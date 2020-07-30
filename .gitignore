@@ -1,3 +1,7 @@
 node_modules/
+browser/
+build/
+web-ext-artifacts/
 .idea/
 .DS_Store
+.web-extension-id
