@@ -1,0 +1,14 @@
+{
+ "addons": {
+  "uscriptplus@mol.com": {
+   "updates": [
+    {
+     "version": "$ext_version",
+     "browser_specific_settings": { "gecko": { "strict_min_version": "55" } },
+     "update_info_url": "https://github.com/magicoflolis/Userscript-Plus/releases/tag/$tag_version",
+     "update_link": "https://github.com/magicoflolis/Userscript-Plus/releases/download/$tag_version/uScriptplus_$tag_version.firefox.signed.xpi"
+    }
+   ]
+  }
+ }
+}
