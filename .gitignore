@@ -2,6 +2,10 @@ node_modules/
 browser/
 build/
 web-ext-artifacts/
+.vscode/
+.eslintrc.json
 .idea/
 .DS_Store
-.web-extension-id
+*.web-extension-id
+*.bak
+*.code-workspace
