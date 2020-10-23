@@ -4,13 +4,15 @@
 
 > Finds available UserJS for current site.
 
-![Preview](https://raw.githubusercontent.com/jae-jae/_resources/master/img/175033.png)
+![Preview](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/resources/example.png)
 
 > Fork of [https://github.com/jae-jae/Userscript-Plus#userscript](https://github.com/jae-jae/Userscript-Plus#userscript)
 
 ## More Information [here](https://github.com/jae-jae/Userscript-Plus)
 
 ## Installation
+
+- Download from [release](https://github.com/magicoflolis/Userscript-Plus/releases)
 
 - [Firefox Addon](https://addons.mozilla.org/addon/uscriptplus)
 
@@ -20,9 +22,7 @@
 
 ``` bash
 # install development dependencies
-npm install
-# compile
-npm run [chrome, firefox]
+npm i
+# run
+web-ext run -s ./extension-dist/
 ```
-
-Note that Windows users should download a tool like [Git Bash](https://git-scm.com/download/win) or [Cygwin](http://cygwin.com/) to build.

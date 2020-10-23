@@ -3,7 +3,6 @@ browser/
 build/
 web-ext-artifacts/
 .vscode/
-.eslintrc.json
 .idea/
 .DS_Store
 *.web-extension-id
