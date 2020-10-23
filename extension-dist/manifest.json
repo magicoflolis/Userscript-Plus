@@ -1,0 +1,41 @@
+{
+    "manifest_version": 2,
+    "author": "Magic Of Lolis",
+    "background": {
+        "page": "background.html"
+    },
+    "name": "Userscript+ for Tampermonkey",
+    "description": "Finds available UserJS for current site.",
+    "version": "1.4.6",
+    "homepage_url": "https://github.com/magicoflolis/Userscript-Plus",
+    "icons": {
+        "16": "img/icon_16.png",
+        "32": "img/icon_32.png",
+        "96": "img/icon_96.png",
+        "128": "img/icon_128.png"
+    },
+    "browser_action": {
+        "browser_style": false,
+        "default_icon": {
+            "16": "img/icon_16.png",
+            "32": "img/icon_32.png",
+            "96": "img/icon_96.png",
+            "128": "img/icon_128.png"
+        },
+        "default_title": "Userscript+",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "webNavigation",
+        "webRequest",
+        "<all_urls>"
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "uscriptplus@mol.com",
+            "strict_min_version": "57.0",
+            "update_url": "https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/firefox/updates.json"
+        }
+    }
+}

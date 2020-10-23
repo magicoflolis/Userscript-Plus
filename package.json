@@ -1,0 +1,40 @@
+{
+  "name": "uscript-plus-firefox",
+  "version": "1.4.5",
+  "description": "Show current site all UserJS，The easier way to install UserJs for Tampermonkey.",
+  "main": "index.js",
+  "dependencies": {
+    "vue": "^2.4.2",
+    "vue-i18n": "7.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "copy-webpack-plugin": "^6.2.1",
+    "css-loader": "^0.28.7",
+    "eslint": "^7.11.0",
+    "eslint-plugin-html": "^3.2.0",
+    "eslint-plugin-vue": "^7.1.0",
+    "standard": "^10.0.3",
+    "web-ext": "^5.3.0",
+    "webpack": "^5.1.3",
+    "webpack-cli": "^4.1.0"
+  },
+  "scripts": {
+    "start:firefox": "web-ext run --start-url www.youtube.com www.twitter.com -s ./extension-dist/"
+  },
+  "repository": "git+https://github.com/magicoflolis/Userscript-Plus.git",
+  "keywords": [
+    "userscript",
+    "userjs",
+    "tampermonkey"
+  ],
+  "author": "Magic Of Lolis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/magicoflolis/Userscript-Plus/issues"
+  },
+  "homepage": "https://github.com/magicoflolis/Userscript-Plus#userscript-for-firefox",
+  "private": true
+}
