@@ -1,0 +1,40 @@
+body {
+    width: 860px;
+    height: 492px;
+    overflow-x: hidden;
+}
+#app {
+    position: fixed;
+    width: 100%;
+}
+
+.ivu-table-body {
+    height: 418px;
+    overflow-x: hidden;
+}
+
+.card-title {
+    cursor: pointer;
+}
+
+.ivu-card-extra {
+    top: 8px;
+}
+.table-footer {
+  position: fixed;
+  bottom: 0 ;
+  padding-left: 10px;
+  width: 100%;
+  background-color: #fff;
+}
+.table-footer a {
+  color: #ed3f14;
+}
+
+.support-box {
+    height: 28px;
+    line-height: 28px;
+}
+.carouse-item {
+    background-color: #ffffff;
+}
