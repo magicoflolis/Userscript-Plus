@@ -1,29 +1,7 @@
 {
   "name": "uscript-plus-firefox",
-  "version": "1.4.5",
+  "version": "2.0",
   "description": "Show current site all UserJS，The easier way to install UserJs for Tampermonkey.",
-  "main": "index.js",
-  "dependencies": {
-    "vue": "^2.4.2",
-    "vue-i18n": "7.2.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1",
-    "copy-webpack-plugin": "^6.2.1",
-    "css-loader": "^0.28.7",
-    "eslint": "^7.11.0",
-    "eslint-plugin-html": "^3.2.0",
-    "eslint-plugin-vue": "^7.1.0",
-    "standard": "^10.0.3",
-    "web-ext": "^5.3.0",
-    "webpack": "^5.1.3",
-    "webpack-cli": "^4.1.0"
-  },
-  "scripts": {
-    "start:firefox": "web-ext run --start-url www.youtube.com www.twitter.com -s ./extension-dist/"
-  },
   "repository": "git+https://github.com/magicoflolis/Userscript-Plus.git",
   "keywords": [
     "userscript",
@@ -32,9 +10,47 @@
   ],
   "author": "Magic Of Lolis",
   "license": "MIT",
+  "webExt": {
+    "sourceDir": "./extension/",
+    "artifactsDir": "./web-ext/"
+  },
   "bugs": {
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues"
   },
   "homepage": "https://github.com/magicoflolis/Userscript-Plus#userscript-for-firefox",
-  "private": true
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@mdi/font": "^5.9.55",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.11",
+    "eslint-plugin-html": "^6.1.1",
+    "standard": "^10.0.3",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "vue-loader": "^13.0.4",
+    "vue-style-loader": "^3.0.1",
+    "vue-template-compiler": "^2.4.2",
+    "webpack": "^3.5.5"
+  },
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "fuzzy.js": "^0.1.0",
+    "iview": "2.12.0",
+    "timeago.js": "^3.0.2",
+    "vue": "^2.4.2",
+    "vue-i18n": "7.2.0",
+    "vuetify": "^2.3.15"
+  },
+  "standard": {
+    "ignore": [
+      "user.js"
+    ]
+  }
 }

@@ -1,28 +1,51 @@
-<!-- ![userscript+.gif](https://cdn.rawgit.com/jae-jae/_resources/master/img/userscript+.gif) -->
+# Additional source code & information found [here](https://github.com/jae-jae/Userscript-Plus#userscript)
 
-# Userscript+ For Firefox
+**Finds available UserJS for current site.**
 
-> Finds available UserJS for current site.
+- [Additional source code & information found here](#additional-source-code--information-found-here)
+  - [About](#about)
+  - [Installation](#installation)
+    - [Firefox Add-ons web site](#firefox-add-ons-web-site)
+    - [Manual](#manual)
+  - [Build Setup](#build-setup)
+  - [License](#license)
 
-![Preview](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/resources/example.png)
+## About
 
-> Fork of [https://github.com/jae-jae/Userscript-Plus#userscript](https://github.com/jae-jae/Userscript-Plus#userscript)
+Userscript+ is a `Firefox addon` designed to be used along side with `Tampermonkey`
 
-## More Information [here](https://github.com/jae-jae/Userscript-Plus)
+Many times, we do not know whether some sites have users to provide the script to optimize the page, but Userscript+ will be able to help you automatically find the applicable UserJS, and by default, according to the score from high to low order recommended to you, bring you a new `Tampermonkey` use experience!
+
+| Preview |
+:----------:
+|![Example](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/resources/example.png)|
 
 ## Installation
 
-- Download from [release](https://github.com/magicoflolis/Userscript-Plus/releases)
+### [Firefox Add-ons web site](https://addons.mozilla.org/firefox/addon/userscript-plus)
 
-- [Firefox Addon](https://addons.mozilla.org/addon/uscriptplus)
+### Manual
 
-- Chrome Extension: [https://github.com/jae-jae/Userscript-Plus/raw/master/crx/extension.crx](https://github.com/jae-jae/Userscript-Plus/raw/master/crx/extension.crx)
+> **Note:** Userscript+ will be installed as a [Temporary Extension](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/)
 
-### Build Setup
+- Direct download the [zip](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/web-ext/userscript_for_tampermonkey-2.0.zip), load it as a [Temporary Extension](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
+- _OR_ clone the repository, zip the [extension folder](https://github.com/magicoflolis/Userscript-Plus/tree/master/extension), load as a [Temporary Extension](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
 
-``` bash
-# install development dependencies
+## Build Setup
+
+> [web-ext documentation](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/)
+
+```bash
+# Install development dependencies
 npm i
-# run
-web-ext run -s ./extension-dist/
+# Build if src was modified
+webpack
+# Run
+web-ext run -s ./extension/
+# Recommended to create additional profile about:profiles
+web-ext run -p <profile> -s ./extension/
 ```
+
+## License
+
+MIT

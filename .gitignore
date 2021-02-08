@@ -1,10 +1,8 @@
-node_modules/
+/tmp/
+node_modules
+Notes
+/Notes/
 browser/
-build/
-web-ext-artifacts/
 .vscode/
-.idea/
-.DS_Store
 *.web-extension-id
-*.bak
 *.code-workspace
