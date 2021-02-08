@@ -28,8 +28,7 @@ Many times, we do not know whether some sites have users to provide the script t
 
 > **Note:** Userscript+ will be installed as a [Temporary Extension](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/)
 
-- Direct download the [zip](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/web-ext/userscript_for_tampermonkey-2.0.zip), load it as a [Temporary Extension](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
-- _OR_ clone the repository, zip the [extension folder](https://github.com/magicoflolis/Userscript-Plus/tree/master/extension), load as a [Temporary Extension](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
+- Download the [zip](https://api.github.com/repos/magicoflolis/Userscript-Plus/zipball/master), load the [extension folder](https://github.com/magicoflolis/Userscript-Plus/tree/master/extension) as a [Temporary Extension](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
 
 ## Build Setup
 
