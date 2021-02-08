@@ -2,7 +2,7 @@
 node_modules
 Notes
 /Notes/
-browser/
+web-ext
 .vscode/
 *.web-extension-id
 *.code-workspace
