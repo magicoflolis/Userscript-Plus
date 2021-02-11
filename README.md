@@ -1,28 +1,42 @@
-# Additional source code & information found [here](https://github.com/jae-jae/Userscript-Plus#userscript)
+# Magics Userscript+ (under development)
 
-**Finds available UserJS for current site.**
+_Fork of [Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/24508-userscript-show-site-all-userjs)_
 
-- [Additional source code & information found here](#additional-source-code--information-found-here)
+_Authors source code & information found [here](https://github.com/jae-jae/Userscript-Plus#userscript)_
+
+- [Magics Userscript+ (under development)](#magics-userscript-under-development)
   - [About](#about)
+  - [Features](#features)
   - [Installation](#installation)
-    - [Firefox Add-ons web site](#firefox-add-ons-web-site)
     - [Manual](#manual)
   - [Build Setup](#build-setup)
   - [License](#license)
 
 ## About
 
-Userscript+ is a `Firefox addon` designed to be used along side with `Tampermonkey`
+_Finds available UserJS for current site._
 
-Many times, we do not know whether some sites have users to provide the script to optimize the page, but Userscript+ will be able to help you automatically find the applicable UserJS, and by default, according to the score from high to low order recommended to you, bring you a new `Tampermonkey` use experience!
+Magics Userscript+ is designed to be used along side with `Tampermonkey OR compatiable UserJS manager`
+
+Currently [Userscript+](https://github.com/jae-jae/Userscript-Plus#userscript) can only find UserJS through [GreasyFork](https://greasyfork.org), I've added support for [SleazyFork](https://sleazyfork.org) along with additional features!
 
 | Preview |
 :----------:
 |![Example](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/resources/example.png)|
 
+## Features
+
+- Added [SleazyFork](https://sleazyfork.org)
+
 ## Installation
 
-### [Firefox Add-ons web site](https://addons.mozilla.org/firefox/addon/userscript-plus)
+> The userscript version is **limited** [info](https://github.com/jae-jae/Userscript-Plus#known-bug). Browser extension should be able to run on most sites.
+
+- [Chrome](https://github.com/magicoflolis/Userscript-Plus)
+
+- [Firefox AMO](https://addons.mozilla.org/firefox/addon/userscript-plus)
+
+- Userscript available from [GreasyFork](https://greasyfork.org/scripts/421603) or GitHub [direct link](https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjsplus.user.js)
 
 ### Manual
 
@@ -36,7 +50,7 @@ Many times, we do not know whether some sites have users to provide the script t
 
 ```bash
 # Install development dependencies
-npm i
+npm i -D
 # Build if src was modified
 webpack
 # Run
