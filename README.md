@@ -1,9 +1,5 @@
 # Magics Userscript+ (under development)
 
-_Fork of [Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/24508-userscript-show-site-all-userjs)_
-
-_Authors source code & information found [here](https://github.com/jae-jae/Userscript-Plus#userscript)_
-
 - [Magics Userscript+ (under development)](#magics-userscript-under-development)
   - [About](#about)
   - [Features](#features)
@@ -14,7 +10,9 @@ _Authors source code & information found [here](https://github.com/jae-jae/Users
 
 ## About
 
-_Finds available UserJS for current site._
+_Fork of [Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/24508-userscript-show-site-all-userjs). Authors source code & information found [here](https://github.com/jae-jae/Userscript-Plus#userscript)._
+
+**Finds available UserJS for current site.**
 
 Magics Userscript+ is designed to be used along side with `Tampermonkey OR compatiable UserJS manager`
 

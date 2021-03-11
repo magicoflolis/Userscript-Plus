@@ -22,8 +22,8 @@
 // @downloadURL  https://greasyfork.org/scripts/421603-magic-userscript-show-site-all-userjs/code/Magic%20Userscript+%20:%20Show%20Site%20All%20UserJS.user.js
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// @resource     uiJs   https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.gf.js?_=1596113955041
-// @resource     ui     https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.html?_=1596113955041
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.gf.js?_=1615253800696
+// @resource     ui     https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.html?_=1615253800697
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
