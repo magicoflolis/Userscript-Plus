@@ -16,6 +16,5 @@
 </script>
 
 <style>
-@import './common/css/default.css';
-    /* @import './common/css/dark.css'; */
+@import './components/default.css';
 </style>

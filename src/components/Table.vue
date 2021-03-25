@@ -57,14 +57,8 @@
       // components: { Info, Support },
       components: { Info },
       mounted: function () {
-        this.$Spin.show()
-    Tools.getData((json) => {
-      this.data = json
-      this.originData = json
-      this.count = this.data.length
-      this.$Spin.hide()
-      this.showBody = !this.showBody
-    })
+        this.count = Tools.getCount()
+        this.adult = Tools.getAdult()
       },
       data: function () {
         return {

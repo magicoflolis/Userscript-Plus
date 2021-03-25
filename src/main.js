@@ -16,11 +16,12 @@ Vue.use(VueI18n)
 
 Vue.use(ViewUI)
 
-let nlang = navigator.language.toLowerCase()
-if (nlang === 'zh') {
-  nlang = 'zh-cn'
-}
-let lang = localeMessage[nlang] ? nlang : 'en-us'
+let nLang;
+
+nLang = navigator.language.toLowerCase()
+(nLang === 'zh') ? nLang = 'zh-cn' : false;
+
+let lang = localeMessage[nLang] ? nLang : 'en-us'
 
 const i18n = new VueI18n({
   locale: lang,

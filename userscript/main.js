@@ -5,7 +5,8 @@ class FetchUserjs {
         this.quietKey = 'jae_fetch_userjs_quiet';
         this.countKey = 'jae_fetch_userjs_count';
         this.adultKey = 'jae_fetch_userjs_adult';
-        this.tplBox = '<div id="jae_userscript_box"><style>.jae-userscript{position:fixed;width:370px;bottom:10px;right:20px;z-index:9999999999;height:56px}.jae-userscript-shadow{box-shadow:0 1px 4px rgba(0,0,0,.3),\\t\\t\\t\\t0px 0 20px rgba(0,0,0,.1) inset}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%;box-shadow:0 15px 10px rgba(0,0,0,.7);transform:rotate(-3deg)}.jae-userscript-shadow::after{right:10px;left:auto;transform:rotate(3deg)}</style><div class="jae-userscript" class=""></div></div>';
+        this.tplBox = '<div id="jae_userscript_box"><div class="jae-userscript" class=""></div></div>';
+        //this.tplBox = '<div id="jae_userscript_box"><style>.jae-userscript{position:fixed;width:370px;bottom:10px;right:20px;z-index:9999999999;height:56px}.jae-userscript-shadow{box-shadow:0 1px 4px rgba(0,0,0,.3),\\t\\t\\t\\t0px 0 20px rgba(0,0,0,.1) inset}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%;box-shadow:0 15px 10px rgba(0,0,0,.7);transform:rotate(-3deg)}.jae-userscript-shadow::after{right:10px;left:auto;transform:rotate(3deg)}</style><div class="jae-userscript" class=""></div></div>';
     }
 
     getMainHost () {
@@ -18,7 +19,11 @@ class FetchUserjs {
         countData = JSON.parse(countData)
         let count =  countData[host]
         sessionStorage.setItem(this.countKey, count)
-        return count
+        let adultData = GM_getResourceText('adult')
+        adultData = JSON.parse(adultData)
+        let adult =  adultData[host]
+        sessionStorage.setItem(this.adultKey, adult)
+        return count && adult
     }
 
     getAdultData(host) {
@@ -83,14 +88,13 @@ class FetchUserjs {
     render() {
         if (!this.isQuiet) {
             let count = this.getCountData(this.host)
-            let adult = this.getAdultData(this.host)
-            if(count || adult) {
+            if(count) {
                 $('body').append(this.tplBox);
 
                 let ui = GM_getResourceText('ui');
                 let dom = document.getElementsByClassName('jae-userscript')[0]
-                var tpl = '<iframe name="jaeFetchUserJSFrame" src="about:blank" style="width:100%;height:100%;border:0px;display: block!important;" allowTransparency="true"></iframe>';
-                dom.innerHTML = tpl;
+                //ar tpl = '<iframe name="jaeFetchUserJSFrame" src="about:blank" style="width:100%;height:100%;border:0px;display: block!important;" allowTransparency="true"></iframe>';
+                dom.innerHTML = '<iframe name="jaeFetchUserJSFrame" src="about:blank" allowTransparency="true"></iframe>';
                 var iframeDom = dom.children[0];
                 iframe.write(iframeDom, ui);
 

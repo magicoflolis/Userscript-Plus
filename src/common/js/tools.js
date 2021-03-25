@@ -1,27 +1,32 @@
-/* global chrome, psl, fetch */
+/* global parent, Event, sessionStorage */
 
-import fuzzy from 'fuzzy.js';
-import timeago from 'timeago.js';
+import timeago from 'timeago.js'
+import fuzzy from 'fuzzy.js'
+import psl from 'psl'
 
 let config = {
+  cacheKey: 'jae_fetch_userjs_cache',
+  countKey: 'jae_fetch_userjs_count',
+  adultKey: 'jae_fetch_userjs_adult',
+  host: psl.get(window.location.hostname) || window.location.hostname.split('.').splice(-2).join('.'),
   api: 'https://greasyfork.org/scripts/by-site/{host}.json',
   sapi: 'https://sleazyfork.org/scripts/by-site/{host}.json'
 }
-
 export default {
   timeagoFormat (time) {
     let lang = (navigator.language === 'zh-CN') ? 'zh_CN' : 'en_short'
     return timeago(null, lang).format(time)
   },
   installUserJs (uri) {
-    let jsStr = `
-    let evt = document.createEvent('MouseEvents'),
-    link = document.createElement('a');
-    evt.initEvent('click', true, true);
-    link.href = '${uri}';
-    link.dispatchEvent(evt);
-    `
-    chrome.tabs.executeScript(null, { code: jsStr })
+    let evt = parent.document.createEvent('MouseEvents')
+    evt.initEvent('click', true, true)
+    let link = parent.document.createElement('a')
+    link.href = uri
+    // link.click()
+    link.dispatchEvent(evt)
+  },
+  dispatchEvent (eventName) {
+    parent.document.getElementById('jae_userscript_box').dispatchEvent(new Event(eventName))
   },
   /* Nano Templates - https://github.com/trix/nano */
   nano (template, data) {
@@ -32,79 +37,46 @@ export default {
       return (typeof v !== 'undefined' && v !== null) ? v : ''
     })
   },
-
-  get currentTab () {
-    return new Promise(function (resolve, reject) {
-      let queryInfo = {
-        active: true,
-        currentWindow: true
+  getJSON (url, callback) {
+    parent.window.GmAjax({
+      method: 'GET',
+      url: url,
+      onload: (res) => {
+        let json = JSON.parse(res.responseText)
+        callback(json)
       }
-
-      chrome.tabs.query(queryInfo, (tabs) => {
-        let tab = tabs[0]
-        resolve(tab)
-      })
     })
   },
-
-  get sessionStorage () {
-    return new Promise((resolve, reject) => {
-      chrome.runtime.getBackgroundPage((bg) => {
-        resolve(bg.sessionStorage)
-      })
-    })
-  },
-
-  get host () {
-    return new Promise((resolve, reject) => {
-      this.currentTab.then((tab) => {
-        let a = document.createElement('a')
-        a.href = tab.url
-        let mainHost = psl.get(a.hostname) || a.hostname.split('.').splice(-2).join('.')
-        resolve(mainHost)
-      })
-    })
-  },
-
+    // 获取油猴缓存好的脚本数据
   getData (callback) {
-    this.sessionStorage.then((bgSessionStorage) => {
-      this.host.then((host) => {
-        let data = bgSessionStorage.getItem(host)
-        if (data) {
-          data = JSON.parse(data)
-          callback(data)
-        } else {
-          let api = this.nano(config.api, {
-            host: host
-          })
-          let sapi = this.nano(config.sapi, {
-            host: host
-          })
-          fetch(sapi)
-            .then((r) => {
-              r.json().then((json) => {
-                json = json.map((item) => {
-                  item.user = item.users[0]
-                  return item
-                })
-                bgSessionStorage.setItem(host, JSON.stringify(json))
-                callback(json)
-              })
-            })
-          fetch(api)
-            .then((r) => {
-              r.json().then((json) => {
-                json = json.map((item) => {
-                  item.user = item.users[0]
-                  return item
-                })
-                bgSessionStorage.setItem(host, JSON.stringify(json))
-                callback(json)
-              })
-          })
-        }
+    let data = sessionStorage.getItem(config.cacheKey)
+    if (data) {
+      data = JSON.parse(data)
+      callback(data)
+    } else {
+      let api = this.nano(config.api, {
+        host: config.host
       })
-    })
+      this.getJSON(api, (json) => {
+        json = json.map((item) => {
+          item.user = item.users[0]
+          return item
+        })
+        sessionStorage.setItem(config.cacheKey, JSON.stringify(json))
+        callback(json)
+      })
+    }
+  },
+
+  getCount () {
+    let count = sessionStorage.getItem(config.countKey)
+    let adult = sessionStorage.getItem(config.adultKey)
+    return count >= 50 ? 50 : adult >= 50 ? 50 : count
+  },
+
+  getAdult () {
+    let adult = sessionStorage.getItem(config.adultKey)
+    return adult >= 50 ? 50 : adult
   },
 
   searcher (data, query) {
@@ -130,16 +102,14 @@ export default {
         'score': max.score
       })
     }
-    rt = rt.map((a) => a.item)
-    // rt = rt.filter((a) => a.score !== 0).sort((a, b) => b.score - a.score).map((a) => a.item)
+    rt = rt.filter((a) => a.score !== 0).sort((a, b) => b.score - a.score).map((a) => a.item)
     return rt
   },
 
   isZH () {
-    let nlang = navigator.language.toLowerCase()
-    if (nlang === 'zh') {
-      nlang = 'zh-cn'
-    }
-    return nlang.search('zh-') === 0
+    let nLang;
+    nLang = navigator.language.toLowerCase()
+    (nLang === 'zh') ? nLang = 'zh-cn' : false;
+    return nLang.search('zh-') === 0
   }
 }

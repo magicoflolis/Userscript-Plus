@@ -49,7 +49,7 @@
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
 {ljs}
-// @resource     ui     https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.html?_={time}
+// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_={time}
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
@@ -58,6 +58,7 @@
 // @grant        GM_setValue
 // @grant        unsafeWindow
 // @noframes
+// @noframe
 // @connect      cdn.bootcss.com
 // @connect      raw.githubusercontent.com
 // @connect      gist.githubusercontent.com

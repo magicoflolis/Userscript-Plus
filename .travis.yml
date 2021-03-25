@@ -1,16 +1,16 @@
 language: node_js
-node_js: 9
+node_js: 15
 before_script:
   - npm install yarn webpack -g
   - git checkout master
-  - cd crx
+  - cd webextension
   - yarn
   - cd ..
   - yarn
 
 script:
   - yarn build
-  - cd crx
+  - cd webextension
   - yarn build
   - cd ..
 
