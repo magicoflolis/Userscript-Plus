@@ -50,8 +50,8 @@
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// @resource     uiJs   https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.gf.js?_=1616636095054
-// @resource     ui     https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.html?_=1616636095055
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.gf.js?_=1616636684745
+// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1616636684746
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
