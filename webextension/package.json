@@ -11,21 +11,19 @@
   "author": "Magic Of Lolis",
   "license": "MIT",
   "webExt": {
-    "sourceDir": "./extension/",
-    "artifactsDir": "./web-ext/"
+    "sourceDir": "./src/",
+    "artifactsDir": "./extension/"
   },
   "bugs": {
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues"
   },
   "homepage": "https://github.com/magicoflolis/Userscript-Plus#userscript-for-firefox",
   "scripts": {
-    "build": "webpack --config=build/webpack.config.js",
-    "build:all": "webpack --config=build/webpack.config.js && webpack --config=build/webpack.gf.config.js  && node build/userscript.js",
-    "build:user": "webpack --config=build/webpack.gf.config.js && node build/userscript.js",
-    "watch": "webpack --watch"
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "standard": "standard --plugin html 'src/**/*.{js,vue}' --fix"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.2",
     "@mdi/font": "^5.9.55",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -55,5 +53,6 @@
     "ignore": [
       "user.js"
     ]
-  }
+  },
+  "main": "webpack.config.js"
 }

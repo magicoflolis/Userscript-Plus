@@ -3,7 +3,7 @@
     "author": "Magic of Lolis",
     "name": "Userscript+ for Tampermonkey",
     "description": "Finds available UserJS for current site.",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "homepage_url": "https://github.com/magicoflolis/Userscript-Plus",
     "icons": {
       "16": "img/icon_16.png",
