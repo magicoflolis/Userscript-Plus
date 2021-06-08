@@ -314,9 +314,9 @@
 
 <style>
     .card-title {
-        cursor: pointer;
+      color: #ffffff !important;
+      cursor: pointer;
     }
-
     .ivu-card-extra {
         top: 8px;
     }
@@ -324,6 +324,7 @@
     .ivu-table-body {
         height: 400px;
         overflow-x: hidden;
+        scrollbar-width: thin !important;
     }
 
     .table-footer {
@@ -331,9 +332,28 @@
       bottom: 0 ;
       padding-left: 10px;
       width: 100%;
-      background-color: #fff;
+      background-color: #ffffff;
     }
     .table-footer a {
       color: #ed3f14;
+    }
+    .ivu-card-head {
+      border-bottom: 1px solid #ffffff !important;
+    }
+    .ivu-tooltip {
+      border-color: #ffffff !important;
+      border-radius: 4px !important;
+      background-color: #ffffff !important;
+    }
+    .ivu-table {
+      color: #ffffff !important;
+      background-color: #2e323d !important;
+    }
+    .ivu-card, .ivu-table td, .ivu-table th {
+      background-color: #2e323d !important;
+      border-color: #ffffff !important;
+    }
+    .ivu-table-row-highlight, .ivu-table-row-hover {
+      color: #9cc3e7 !important;
     }
 </style>

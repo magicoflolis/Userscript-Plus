@@ -222,9 +222,6 @@ card {
   color: #ffffff !important;
   cursor: pointer;
 }
-/* .ivu-card-body {
-  padding: 0px !important;
-} */
 .ivu-card-extra {
     top: 8px !important;
 }
