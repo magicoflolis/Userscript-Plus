@@ -4,23 +4,17 @@ node_js:
 
 notifications:
   email: false
-before_script:
-  - npm install -g yarn webpack
-  - git checkout master
-  - cd webextension
-  - yarn
-  - cd ..
-  - yarn
 
-install:
-  - npm i --force
-  - webpack --config=build/webpack.config.js && webpack --config=build/webpack.gf.config.js  && node build/userscript.js
+before_script:
+  - npm i -g webpack
+  - git checkout master
 
 script:
-  - yarn build
+  - npm i --force
   - cd webextension
-  - yarn build
+  - npm i --force
   - cd ..
+  - webpack --config=build/webpack.config.js && webpack --config=build/webpack.gf.config.js  && node build/userscript.js
 
 after_success:
   - pwd
@@ -29,11 +23,11 @@ after_success:
   - git push "https://${GH_TOKEN}@${GH_REF}" master:master
 
 cache:
-  yarn: true
+  yarn: false
   webpack: true
   directories:
     - "node_modules"
-    - "crx/node_modules"
+    - "webextension/node_modules"
 
 env:
  global:
