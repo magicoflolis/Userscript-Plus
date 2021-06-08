@@ -1,11 +1,15 @@
 language: node_js
 node_js:
-  - 'node'
+- node
+before_install:
+- openssl aes-256-cbc -K $encrypted_b8048afd00e8_key -iv $encrypted_b8048afd00e8_iv
+  -in key.txt.enc -out key.txt -d
 after_success:
-  - pwd
-  - git commit -a -m "Travis build"
-  - git status
-  - git push "https://${GH_TOKEN}@${GH_REF}" master:master
+- pwd
+- git commit -a -m "Travis build"
+- git status
+- git push "https://${GH_TOKEN}@${GH_REF}" master:master
 env:
- global:
-   - GH_REF: github.com/magicoflolis/Userscript-Plus.git
+  global:
+  - GH_REF: github.com/magicoflolis/Userscript-Plus.git
+  - secure: cPwl9ySLAuGmqajY4SdzK5EiWUumj6ekVbPIDZ+bGNEESP1c6WRFUrodaz0/14Y0RUKpgWBDqGM60IOmjq7q7nUZmdbs1HH/PuLYncDVAYc/9FA2IbvP/l6qTZC560aRnO388XklbpitcSs2rftKE3yrLbqt4TMfWIQZEzIFuKs+k+5MGp5r350FDw1P4ZhtVTdWtJOnSZ5X51AeQr964BJ9UYmlFvma7ngKgMvZJ2ArVDlXFFDC8lSY/Zyrppb5uSARdYFIjj6F6cASxt0qZE5n4io3QVy6lGV26kZk6Dw4fTdH2lTzBvApzyl/g5WRzN1RjwwbRaKOhTRJyYtXWTOuknRGycxoJuxXUnCskXd/AMGCd7JAdue22UMbp2tY7tp4YSZQzVMVlHTMvYjhMiRQ1Urfe7zXAwy4Q05+ccJIIrp8Sp2q+hQTzzeRPkGYqX0BkPOHrfej5Fp+Obn1FTQvAcU/G1yVKs/vioD2PQWL/mahGO5X11NwiDTJ9LcNWILa0H0peVR5ULgz8TP5BTSsssxvUro95c9gYwHqzXuYy1+axad/KtbPj1e3Bp5PhcP4HKV2vZ1j7ntFP/yBnrIB5zUV8zMs/Hq+QVhSis19R/og1T8syPxpKkjq5SKOHMKL/LOrAzPVgxTmRX6jZz9sCv++J6Cn0e9YWgVPgVk=
