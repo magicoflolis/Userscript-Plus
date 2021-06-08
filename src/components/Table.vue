@@ -21,14 +21,20 @@
                     </Tooltip>
 
                     <Tooltip content="New issue" placement="bottom">
-                        <Button type="dashed" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues')">
+                        <Button type="dashed" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')">
                             <Icon type="bug"></Icon>
                         </Button>
                     </Tooltip>
 
                     <Tooltip content="GitHub" placement="bottom">
-                        <Button type="dashed" @click="open('https://github.com/magicoflolis/Userscript-Plus#userscript-for-firefox')">
+                        <Button type="dashed" @click="open('https://github.com/magicoflolis/Userscript-Plus')">
                             <Icon type="social-github"></Icon>
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip content="Original Script" placement="bottom">
+                        <Button type="dashed" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')">
+                            <Icon type="fork"></Icon>
                         </Button>
                     </Tooltip>
                 </span>
@@ -52,10 +58,8 @@
 <script>
     import Tools from '../common/js/tools'
     import Info from './Info.vue'
-    // import Support from './Support.vue'
     export default {
-      // components: { Info, Support },
-      components: { Info },
+      components: { Info, Indicator },
       mounted: function () {
         this.count = Tools.getCount()
         this.adult = Tools.getAdult()
@@ -196,3 +200,53 @@
       }
     }
 </script>
+
+<style>
+card {
+  width:100%;
+  height:100%;
+  padding:0px
+}
+.card-title {
+  color: #ffffff !important;
+  cursor: pointer;
+}
+.ivu-card-extra {
+    top: 8px !important;
+}
+.ivu-card-head {
+  padding: 2.5% 16px !important;
+  border-bottom: 1px solid #ffffff !important;
+}
+.ivu-table-body {
+    height: 418px;
+    overflow-x: hidden;
+    scrollbar-width: thin !important;
+}
+.table-footer {
+    position: fixed;
+  bottom: 0 ;
+  padding-left: 10px;
+  width: 100%;
+  background-color: #ffffff;
+}
+.table-footer a {
+    color: #ed3f14;
+}
+.ivu-tooltip {
+  border-color: #ffffff !important;
+  border-radius: 4px !important;
+  background-color: #ffffff !important;
+}
+.ivu-table {
+  color: #ffffff !important;
+  background-color: #2e323d !important;
+}
+.ivu-card, .ivu-table td, .ivu-table th {
+  background-color: #2e323d !important;
+  border-color: #ffffff !important;
+}
+.ivu-table-row-highlight, .ivu-table-row-hover {
+  color: #9cc3e7 !important;
+}
+</style>

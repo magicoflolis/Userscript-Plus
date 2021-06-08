@@ -16,8 +16,8 @@
   "homepage": "https://github.com/magicoflolis/Userscript-Plus#userscript-for-firefox",
   "scripts": {
     "build:all": "webpack --config=build/webpack.config.js && webpack --config=build/webpack.gf.config.js  && node build/userscript.js",
-    "build:default": "webpack --config=build/webpack.config.js",
     "build:user": "webpack --config=build/webpack.gf.config.js && node build/userscript.js",
+    "build:default": "webpack --config=build/webpack.config.js",
     "watch:ui": "webpack --watch --config=build/webpack.config.js"
   },
   "devDependencies": {
@@ -35,6 +35,7 @@
     "vue-loader": "^13.0.4",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.4.2",
+    "web-ext": "latest",
     "webpack": "^3.5.5"
   },
   "dependencies": {
@@ -46,6 +47,10 @@
     "view-design": "^4.5.0",
     "vue": "^2.4.2",
     "vue-i18n": "7.2.0"
+  },
+  "webExt": {
+    "sourceDir": "./webextension/extension/",
+    "artifactsDir": "./webextension/build/"
   },
   "standard": {
     "ignore": [

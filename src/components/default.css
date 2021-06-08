@@ -1,7 +1,11 @@
+html {
+  overflow-x: hidden !important;
+}
+
 body {
   width: 860px;
   height: 492px;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 #app {
   position: fixed;
@@ -20,7 +24,7 @@ body {
 
 .ivu-table-body {
   height: 400px;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .table-footer {

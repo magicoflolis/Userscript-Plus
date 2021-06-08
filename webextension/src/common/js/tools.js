@@ -6,7 +6,8 @@ import timeago from 'timeago.js';
 let config = {
   api: 'https://greasyfork.org/scripts/by-site/{host}.json',
   sapi: 'https://sleazyfork.org/scripts/by-site/{host}.json'
-}
+},
+brws = typeof browser == "undefined" ? chrome : browser;
 
 export default {
   timeagoFormat (time) {
@@ -15,13 +16,12 @@ export default {
   },
   installUserJs (uri) {
     let jsStr = `
-    let evt = document.createEvent('MouseEvents'),
-    link = document.createElement('a');
+    let evt = parent.document.createEvent('MouseEvents'),
+    link = parent.document.createElement('a');
     evt.initEvent('click', true, true);
-    link.href = '${uri}';
-    link.dispatchEvent(evt);
-    `
-    chrome.tabs.executeScript(null, { code: jsStr })
+    link.href = '${uri}'
+    link.dispatchEvent(evt) `;
+    brws.tabs.executeScript(null, { code: jsStr })
   },
   /* Nano Templates - https://github.com/trix/nano */
   nano (template, data) {
@@ -39,8 +39,7 @@ export default {
         active: true,
         currentWindow: true
       }
-
-      chrome.tabs.query(queryInfo, (tabs) => {
+      brws.tabs.query(queryInfo, (tabs) => {
         let tab = tabs[0]
         resolve(tab)
       })
@@ -49,7 +48,7 @@ export default {
 
   get sessionStorage () {
     return new Promise((resolve, reject) => {
-      chrome.runtime.getBackgroundPage((bg) => {
+      brws.runtime.getBackgroundPage((bg) => {
         resolve(bg.sessionStorage)
       })
     })
@@ -76,13 +75,11 @@ export default {
         } else {
           let api = this.nano(config.api, {
             host: host
-          })
-          let sapi = this.nano(config.sapi, {
+          }),
+          sapi = this.nano(config.sapi, {
             host: host
-          })
-          fetch(sapi)
-            .then((r) => {
-              r.json().then((json) => {
+          });
+          fetch(sapi).then((r) => {r.json().then((json) => {
                 json = json.map((item) => {
                   item.user = item.users[0]
                   return item
@@ -91,8 +88,7 @@ export default {
                 callback(json)
               })
             })
-          fetch(api)
-            .then((r) => {
+          fetch(api).then((r) => {
               r.json().then((json) => {
                 json = json.map((item) => {
                   item.user = item.users[0]
@@ -130,8 +126,7 @@ export default {
         'score': max.score
       })
     }
-    rt = rt.map((a) => a.item)
-    // rt = rt.filter((a) => a.score !== 0).sort((a, b) => b.score - a.score).map((a) => a.item)
+    rt = rt.filter((a) => a.score !== 0).sort((a, b) => b.score - a.score).map((a) => a.item)
     return rt
   },
 

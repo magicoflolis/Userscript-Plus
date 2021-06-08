@@ -3,7 +3,7 @@
 import timeago from 'timeago.js'
 import fuzzy from 'fuzzy.js'
 import psl from 'psl'
-
+// https://www.userscript.zone/search?q=
 let config = {
   cacheKey: 'jae_fetch_userjs_cache',
   countKey: 'jae_fetch_userjs_count',

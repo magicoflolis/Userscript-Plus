@@ -31,16 +31,17 @@ var time = +new Date();
 
 // let ljs = `// @require     https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js
 // // @require     https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// // @resource     uiJs   https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.js?_=${time}`,
+// // @resource     uiJs   https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/ui.js?_=${time}`,
 // 	ljs_GF = `// @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// // @resource     uiJs   https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.gf.js?_=${time}`;
+// // @resource     uiJs   https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/ui.gf.js?_=${time}`;
 let ljs = `// @require     https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js
 // @require     https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
 // @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.js?_=${time}`,
 	ljs_GF = `// @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
 // @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.gf.js?_=${time}`;
+
 
 renderOut("./dist/magic-userjs.user.js", ljs);
 //greasyfork version

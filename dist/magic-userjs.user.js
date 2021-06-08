@@ -7,7 +7,7 @@
 // @name:ru-RU   Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
 // @name:ru      Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
 // @namespace    https://github.com/magicoflolis/Userscript-Plus
-// @version      2.3.11
+// @version      2.3.12
 // @description         Show current site all UserJS，The easier way to install UserJs for Tampermonkey.
 // @description:zh      显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
 // @description:zh-CN   显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
@@ -50,8 +50,8 @@
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
 // @require     https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js
 // @require     https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.js?_=1616636684745
-// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1616636684745
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.js?_=1623139263269
+// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1623139263269
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
@@ -60,7 +60,6 @@
 // @grant        GM_setValue
 // @grant        unsafeWindow
 // @noframes
-// @noframe
 // @connect      cdn.bootcss.com
 // @connect      raw.githubusercontent.com
 // @connect      gist.githubusercontent.com
@@ -82,8 +81,7 @@ unsafeWindow.GmAjax = GM_xmlhttpRequest;
         this.quietKey = 'jae_fetch_userjs_quiet';
         this.countKey = 'jae_fetch_userjs_count';
         this.adultKey = 'jae_fetch_userjs_adult';
-        this.tplBox = '<div id="jae_userscript_box"><div class="jae-userscript" class=""></div></div>';
-        //this.tplBox = '<div id="jae_userscript_box"><style>.jae-userscript{position:fixed;width:370px;bottom:10px;right:20px;z-index:9999999999;height:56px}.jae-userscript-shadow{box-shadow:0 1px 4px rgba(0,0,0,.3),\\t\\t\\t\\t0px 0 20px rgba(0,0,0,.1) inset}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%;box-shadow:0 15px 10px rgba(0,0,0,.7);transform:rotate(-3deg)}.jae-userscript-shadow::after{right:10px;left:auto;transform:rotate(3deg)}</style><div class="jae-userscript" class=""></div></div>';
+        this.tplBox = '<div id="jae_userscript_box"><style>.jae-userscript{position:fixed;width:370px;bottom:10px;right:20px;z-index:9999999999;height:56px}.jae-userscript-shadow{box-shadow:0 1px 4px rgba(0,0,0,.3),\\t\\t\\t\\t0px 0 20px rgba(0,0,0,.1) inset}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%}.jae-userscript-shadow::before,.jae-userscript-shadow::after{content:"";position:absolute;z-index:-1;bottom:15px;left:10px;width:50%;height:20%;box-shadow:0 15px 10px rgba(0,0,0,.7);transform:rotate(-3deg)}.jae-userscript-shadow::after{right:10px;left:auto;transform:rotate(3deg)}</style><div class="jae-userscript" class=""></div></div>';
     }
 
     getMainHost() {
@@ -168,11 +166,11 @@ unsafeWindow.GmAjax = GM_xmlhttpRequest;
             if (count) {
                 $('body').append(this.tplBox);
 
-                let ui = GM_getResourceText('ui');
-                let dom = document.getElementsByClassName('jae-userscript')[0];
-                //ar tpl = '<iframe name="jaeFetchUserJSFrame" src="about:blank" style="width:100%;height:100%;border:0px;display: block!important;" allowTransparency="true"></iframe>';
-                dom.innerHTML = '<iframe name="jaeFetchUserJSFrame" src="about:blank" allowTransparency="true"></iframe>';
-                var iframeDom = dom.children[0];
+                let ui = GM_getResourceText('ui'),
+                    dom = document.getElementsByClassName('jae-userscript')[0],
+                    tpl = '<iframe name="jaeFetchUserJSFrame" src="about:blank" style="width:100%;height:100%;border:0px;display: block!important;" allowTransparency="true"></iframe>';
+                dom.innerHTML = tpl;
+                let iframeDom = dom.children[0];
                 iframe.write(iframeDom, ui);
 
                 this.execFrameJs(jaeFetchUserJSFrame.window);
