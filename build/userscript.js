@@ -44,7 +44,7 @@ let ljs = `// @require     https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.use
 
 let ljs_GF = `// @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// @resource     uiJs   https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/ui.gf.js?raw=true
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.gf.js?_=${time}
 // @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=${time}`;
 
 

@@ -1,12 +1,20 @@
 language: node_js
-node_js: 15
+node_js:
+  - 'node'
+
+notifications:
+  email: false
 before_script:
-  - npm install yarn webpack -g
+  - npm install -g yarn webpack
   - git checkout master
   - cd webextension
   - yarn
   - cd ..
   - yarn
+
+install:
+  - npm i --force
+  - webpack --config=build/webpack.config.js && webpack --config=build/webpack.gf.config.js  && node build/userscript.js
 
 script:
   - yarn build
