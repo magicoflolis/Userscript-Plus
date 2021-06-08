@@ -1,3 +1,11 @@
 language: node_js
 node_js:
   - 'node'
+after_success:
+  - pwd
+  - git commit -a -m "Travis build"
+  - git status
+  - git push "https://${GH_TOKEN}@${GH_REF}" master:master
+env:
+ global:
+   - GH_REF: github.com/magicoflolis/Userscript-Plus.git
