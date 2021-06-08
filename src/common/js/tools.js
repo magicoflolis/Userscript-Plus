@@ -3,7 +3,7 @@
 import timeago from 'timeago.js'
 import fuzzy from 'fuzzy.js'
 import psl from 'psl'
-
+// https://www.userscript.zone/search?q=
 let config = {
   cacheKey: 'jae_fetch_userjs_cache',
   countKey: 'jae_fetch_userjs_count',
@@ -22,6 +22,7 @@ export default {
     evt.initEvent('click', true, true)
     let link = parent.document.createElement('a')
     link.href = uri
+    // link.click()
     link.dispatchEvent(evt)
   },
   dispatchEvent (eventName) {
@@ -46,6 +47,7 @@ export default {
       }
     })
   },
+    // 获取油猴缓存好的脚本数据
   getData (callback) {
     let data = sessionStorage.getItem(config.cacheKey)
     if (data) {

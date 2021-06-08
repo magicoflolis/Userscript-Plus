@@ -261,7 +261,7 @@ body {
     scrollbar-width: thin !important;
 }
 .table-footer {
-    position: fixed;
+  position: fixed;
   bottom: 0 ;
   padding-left: 10px;
   width: 100%;
