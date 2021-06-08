@@ -124,16 +124,6 @@
     export default {
       components: { Info, Indicator, Support },
       mounted: function () {
-            // let host =  location.host.split('.').splice(-2).join('.');
-            /** let host = 'baidu.com'
-            fetch(`https://greasyfork.org/zh-CN/scripts/by-site/${host}.json`)
-                .then((r) => {
-                    r.json().then((json) => {
-                        this.data = json
-                    })
-                })**/
-        // this.data = Tools.getData()
-        // this.data = [];
         this.count = Tools.getCount()
       },
       data: function () {

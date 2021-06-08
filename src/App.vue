@@ -13,11 +13,9 @@ export default {
 </script>
 
 <style>
-body {
+#app {
   color: #ffffff !important;
   background-color: #2e323d !important;
-}
-#app {
   position: fixed;
   bottom: 0;
   right: 0;
