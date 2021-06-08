@@ -64,7 +64,6 @@
       components: { Info, Indicator },
       mounted: function () {
         this.count = Tools.getCount()
-        this.Adult = Tools.getAdult()
       },
       data: function () {
         return {
@@ -179,11 +178,9 @@
       watch: {
         showBody (val) {
           if (val) {
-                    // 最大化
             this.titleIcon = 'chevron-down'
             Tools.dispatchEvent('max')
           } else {
-                    // 最小化
             this.titleIcon = 'chevron-up'
             Tools.dispatchEvent('min')
           }
@@ -241,10 +238,9 @@
 </script>
 
 <style>
-card {
-  width:100%;
-  height:100%;
-  padding:0px
+body {
+  color: #ffffff!important;
+  background-color: #2e323d !important;
 }
 .card-title {
   color: #ffffff !important;
@@ -254,11 +250,10 @@ card {
     top: 8px !important;
 }
 .ivu-card-head {
-  padding: 2.5% 16px !important;
   border-bottom: 1px solid #ffffff !important;
 }
 .ivu-table-body {
-    height: 418px;
+    height: 400px;
     overflow-x: hidden;
     scrollbar-width: thin !important;
 }
