@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/magicoflolis/Userscript-Plus#userscript-for-firefox",
   "scripts": {
-    "build:all": "webpack --config=webpacks/webpack.config.js && webpack --config=webpacks/webpack.gf.config.js  && node webpacks/userscript.mjs",
-    "build:user": "webpack --config=webpacks/webpack.gf.config.js && node webpacks/userscript.mjs"
+    "build:all": "webpack --config=build/webpack.config.js && webpack --config=build/webpack.gf.config.js  && node build/userscript.js",
+    "build:user": "webpack --config=build/webpack.gf.config.js && node build/userscript.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",

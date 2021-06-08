@@ -5,7 +5,8 @@ const { VueLoaderPlugin } = require("vue-loader"),
       ui: "./src/main.js",
     },
     output: {
-      path: __dirname + '../dist',
+      publicPath: '',
+      path: __dirname + '/../dist',
       filename: "[name].gf.js",
     },
     module: {
@@ -37,6 +38,9 @@ const { VueLoaderPlugin } = require("vue-loader"),
       poll: 1000,
       aggregateTimeout: 500,
       ignored: /node_modules/,
+    },
+    performance: {
+      hints: false,
     },
     plugins: [new VueLoaderPlugin()],
   };
