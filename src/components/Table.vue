@@ -118,11 +118,11 @@
 <script>
 	/* global Event */
     import Tools from '../common/js/tools'
-    import Info from './Info.vue'
     import Indicator from './Indicator.vue'
+    import Info from './Info.vue'
     import Support from './Support.vue'
     export default {
-      components: { Info, Indicator, Support },
+      components: { Indicator, Info, Support },
       mounted: function () {
         this.count = Tools.getCount()
       },
@@ -136,7 +136,6 @@
           titleIcon: 'chevron-up',
           count: 0,
           showDonate: false,
-                // 表头
           columns: [{
             type: 'expand',
             width: 50,
@@ -233,7 +232,6 @@
             }
           }
           ],
-                // 表格数据
           originData: [],
           data: []
         }
@@ -241,11 +239,9 @@
       watch: {
         showBody (val) {
           if (val) {
-                    // 最大化
             this.titleIcon = 'chevron-down'
             Tools.dispatchEvent('max')
           } else {
-                    // 最小化
             this.titleIcon = 'chevron-up'
             Tools.dispatchEvent('min')
           }
@@ -304,7 +300,7 @@
 
 <style>
     .card-title {
-      /* color: #ffffff !important; */
+      color: #ffffff !important;
       cursor: pointer;
     }
     .ivu-card-extra {
@@ -322,12 +318,12 @@
       bottom: 0 ;
       padding-left: 10px;
       width: 100%;
-      /* background-color: #ffffff; */
+      background-color: #ffffff;
     }
     .table-footer a {
       color: #ed3f14 !important;
     }
-    /* .ivu-card-head {
+    .ivu-card-head {
       border-bottom: 1px solid #ffffff !important;
     }
     .ivu-tooltip {
@@ -345,5 +341,5 @@
     }
     .ivu-table-row-highlight, .ivu-table-row-hover {
       color: #9cc3e7 !important;
-    } */
+    }
 </style>

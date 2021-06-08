@@ -10,11 +10,8 @@ before_script:
   - git checkout master
 
 script:
-  - npm i --force
-  - cd webextension
-  - npm i --force
-  - cd ..
-  - webpack --config=build/webpack.config.js && webpack --config=build/webpack.gf.config.js  && node build/userscript.js
+  - npm ci
+  - npm build:all
 
 after_success:
   - pwd
