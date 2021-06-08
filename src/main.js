@@ -6,6 +6,8 @@ import 'animate.css'
 import VueI18n from 'vue-i18n'
 import localeMessage from './common/js/locale'
 
+Vue.config.productionTip = false
+
 Vue.locale = (locale) => {
 
 }
@@ -18,7 +20,7 @@ let nlang = navigator.language.toLowerCase()
 if (nlang === 'zh') {
   nlang = 'zh-cn'
 }
-let lang = localeMessage[nlang] ? nlang : 'en-us'
+let lang = (localeMessage[nlang]) ? nlang : 'en-us'
 
 const i18n = new VueI18n({
   locale: lang,
@@ -32,3 +34,12 @@ new Vue({       // eslint-disable-line no-new
   el: appEl,
   render: h => h(App)
 })
+
+
+// Vue.component('Async', resolve => {
+//   console.log("Loading...")
+//   setTimeout(() => {
+//     require(['./Async'], resolve)
+//     console.log("Loaded")
+//   }, 2000)
+// })

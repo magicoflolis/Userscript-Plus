@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import MainTable from "./components/Table.vue";
+const MainTable = () => import("./components/Table.vue");
+// import MainTable from "./components/Table.vue";
 export default {
   components: { MainTable },
   mounted: function() {},
