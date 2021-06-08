@@ -58,6 +58,7 @@
 <script>
     import Tools from '../common/js/tools'
     import Info from './Info.vue'
+    import Indicator from './Indicator.vue'
     export default {
       components: { Info, Indicator },
       mounted: function () {
