@@ -59,8 +59,9 @@
 	/* global Event */
     import Tools from '../common/js/tools'
     import Info from './Info.vue'
+    import Indicator from './Indicator.vue'
     export default {
-      components: { Info },
+      components: { Info, Indicator },
       mounted: function () {
         this.count = Tools.getCount()
         this.Adult = Tools.getAdult()
