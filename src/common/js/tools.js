@@ -3,15 +3,14 @@
 import timeago from 'timeago.js'
 import fuzzy from 'fuzzy.js'
 import psl from 'psl'
-// https://www.userscript.zone/search?q=
+
 let config = {
   cacheKey: 'jae_fetch_userjs_cache',
   countKey: 'jae_fetch_userjs_count',
-  adultKey: 'jae_fetch_userjs_adult',
   host: psl.get(window.location.hostname) || window.location.hostname.split('.').splice(-2).join('.'),
-  api: 'https://greasyfork.org/scripts/by-site/{host}.json',
-  sapi: 'https://sleazyfork.org/scripts/by-site/{host}.json'
+  api: 'https://greasyfork.org/en/scripts/by-site/{host}.json'
 }
+
 export default {
   timeagoFormat (time) {
     let lang = (navigator.language === 'zh-CN') ? 'zh_CN' : 'en_short'
@@ -70,13 +69,7 @@ export default {
 
   getCount () {
     let count = sessionStorage.getItem(config.countKey)
-    let adult = sessionStorage.getItem(config.adultKey)
-    return count >= 50 ? 50 : adult >= 50 ? 50 : count
-  },
-
-  getAdult () {
-    let adult = sessionStorage.getItem(config.adultKey)
-    return adult >= 50 ? 50 : adult
+    return count >= 50 ? 50 : count
   },
 
   searcher (data, query) {
@@ -107,9 +100,10 @@ export default {
   },
 
   isZH () {
-    let nLang;
-    nLang = navigator.language.toLowerCase()
-    (nLang === 'zh') ? nLang = 'zh-cn' : false;
-    return nLang.search('zh-') === 0
+    let nlang = navigator.language.toLowerCase()
+    if (nlang === 'zh') {
+      nlang = 'zh-cn'
+    }
+    return nlang.search('zh-') === 0
   }
 }
