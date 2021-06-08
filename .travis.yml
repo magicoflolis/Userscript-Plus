@@ -1,9 +1,6 @@
 language: node_js
 node_js:
 - node
-before_install:
-- openssl aes-256-cbc -K $encrypted_b8048afd00e8_key -iv $encrypted_b8048afd00e8_iv
-  -in key.txt.enc -out key.txt -d
 after_success:
 - pwd
 - git commit -a -m "Travis build"
