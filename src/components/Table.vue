@@ -304,7 +304,7 @@
 
 <style>
     .card-title {
-      color: #ffffff !important;
+      /* color: #ffffff !important; */
       cursor: pointer;
     }
     .ivu-card-extra {
@@ -322,12 +322,12 @@
       bottom: 0 ;
       padding-left: 10px;
       width: 100%;
-      background-color: #ffffff;
+      /* background-color: #ffffff; */
     }
     .table-footer a {
-      color: #ed3f14;
+      color: #ed3f14 !important;
     }
-    .ivu-card-head {
+    /* .ivu-card-head {
       border-bottom: 1px solid #ffffff !important;
     }
     .ivu-tooltip {
@@ -345,5 +345,5 @@
     }
     .ivu-table-row-highlight, .ivu-table-row-hover {
       color: #9cc3e7 !important;
-    }
+    } */
 </style>
