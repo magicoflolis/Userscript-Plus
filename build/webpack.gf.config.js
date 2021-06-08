@@ -22,7 +22,7 @@ const { VueLoaderPlugin } = require("vue-loader"),
         },
         {
           test: /\.css$/,
-          use: ["vue-style-loader", "css-loader"],
+          use: ["style-loader", "css-loader"],
         },
         {
           test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
