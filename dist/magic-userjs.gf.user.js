@@ -50,8 +50,8 @@
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// @resource     uiJs   https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/ui.js
-// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1623146202452
+// @resource     uiJs   https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/ui.gf.js
+// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1623146379839
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest

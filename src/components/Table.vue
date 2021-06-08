@@ -64,6 +64,7 @@
       components: { Info, Indicator },
       mounted: function () {
         this.count = Tools.getCount()
+        this.Adult = Tools.getAdult()
       },
       data: function () {
         return {
@@ -178,9 +179,11 @@
       watch: {
         showBody (val) {
           if (val) {
+                    // 最大化
             this.titleIcon = 'chevron-down'
             Tools.dispatchEvent('max')
           } else {
+                    // 最小化
             this.titleIcon = 'chevron-up'
             Tools.dispatchEvent('min')
           }
@@ -253,7 +256,7 @@ body {
   border-bottom: 1px solid #ffffff !important;
 }
 .ivu-table-body {
-    height: 400px;
+    height: 418px;
     overflow-x: hidden;
     scrollbar-width: thin !important;
 }
