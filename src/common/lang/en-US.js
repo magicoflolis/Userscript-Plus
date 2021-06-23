@@ -20,6 +20,16 @@ export default {
     feedback: 'Feedback',
     close: 'No longer show',
     scriptInstalling: 'Script installing...',
-    search: 'Search'
+    search: 'Search',
+    issue: 'Report New Issue',
+    home: 'Homepage',
+    og: 'Original Script',
+    noFilteredDataText: 'Placeholder'
+  },
+  i: {
+    table: {
+      noDataText: 'No scripts found',
+      noFilteredDataText: 'PlaceholderA'
+    }
   }
 }

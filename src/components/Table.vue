@@ -1,141 +1,87 @@
 <template>
     <div>
         <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn">
-            <div v-show="showTitle">
-            <Card :padding="0">
+            <div>
+            <Card :bordered="false" style="width:100%;height:100%;padding:0px">
                 <div slot="title" class="card-title">
-                    <Icon :type="titleIcon"></Icon>
-                    <!--<span>发现 <Badge :count="count"></Badge> 个脚本适用于当前页面</span>-->
-                    <span v-if="!showSearchInput" @click="bodySwitch">
+                    <span v-if="!showSearchInput">
                       <i18n path="table.tips" tag="span">
-                          <Badge place="count" :count="count" style="padding:0px 5px;"></Badge>
+                        <template v-slot:count>
+                          <Badge :count="count" style="padding:0px 5px;"></Badge>
+                          </template>
                       </i18n>
-                      <span v-show="showBody">
-                        - Userscript+
-                      </span>
+                      - Userscript+
                     </span>
-                    <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 450px;height: 25px;"></Input>                    
+                    <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 50%"/>
                 </div>
                 <div slot="extra">
-                <span v-show="showBody">
+                <span>
                   <Tooltip :content="$t('table.search')" placement="bottom">
-                        <Button type="dashed" @click="showSearchInput = !showSearchInput">
-                            <Icon type="android-search"></Icon>
+                        <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
+                            <Icon type="android-search" color="white"></Icon>
                         </Button>
                     </Tooltip>
 
-                    <Tooltip :content="$t('table.feedback')" placement="bottom">
-                        <Button type="dashed" @click="open('https://greasyfork.org/zh-CN/scripts/24508/feedback')">
-                            <Icon type="bug"></Icon>
+                    <Tooltip :content="$t('table.issue')" placement="bottom">
+                        <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
+                            <Icon type="bug" color="white"></Icon>
                         </Button>
                     </Tooltip>
 
-                    <Tooltip content="Chrome" placement="bottom">
-                        <Button type="dashed" @click="open('https://github.com/jae-jae/Userscript-Plus/tree/master/crx')">
-                             <Icon type="social-chrome"></Icon>
+                    <Tooltip :content="$t('table.home')" placement="bottom">
+                        <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
+                            <Icon type="home" color="white"></Icon>
                         </Button>
                     </Tooltip>
 
-                    <Tooltip v-if="!isZH" content="GreasyFork" placement="bottom">
-                        <Button type="dashed" @click="open('https://greasyfork.org/zh-CN/scripts/24508')">
-                            <Icon type="fork"></Icon>
+                    <Tooltip :content="$t('table.og')" placement="bottom">
+                        <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
+                            <Icon type="fork" color="white"></Icon>
                         </Button>
                     </Tooltip>
 
-                    <Tooltip content="GitHub" placement="bottom">
-                        <Button type="dashed" @click="open('https://github.com/jae-jae/Userscript-Plus')">
-                            <Icon type="social-github"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip :content="$t('table.donate')" placement="bottom">
-                         <Button type="dashed" @click="showDonate = true">
-                            <Icon type="card"></Icon>
-                        </Button>
-                    </Tooltip>
                 </span>
-
-                    <Tooltip :content="$t('table.close')" placement="left">
-                        <Button type="dashed" @click="close">
-                            <Icon type="close-round"></Icon>
-                        </Button>
-                    </Tooltip>
 
                 </div>
                 <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn" leave-active-class="animated bounceOutRight">
-                    <div v-show="showBody">
+                    <div>
                         <Table highlight-row :columns="columns" :data="data"></Table>
                         <div class="table-footer">
-                            <Support />
                         </div>
                     </div>
                 </transition>
             </Card>
-            <Modal v-model="showDonate" width="400">
-
-                <Tabs value="wechat">
-
-                    <Tab-Pane :label="$t('table.wechat')" name="wechat">
-                        <div style="text-align: center;">
-                            <img width="200px" src="https://ww1.sinaimg.cn/large/7de3675bly1fizyy2pivwj2074074js6.jpg">
-                        </div>
-                    </Tab-Pane>
-
-                    <Tab-Pane :label="$t('table.alipay')" name="alipay">
-                        <div style="text-align: center;">
-                            <img width="200px" src="https://ww1.sinaimg.cn/large/7de3675bly1fizyyh7m7yj20ci0ciwfl.jpg">
-                        </div>
-                    </Tab-Pane>
-
-                    <Tab-Pane :label="$t('table.paypal')" name="paypal">
-                        <div style="text-align: center;">
-                            <a href="https://paypal.me/jaepay/10" target="_blank">
-                                <img src="https://ww1.sinaimg.cn/large/7de3675bly1fizzsw92owj207s03s748.jpg">
-                            </a>
-                        </div>
-                    </Tab-Pane>
-
-                </Tabs>
-
-                <div slot="footer">
-                    <Button type="info" size="large" long @click="showDonate=false">{{$t('table.closeDonate')}}</Button>
-                </div>
-
-            </Modal>
         </div>
         </transition>
 
-        <div v-show="!showTitle" @mouseover='showTitle = true'>
-
-            <Indicator :count="count"></Indicator>
-
-        </div>
     </div>
 
 
 </template>
-
 <script>
-	/* global Event */
     import Tools from '../common/js/tools'
-    import Indicator from './Indicator.vue'
     import Info from './Info.vue'
-    import Support from './Support.vue'
+    import Indicator from './Indicator.vue'
     export default {
-      components: { Indicator, Info, Support },
+      components: { Info, Indicator },
       mounted: function () {
-        this.count = Tools.getCount()
+        this.$Spin.show()
+        Tools.getData((json) => {
+          this.data = json
+          this.originData = json
+          this.count = this.data.length
+          this.$Spin.hide()
+          this.showBody = !this.showBody
+        })
       },
       data: function () {
         return {
           isZH: Tools.isZH(),
           showSearchInput: false,
           searchInput: '',
-          showTitle: false,
           showBody: false,
           titleIcon: 'chevron-up',
           count: 0,
-          showDonate: false,
           columns: [{
             type: 'expand',
             width: 50,
@@ -199,6 +145,7 @@
           },
           {
             title: this.$t('table.updatedTime'),
+            width: 105,
             key: 'code_updated_at',
             render: (h, params) => {
               return h('span', Tools.timeagoFormat(params.row.code_updated_at))
@@ -222,9 +169,14 @@
                     marginRight: '5px'
                   },
                   on: {
-                    click: (event) => {
+                    click: () => {
                       this.$Message.info(this.$t('table.scriptInstalling'))
-                      Tools.installUserJs(params.row.code_url)
+                      // Tools.installUserJs(params.row.code_url)
+                      let evt = parent.document.createEvent('MouseEvents')
+                      evt.initEvent('click', true, true)
+                      let link = parent.document.createElement('a')
+                      link.href = params.row.code_url
+                      link.dispatchEvent(evt)
                     }
                   }
                 }, this.$t('table.install'))
@@ -232,21 +184,11 @@
             }
           }
           ],
-          originData: [],
-          data: []
+          originData: [ ],
+          data: [ ]
         }
       },
       watch: {
-        showBody (val) {
-          if (val) {
-            this.titleIcon = 'chevron-down'
-            Tools.dispatchEvent('max')
-          } else {
-            this.titleIcon = 'chevron-up'
-            Tools.dispatchEvent('min')
-          }
-          window.dispatchEvent(new Event('resize'))
-        },
         searchInput: function (val) {
           if (val) {
             val = val.toLowerCase()
@@ -257,39 +199,13 @@
         }
       },
       methods: {
-        close () {
-          Tools.dispatchEvent('close')
-        },
-
         getData (callback) {
-          let host = 'baidu.com'
-          window.fetch(`https://greasyfork.org/zh-CN/scripts/by-site/${host}.json`)
-              .then((r) => {
-                r.json().then((json) => {
-                  callback(json)
-                })
-              })
-        },
-
-        bodySwitch () {
-          if (this.data.length === 0 && this.showBody === false) {
-            this.$Spin.show()
-            Tools.dispatchEvent('loading')
-            Tools.getData((json) => {
-              this.originData = json
-              this.data = json
-              this.$Spin.hide()
-              this.showBody = !this.showBody
-              setTimeout(() => {
-                this.showTitle = this.showBody
-              }, 500)
+          let host = 'pornhub.com'
+          window.fetch(`https://greasyfork.org/scripts/by-site/${host}.json`).then((r) => {
+            r.json().then((json) => {
+              callback(json)
             })
-          } else {
-            this.showBody = !this.showBody
-            setTimeout(() => {
-              this.showTitle = this.showBody
-            }, 500)
-          }
+          })
         },
         open (url) {
           window.open(url)
@@ -299,47 +215,46 @@
 </script>
 
 <style>
-    .card-title {
-      color: #ffffff !important;
-      cursor: pointer;
-    }
-    .ivu-card-extra {
-        top: 8px;
-    }
-
-    .ivu-table-body {
-        height: 400px;
-        overflow-x: hidden;
-        scrollbar-width: thin !important;
-    }
-
-    .table-footer {
-      position: fixed;
-      bottom: 0 ;
-      padding-left: 10px;
-      width: 100%;
-      background-color: #ffffff;
-    }
-    .table-footer a {
-      color: #ed3f14 !important;
-    }
-    .ivu-card-head {
-      border-bottom: 1px solid #ffffff !important;
-    }
-    .ivu-tooltip {
-      border-color: #ffffff !important;
-      border-radius: 4px !important;
-      background-color: #ffffff !important;
-    }
-    .ivu-table {
-      color: #ffffff !important;
-      background-color: #2e323d !important;
-    }
-    .ivu-card, .ivu-table td, .ivu-table th {
-      background-color: #2e323d !important;
-      border-color: #ffffff !important;
-    }
-    .ivu-table-row-highlight, .ivu-table-row-hover {
-      color: #9cc3e7 !important;
-    }
+.card-title {
+  color: #ffffff !important;
+  cursor: pointer;
+}
+.ivu-card-extra {
+  top: 8px !important;
+}
+.ivu-card-head {
+  padding: 2.5% 16px !important;
+  border-bottom: 1px solid #ffffff !important;
+}
+.ivu-table-body {
+  height: 418px;
+  overflow-x: hidden;
+  scrollbar-width: thin !important;
+}
+.table-footer {
+  position: fixed;
+  bottom: 0 ;
+  padding-left: 10px;
+  width: 100%;
+  background-color: #ffffff;
+}
+.table-footer a {
+  color: #ed3f14;
+}
+.ivu-tooltip {
+  border-color: #ffffff !important;
+  border-radius: 4px !important;
+  background-color: #ffffff !important;
+}
+.ivu-table {
+  color: #ffffff !important;
+  background-color: #2e323d !important;
+}
+.ivu-card, .ivu-table td, .ivu-table th {
+  background-color: #2e323d !important;
+  border-color: #ffffff !important;
+}
+.ivu-table-row-highlight, .ivu-table-row-hover {
+  color: #9cc3e7 !important;
+}
 </style>

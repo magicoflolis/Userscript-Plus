@@ -20,6 +20,16 @@ export default {
     feedback: 'Обратная связь',
     close: 'Больше не показывать',
     scriptInstalling: 'Скрипт устанавливается...',
-    search: 'Поиск'
+    search: 'Поиск',
+    issue: 'Сообщить о новой проблеме',
+    home: 'Homepage',
+    og: 'Original Script',
+    noFilteredDataText: 'Placeholder'
+  },
+  i: {
+    table: {
+      noDataText: 'Скрипты не найдены',
+      noFilteredDataText: 'Placeholder'
+    }
   }
 }

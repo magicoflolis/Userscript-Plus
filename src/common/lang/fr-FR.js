@@ -20,6 +20,16 @@ export default {
     feedback: 'Avis',
     close: 'Ne plus montrer',
     scriptInstalling: 'Installation du script…',
-    search: 'Chercher'
+    search: 'Chercher',
+    issue: 'Signaler un nouveau numéro',
+    home: 'Homepage',
+    og: 'Original Script',
+    noFilteredDataText: 'Placeholder'
+  },
+  i: {
+    table: {
+      noDataText: 'Aucun script trouvé',
+      noFilteredDataText: 'Placeholder'
+    }
   }
 }

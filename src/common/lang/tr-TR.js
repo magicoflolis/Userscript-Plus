@@ -20,6 +20,16 @@ export default {
     feedback: 'Geri Bildirim',
     close: 'Tekrar Gösterme',
     scriptInstalling: 'Betik yükleniyor...',
-    search: 'Ara'
+    search: 'Ara',
+    issue: 'Yeni Sorunu Bildir',
+    home: 'Homepage',
+    og: 'Original Script',
+    noFilteredDataText: 'Placeholder'
+  },
+  i: {
+    table: {
+      noDataText: 'Komut dosyası bulunamadı',
+      noFilteredDataText: 'Placeholder'
+    }
   }
 }

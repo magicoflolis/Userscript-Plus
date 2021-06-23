@@ -20,6 +20,16 @@ export default {
     feedback: '反馈',
     close: '该网站本次会话的所有页面都不再显示',
     scriptInstalling: '脚本安装中...',
-    search: '搜索'
+    search: '搜索',
+    issue: '报告新问题',
+    home: 'Homepage',
+    og: 'Original Script',
+    noFilteredDataText: 'Placeholder'
+  },
+  i: {
+    table: {
+      noDataText: '未找到脚本',
+      noFilteredDataText: 'Placeholder'
+    }
   }
 }

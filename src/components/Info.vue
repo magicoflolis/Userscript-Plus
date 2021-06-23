@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Row style="margin-bottom: 16px;">
+        <Row>
             <Col span="8">
             <span class="expand-key">{{$t('table.version')}}：</span>
             <span class="expand-value">{{ row.version }}</span>

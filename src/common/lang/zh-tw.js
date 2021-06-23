@@ -20,6 +20,16 @@ export default {
     feedback: '反饋',
     close: '該網站本次會話的所有頁面都不再顯示',
     scriptInstalling: '腳本安裝中...',
-    search: '搜索'
+    search: '搜索',
+    issue: '報告新問題',
+    home: 'Homepage',
+    og: 'Original Script',
+    noFilteredDataText: 'Placeholder'
+  },
+  i: {
+    table: {
+      noDataText: '未找到腳本',
+      noFilteredDataText: 'Placeholder'
+    }
   }
 }

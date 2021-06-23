@@ -1,8 +1,22 @@
-/tmp/
-node_modules
+# Dependency directories
+yarn.lock
+node_modules/
+jspm_packages/
+
+# dotenv environment variables file
+.env
+
+.vscode
+.vs/
+
+*.bak
+*.code-workspace
+*.web-extension-id
+web-ext-artifacts
+web-ext
+build
+/build/
 Notes
 /Notes/
-web-ext
-.vscode/
-*.web-extension-id
-*.code-workspace
+chrome
+/chrome/

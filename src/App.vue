@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <MainTable></MainTable>
-  </div>
+    <div id="app">
+      <MainTable></MainTable>
+    </div>
 </template>
 
 <script>
@@ -13,12 +13,16 @@ export default {
 </script>
 
 <style>
-#app {
-  color: #ffffff !important;
+body {
+  color: #ffffff!important;
   background-color: #2e323d !important;
+  width: 800px !important;
+  height: 550px;
+  top:0px;
+  left:0px;
+}
+#app {
   position: fixed;
-  bottom: 0;
-  right: 0;
   width: 100%;
 }
 </style>

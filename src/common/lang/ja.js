@@ -20,6 +20,16 @@ export default {
     feedback: 'フィードバック',
     close: '次回から表示しない',
     scriptInstalling: 'スクリプトをインストール中...',
-    search: '検索'
+    search: '検索',
+    issue: '新しい問題を報告する',
+    home: 'Homepage',
+    og: 'Original Script',
+    noFilteredDataText: 'Placeholder'
+  },
+  i: {
+    table: {
+      noDataText: 'スクリプトが見つかりません',
+      noFilteredDataText: 'Placeholder'
+    }
   }
 }
