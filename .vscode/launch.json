@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "compounds": [
+        {
+          "name": "Attach/Launch",
+          "configurations": ["Attach:Firefox", "SF"]
+        }
+      ],
+    "configurations": [
+        {
+            "name": "Attach:Firefox",
+            "type": "firefox",
+            "request": "attach",
+        },
+        {
+          "name": "SF",
+          "type": "firefox",
+          "request": "launch",
+          "reAttach": true,
+          "reloadOnAttach": true,
+          "keepProfileChanges": false,
+          "clearConsoleOnReload": true,
+          "url": "https://www.google.com/",
+          "addonPath": "${workspaceFolder}\\dist\\extension"
+      }
+    ]
+}

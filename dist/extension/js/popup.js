@@ -168,10 +168,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -281,13 +277,8 @@ __webpack_require__.r(__webpack_exports__);
             },
             on: {
               click: () => {
-                this.$Message.info(this.$t('table.scriptInstalling')); // Tools.installUserJs(params.row.code_url)
-
-                let evt = parent.document.createEvent('MouseEvents');
-                evt.initEvent('click', true, true);
-                let link = parent.document.createElement('a');
-                link.href = params.row.code_url;
-                link.dispatchEvent(evt);
+                this.$Message.info(this.$t('table.scriptInstalling'));
+                _common_js_tools__WEBPACK_IMPORTED_MODULE_0__.default.installUserJs(params.row.code_url);
               }
             }
           }, this.$t('table.install'))]);
@@ -299,12 +290,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     searchInput: function (val) {
-      if (val) {
-        val = val.toLowerCase();
-        this.data = _common_js_tools__WEBPACK_IMPORTED_MODULE_0__.default.searcher(this.originData, val);
-      } else {
-        this.data = this.originData;
-      }
+      val ? (val = val.toLowerCase(), this.data = _common_js_tools__WEBPACK_IMPORTED_MODULE_0__.default.searcher(this.originData, val)) : this.data = this.originData;
     }
   },
   methods: {
@@ -369,17 +355,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var fuzzy_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(fuzzy_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var timeago_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! timeago.js */ "../node_modules/timeago.js/dist/timeago.min.js");
 /* harmony import */ var timeago_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(timeago_js__WEBPACK_IMPORTED_MODULE_1__);
-/* global chrome, psl, fetch */
 
 
 let config = {
-  api: 'https://greasyfork.org/scripts/by-site/{host}.json',
-  sapi: 'https://sleazyfork.org/scripts/by-site/{host}.json'
+  api: "https://greasyfork.org/scripts/by-site/{host}.json",
+  sapi: "https://sleazyfork.org/scripts/by-site/{host}.json"
 },
-    brws = typeof browser == "undefined" ? chrome : browser;
+    brws = typeof browser === "undefined" ? chrome : browser;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   timeagoFormat(time) {
-    let lang = navigator.language === 'zh-CN' ? 'zh_CN' : 'en_short';
+    let lang = navigator.language === "zh-CN" ? "zh_CN" : "en_short";
     return timeago_js__WEBPACK_IMPORTED_MODULE_1___default()(null, lang).format(time);
   },
 
@@ -397,45 +382,57 @@ let config = {
 
   /* Nano Templates - https://github.com/trix/nano */
   nano(template, data) {
-    return template.replace(/\{([\w.]*)\}/g, function (str, key) {
-      let keys = key.split('.');
-      let v = data[keys.shift()];
+    return template.replace(/\{([\w.]*)\}/g, (str, key) => {
+      let keys = key.split("."),
+          v = data[keys.shift()];
 
       for (let i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
 
-      return typeof v !== 'undefined' && v !== null ? v : '';
+      return typeof v !== "undefined" && v !== null ? v : "";
     });
   },
 
   get currentTab() {
-    return new Promise(function (resolve, reject) {
-      let queryInfo = {
-        active: true,
-        currentWindow: true
-      };
-      brws.tabs.query(queryInfo, tabs => {
-        let tab = tabs[0];
-        resolve(tab);
-      });
+    return new Promise((resolve, reject) => {
+      try {
+        let queryInfo = {
+          active: true,
+          currentWindow: true
+        };
+        brws.tabs.query(queryInfo, tabs => {
+          let tab = tabs[0];
+          resolve(tab);
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
   },
 
   get sessionStorage() {
     return new Promise((resolve, reject) => {
-      brws.runtime.getBackgroundPage(bg => {
-        resolve(bg.sessionStorage);
-      });
+      try {
+        brws.runtime.getBackgroundPage(bg => {
+          resolve(bg.sessionStorage);
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
   },
 
   get host() {
     return new Promise((resolve, reject) => {
-      this.currentTab.then(tab => {
-        let a = document.createElement('a');
-        a.href = tab.url;
-        let mainHost = psl.get(a.hostname) || a.hostname.split('.').splice(-2).join('.');
-        resolve(mainHost);
-      });
+      try {
+        this.currentTab.then(tab => {
+          let a = document.createElement("a");
+          a.href = tab.url;
+          let mainHost = psl.get(a.hostname) || a.hostname.split(".").splice(-2).join(".");
+          resolve(mainHost);
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
   },
 
@@ -443,38 +440,29 @@ let config = {
     this.sessionStorage.then(bgSessionStorage => {
       this.host.then(host => {
         let data = bgSessionStorage.getItem(host);
-
-        if (data) {
-          data = JSON.parse(data);
-          callback(data);
-        } else {
-          let api = this.nano(config.api, {
-            host: host
-          }),
-              sapi = this.nano(config.sapi, {
-            host: host
-          });
-          fetch(sapi).then(r => {
-            r.json().then(json => {
-              json = json.map(item => {
-                item.user = item.users[0];
-                return item;
-              });
-              bgSessionStorage.setItem(host, JSON.stringify(json));
-              callback(json);
+        data ? (data = JSON.parse(data), callback(data)) : (fetch(this.nano(config.api, {
+          host: host
+        })).then(r => {
+          r.json().then(json => {
+            json = json.map(item => {
+              item.user = item.users[0];
+              return item;
             });
+            bgSessionStorage.setItem(host, JSON.stringify(json));
+            callback(json);
           });
-          fetch(api).then(r => {
-            r.json().then(json => {
-              json = json.map(item => {
-                item.user = item.users[0];
-                return item;
-              });
-              bgSessionStorage.setItem(host, JSON.stringify(json));
-              callback(json);
+        }), fetch(this.nano(config.sapi, {
+          host: host
+        })).then(r => {
+          r.json().then(json => {
+            json = json.map(item => {
+              item.user = item.users[0];
+              return item;
             });
+            bgSessionStorage.setItem(host, JSON.stringify(json));
+            callback(json);
           });
-        }
+        }));
       });
     });
   },
@@ -487,23 +475,14 @@ let config = {
       let max = null;
       let frt = null;
 
-      for (let key of ['name', 'description', 'user']) {
-        if (key === 'user') {
-          frt = fuzzy_js__WEBPACK_IMPORTED_MODULE_0___default()(item['user']['name'], query);
-        } else {
-          frt = fuzzy_js__WEBPACK_IMPORTED_MODULE_0___default()(item[key], query);
-        }
-
-        if (max === null) {
-          max = frt;
-        } else if (max.score < frt.score) {
-          max = frt;
-        }
+      for (let key of ["name", "description", "user"]) {
+        key === "user" ? frt = fuzzy_js__WEBPACK_IMPORTED_MODULE_0___default()(item["user"]["name"], query) : frt = fuzzy_js__WEBPACK_IMPORTED_MODULE_0___default()(item[key], query);
+        max === null ? max = frt : max.score < frt.score ? max = frt : false;
       }
 
       rt.push({
         item,
-        'score': max.score
+        score: max.score
       });
     }
 
@@ -513,12 +492,8 @@ let config = {
 
   isZH() {
     let nlang = navigator.language.toLowerCase();
-
-    if (nlang === 'zh') {
-      nlang = 'zh-cn';
-    }
-
-    return nlang.search('zh-') === 0;
+    nlang === "zh" ? nlang = "zh-cn" : false;
+    return nlang.search("zh-") === 0;
   }
 
 });
@@ -561,13 +536,12 @@ __webpack_require__.r(__webpack_exports__);
     search: 'Search',
     issue: 'Report New Issue',
     home: 'Homepage',
-    og: 'Original Script',
-    noFilteredDataText: 'Placeholder'
+    og: 'Original Script'
   },
   i: {
     table: {
       noDataText: 'No scripts found',
-      noFilteredDataText: 'PlaceholderA'
+      noFilteredDataText: 'Error, no User Script found'
     }
   }
 });
@@ -1012,7 +986,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.card-title {\r\n  color: #ffffff !important;\r\n  cursor: pointer;\n}\n.ivu-card-extra {\r\n  top: 8px !important;\n}\n.ivu-card-head {\r\n  padding: 2.5% 16px !important;\r\n  border-bottom: 1px solid #ffffff !important;\n}\n.ivu-table-body {\r\n  height: 418px;\r\n  overflow-x: hidden;\r\n  scrollbar-width: thin !important;\n}\n.table-footer {\r\n  position: fixed;\r\n  bottom: 0 ;\r\n  padding-left: 10px;\r\n  width: 100%;\r\n  background-color: #ffffff;\n}\n.table-footer a {\r\n  color: #ed3f14;\n}\n.ivu-tooltip {\r\n  border-color: #ffffff !important;\r\n  border-radius: 4px !important;\r\n  background-color: #ffffff !important;\n}\n.ivu-table {\r\n  color: #ffffff !important;\r\n  background-color: #2e323d !important;\n}\n.ivu-card, .ivu-table td, .ivu-table th {\r\n  background-color: #2e323d !important;\r\n  border-color: #ffffff !important;\n}\n.ivu-table-row-highlight, .ivu-table-row-hover {\r\n  color: #9cc3e7 !important;\n}\r\n", "",{"version":3,"sources":["webpack://./../components/Table.vue"],"names":[],"mappings":";AAyNA;EACA,yBAAA;EACA,eAAA;AACA;AACA;EACA,mBAAA;AACA;AACA;EACA,6BAAA;EACA,2CAAA;AACA;AACA;EACA,aAAA;EACA,kBAAA;EACA,gCAAA;AACA;AACA;EACA,eAAA;EACA,UAAA;EACA,kBAAA;EACA,WAAA;EACA,yBAAA;AACA;AACA;EACA,cAAA;AACA;AACA;EACA,gCAAA;EACA,6BAAA;EACA,oCAAA;AACA;AACA;EACA,yBAAA;EACA,oCAAA;AACA;AACA;EACA,oCAAA;EACA,gCAAA;AACA;AACA;EACA,yBAAA;AACA","sourcesContent":["<template>\r\n    <div>\r\n        <transition name=\"custom-classes-transition\" enter-active-class=\"animated lightSpeedIn\">\r\n            <div>\r\n            <Card :bordered=\"false\" style=\"width:100%;height:100%;padding:0px\">\r\n                <div slot=\"title\" class=\"card-title\">\r\n                    <span v-if=\"!showSearchInput\">\r\n                      <i18n path=\"table.tips\" tag=\"span\">\r\n                        <template v-slot:count>\r\n                          <Badge :count=\"count\" style=\"padding:0px 5px;\"></Badge>\r\n                          </template>\r\n                      </i18n>\r\n                      - Userscript+\r\n                    </span>\r\n                    <Input v-else v-model=\"searchInput\"  icon=\"android-search\" placeholder=\"Enter title、description、author...\" style=\"width: 50%\"/>\r\n                </div>\r\n                <div slot=\"extra\">\r\n                <span>\r\n                  <Tooltip :content=\"$t('table.search')\" placement=\"bottom\">\r\n                        <Button type=\"default\" @click=\"showSearchInput = !showSearchInput\" style=\"background-color: #2e323d\">\r\n                            <Icon type=\"android-search\" color=\"white\"></Icon>\r\n                        </Button>\r\n                    </Tooltip>\r\n\r\n                    <Tooltip :content=\"$t('table.issue')\" placement=\"bottom\">\r\n                        <Button type=\"default\" @click=\"open('https://github.com/magicoflolis/Userscript-Plus/issues/new')\" style=\"background-color: #2e323d\">\r\n                            <Icon type=\"bug\" color=\"white\"></Icon>\r\n                        </Button>\r\n                    </Tooltip>\r\n\r\n                    <Tooltip :content=\"$t('table.home')\" placement=\"bottom\">\r\n                        <Button type=\"default\" @click=\"open('https://github.com/magicoflolis/Userscript-Plus')\" style=\"background-color: #2e323d\">\r\n                            <Icon type=\"home\" color=\"white\"></Icon>\r\n                        </Button>\r\n                    </Tooltip>\r\n\r\n                    <Tooltip @click=\"darkTheme = !darkTheme\" :content=\"$t('table.og')\" placement=\"bottom\">\r\n                        <Button type=\"default\" @click=\"open('https://github.com/jae-jae/Userscript-Plus#readme')\" style=\"background-color: #2e323d\">\r\n                            <Icon type=\"fork\" color=\"white\"></Icon>\r\n                        </Button>\r\n                    </Tooltip>\r\n\r\n                </span>\r\n\r\n                </div>\r\n                <transition name=\"custom-classes-transition\" enter-active-class=\"animated lightSpeedIn\" leave-active-class=\"animated bounceOutRight\">\r\n                    <div>\r\n                        <Table highlight-row :columns=\"columns\" :data=\"data\"></Table>\r\n                        <div class=\"table-footer\">\r\n                        </div>\r\n                    </div>\r\n                </transition>\r\n            </Card>\r\n        </div>\r\n        </transition>\r\n\r\n    </div>\r\n\r\n\r\n</template>\r\n<script>\r\n    import Tools from '../common/js/tools'\r\n    import Info from './Info.vue'\r\n    import Indicator from './Indicator.vue'\r\n    export default {\r\n      components: { Info, Indicator },\r\n      mounted: function () {\r\n        this.$Spin.show()\r\n        Tools.getData((json) => {\r\n          this.data = json\r\n          this.originData = json\r\n          this.count = this.data.length\r\n          this.$Spin.hide()\r\n          this.showBody = !this.showBody\r\n        })\r\n      },\r\n      data: function () {\r\n        return {\r\n          isZH: Tools.isZH(),\r\n          showSearchInput: false,\r\n          searchInput: '',\r\n          showBody: false,\r\n          titleIcon: 'chevron-up',\r\n          count: 0,\r\n          columns: [{\r\n            type: 'expand',\r\n            width: 50,\r\n            render: (h, params) => {\r\n              return h(Info, {\r\n                props: {\r\n                  row: params.row\r\n                }\r\n              })\r\n            }\r\n          },\r\n          {\r\n            type: 'index',\r\n            width: 50,\r\n            align: 'center'\r\n          },\r\n          {\r\n            title: this.$t('table.title'),\r\n            key: 'name',\r\n            width: '35%',\r\n            ellipsis: false,\r\n            render: (h, params) => {\r\n              return h('span', {\r\n                attrs: {\r\n                  title: params.row.description\r\n                },\r\n                style: {\r\n                  cursor: 'pointer'\r\n                },\r\n                on: {\r\n                  click: _ => {\r\n                    window.open(params.row.url)\r\n                  }\r\n                }\r\n              }, params.row.name)\r\n            }\r\n          },\r\n          {\r\n            title: this.$t('table.author'),\r\n            render: (h, params) => {\r\n              return h('span', {\r\n                attrs: {\r\n                  title: this.$t('table.authorTips', {name: params.row.user.name})\r\n                },\r\n                style: {\r\n                  cursor: 'pointer'\r\n                },\r\n                on: {\r\n                  click: _ => {\r\n                    window.open(params.row.user.url)\r\n                  }\r\n                }\r\n              }, params.row.user.name)\r\n            }\r\n          },\r\n          {\r\n            title: this.$t('table.dailyInstalls'),\r\n            width: 105,\r\n            key: 'daily_installs',\r\n            sortable: true\r\n          },\r\n          {\r\n            title: this.$t('table.updatedTime'),\r\n            width: 105,\r\n            key: 'code_updated_at',\r\n            render: (h, params) => {\r\n              return h('span', Tools.timeagoFormat(params.row.code_updated_at))\r\n            },\r\n            sortable: true\r\n          },\r\n          {\r\n            title: this.$t('table.action'),\r\n            width: 100,\r\n            key: 'code_url',\r\n            align: 'center',\r\n            render: (h, params) => {\r\n              return h('div', [\r\n                h('Button', {\r\n                  props: {\r\n                    type: 'primary',\r\n                    size: 'small',\r\n                    icon: 'ios-download-outline'\r\n                  },\r\n                  style: {\r\n                    marginRight: '5px'\r\n                  },\r\n                  on: {\r\n                    click: () => {\r\n                      this.$Message.info(this.$t('table.scriptInstalling'))\r\n                      // Tools.installUserJs(params.row.code_url)\r\n                      let evt = parent.document.createEvent('MouseEvents')\r\n                      evt.initEvent('click', true, true)\r\n                      let link = parent.document.createElement('a')\r\n                      link.href = params.row.code_url\r\n                      link.dispatchEvent(evt)\r\n                    }\r\n                  }\r\n                }, this.$t('table.install'))\r\n              ])\r\n            }\r\n          }\r\n          ],\r\n          originData: [ ],\r\n          data: [ ]\r\n        }\r\n      },\r\n      watch: {\r\n        searchInput: function (val) {\r\n          if (val) {\r\n            val = val.toLowerCase()\r\n            this.data = Tools.searcher(this.originData, val)\r\n          } else {\r\n            this.data = this.originData\r\n          }\r\n        }\r\n      },\r\n      methods: {\r\n        getData (callback) {\r\n          let host = 'pornhub.com'\r\n          window.fetch(`https://greasyfork.org/scripts/by-site/${host}.json`).then((r) => {\r\n            r.json().then((json) => {\r\n              callback(json)\r\n            })\r\n          })\r\n        },\r\n        open (url) {\r\n          window.open(url)\r\n        }\r\n      }\r\n    }\r\n</script>\r\n\r\n<style>\r\n.card-title {\r\n  color: #ffffff !important;\r\n  cursor: pointer;\r\n}\r\n.ivu-card-extra {\r\n  top: 8px !important;\r\n}\r\n.ivu-card-head {\r\n  padding: 2.5% 16px !important;\r\n  border-bottom: 1px solid #ffffff !important;\r\n}\r\n.ivu-table-body {\r\n  height: 418px;\r\n  overflow-x: hidden;\r\n  scrollbar-width: thin !important;\r\n}\r\n.table-footer {\r\n  position: fixed;\r\n  bottom: 0 ;\r\n  padding-left: 10px;\r\n  width: 100%;\r\n  background-color: #ffffff;\r\n}\r\n.table-footer a {\r\n  color: #ed3f14;\r\n}\r\n.ivu-tooltip {\r\n  border-color: #ffffff !important;\r\n  border-radius: 4px !important;\r\n  background-color: #ffffff !important;\r\n}\r\n.ivu-table {\r\n  color: #ffffff !important;\r\n  background-color: #2e323d !important;\r\n}\r\n.ivu-card, .ivu-table td, .ivu-table th {\r\n  background-color: #2e323d !important;\r\n  border-color: #ffffff !important;\r\n}\r\n.ivu-table-row-highlight, .ivu-table-row-hover {\r\n  color: #9cc3e7 !important;\r\n}\r\n</style>"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n*:not(select) {\r\n  scrollbar-color: #ffffff #2e323d;\r\n  scrollbar-width: thin;\n}\r\n/* Chrome and derivatives*/\n::-webkit-scrollbar {\r\n  max-width: 8px !important;\r\n  max-height: 8px !important;\n}\n::-webkit-scrollbar-thumb {\r\n  background: #ffffff;\n}\n::-webkit-scrollbar-track {\r\n  background-color: #2e323d;\n}\n.card-title {\r\n  color: #ffffff !important;\r\n  cursor: pointer;\n}\n.ivu-card-extra {\r\n  top: 8px !important;\n}\n.ivu-card-head {\r\n  padding: 2.5% 16px !important;\r\n  border-bottom: 1px solid #ffffff !important;\n}\n.ivu-table-body {\r\n  height: 418px;\r\n  overflow-x: hidden;\r\n  scrollbar-width: thin !important;\n}\n.table-footer {\r\n  position: fixed;\r\n  bottom: 0 ;\r\n  padding-left: 10px;\r\n  width: 100%;\r\n  background-color: #ffffff;\n}\n.table-footer a {\r\n  color: #ed3f14;\n}\n.ivu-tooltip {\r\n  border-color: #ffffff !important;\r\n  border-radius: 4px !important;\r\n  background-color: #ffffff !important;\n}\n.ivu-table {\r\n  color: #ffffff !important;\r\n  background-color: #2e323d !important;\n}\n.ivu-card, .ivu-table td, .ivu-table th {\r\n  background-color: #2e323d !important;\r\n  border-color: #ffffff !important;\n}\n.ivu-table-row-highlight, .ivu-table-row-hover {\r\n  color: #9cc3e7 !important;\n}\r\n", "",{"version":3,"sources":["webpack://./../components/Table.vue"],"names":[],"mappings":";AA2MA;EACA,gCAAA;EACA,qBAAA;AACA;AACA,0BAAA;AACA;EACA,yBAAA;EACA,0BAAA;AACA;AACA;EACA,mBAAA;AACA;AACA;EACA,yBAAA;AACA;AACA;EACA,yBAAA;EACA,eAAA;AACA;AACA;EACA,mBAAA;AACA;AACA;EACA,6BAAA;EACA,2CAAA;AACA;AACA;EACA,aAAA;EACA,kBAAA;EACA,gCAAA;AACA;AACA;EACA,eAAA;EACA,UAAA;EACA,kBAAA;EACA,WAAA;EACA,yBAAA;AACA;AACA;EACA,cAAA;AACA;AACA;EACA,gCAAA;EACA,6BAAA;EACA,oCAAA;AACA;AACA;EACA,yBAAA;EACA,oCAAA;AACA;AACA;EACA,oCAAA;EACA,gCAAA;AACA;AACA;EACA,yBAAA;AACA","sourcesContent":["<template>\r\n    <div>\r\n        <transition name=\"custom-classes-transition\" enter-active-class=\"animated lightSpeedIn\">\r\n            <div>\r\n            <Card :bordered=\"false\" style=\"width:100%;height:100%;padding:0px\">\r\n                <div slot=\"title\" class=\"card-title\">\r\n                    <span v-if=\"!showSearchInput\">\r\n                      <i18n path=\"table.tips\" tag=\"span\">\r\n                        <template v-slot:count>\r\n                          <Badge :count=\"count\" style=\"padding:0px 5px;\"></Badge>\r\n                          </template>\r\n                      </i18n>\r\n                      - Userscript+\r\n                    </span>\r\n                    <Input v-else v-model=\"searchInput\"  icon=\"android-search\" placeholder=\"Enter title、description、author...\" style=\"width: 50%\"/>\r\n                </div>\r\n                <div slot=\"extra\">\r\n\r\n                <span>\r\n                  <Tooltip :content=\"$t('table.search')\" placement=\"bottom\">\r\n                      <Button type=\"default\" @click=\"showSearchInput = !showSearchInput\" style=\"background-color: #2e323d\">\r\n                          <Icon type=\"android-search\" color=\"white\"></Icon>\r\n                      </Button>\r\n                  </Tooltip>\r\n                  <Tooltip :content=\"$t('table.issue')\" placement=\"bottom\">\r\n                      <Button type=\"default\" @click=\"open('https://github.com/magicoflolis/Userscript-Plus/issues/new')\" style=\"background-color: #2e323d\">\r\n                          <Icon type=\"bug\" color=\"white\"></Icon>\r\n                      </Button>\r\n                  </Tooltip>\r\n                  <Tooltip :content=\"$t('table.home')\" placement=\"bottom\">\r\n                      <Button type=\"default\" @click=\"open('https://github.com/magicoflolis/Userscript-Plus')\" style=\"background-color: #2e323d\">\r\n                          <Icon type=\"home\" color=\"white\"></Icon>\r\n                      </Button>\r\n                  </Tooltip>\r\n                  <Tooltip :content=\"$t('table.og')\" placement=\"bottom\">\r\n                      <Button type=\"default\" @click=\"open('https://github.com/jae-jae/Userscript-Plus#readme')\" style=\"background-color: #2e323d\">\r\n                          <Icon type=\"fork\" color=\"white\"></Icon>\r\n                      </Button>\r\n                  </Tooltip>\r\n                </span>\r\n\r\n                </div>\r\n                <transition name=\"custom-classes-transition\" enter-active-class=\"animated lightSpeedIn\" leave-active-class=\"animated bounceOutRight\">\r\n                    <div>\r\n                        <Table highlight-row :columns=\"columns\" :data=\"data\"></Table>\r\n                        <div class=\"table-footer\"></div>\r\n                    </div>\r\n                </transition>\r\n            </Card>\r\n        </div>\r\n        </transition>\r\n\r\n    </div>\r\n\r\n\r\n</template>\r\n<script>\r\n    import Tools from '../common/js/tools'\r\n    import Info from './Info.vue'\r\n    import Indicator from './Indicator.vue'\r\n    export default {\r\n      components: { Info, Indicator },\r\n      mounted: function () {\r\n        this.$Spin.show()\r\n        Tools.getData((json) => {\r\n          this.data = json\r\n          this.originData = json\r\n          this.count = this.data.length\r\n          this.$Spin.hide()\r\n          this.showBody = !this.showBody\r\n        })\r\n      },\r\n      data: function () {\r\n        return {\r\n          isZH: Tools.isZH(),\r\n          showSearchInput: false,\r\n          searchInput: '',\r\n          showBody: false,\r\n          titleIcon: 'chevron-up',\r\n          count: 0,\r\n          columns: [{\r\n            type: 'expand',\r\n            width: 50,\r\n            render: (h, params) => {\r\n              return h(Info, {\r\n                props: {\r\n                  row: params.row\r\n                }\r\n              })\r\n            }\r\n          },\r\n          {\r\n            type: 'index',\r\n            width: 50,\r\n            align: 'center'\r\n          },\r\n          {\r\n            title: this.$t('table.title'),\r\n            key: 'name',\r\n            width: '35%',\r\n            ellipsis: false,\r\n            render: (h, params) => {\r\n              return h('span', {\r\n                attrs: {\r\n                  title: params.row.description\r\n                },\r\n                style: {\r\n                  cursor: 'pointer'\r\n                },\r\n                on: {\r\n                  click: _ => {\r\n                    window.open(params.row.url)\r\n                  }\r\n                }\r\n              }, params.row.name)\r\n            }\r\n          },\r\n          {\r\n            title: this.$t('table.author'),\r\n            render: (h, params) => {\r\n              return h('span', {\r\n                attrs: {\r\n                  title: this.$t('table.authorTips', {name: params.row.user.name})\r\n                },\r\n                style: {\r\n                  cursor: 'pointer'\r\n                },\r\n                on: {\r\n                  click: _ => {\r\n                    window.open(params.row.user.url)\r\n                  }\r\n                }\r\n              }, params.row.user.name)\r\n            }\r\n          },\r\n          {\r\n            title: this.$t('table.dailyInstalls'),\r\n            width: 105,\r\n            key: 'daily_installs',\r\n            sortable: true\r\n          },\r\n          {\r\n            title: this.$t('table.updatedTime'),\r\n            width: 105,\r\n            key: 'code_updated_at',\r\n            render: (h, params) => {\r\n              return h('span', Tools.timeagoFormat(params.row.code_updated_at))\r\n            },\r\n            sortable: true\r\n          },\r\n          {\r\n            title: this.$t('table.action'),\r\n            width: 100,\r\n            key: 'code_url',\r\n            align: 'center',\r\n            render: (h, params) => {\r\n              return h('div', [\r\n                h('Button', {\r\n                  props: {\r\n                    type: 'primary',\r\n                    size: 'small',\r\n                    icon: 'ios-download-outline'\r\n                  },\r\n                  style: {\r\n                    marginRight: '5px'\r\n                  },\r\n                  on: {\r\n                    click: () => {\r\n                      this.$Message.info(this.$t('table.scriptInstalling'))\r\n                      Tools.installUserJs(params.row.code_url)\r\n                    }\r\n                  }\r\n                }, this.$t('table.install'))\r\n              ])\r\n            }\r\n          }\r\n          ],\r\n          originData: [ ],\r\n          data: [ ]\r\n        }\r\n      },\r\n      watch: {\r\n        searchInput: function (val) {\r\n          (val) ? (val = val.toLowerCase(),this.data = Tools.searcher(this.originData, val)) : (this.data = this.originData);\r\n        }\r\n      },\r\n      methods: {\r\n        getData (callback) {\r\n          let host = 'pornhub.com'\r\n          window.fetch(`https://greasyfork.org/scripts/by-site/${host}.json`).then((r) => {\r\n            r.json().then((json) => {\r\n              callback(json)\r\n            })\r\n          })\r\n        },\r\n        open (url) {\r\n          window.open(url)\r\n        }\r\n      }\r\n    }\r\n</script>\r\n\r\n<style>\r\n*:not(select) {\r\n  scrollbar-color: #ffffff #2e323d;\r\n  scrollbar-width: thin;\r\n}\r\n/* Chrome and derivatives*/\r\n::-webkit-scrollbar {\r\n  max-width: 8px !important;\r\n  max-height: 8px !important;\r\n}\r\n::-webkit-scrollbar-thumb {\r\n  background: #ffffff;\r\n}\r\n::-webkit-scrollbar-track {\r\n  background-color: #2e323d;\r\n}\r\n.card-title {\r\n  color: #ffffff !important;\r\n  cursor: pointer;\r\n}\r\n.ivu-card-extra {\r\n  top: 8px !important;\r\n}\r\n.ivu-card-head {\r\n  padding: 2.5% 16px !important;\r\n  border-bottom: 1px solid #ffffff !important;\r\n}\r\n.ivu-table-body {\r\n  height: 418px;\r\n  overflow-x: hidden;\r\n  scrollbar-width: thin !important;\r\n}\r\n.table-footer {\r\n  position: fixed;\r\n  bottom: 0 ;\r\n  padding-left: 10px;\r\n  width: 100%;\r\n  background-color: #ffffff;\r\n}\r\n.table-footer a {\r\n  color: #ed3f14;\r\n}\r\n.ivu-tooltip {\r\n  border-color: #ffffff !important;\r\n  border-radius: 4px !important;\r\n  background-color: #ffffff !important;\r\n}\r\n.ivu-table {\r\n  color: #ffffff !important;\r\n  background-color: #2e323d !important;\r\n}\r\n.ivu-card, .ivu-table td, .ivu-table th {\r\n  background-color: #2e323d !important;\r\n  border-color: #ffffff !important;\r\n}\r\n.ivu-table-row-highlight, .ivu-table-row-hover {\r\n  color: #9cc3e7 !important;\r\n}\r\n</style>"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -41197,11 +41171,6 @@ var render = function() {
                             attrs: {
                               content: _vm.$t("table.og"),
                               placement: "bottom"
-                            },
-                            on: {
-                              click: function($event) {
-                                _vm.darkTheme = !_vm.darkTheme
-                              }
                             }
                           },
                           [

@@ -18,12 +18,16 @@ export default {
     return timeago(null, lang).format(time)
   },
   installUserJs (uri) {
-    let evt = parent.document.createEvent('MouseEvents')
-    evt.initEvent('click', true, true)
-    let link = parent.document.createElement('a')
+    let evt = parent.document.createEvent('MouseEvents'),
+    link = parent.document.createElement('a');
+    evt.initEvent('click', true, true);
     link.href = uri
-    // link.click()
     link.dispatchEvent(evt)
+    // let evt = parent.document.createEvent('MouseEvents')
+    // evt.initEvent('click', true, true)
+    // let link = parent.document.createElement('a')
+    // link.href = uri
+    // link.dispatchEvent(evt)
   },
   dispatchEvent (eventName) {
     parent.document.getElementById('jae_userscript_box').dispatchEvent(new Event(eventName))
@@ -47,7 +51,6 @@ export default {
       }
     })
   },
-    // 获取油猴缓存好的脚本数据
   getData (callback) {
     let data = sessionStorage.getItem(config.cacheKey)
     if (data) {

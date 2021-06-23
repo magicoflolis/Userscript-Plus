@@ -6,17 +6,12 @@ jspm_packages/
 # dotenv environment variables file
 .env
 
-.vscode
-.vs/
+.vscode/.history
 
 *.bak
 *.code-workspace
 *.web-extension-id
 web-ext-artifacts
 web-ext
-build
-/build/
 Notes
 /Notes/
-chrome
-/chrome/

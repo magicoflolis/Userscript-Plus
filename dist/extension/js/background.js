@@ -1,6 +1,6 @@
 const countApi = "https://greasyfork.org/scripts/by-site.json",
   adultAPI = "https://sleazyfork.org/scripts/by-site.json",
-  brws = (typeof browser == "undefined") ? chrome : browser,
+  brws = typeof browser === "undefined" ? chrome : browser,
   getCurrentTabUrl = (callback) => {
     try {
     let queryInfo = {

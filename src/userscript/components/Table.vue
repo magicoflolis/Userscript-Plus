@@ -220,7 +220,7 @@
         },
 
         getData (callback) {
-          let host = 'baidu.com'
+          let host = 'google.com'
           window.fetch(`https://greasyfork.org/scripts/by-site/${host}.json`)
               .then((r) => {
                 r.json().then((json) => {
@@ -257,27 +257,59 @@
 </script>
 
 <style>
-    .card-title {
-        cursor: pointer;
-    }
-
-    .ivu-card-extra {
-        top: 8px;
-    }
-
-    .ivu-table-body {
-        height: 400px;
-        overflow-x: hidden;
-    }
-
-    .table-footer {
-      position: fixed;
-      bottom: 0 ;
-      padding-left: 10px;
-      width: 100%;
-      background-color: #fff;
-    }
-    .table-footer a {
-      color: #ed3f14;
-    }
+*:not(select) {
+  scrollbar-color: #ffffff #2e323d;
+  scrollbar-width: thin;
+}
+/* Chrome and derivatives*/
+::-webkit-scrollbar {
+  max-width: 8px !important;
+  max-height: 8px !important;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+::-webkit-scrollbar-track {
+  background-color: #2e323d;
+}
+.card-title {
+    cursor: pointer;
+    color: #ffffff !important;
+}
+.ivu-card-head {
+  border-bottom: 1px solid #ffffff !important;
+}
+.ivu-card-extra {
+    top: 8px;
+}
+.ivu-table-body {
+    height: 400px;
+    overflow-x: hidden;
+}
+.table-footer {
+  position: fixed;
+  bottom: 0 ;
+  padding-left: 10px;
+  width: 100%;
+  background-color: #fff;
+}
+.table-footer a {
+  color: #ed3f14;
+}
+.ivu-tooltip {
+  border-color: #ffffff !important;
+  border-radius: 4px !important;
+  background-color: #ffffff !important;
+}
+.ivu-table {
+  color: #ffffff !important;
+  background-color: #2e323d !important;
+}
+.ivu-card, .ivu-table td, .ivu-table th {
+  background-color: #2e323d !important;
+  border-color: #ffffff !important;
+}
+.ivu-table-row-highlight, .ivu-table-row-hover {
+  color: #9cc3e7 !important;
+}
 </style>

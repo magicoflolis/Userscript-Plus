@@ -15,39 +15,35 @@
                     <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 50%"/>
                 </div>
                 <div slot="extra">
+
                 <span>
                   <Tooltip :content="$t('table.search')" placement="bottom">
-                        <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
-                            <Icon type="android-search" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip :content="$t('table.issue')" placement="bottom">
-                        <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
-                            <Icon type="bug" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip :content="$t('table.home')" placement="bottom">
-                        <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
-                            <Icon type="home" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip :content="$t('table.og')" placement="bottom">
-                        <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
-                            <Icon type="fork" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-
+                      <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
+                          <Icon type="android-search" color="white"></Icon>
+                      </Button>
+                  </Tooltip>
+                  <Tooltip :content="$t('table.issue')" placement="bottom">
+                      <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
+                          <Icon type="bug" color="white"></Icon>
+                      </Button>
+                  </Tooltip>
+                  <Tooltip :content="$t('table.home')" placement="bottom">
+                      <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
+                          <Icon type="home" color="white"></Icon>
+                      </Button>
+                  </Tooltip>
+                  <Tooltip :content="$t('table.og')" placement="bottom">
+                      <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
+                          <Icon type="fork" color="white"></Icon>
+                      </Button>
+                  </Tooltip>
                 </span>
 
                 </div>
                 <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn" leave-active-class="animated bounceOutRight">
                     <div>
                         <Table highlight-row :columns="columns" :data="data"></Table>
-                        <div class="table-footer">
-                        </div>
+                        <div class="table-footer"></div>
                     </div>
                 </transition>
             </Card>
@@ -171,12 +167,7 @@
                   on: {
                     click: () => {
                       this.$Message.info(this.$t('table.scriptInstalling'))
-                      // Tools.installUserJs(params.row.code_url)
-                      let evt = parent.document.createEvent('MouseEvents')
-                      evt.initEvent('click', true, true)
-                      let link = parent.document.createElement('a')
-                      link.href = params.row.code_url
-                      link.dispatchEvent(evt)
+                      Tools.installUserJs(params.row.code_url)
                     }
                   }
                 }, this.$t('table.install'))
@@ -190,12 +181,7 @@
       },
       watch: {
         searchInput: function (val) {
-          if (val) {
-            val = val.toLowerCase()
-            this.data = Tools.searcher(this.originData, val)
-          } else {
-            this.data = this.originData
-          }
+          (val) ? (val = val.toLowerCase(),this.data = Tools.searcher(this.originData, val)) : (this.data = this.originData);
         }
       },
       methods: {
@@ -215,6 +201,21 @@
 </script>
 
 <style>
+*:not(select) {
+  scrollbar-color: #ffffff #2e323d;
+  scrollbar-width: thin;
+}
+/* Chrome and derivatives*/
+::-webkit-scrollbar {
+  max-width: 8px !important;
+  max-height: 8px !important;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+::-webkit-scrollbar-track {
+  background-color: #2e323d;
+}
 .card-title {
   color: #ffffff !important;
   cursor: pointer;
