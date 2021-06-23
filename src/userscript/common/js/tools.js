@@ -20,7 +20,7 @@ export default {
   installUserJs (uri) {
     let evt = parent.document.createEvent('MouseEvents'),
     link = parent.document.createElement('a');
-    evt.initEvent('click', true, true);
+    evt.initEvent('click', true, true)
     link.href = uri
     link.dispatchEvent(evt)
   },
@@ -36,14 +36,28 @@ export default {
       return (typeof v !== 'undefined' && v !== null) ? v : ''
     })
   },
-  getJSON (url, callback) {
-    parent.window.GmAjax({
-      method: 'GET',
-      url: url,
-      onload: (res) => {
-        let json = JSON.parse(res.responseText)
-        callback(json)
-      }
+  getJSON (url, retry = 3) {
+    new Promise((resolve, reject) => {
+      try {
+        parent.window.GmAjax({
+          method: 'GET',
+          url,
+          onload: ({ status, response }) => {
+            let json = JSON.parse(response.responseText)
+            (status === 200) ? resolve(json) : (retry === 0) ? reject(`${status} ${url}`) : false;
+          }
+        })
+        // parent.window.GmAjax({
+        //   method: 'GET',
+        //   url: url,
+        //   onload: (res) => {
+        //     let json = JSON.parse(res.responseText)
+        //     callback(json)
+        //   }
+        // })
+      } catch (error) {
+        reject(error)
+    }
     })
   },
   getData (callback) {
@@ -80,16 +94,8 @@ export default {
       let max = null
       let frt = null
       for (let key of ['name', 'description', 'user']) {
-        if (key === 'user') {
-          frt = fuzzy(item['user']['name'], query)
-        } else {
-          frt = fuzzy(item[key], query)
-        }
-        if (max === null) {
-          max = frt
-        } else if (max.score < frt.score) {
-          max = frt
-        }
+        key === "user" ? (frt = fuzzy(item["user"]["name"], query)) : (frt = fuzzy(item[key], query));
+        max === null ? (max = frt) : max.score < frt.score ? (max = frt) : false;
       }
       rt.push({
         item,
@@ -101,8 +107,8 @@ export default {
   },
 
   isZH () {
-    let nlang = navigator.language.toLowerCase();
-    nlang === "zh" ? (nlang = "zh-cn") : false;
-    return nlang.search("zh-") === 0;
+    let nlang = navigator.language.toLowerCase()
+    nlang === "zh" ? (nlang = "zh-cn") : false
+    return nlang.search("zh-") === 0
   }
 }
