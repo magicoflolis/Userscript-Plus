@@ -48,8 +48,8 @@
 // @exclude      *://*myetherwallet.com/*
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// @resource     uiJs   https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/ui.gf.js?_=1624490278609
-// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1624490278610
+// @resource     uiJs   https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/ui.gf.js?_=1624490491041
+// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1624490491041
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
