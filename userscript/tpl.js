@@ -47,7 +47,7 @@
 // @exclude      *://*payoneer.com/*
 // @exclude      *://*myetherwallet.com/*
 {ljs}
-// @resource     ui     https://cdn.jsdelivr.net/gh/jae-jae/Userscript-Plus/dist/ui.html?_={time}
+// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_={time}
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest

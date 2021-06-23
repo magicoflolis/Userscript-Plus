@@ -23,11 +23,6 @@ export default {
     evt.initEvent('click', true, true);
     link.href = uri
     link.dispatchEvent(evt)
-    // let evt = parent.document.createEvent('MouseEvents')
-    // evt.initEvent('click', true, true)
-    // let link = parent.document.createElement('a')
-    // link.href = uri
-    // link.dispatchEvent(evt)
   },
   dispatchEvent (eventName) {
     parent.document.getElementById('jae_userscript_box').dispatchEvent(new Event(eventName))
@@ -52,18 +47,17 @@ export default {
     })
   },
   getData (callback) {
-    let data = sessionStorage.getItem(config.cacheKey)
-    if (data) {
-      data = JSON.parse(data)
-      callback(data)
-    } else {
-      let api = this.nano(config.api, {
-        host: config.host
-      })
-      let sapi = this.nano(config.sapi, {
-        host: config.host
-      })
-      this.getJSON(sapi, (json) => {
+    let data = sessionStorage.getItem(config.cacheKey);
+    (data) ? (data = JSON.parse(data),callback(data)) : (
+      this.getJSON(this.nano(config.sapi, {host: config.host}), (json) => {
+        json = json.map((item) => {
+          item.user = item.users[0]
+          return item
+        })
+        sessionStorage.setItem(config.cacheKey, JSON.stringify(json))
+        callback(json)
+      }),
+      this.getJSON(this.nano(config.api, {host: config.host}), (json) => {
         json = json.map((item) => {
           item.user = item.users[0]
           return item
@@ -71,15 +65,7 @@ export default {
         sessionStorage.setItem(config.cacheKey, JSON.stringify(json))
         callback(json)
       })
-      this.getJSON(api, (json) => {
-        json = json.map((item) => {
-          item.user = item.users[0]
-          return item
-        })
-        sessionStorage.setItem(config.cacheKey, JSON.stringify(json))
-        callback(json)
-      })
-    }
+    )
   },
 
   getCount () {
@@ -115,10 +101,8 @@ export default {
   },
 
   isZH () {
-    let nlang = navigator.language.toLowerCase()
-    if (nlang === 'zh') {
-      nlang = 'zh-cn'
-    }
-    return nlang.search('zh-') === 0
+    let nlang = navigator.language.toLowerCase();
+    nlang === "zh" ? (nlang = "zh-cn") : false;
+    return nlang.search("zh-") === 0;
   }
 }

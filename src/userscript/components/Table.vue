@@ -1,72 +1,63 @@
 <template>
-    <div>
-        <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn">
-            <div v-show="showTitle">
-            <Card :padding="0">
-                <div slot="title" class="card-title">
-                    <Icon :type="titleIcon"></Icon>
-                    <span v-if="!showSearchInput" @click="bodySwitch">
-                      <i18n path="table.tips" tag="span">
-                          <Badge place="count" :count="count" style="padding:0px 5px;"></Badge>
-                      </i18n>
-                      <span v-show="showBody">
-                        - Userscript+
-                      </span>
-                    </span>
-                    <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 450px;height: 25px;"></Input>                    
+  <div>
+    <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn">
+      <div v-show="showTitle">
+      <Card :bordered="false" :padding="0">
+          <div slot="title" class="card-title">
+              <Icon :type="titleIcon"></Icon>
+              <span v-if="!showSearchInput" @click="bodySwitch">
+                <i18n path="table.tips" tag="span">
+                  <template v-slot:count>
+                    <Badge :count="count" style="padding:0px 5px;"></Badge>
+                    </template>
+                </i18n>
+                <span v-show="showBody"> - Userscript+ </span>
+              </span>
+              <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 450px;height: 25px;"></Input>                    
+          </div>
+          <div slot="extra">
+          <span v-show="showBody">
+            <Tooltip :content="$t('table.search')" placement="bottom">
+              <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
+                <Icon type="android-search" color="white"></Icon>
+              </Button>
+            </Tooltip>
+            <Tooltip :content="$t('table.issue')" placement="bottom">
+              <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
+                <Icon type="bug" color="white"></Icon>
+              </Button>
+            </Tooltip>
+            <Tooltip :content="$t('table.home')" placement="bottom">
+              <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
+                <Icon type="home" color="white"></Icon>
+              </Button>
+            </Tooltip>
+            <Tooltip :content="$t('table.og')" placement="bottom">
+              <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
+                <Icon type="fork" color="white"></Icon>
+              </Button>
+            </Tooltip>
+          </span>
+            <Tooltip :content="$t('table.close')" placement="left" style="background-color: #2e323d">
+                <Button type="default" @click="close">
+                    <Icon type="close-round"></Icon>
+                </Button>
+            </Tooltip>
+          </div>
+          <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn" leave-active-class="animated bounceOutRight">
+            <div v-show="showBody">
+                <Table highlight-row :columns="columns" :data="data"></Table>
+                <div class="table-footer">
                 </div>
-                <div slot="extra">
-                <span v-show="showBody">
-                  <Tooltip :content="$t('table.search')" placement="bottom">
-                        <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
-                            <Icon type="android-search" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip :content="$t('table.issue')" placement="bottom">
-                        <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
-                            <Icon type="bug" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip :content="$t('table.home')" placement="bottom">
-                        <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
-                            <Icon type="home" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip :content="$t('table.og')" placement="bottom">
-                        <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
-                            <Icon type="fork" color="white"></Icon>
-                        </Button>
-                    </Tooltip>
-                </span>
-
-                    <Tooltip :content="$t('table.close')" placement="left">
-                        <Button type="dashed" @click="close">
-                            <Icon type="close-round"></Icon>
-                        </Button>
-                    </Tooltip>
-
-                </div>
-                <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn" leave-active-class="animated bounceOutRight">
-                    <div v-show="showBody">
-                        <Table highlight-row :columns="columns" :data="data"></Table>
-                        <div class="table-footer">
-                        </div>
-                    </div>
-                </transition>
-            </Card>
-
-        </div>
-        </transition>
-
-        <div v-show="!showTitle" @mouseover='showTitle = true'>
-
-            <Indicator :count="count"></Indicator>
-
-        </div>
+            </div>
+          </transition>
+      </Card>
     </div>
+    </transition>
+    <div v-show="!showTitle" @mouseover='showTitle = true'>
+        <Indicator :count="count"></Indicator>
+    </div>
+  </div>
 
 
 </template>
@@ -76,7 +67,6 @@
     import Tools from '../common/js/tools'
     import Info from './Info.vue'
     import Indicator from './Indicator.vue'
-    // import Support from './Support.vue'
     export default {
       components: { Info, Indicator },
       mounted: function () {
@@ -177,7 +167,7 @@
                     marginRight: '5px'
                   },
                   on: {
-                    click: (event) => {
+                    click: () => {
                       this.$Message.info(this.$t('table.scriptInstalling'))
                       Tools.installUserJs(params.row.code_url)
                     }
@@ -187,31 +177,17 @@
             }
           }
           ],
-                // 表格数据
-          originData: [],
-          data: []
+          originData: [ ],
+          data: [ ]
         }
       },
       watch: {
         showBody (val) {
-          if (val) {
-                    // 最大化
-            this.titleIcon = 'chevron-down'
-            Tools.dispatchEvent('max')
-          } else {
-                    // 最小化
-            this.titleIcon = 'chevron-up'
-            Tools.dispatchEvent('min')
-          }
+          (val) ? (this.titleIcon = 'chevron-down',Tools.dispatchEvent('max')) : (this.titleIcon = 'chevron-up',Tools.dispatchEvent('min'))
           window.dispatchEvent(new Event('resize'))
         },
         searchInput: function (val) {
-          if (val) {
-            val = val.toLowerCase()
-            this.data = Tools.searcher(this.originData, val)
-          } else {
-            this.data = this.originData
-          }
+          (val) ? (val = val.toLowerCase(),this.data = Tools.searcher(this.originData, val)) : (this.data = this.originData)
         }
       },
       methods: {
@@ -273,18 +249,18 @@
   background-color: #2e323d;
 }
 .card-title {
-    cursor: pointer;
-    color: #ffffff !important;
+  cursor: pointer;
+  color: #ffffff !important;
 }
 .ivu-card-head {
   border-bottom: 1px solid #ffffff !important;
 }
 .ivu-card-extra {
-    top: 8px;
+  top: 8px;
 }
 .ivu-table-body {
-    height: 400px;
-    overflow-x: hidden;
+  height: 400px;
+  overflow-x: hidden;
 }
 .table-footer {
   position: fixed;
