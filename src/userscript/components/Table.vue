@@ -183,7 +183,8 @@
     watch: {
       showBody (val) {
         (val) ? (this.titleIcon = 'chevron-down',Tools.dispatchEvent('max')) : (this.titleIcon = 'chevron-up',Tools.dispatchEvent('min'))
-        window.dispatchEvent(new Event('resize'))
+        Tools.dispatchEvent('resize')
+        // window.dispatchEvent(new Event('resize'))
       },
       searchInput: function (val) {
         (val) ? (val = val.toLowerCase(),this.data = Tools.searcher(this.originData, val)) : (this.data = this.originData)
@@ -203,24 +204,22 @@
           })
       },
       bodySwitch () {
-        if (this.data.length === 0 && this.showBody === false) {
-          this.$Spin.show()
-          Tools.dispatchEvent('loading')
+        (this.data.length === 0 && this.showBody === false) ? (
+          this.$Spin.show(),
+          Tools.dispatchEvent('loading'),
           Tools.getData((json) => {
             this.originData = json
             this.data = json
             this.$Spin.hide()
             this.showBody = !this.showBody
-            setTimeout(() => {
-              this.showTitle = this.showBody
-            }, 500)
-          })
-        } else {
-          this.showBody = !this.showBody
-          setTimeout(() => {
+            new Promise((resolve) => setTimeout(resolve, 500))
             this.showTitle = this.showBody
-          }, 500)
-        }
+          })
+        ) : (
+          this.showBody = !this.showBody,
+          new Promise((resolve) => setTimeout(resolve, 500)),
+          this.showTitle = this.showBody
+        )
       },
       open (url) {
         window.open(url)

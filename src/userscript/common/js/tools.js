@@ -36,29 +36,19 @@ export default {
       return (typeof v !== 'undefined' && v !== null) ? v : ''
     })
   },
-  getJSON (url, retry = 3) {
-    new Promise((resolve, reject) => {
-      try {
-        parent.window.GmAjax({
-          method: 'GET',
-          url,
-          onload: ({ status, response }) => {
-            let json = JSON.parse(response.responseText)
-            (status === 200) ? resolve(json) : (retry === 0) ? reject(`${status} ${url}`) : false;
-          }
-        })
-        // parent.window.GmAjax({
-        //   method: 'GET',
-        //   url: url,
-        //   onload: (res) => {
-        //     let json = JSON.parse(res.responseText)
-        //     callback(json)
-        //   }
-        // })
-      } catch (error) {
-        reject(error)
+  getJSON (url, callback) {
+    try {
+      parent.window.GmAjax({
+        method: 'GET',
+        url: url,
+        onload: (res) => {
+          let json = JSON.parse(res.responseText)
+          callback(json)
+        }
+      })
+    } catch (error) {
+      console.error(error)
     }
-    })
   },
   getData (callback) {
     let data = sessionStorage.getItem(config.cacheKey);

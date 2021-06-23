@@ -9,8 +9,7 @@
                         <template v-slot:count>
                           <Badge :count="count" style="padding:0px 5px;"></Badge>
                           </template>
-                      </i18n>
-                      - Userscript+
+                      </i18n> - Userscript+
                     </span>
                     <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 50%"/>
                 </div>
