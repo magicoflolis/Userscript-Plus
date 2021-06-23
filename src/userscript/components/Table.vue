@@ -2,7 +2,7 @@
   <div>
     <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn">
       <div v-show="showTitle">
-      <Card :bordered="false" :padding="0">
+      <Card dis-hover :bordered="false" :padding="0">
           <div slot="title" class="card-title">
               <Icon :type="titleIcon"></Icon>
               <span v-if="!showSearchInput" @click="bodySwitch">
@@ -183,7 +183,7 @@
     watch: {
       showBody (val) {
         (val) ? (this.titleIcon = 'chevron-down',Tools.dispatchEvent('max')) : (this.titleIcon = 'chevron-up',Tools.dispatchEvent('min'))
-        Tools.dispatchEvent('resize')
+        // Tools.dispatchEvent('resize')
         // window.dispatchEvent(new Event('resize'))
       },
       searchInput: function (val) {
