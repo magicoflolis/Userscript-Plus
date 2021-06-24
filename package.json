@@ -16,11 +16,10 @@
   },
   "homepage": "https://github.com/magicoflolis/Userscript-Plus",
   "scripts": {
+    "build:user": "npm run webpack:user && node webpackConfig/userscript.js",
     "dev:browser": "webpack --watch --progress --config=webpackConfig/webpack.config.js",
     "webpack:user": "webpack --config=webpackConfig/webpack.ui.config.js && webpack --config=webpackConfig/webpack.gf.config.js",
-    "build:all": "webpack --mode=production --config=webpackConfig/webpack.config.js && npm run build:user",
-    "build:user": "npm run webpack:user && node webpackConfig/userscript.js",
-    "test": "npm run build:all"
+    "build:all": "webpack --mode=production --config=webpackConfig/webpack.config.js && npm run build:user"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",

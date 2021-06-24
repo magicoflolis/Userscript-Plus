@@ -1,7 +1,7 @@
-<template>
+<template v-slot:count>
   <div>
     <Card class="circle">
-      <Badge place="count" :count="count" class-name="badge"></Badge>
+      <Badge :count="count" class-name="badge"></Badge>
     </Card>
   </div>
 </template>
@@ -16,8 +16,7 @@ export default {
 .circle {
   width: 56px;
   height: 56px;
-  line-height: 56px;
-  border-radius: 28px;
+  border-radius: 28px !important;
   float: right;
   right: 40px;
 }
@@ -29,5 +28,6 @@ export default {
   height: 26px;
   line-height: 26px;
   border-radius: 13px;
+  font-weight: bold;
 }
 </style>

@@ -48,8 +48,8 @@
 // @exclude      *://*myetherwallet.com/*
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
 // @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
-// @resource     uiJs   https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/ui.gf.js?_=1624492218750
-// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1624492218751
+// @resource     uiJs   https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/ui.gf.js?_=1624504023660
+// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus/dist/ui.html?_=1624504023661
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
@@ -162,7 +162,7 @@ unsafeWindow.GmAjax = GM_xmlhttpRequest;
         $('body').append(this.tplBox);
         let ui = GM_getResourceText('ui'),
             dom = document.getElementsByClassName('jae-userscript')[0],
-            tpl = '<iframe name="jaeFetchUserJSFrame" src="about:blank" style="width:100%;height:100%;border:0px;display: block!important;" allowTransparency="true"></iframe>';
+            tpl = '<iframe name="jaeFetchUserJSFrame" src="about:blank" style="width:100%;height:100%;border:0px;display: block!important;border-radius:5px;" allowTransparency="true"></iframe>';
         dom.innerHTML = tpl;
         let iframeDom = dom.children[0];
         iframe.write(iframeDom, ui);
