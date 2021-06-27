@@ -9,7 +9,6 @@
     "tampermonkey"
   ],
   "author": "Magic Of Lolis <magicoflolis@gmail.com> (https://github.com/magicoflolis)",
-  "private": true,
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
