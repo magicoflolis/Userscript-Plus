@@ -1,55 +1,48 @@
 <template>
+  <div>
     <div>
-        <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn">
-            <div>
-            <Card :bordered="false" style="width:100%;height:100%;padding:0px">
-                <div slot="title" class="card-title">
-                    <span v-if="!showSearchInput">
-                      <i18n path="table.tips" tag="span">
-                        <template v-slot:count>
-                          <Badge :count="count" style="padding:0px 5px;"></Badge>
-                          </template>
-                      </i18n> - Userscript+
-                    </span>
-                    <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 50%"/>
-                </div>
-                <div slot="extra">
-
-                <span>
-                  <Tooltip :content="$t('table.search')" placement="bottom">
-                      <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
-                          <Icon type="android-search" color="white"></Icon>
-                      </Button>
-                  </Tooltip>
-                  <Tooltip :content="$t('table.issue')" placement="bottom">
-                      <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
-                          <Icon type="bug" color="white"></Icon>
-                      </Button>
-                  </Tooltip>
-                  <Tooltip :content="$t('table.home')" placement="bottom">
-                      <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
-                          <Icon type="home" color="white"></Icon>
-                      </Button>
-                  </Tooltip>
-                  <Tooltip :content="$t('table.og')" placement="bottom">
-                      <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
-                          <Icon type="fork" color="white"></Icon>
-                      </Button>
-                  </Tooltip>
-                </span>
-
-                </div>
-                <transition name="custom-classes-transition" enter-active-class="animated lightSpeedIn" leave-active-class="animated bounceOutRight">
-                    <div>
-                        <Table highlight-row :columns="columns" :data="data"></Table>
-                        <div class="table-footer"></div>
-                    </div>
-                </transition>
-            </Card>
-        </div>
-        </transition>
-
+    <Card :bordered="false" style="width:100%;height:100%;padding:0px">
+      <div slot="title" class="card-title">
+        <span v-if="!showSearchInput">
+          <i18n path="table.tips" tag="span">
+            <template v-slot:count>
+              <Badge :count="count" style="padding:0px 5px;"></Badge>
+              </template>
+          </i18n> - Userscript+
+        </span>
+        <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 50%"/>
+      </div>
+      <div slot="extra">
+      <span>
+        <Tooltip :content="$t('table.search')" placement="bottom">
+          <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
+            <Icon type="android-search" color="white"></Icon>
+          </Button>
+        </Tooltip>
+        <Tooltip :content="$t('table.issue')" placement="bottom">
+          <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
+            <Icon type="bug" color="white"></Icon>
+          </Button>
+        </Tooltip>
+        <Tooltip :content="$t('table.home')" placement="bottom">
+          <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
+            <Icon type="home" color="white"></Icon>
+          </Button>
+        </Tooltip>
+        <Tooltip :content="$t('table.og')" placement="bottom">
+          <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
+            <Icon type="fork" color="white"></Icon>
+          </Button>
+        </Tooltip>
+      </span>
+      </div>
+      <div>
+        <Table highlight-row :columns="columns" :data="data"></Table>
+        <div class="table-footer"></div>
+      </div>
+    </Card>
     </div>
+  </div>
 
 
 </template>
@@ -74,7 +67,6 @@
         isZH: Tools.isZH(),
         showSearchInput: false,
         searchInput: '',
-        showBody: false,
         titleIcon: 'chevron-up',
         count: 0,
         columns: [{
@@ -108,7 +100,7 @@
               },
               on: {
                 click: _ => {
-                  window.open(params.row.url)
+                  open(params.row.url)
                 }
               }
             }, params.row.name)
@@ -126,7 +118,7 @@
               },
               on: {
                 click: _ => {
-                  window.open(params.row.user.url)
+                  open(params.row.user.url)
                 }
               }
             }, params.row.user.name)
@@ -136,7 +128,19 @@
           title: this.$t('table.dailyInstalls'),
           width: 105,
           key: 'daily_installs',
-          sortable: true
+          sortable: true,
+          render: (h, params) => {
+            return h('span', {
+              style: {
+                cursor: 'pointer'
+              },
+              on: {
+                click: _ => {
+                  open(`${params.row.url}/feedback`)
+                }
+              }
+            }, params.row.daily_installs)
+          }
         },
         {
           title: this.$t('table.updatedTime'),
@@ -184,14 +188,6 @@
       }
     },
     methods: {
-      getData (callback) {
-        let host = 'pornhub.com'
-        window.fetch(`https://greasyfork.org/scripts/by-site/${host}.json`).then((r) => {
-          r.json().then((json) => {
-            callback(json)
-          })
-        })
-      },
       open (url) {
         window.open(url)
       }
@@ -204,11 +200,6 @@
   scrollbar-color: #ffffff #2e323d;
   scrollbar-width: thin;
 }
-/* Chrome and derivatives*/
-::-webkit-scrollbar {
-  max-width: 8px !important;
-  max-height: 8px !important;
-}
 ::-webkit-scrollbar-thumb {
   background: #ffffff;
 }
@@ -219,27 +210,9 @@
   color: #ffffff !important;
   cursor: pointer;
 }
-.ivu-card-extra {
-  top: 8px !important;
-}
 .ivu-card-head {
   padding: 2.5% 16px !important;
   border-bottom: 1px solid #ffffff !important;
-}
-.ivu-table-body {
-  height: 418px;
-  overflow-x: hidden;
-  scrollbar-width: thin !important;
-}
-.table-footer {
-  position: fixed;
-  bottom: 0 ;
-  padding-left: 10px;
-  width: 100%;
-  background-color: #ffffff;
-}
-.table-footer a {
-  color: #ed3f14;
 }
 .ivu-tooltip {
   border-color: #ffffff !important;
@@ -256,5 +229,28 @@
 }
 .ivu-table-row-highlight, .ivu-table-row-hover {
   color: #9cc3e7 !important;
+}
+/* Chrome and derivatives*/
+::-webkit-scrollbar {
+  max-width: 8px !important;
+  max-height: 8px !important;
+}
+.ivu-card-extra {
+  top: 8px !important;
+}
+.ivu-table-body {
+  height: 418px;
+  overflow-x: hidden;
+  scrollbar-width: thin !important;
+}
+.table-footer {
+  position: fixed;
+  bottom: 0 ;
+  padding-left: 10px;
+  width: 100%;
+  background-color: #ffffff;
+}
+.table-footer a {
+  color: #ed3f14;
 }
 </style>

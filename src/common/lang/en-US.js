@@ -28,7 +28,7 @@ export default {
   i: {
     table: {
       noDataText: 'No scripts found',
-      noFilteredDataText: 'Error, no User Script found'
+      noFilteredDataText: 'Error, no scripts found'
     }
   }
 }

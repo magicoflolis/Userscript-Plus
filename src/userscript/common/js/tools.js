@@ -1,6 +1,6 @@
 /* global parent, Event, sessionStorage */
 
-import timeago from 'timeago.js'
+import { format }  from 'timeago.js'
 import fuzzy from 'fuzzy.js'
 import psl from 'psl'
 
@@ -14,8 +14,8 @@ let config = {
 
 export default {
   timeagoFormat (time) {
-    let lang = (navigator.language === 'zh-CN') ? 'zh_CN' : 'en_short'
-    return timeago(null, lang).format(time)
+    let lang = (navigator.language !== 'zh-CN') ? 'en_short' : 'zh_CN'
+    return format(time, lang)
   },
   installUserJs (uri) {
     let evt = parent.document.createEvent('MouseEvents'),
@@ -53,7 +53,7 @@ export default {
   getData (callback) {
     let data = sessionStorage.getItem(config.cacheKey);
     (data) ? (data = JSON.parse(data),callback(data)) : (
-      this.getJSON(this.nano(config.sapi, {host: config.host}), (json) => {
+      this.getJSON(this.nano(config.api, {host: config.host}), (json) => {
         json = json.map((item) => {
           item.user = item.users[0]
           return item
@@ -61,7 +61,7 @@ export default {
         sessionStorage.setItem(config.cacheKey, JSON.stringify(json))
         callback(json)
       }),
-      this.getJSON(this.nano(config.api, {host: config.host}), (json) => {
+      this.getJSON(this.nano(config.sapi, {host: config.host}), (json) => {
         json = json.map((item) => {
           item.user = item.users[0]
           return item
@@ -74,7 +74,7 @@ export default {
 
   getCount () {
     let count = sessionStorage.getItem(config.countKey)
-    return count >= 50 ? 50 : count
+    return (count >= 50) ? 50 : count
   },
 
   searcher (data, query) {

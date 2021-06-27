@@ -1,16 +1,15 @@
 import fuzzy from "fuzzy.js";
-import timeago from "timeago.js";
+import { format } from "timeago.js";
 
 let config = {
     api: "https://greasyfork.org/scripts/by-site/{host}.json",
     sapi: "https://sleazyfork.org/scripts/by-site/{host}.json"
   },
   brws = typeof browser === "undefined" ? chrome : browser;
-
 export default {
-  timeagoFormat(time) {
-    let lang = navigator.language === "zh-CN" ? "zh_CN" : "en_short";
-    return timeago(null, lang).format(time);
+  timeagoFormat (time) {
+    let lang = (navigator.language !== 'zh-CN') ? 'en_short' : 'zh_CN'
+    return format(time, lang)
   },
   installUserJs(uri) {
     let jsStr = `
@@ -78,27 +77,23 @@ export default {
   getData(callback) {
     this.sessionStorage.then(bgSessionStorage => {
       this.host.then(host => {
-        let data = bgSessionStorage.getItem(host);
+        let data = bgSessionStorage.getItem(host),
+        fetchJS = (api) => {
+          fetch(api).then(r => {
+            r.json().then(json => {
+              json = json.map(item => {
+                item.user = item.users[0];
+                return item;
+              });
+              bgSessionStorage.setItem(host, JSON.stringify(json));
+              callback(json);
+            });
+          });
+        };
         (data) ? (data = JSON.parse(data),callback(data)) : (
-        fetch(this.nano(config.api, {host: host})).then(r => {
-          r.json().then(json => {
-            json = json.map(item => {
-              item.user = item.users[0];
-              return item;
-            });
-            bgSessionStorage.setItem(host, JSON.stringify(json));
-            callback(json);
-          });
-        }),fetch(this.nano(config.sapi, {host: host})).then(r => {
-          r.json().then(json => {
-            json = json.map(item => {
-              item.user = item.users[0];
-              return item;
-            });
-            bgSessionStorage.setItem(host, JSON.stringify(json));
-            callback(json);
-          });
-        }) );
+        fetchJS(this.nano(config.api, {host: host})),
+        fetchJS(this.nano(config.sapi, {host: host}))
+        );
       });
     });
   },
@@ -106,22 +101,18 @@ export default {
   searcher(data, query) {
     let rt = [];
     for (let i = 0; i < data.length; i++) {
-      let item = data[i];
-      let max = null;
-      let frt = null;
+      let max,frt,item = data[i];
       for (let key of ["name", "description", "user"]) {
         key === "user" ? (frt = fuzzy(item["user"]["name"], query)) : (frt = fuzzy(item[key], query));
-        max === null ? (max = frt) : max.score < frt.score ? (max = frt) : false;
+        max ?? (max = frt);
+        max.score < frt.score ? (max = frt) : false;
       }
       rt.push({
         item,
         score: max.score
       });
     }
-    rt = rt
-      .filter(a => a.score !== 0)
-      .sort((a, b) => b.score - a.score)
-      .map(a => a.item);
+    rt = rt.filter(a => a.score !== 0).sort((a, b) => b.score - a.score).map(a => a.item);
     return rt;
   },
 

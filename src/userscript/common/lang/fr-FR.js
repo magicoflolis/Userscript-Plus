@@ -23,13 +23,12 @@ export default {
     search: 'Chercher',
     issue: 'Signaler un nouveau numéro',
     home: 'Homepage',
-    og: 'Original Script',
-    noFilteredDataText: 'Placeholder'
+    og: 'Original Script'
   },
   i: {
     table: {
       noDataText: 'Aucun script trouvé',
-      noFilteredDataText: 'Placeholder'
+      noFilteredDataText: 'Aucun script trouvé'
     }
   }
 }

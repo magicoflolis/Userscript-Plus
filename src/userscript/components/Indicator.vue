@@ -1,9 +1,10 @@
-<template v-slot:count>
-  <div>
-    <Card class="circle">
-      <Badge :count="count" class-name="badge"></Badge>
-    </Card>
-  </div>
+<template>
+    <div>
+        <Card class="circle">
+            <Badge place="count" :count="count" class-name="badge"></Badge>
+        </Card>
+    </div>
+
 </template>
 
 <script>

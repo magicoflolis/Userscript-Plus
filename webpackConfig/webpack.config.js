@@ -7,7 +7,8 @@ const webpack = require("webpack"),
     devtool: "source-map",
     context: path.resolve(root, "src"),
     entry: {
-      popup: "./main.js"
+      popup: "./main.js",
+      options: "./options.js"
     },
     output: {
       path: path.resolve(root, "dist/extension/js"),
@@ -32,11 +33,7 @@ const webpack = require("webpack"),
           use: ["style-loader", "css-loader"],
         },
         {
-          test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-          loader: "url-loader",
-        },
-        {
-          test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+          test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
           loader: "url-loader",
         },
       ],

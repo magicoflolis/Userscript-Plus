@@ -99,7 +99,7 @@
               },
               on: {
                 click: _ => {
-                  window.open(params.row.url)
+                  open(params.row.url)
                 }
               }
             }, params.row.name)
@@ -117,7 +117,7 @@
               },
               on: {
                 click: _ => {
-                  window.open(params.row.user.url)
+                  open(params.row.user.url)
                 }
               }
             }, params.row.user.name)
@@ -127,15 +127,36 @@
           title: this.$t('table.dailyInstalls'),
           width: 105,
           key: 'daily_installs',
-          sortable: true
+          sortable: true,
+          render: (h, params) => {
+            return h('span', {
+              style: {
+                cursor: 'pointer'
+              },
+              on: {
+                click: _ => {
+                  open(`${params.row.url}/feedback`)
+                }
+              }
+            }, params.row.daily_installs)
+          }
         },
         {
           title: this.$t('table.updatedTime'),
           key: 'code_updated_at',
+          sortable: true,
           render: (h, params) => {
-            return h('span', Tools.timeagoFormat(params.row.code_updated_at))
-          },
-          sortable: true
+            return h('span', {
+              style: {
+                cursor: 'pointer'
+              },
+              on: {
+                click: _ => {
+                  open(`${params.row.url}/versions`)
+                }
+              }
+            }, Tools.timeagoFormat(params.row.code_updated_at))
+          }
         },
         {
           title: this.$t('table.action'),
@@ -182,15 +203,15 @@
       close () {
         Tools.dispatchEvent('close')
       },
-      getData (callback) {
-        let host = 'google.com'
-        window.fetch(`https://greasyfork.org/scripts/by-site/${host}.json`)
-          .then((r) => {
-            r.json().then((json) => {
-              callback(json)
-            })
-          })
-      },
+      // getData (callback) {
+      //   let host = 'pornhub.com'
+      //   window.fetch(`https://sleazyfork.org/scripts/by-site/${host}.json`)
+      //     .then((r) => {
+      //       r.json().then((json) => {
+      //         callback(json)
+      //       })
+      //     })
+      // },
       bodySwitch () {
         (!this.data.length && !this.showBody) ? (
           this.$Spin.show(),
@@ -248,7 +269,6 @@
   color: #ed3f14;
 }
 /* dark theme */
-/*
 .card-title {
   color: #ffffff !important;
 }
@@ -270,5 +290,5 @@
 }
 .ivu-table-row-highlight, .ivu-table-row-hover {
   color: #9cc3e7 !important;
-} */
+}
 </style>

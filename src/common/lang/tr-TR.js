@@ -23,13 +23,12 @@ export default {
     search: 'Ara',
     issue: 'Yeni Sorunu Bildir',
     home: 'Homepage',
-    og: 'Original Script',
-    noFilteredDataText: 'Placeholder'
+    og: 'Original Script'
   },
   i: {
     table: {
       noDataText: 'Komut dosyası bulunamadı',
-      noFilteredDataText: 'Placeholder'
+      noFilteredDataText: 'Komut dosyası bulunamadı'
     }
   }
 }

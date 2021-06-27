@@ -23,13 +23,12 @@ export default {
     search: '搜索',
     issue: '报告新问题',
     home: 'Homepage',
-    og: 'Original Script',
-    noFilteredDataText: 'Placeholder'
+    og: 'Original Script'
   },
   i: {
     table: {
       noDataText: '未找到脚本',
-      noFilteredDataText: 'Placeholder'
+      noFilteredDataText: '未找到脚本'
     }
   }
 }

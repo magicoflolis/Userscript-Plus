@@ -1,25 +1,25 @@
 const countApi = "https://greasyfork.org/scripts/by-site.json",
   adultAPI = "https://sleazyfork.org/scripts/by-site.json",
   brws = typeof browser === "undefined" ? chrome : browser,
-  getCurrentTabUrl = (callback) => {
+  getCurrentTabUrl = async (callback) => {
     try {
-    let queryInfo = {
-      active: true,
-      currentWindow: true,
-    };
-    brws.tabs.query(queryInfo, (tabs) => {
+      let queryInfo = {
+        active: true,
+        currentWindow: true,
+      };
+      brws.tabs.query(queryInfo, (tabs) => {
         let tab = tabs[0],
         url = tab.url;
         console.assert(typeof url == "string", "tab.url should be a string");
         callback(url);
-    });
-  } catch (e) {
-    console.log(e);
-    brws.browserAction.setBadgeText({
-      text: "err",
-    });
-    return callback(url);
-  }
+      });
+    } catch (e) {
+      console.log(e);
+      brws.browserAction.setBadgeText({
+        text: "err",
+      });
+      return callback(url);
+    }
   },
   getUrlHost = (url) => {
     let a = document.createElement("a");
@@ -41,25 +41,24 @@ const countApi = "https://greasyfork.org/scripts/by-site.json",
         text: "",
       });
     });
+  },
+  countBadge = async (api) => {
+    await new Promise((reject) => {
+      try {
+        fetch(api).then((r) => {
+          r.json().then((data) => {
+            brws.tabs.onUpdated.addListener(() => {
+              changeBadge(data);
+            });
+            brws.tabs.onActivated.addListener(() => {
+              changeBadge(data);
+            });
+          });
+        });
+      } catch (error) {
+        reject(error);
+      }
+    })
   };
-
-fetch(countApi).then((r) => {
-  r.json().then((data) => {
-    brws.tabs.onUpdated.addListener(() => {
-      changeBadge(data);
-    });
-    brws.tabs.onActivated.addListener(() => {
-      changeBadge(data);
-    });
-  });
-});
-fetch(adultAPI).then((r) => {
-  r.json().then((data) => {
-    brws.tabs.onUpdated.addListener(() => {
-      changeBadge(data);
-    });
-    brws.tabs.onActivated.addListener(() => {
-      changeBadge(data);
-    });
-  });
-});
+  countBadge(countApi);
+  countBadge(adultAPI);

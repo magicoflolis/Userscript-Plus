@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>UserJS Plus Options</title>
+    <link rel="stylesheet" type="text/css" href="css/options.css" />
+  </head>
+  <body>
+    <form>
+      <section class="select">Theme
+        <select name="theme">
+          <option disabled value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </section>
+      <section class="checkbox">
+        <label>
+          <span>Enable "Greasyfork Search with Sleazyfork Results include"</span>
+          <div class="switch">
+            <input type="checkbox" name="sleazyfork" id="sleazyfork" />
+            <label for="sleazyfork"></label>
+          </div>
+        </label>
+      </section>
+    </form>
+    <script src="./js/options.js"></script>
+  </body>
+
+</html>

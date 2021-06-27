@@ -23,13 +23,12 @@ export default {
     search: 'Search',
     issue: 'Report New Issue',
     home: 'Homepage',
-    og: 'Original Script',
-    noFilteredDataText: 'Placeholder'
+    og: 'Original Script'
   },
   i: {
     table: {
       noDataText: 'No scripts found',
-      noFilteredDataText: 'PlaceholderA'
+      noFilteredDataText: 'Error, no scripts found'
     }
   }
 }

@@ -23,13 +23,12 @@ export default {
     search: 'Поиск',
     issue: 'Сообщить о новой проблеме',
     home: 'Homepage',
-    og: 'Original Script',
-    noFilteredDataText: 'Placeholder'
+    og: 'Original Script'
   },
   i: {
     table: {
       noDataText: 'Скрипты не найдены',
-      noFilteredDataText: 'Placeholder'
+      noFilteredDataText: 'Скрипты не найдены'
     }
   }
 }

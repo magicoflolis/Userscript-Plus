@@ -23,13 +23,12 @@ export default {
     search: '検索',
     issue: '新しい問題を報告する',
     home: 'Homepage',
-    og: 'Original Script',
-    noFilteredDataText: 'Placeholder'
+    og: 'Original Script'
   },
   i: {
     table: {
       noDataText: 'スクリプトが見つかりません',
-      noFilteredDataText: 'Placeholder'
+      noFilteredDataText: 'スクリプトが見つかりません'
     }
   }
 }
