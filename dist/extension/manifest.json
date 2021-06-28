@@ -4,7 +4,7 @@
   "default_locale": "en",
   "name": "__MSG_extName__",
   "description": "__MSG_extShortDesc__",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "homepage_url": "https://github.com/magicoflolis/Userscript-Plus",
   "content_scripts": [
     {

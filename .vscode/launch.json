@@ -3,17 +3,17 @@
     "compounds": [
         {
           "name": "Attach/Launch",
-          "configurations": ["Attach:Firefox", "SF"]
+          "configurations": ["Attach:Firefox", "Start:Firefox"]
         }
       ],
     "configurations": [
         {
-            "name": "Attach:Firefox",
-            "type": "firefox",
-            "request": "attach",
+          "name": "Attach:Firefox",
+          "type": "firefox",
+          "request": "attach",
         },
         {
-          "name": "SF",
+          "name": "Start:Firefox",
           "type": "firefox",
           "request": "launch",
           "reAttach": true,
@@ -21,7 +21,11 @@
           "keepProfileChanges": false,
           "clearConsoleOnReload": true,
           "url": "https://www.google.com/",
-          "addonPath": "${workspaceFolder}\\dist\\extension"
+          "addonPath": "${workspaceFolder}\\dist\\extension",
+          "reloadOnChange": {
+            "watch": [ "${workspaceFolder}/dist/extension/js/*.js" ],
+            "ignore": [ "${workspaceFolder}/node_modules/**" ]
+        }
       }
     ]
 }

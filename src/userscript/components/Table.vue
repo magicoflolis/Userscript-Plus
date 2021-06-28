@@ -7,9 +7,7 @@
             <Icon :type="titleIcon"></Icon>
             <span v-if="!showSearchInput" @click="bodySwitch">
               <i18n path="table.tips" tag="span">
-                <template v-slot:count>
-                  <Badge :count="count" style="padding:0px 5px;"></Badge>
-                </template>
+                <Badge place="count" :count="count" style="padding:0px 5px;"></Badge>
               </i18n>
               <span v-show="showBody"> - Userscript+</span>
             </span>
@@ -29,6 +27,11 @@
             <Tooltip :content="$t('table.og')" placement="bottom">
               <Button icon="fork" type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')"></Button>
             </Tooltip>
+            <!-- <Tooltip :content="$t('table.donate')" placement="bottom">
+              <Button type="default" @click="showConfig = true">
+                <Icon type="card"></Icon>
+              </Button>
+            </Tooltip> -->
           </span>
             <Tooltip :content="$t('table.close')" placement="left">
               <Button icon="close-round" type="default" @click="close"></Button>
@@ -41,10 +44,26 @@
             </div>
           </transition>
       </Card>
+      <!-- <Modal v-model="showConfig" width="400">
+        <CheckboxGroup>
+          <Checkbox label="light" disabled>
+            <span>Enable light theme</span>
+          </Checkbox>
+          <Checkbox label="sleazyfork" v-model="enableSleazy">
+            <span>Enable "Greasyfork Search with Sleazyfork Results include"</span>
+          </Checkbox>
+        </CheckboxGroup>
+        
+      <div slot="footer">
+        <Button type="info" size="large" long @click="showConfig=false">{{$t('table.close')}}</Button>
+      </div>
+    </Modal> -->
     </div>
     </transition>
     <div v-show="!showTitle" @mouseover='showTitle = true'>
+
       <Indicator :count="count"></Indicator>
+
     </div>
   </div>
 </template>
@@ -58,6 +77,7 @@
     components: { Info, Indicator },
     mounted: function () {
       this.count = Tools.getCount()
+      // this.enableSleazy = Tools.getSleazy()
     },
     data: function () {
       return {
@@ -66,8 +86,10 @@
         searchInput: '',
         showTitle: false,
         showBody: false,
+        enableSleazy: false,
         titleIcon: 'chevron-up',
         count: 0,
+        showConfig: false,
         columns: [{
           type: 'expand',
           width: 50,
@@ -192,9 +214,11 @@
     watch: {
       showBody (val) {
         (val) ? (this.titleIcon = 'chevron-down',Tools.dispatchEvent('max')) : (this.titleIcon = 'chevron-up',Tools.dispatchEvent('min'))
-        // Tools.dispatchEvent('resize')
         window.dispatchEvent(new Event('resize'))
       },
+      // enableSleazy (val) {
+      //   Tools.toggleSleazy(val)
+      // },
       searchInput: function (val) {
         (val) ? (val = val.toLowerCase(),this.data = Tools.searcher(this.originData, val)) : (this.data = this.originData)
       }
@@ -231,64 +255,3 @@
     }
   }
 </script>
-
-<style>
-*:not(select) {
-  scrollbar-color: #2d8cf0 #ffffff;
-}
-::-webkit-scrollbar-thumb {
-  background: #2d8cf0;
-}
-::-webkit-scrollbar-track {
-  background-color: #ffffff;
-}
-/* Chrome and derivatives*/
-::-webkit-scrollbar {
-  max-width: 8px !important;
-  max-height: 8px !important;
-}
-.card-title {
-  cursor: pointer;
-}
-.ivu-card-head {
-  line-height: 2 !important;
-  min-height: 54px !important;
-}
-.ivu-table-body {
-  height: 400px;
-  overflow-x: hidden;
-}
-.table-footer {
-  position: fixed;
-  bottom: 0 ;
-  padding-left: 10px;
-  width: 100%;
-  background-color: #fff;
-}
-.table-footer a {
-  color: #ed3f14;
-}
-/* dark theme */
-.card-title {
-  color: #ffffff !important;
-}
-.ivu-card-head {
-  border-bottom: 1px solid #ffffff !important;
-}
-.ivu-tooltip {
-  border-color: #ffffff !important;
-  border-radius: 4px !important;
-  background-color: #ffffff !important;
-}
-.ivu-btn-icon-only, .ivu-table {
-  color: #ffffff !important;
-  background-color: #2e323d !important;
-}
-.ivu-card, .ivu-table td, .ivu-table th {
-  background-color: #2e323d !important;
-  border-color: #ffffff !important;
-}
-.ivu-table-row-highlight, .ivu-table-row-hover {
-  color: #9cc3e7 !important;
-}
-</style>

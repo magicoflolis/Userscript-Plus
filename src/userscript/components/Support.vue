@@ -49,11 +49,11 @@ export default {
 </script>
 
 <style>
-    .support-box {
-        height: 28px;
-        line-height: 28px;
-    }
-    .carouse-item {
-        background-color: #ffffff;
-    }
+  .support-box {
+      height: 28px;
+      line-height: 28px;
+  }
+  .carouse-item {
+      background-color: #ffffff;
+  }
 </style>

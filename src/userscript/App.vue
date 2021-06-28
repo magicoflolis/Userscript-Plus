@@ -13,10 +13,5 @@ export default {
 </script>
 
 <style>
-#app {
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  right: 0;
-}
+@import "./common/less/app.css";
 </style>
