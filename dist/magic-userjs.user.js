@@ -6,8 +6,6 @@
 // @name:ja      Magic Userscript+ : 現在のサイトの利用可能なすべてのUserJSスクリプトを表示するJaeger
 // @name:ru-RU   Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
 // @name:ru      Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
-// @namespace    https://github.com/magicoflolis/Userscript-Plus
-// @version      2.3.11
 // @description         Show current site all UserJS，The easier way to install UserJs for Tampermonkey.
 // @description:zh      显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
 // @description:zh-CN   显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
@@ -16,7 +14,12 @@
 // @description:ru-RU   Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @description:ru      Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @author       Magic of Lolis <magicoflolis@gmail.com>
+// @namespace    https://github.com/magicoflolis/Userscript-Plus
+// @homepageURL  https://github.com/magicoflolis/Userscript-Plus#magic-userscript
+// @supportURL   https://github.com/magicoflolis/Userscript-Plus/issues/new
+// @version      2.3.11a
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3ggEBCQHM3fXsAAAAVdJREFUOMudkz2qwkAUhc/goBaGJBgUtBCZyj0ILkpwAW7Bws4yO3AHLiCtEFD8KVREkoiFxZzX5A2KGfN4F04zMN+ce+5c4LMUgDmANYBnrnV+plBSi+FwyHq9TgA2LQpvCiEiABwMBtzv95RSfoNEHy8DYBzHrNVqVEr9BWKcqNFoxF6vx3a7zc1mYyC73a4MogBg7vs+z+czO50OW60Wt9stK5UKp9Mpj8cjq9WqDTBHnjAdxzGQZrPJw+HA31oulzbAWgLoA0CWZVBKIY5jzGYzdLtdE9DlcrFNrY98zobqOA6TJKHW2jg4nU5sNBpFDp6mhVe5rsvVasUwDHm9Xqm15u12o+/7Hy0gD8KatOd5vN/v1FozTVN6nkchxFuI6hsAAIMg4OPxMJCXdtTbR7JJCMEgCJhlGUlyPB4XfumozInrupxMJpRSRtZlKoNYl+m/6/wDuWAjtPfsQuwAAAAASUVORK5CYII=
+// @license      MIT
 // @include      *
 // @exclude      *://paypal.com/*
 // @exclude      *://mega.nz
@@ -67,9 +70,9 @@
 // @exclude      *://*.*.*/options/*
 // @exclude      *://*.*.*.gov/*
 // @exclude      *://*.*.*/password_reset
-// @require      https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js
-// @require      https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/userjs-base.js?_=1624939026806
-// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js?_=1624939026806
+// @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
+// @require      https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/userjs-base.js?_=1624989235091
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js?_=1624989235091
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
@@ -125,7 +128,44 @@ class FetchUserjs {
     this.quietKey = "jae_fetch_userjs_quiet";
     this.countKey = "jae_fetch_userjs_count";
     this.adultKey = "jae_fetch_userjs_adult";
-    this.tplBox = '<div id="jae_userscript_box"><style>.jae-userscript{  position:fixed;  width:370px;  bottom:10px;  right:20px;  z-index:9999999999;  height:56px}.jae-userscript-shadow{  box-shadow:0 1px 4px rgba(0,0,0,.3);}.jae-userscript-shadow::before,.jae-userscript-shadow::after{  content:"";  position:absolute;  z-index:-1;  bottom:15px;  left:10px;  width:50%;  height:20%;  box-shadow:0 15px 10px rgba(0,0,0,.7);}.jae-userscript-shadow::before{  transform:rotate(-3deg)}.jae-userscript-shadow::after{  right:10px;  left:auto;  transform:rotate(3deg)}</style><div class="jae-userscript"></div></div>';
+    this.tplBox = `<div id="jae_userscript_box">
+    <style>.jae-userscript{
+      position:fixed; 
+      width:370px;
+      bottom:10px;
+      right:20px;
+      z-index:9999999999;
+      height:56px
+    }
+    .jae-userscript-shadow{
+      box-shadow:0 1px 4px rgba(0,0,0,.3);
+    }
+    .jae-userscript-shadow::before,
+    .jae-userscript-shadow::after{
+      content:"";
+      position:absolute;
+      z-index:-1;
+      bottom:15px;
+      left:10px;
+      width:50%;
+      height:20%;
+      box-shadow:0 15px 10px rgba(0,0,0,.7);
+    }
+    .jae-userscript-shadow::before{
+      transform:rotate(-3deg)
+    }
+    .jae-userscript-shadow::after{
+      right:10px;  left:auto;
+      transform:rotate(3deg)
+    }
+    @media screen and (max-width:1228px) {
+      .jae-userscript {
+        max-width: 100%;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    </style><div class="jae-userscript"></div></div>`;
   }
 
   getCountData(host) {

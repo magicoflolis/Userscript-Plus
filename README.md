@@ -11,8 +11,10 @@
 > Currently [Userscript+](https://github.com/jae-jae/Userscript-Plus#userscript) can only find userscripts through [GreasyFork](https://greasyfork.org), I've added support for [SleazyFork](https://sleazyfork.org) along with a few additional features and tweaks!
 
 * Tested and compatible with TamperMonkey n ViolentMonkey.
+* Trimmed / moved some @resources to this build.
 * Added [SleazyFork](https://sleazyfork.org).
 * Added Dark Theme.
+* Added extra @excludes.
 * Added built-in ["Greasyfork Search with Sleazyfork Results include"](https://greasyfork.org/scripts/23840)
 
 ```bash
