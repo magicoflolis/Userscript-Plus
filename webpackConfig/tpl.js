@@ -18,25 +18,23 @@
 // @author       Magic of Lolis <magicoflolis@gmail.com>
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3ggEBCQHM3fXsAAAAVdJREFUOMudkz2qwkAUhc/goBaGJBgUtBCZyj0ILkpwAW7Bws4yO3AHLiCtEFD8KVREkoiFxZzX5A2KGfN4F04zMN+ce+5c4LMUgDmANYBnrnV+plBSi+FwyHq9TgA2LQpvCiEiABwMBtzv95RSfoNEHy8DYBzHrNVqVEr9BWKcqNFoxF6vx3a7zc1mYyC73a4MogBg7vs+z+czO50OW60Wt9stK5UKp9Mpj8cjq9WqDTBHnjAdxzGQZrPJw+HA31oulzbAWgLoA0CWZVBKIY5jzGYzdLtdE9DlcrFNrY98zobqOA6TJKHW2jg4nU5sNBpFDp6mhVe5rsvVasUwDHm9Xqm15u12o+/7Hy0gD8KatOd5vN/v1FozTVN6nkchxFuI6hsAAIMg4OPxMJCXdtTbR7JJCMEgCJhlGUlyPB4XfumozInrupxMJpRSRtZlKoNYl+m/6/wDuWAjtPfsQuwAAAAASUVORK5CYII=
 // @include      *
-// @exclude      *://mega.nz/*
+// @exclude      *://paypal.com/*
+// @exclude      *://mega.nz
 // @exclude      *://*.alipay.com/*
-// @exclude      *://*.paypal.com/*
 // @exclude      *://*bank.*/*
 // @exclude      *://*perfectmoney.*/*
 // @exclude      *://*stripe.com/*
 // @exclude      *://*ica.yandex.com/*
 // @exclude      *://*authorize.net/*
 // @exclude      *://*2checkout.com/*
-// @exclude      *://bitpay.com/*
 // @exclude      *://192.168*
 // @exclude      *://127.0.0*
 // @exclude      *://router.*.*/*
-// @exclude      *://github.com/*
 // @exclude      *://gitlab.com/*
 // @exclude      *://10.0.0*
 // @exclude      *://*skrill.com/*
 // @exclude      *://*zalo.me/*
-// @exclude      *://pay.amazon.com/*
+// @exclude      *://pay.amazon.*/*
 // @exclude      *://*.opayo.co.uk/*
 // @exclude      *://*.payza.org/*
 // @exclude      *://*.bluesnap.com/*
@@ -46,8 +44,31 @@
 // @exclude      *://*.yeepay.com/*
 // @exclude      *://*payoneer.com/*
 // @exclude      *://*myetherwallet.com/*
+// @exclude      *://bitpay.com/*
+// @exclude      *://*.*/login
+// @exclude      *://*.*/join
+// @exclude      *://*.*/signin
+// @exclude      *://*.*/signup
+// @exclude      *://*.*/sign-up
+// @exclude      *://*.*/cart
+// @exclude      *://*.*.gov/*
+// @exclude      *://*.*/password_reset
+// @exclude      *://*.*/checkout*
+// @exclude      *://*.*/settings/*
+// @exclude      *://*.*/options/*
+// @exclude      *://*.*.*/login
+// @exclude      *://*.*.*/join
+// @exclude      *://*.*.*/signin
+// @exclude      *://*.*.*/signup
+// @exclude      *://*.*.*/sign-up
+// @exclude      *://*.*.*/cart
+// @exclude      *://*.*.*/checkout*
+// @exclude      *://*.*.*/settings/*
+// @exclude      *://*.*.*/options/*
+// @exclude      *://*.*.*.gov/*
+// @exclude      *://*.*.*/password_reset
+// @require      https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js
 {ljs}
-// @resource     ui     https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.html?_={time}
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
@@ -56,10 +77,6 @@
 // @grant        GM_setValue
 // @grant        unsafeWindow
 // @noframes
-// @connect      cdn.bootcss.com
-// @connect      raw.githubusercontent.com
-// @connect      gist.githubusercontent.com
-// @connect      cdnjs.cloudflare.com
 // @connect      greasyfork.org
 // @connect      sleazyfork.org
 // @connect      cdn.jsdelivr.net
@@ -67,18 +84,18 @@
 // ==/UserScript==
 
 /**
-* Enable built-in "Greasyfork Search with Sleazyfork Results include"
-* 启用内置"使用 Sleazyfork 搜索"结果包括"
-* 組み込みの「スライジーフォークの結果を含む脂っこく検索」を有効にする
-* Включить встроенный "Greasyfork Поиск с Sleazyfork Результаты включают"
-*/
+ * Enable built-in "Greasyfork Search with Sleazyfork Results include"
+ * 启用内置"使用 Sleazyfork 搜索"结果包括"
+ * 組み込みの「スライジーフォークの結果を含む脂っこく検索」を有効にする
+ * Включить встроенный "Greasyfork Поиск с Sleazyfork Результаты включают"
+ * https://greasyfork.org/scripts/23840
+ */
 let sleazyfork_redirect = false; // "true" to enable, "false" to disable
 
 unsafeWindow.GmAjax = GM_xmlhttpRequest;
 
 (() => {
-  (document.location.hostname === "greasyfork.org" || document.location.hostname === "sleazyfork.org") ? (sleazyfork_redirect ? sleazyfork() : false) : false;
-
+  
   {code}
   
 })();

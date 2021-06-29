@@ -27,11 +27,6 @@
             <Tooltip :content="$t('table.og')" placement="bottom">
               <Button icon="fork" type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')"></Button>
             </Tooltip>
-            <!-- <Tooltip :content="$t('table.donate')" placement="bottom">
-              <Button type="default" @click="showConfig = true">
-                <Icon type="card"></Icon>
-              </Button>
-            </Tooltip> -->
           </span>
             <Tooltip :content="$t('table.close')" placement="left">
               <Button icon="close-round" type="default" @click="close"></Button>
@@ -44,20 +39,6 @@
             </div>
           </transition>
       </Card>
-      <!-- <Modal v-model="showConfig" width="400">
-        <CheckboxGroup>
-          <Checkbox label="light" disabled>
-            <span>Enable light theme</span>
-          </Checkbox>
-          <Checkbox label="sleazyfork" v-model="enableSleazy">
-            <span>Enable "Greasyfork Search with Sleazyfork Results include"</span>
-          </Checkbox>
-        </CheckboxGroup>
-        
-      <div slot="footer">
-        <Button type="info" size="large" long @click="showConfig=false">{{$t('table.close')}}</Button>
-      </div>
-    </Modal> -->
     </div>
     </transition>
     <div v-show="!showTitle" @mouseover='showTitle = true'>
@@ -77,7 +58,6 @@
     components: { Info, Indicator },
     mounted: function () {
       this.count = Tools.getCount()
-      // this.enableSleazy = Tools.getSleazy()
     },
     data: function () {
       return {
@@ -121,7 +101,7 @@
               },
               on: {
                 click: _ => {
-                  open(params.row.url)
+                  Tools.open(params.row.url)
                 }
               }
             }, params.row.name)
@@ -139,7 +119,7 @@
               },
               on: {
                 click: _ => {
-                  open(params.row.user.url)
+                  Tools.open(params.row.user.url)
                 }
               }
             }, params.row.user.name)
@@ -157,7 +137,7 @@
               },
               on: {
                 click: _ => {
-                  open(`${params.row.url}/feedback`)
+                  Tools.open(`${params.row.url}/feedback`)
                 }
               }
             }, params.row.daily_installs)
@@ -174,7 +154,7 @@
               },
               on: {
                 click: _ => {
-                  open(`${params.row.url}/versions`)
+                  Tools.open(`${params.row.url}/versions`)
                 }
               }
             }, Tools.timeagoFormat(params.row.code_updated_at))
@@ -197,7 +177,7 @@
                   marginRight: '5px'
                 },
                 on: {
-                  click: () => {
+                  click: _ => {
                     this.$Message.info(this.$t('table.scriptInstalling'))
                     Tools.installUserJs(params.row.code_url)
                   }
@@ -213,29 +193,22 @@
     },
     watch: {
       showBody (val) {
-        (val) ? (this.titleIcon = 'chevron-down',Tools.dispatchEvent('max')) : (this.titleIcon = 'chevron-up',Tools.dispatchEvent('min'))
-        window.dispatchEvent(new Event('resize'))
+        (val) ? (
+          this.titleIcon = 'chevron-down',
+          Tools.dispatchEvent('max')
+          ) : (
+            this.titleIcon = 'chevron-up',
+            Tools.dispatchEvent('min')
+            )
       },
-      // enableSleazy (val) {
-      //   Tools.toggleSleazy(val)
-      // },
-      searchInput: function (val) {
-        (val) ? (val = val.toLowerCase(),this.data = Tools.searcher(this.originData, val)) : (this.data = this.originData)
+      searchInput (val) {
+        (val) ? (val = val.toLowerCase(),this.data = Tools.searcher(this.originData, val)) : (this.data = this.originData);
       }
     },
     methods: {
       close () {
         Tools.dispatchEvent('close')
       },
-      // getData (callback) {
-      //   let host = 'pornhub.com'
-      //   window.fetch(`https://sleazyfork.org/scripts/by-site/${host}.json`)
-      //     .then((r) => {
-      //       r.json().then((json) => {
-      //         callback(json)
-      //       })
-      //     })
-      // },
       bodySwitch () {
         (!this.data.length && !this.showBody) ? (
           this.$Spin.show(),
@@ -250,7 +223,7 @@
           this.showTitle = this.showBody
       },
       open (url) {
-        window.open(url)
+        document.open(url,'', 'noopener=true')
       }
     }
   }

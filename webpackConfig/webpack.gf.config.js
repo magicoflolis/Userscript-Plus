@@ -63,12 +63,12 @@ const webpack = require("webpack"),
 
   let tpl = fs.readFileSync("./webpackConfig/tpl.js").toString(),
   code = babel.transformFileSync("./webpackConfig/main.js").code,
-  nano = function(template, data) {
-  return template.replace(/\{([\w\.]*)\}/g, function(str, key) {
-    let keys = key.split("."),
+  nano = (template, data) => {
+    return template.replace(/\{([\w\.]*)\}/g, (str, key) => {
+      let keys = key.split("."),
       v = data[keys.shift()];
-    for (let i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
-    return typeof v !== "undefined" && v !== null ? v : "";
+      for (let i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
+      return typeof v === "undefined" ? "" : v;
   });
 },
 renderOut = (outFile, ljs) => {
@@ -78,7 +78,7 @@ renderOut = (outFile, ljs) => {
     time: +new Date(),
   });
 
-  fs.writeFile(outFile, ujs, function(err) {
+  fs.writeFile(outFile, ujs, (err) => {
     if (err) {
       return console.log(err);
     }
@@ -86,21 +86,15 @@ renderOut = (outFile, ljs) => {
   });
 },
 time = +new Date(),
-ljs_dev = `// @require     https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js
-// @require     https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
+ljs_dev = `// @require     http://localhost:8080/userjs-base.js?_=${time}
 // @resource     uiJs   http://localhost:8080/ui.js?_=${time}`,
-ljs = `// @require     https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js
-// @require     https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
+ljs = `// @require      https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/userjs-base.js?_=${time}
 // @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js?_=${time}`,
-ljs_GF = `// @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
-// @require      https://greasyfork.org/scripts/23420-userjs-base-js/code/userjs-basejs.js
+ljs_GF = `// @require       https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/userjs-base.js?_=${time}
 // @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.gf.js?_=${time}`;
 
-// renderOut("./dist/magic-userjs.user.js", ljs)
-// //greasyfork version
-// renderOut("./dist/magic-userjs.gf.user.js", ljs_GF)
-
 module.exports = (env, argv) => {
+  //(argv.mode === "production") ? ((config.mode = "production")) : false;
   (argv.mode !== "development") ? (config.mode = "production") : (config.mode = "development", ljs = ljs_dev);
   console.log(config.mode);
   renderOut("./dist/magic-userjs.user.js", ljs)
@@ -108,10 +102,3 @@ module.exports = (env, argv) => {
   renderOut("./dist/magic-userjs.gf.user.js", ljs_GF)
   return config;
 };
-
-// module.exports = (env, argv) => {
-//   (argv.mode === "development") ? ((config.mode = "development")) : false;
-//   //(argv.mode === "production") ? ((config.mode = "production")) : false;
-//   console.log(config.mode);
-//   return config;
-// };

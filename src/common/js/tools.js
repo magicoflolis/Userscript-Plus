@@ -13,9 +13,8 @@ export default {
   },
   installUserJs(uri) {
     let jsStr = `
-    let evt = parent.document.createEvent('MouseEvents'),
+    let evt = new MouseEvent("click"),
     link = parent.document.createElement('a');
-    evt.initEvent('click', true, true);
     link.href = '${uri}'
     link.dispatchEvent(evt) `;
     brws.tabs.executeScript(null, { code: jsStr });
@@ -26,7 +25,7 @@ export default {
       let keys = key.split("."),
       v = data[keys.shift()];
       for (let i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
-      return typeof v !== "undefined" && v !== null ? v : "";
+      return typeof v === "undefined" ? "" : v;
     });
   },
 
@@ -78,17 +77,16 @@ export default {
     this.sessionStorage.then(bgSessionStorage => {
       this.host.then(host => {
         let data = bgSessionStorage.getItem(host),
-        fetchJS = (api) => {
-          fetch(api).then(r => {
-            r.json().then(json => {
-              json = json.map(item => {
-                item.user = item.users[0];
-                return item;
-              });
-              bgSessionStorage.setItem(host, JSON.stringify(json));
-              callback(json);
+        fetchJS = (url = '') => {
+          let f = fetch(url).then(r => r.json())
+          f.then(json => {
+            json = json.map(item => {
+              item.user = item.users[0];
+              return item;
             });
-          });
+            bgSessionStorage.setItem(host, JSON.stringify(json));
+            callback(json);
+          })
         };
         (data) ? (data = JSON.parse(data),callback(data)) : (
         fetchJS(this.nano(config.api, {host: host})),
@@ -122,3 +120,15 @@ export default {
     return nlang.search("zh-") === 0;
   }
 };
+
+// fetch(url).then(r => {
+//   r.json().then(json => {
+//     json = json.map(item => {
+//       item.user = item.users[0];
+//       return item;
+//     });
+//     console.log(JSON.stringify(json));
+//     bgSessionStorage.setItem(host, JSON.stringify(json));
+//     callback(json);
+//   });
+// });
