@@ -81,7 +81,7 @@ ljs_dev = `// @require     http://localhost:8080/userjs-base.js?_=${time}
 // @resource     uiJs   http://localhost:8080/ui.js?_=${time}`,
 ljs = `// @require      https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/userjs-base.js?_=${time}
 // @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js?_=${time}`,
-ljs_GF = `// @require      https://greasyfork.org/scripts/428620-userjs-base/code/userjs-base.js?_=${time}
+ljs_GF = `// @require      https://greasyfork.org/scripts/428620/code/userjs-base.js?_=${time}
 // @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.gf.js?_=${time}`;
 
 module.exports = (env, argv) => {

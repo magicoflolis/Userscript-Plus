@@ -1,8 +1,6 @@
-const brws = typeof browser == "undefined" ? chrome : browser;
+const brws = typeof browser === "undefined" ? chrome : browser;
 brws.storage.local.get((storedConfig) => {
-  ($form =
-    document.querySelector("form") ??
-    console.log(`[UserJS] can't find ${target}`)),
+  ($form = document.querySelector("form") ?? console.log(`[UserJS] can't find ${target}`)),
     (config = {
       theme: "dark",
       sleazyfork: false,

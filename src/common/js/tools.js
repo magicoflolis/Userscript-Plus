@@ -1,5 +1,6 @@
 import fuzzy from "fuzzy.js";
 import { format } from "timeago.js";
+import psl from "psl";
 
 let config = {
     api: "https://greasyfork.org/scripts/by-site/{host}.json",
@@ -11,13 +12,13 @@ export default {
     let lang = (navigator.language !== 'zh-CN') ? 'en_short' : 'zh_CN'
     return format(time, lang)
   },
-  installUserJs(uri) {
+  installUserJs(url) {
     let jsStr = `
     let evt = new MouseEvent("click"),
-    link = parent.document.createElement('a');
-    link.href = '${uri}'
-    link.dispatchEvent(evt) `;
-    brws.tabs.executeScript(null, { code: jsStr });
+    link = document.createElement("a");
+    link.href = '${url}';
+    link.dispatchEvent(evt);`;
+    brws.tabs.executeScript({code: jsStr});
   },
   /* Nano Templates - https://github.com/trix/nano */
   nano(template, data) {
@@ -77,7 +78,7 @@ export default {
     this.sessionStorage.then(bgSessionStorage => {
       this.host.then(host => {
         let data = bgSessionStorage.getItem(host),
-        fetchJS = (url = '') => {
+        fetchJS = (url) => {
           let f = fetch(url).then(r => r.json())
           f.then(json => {
             json = json.map(item => {

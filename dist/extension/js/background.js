@@ -24,9 +24,7 @@ const countApi = "https://greasyfork.org/scripts/by-site.json",
   getUrlHost = (url) => {
     let a = document.createElement("a");
     a.href = url;
-    let mainHost =
-      psl.get(a.hostname) ||
-      a.hostname.split(".").splice(-2).join(".");
+    let mainHost = psl.get(a.hostname) || a.hostname.split(".").splice(-2).join(".");
     return mainHost;
   },
   changeBadge = (cData) => {

@@ -10,7 +10,7 @@
     {
       "all_frames": true,
       "js": ["/js/sleazyfork.js"],
-      "matches": ["https://*.greasyfork.org/*", "https://*.sleazyfork.org/*"],
+      "matches": ["https://greasyfork.org/*/scripts/*", "https://sleazyfork.org/*/scripts/*"],
       "run_at": "document_end"
     }
   ],
@@ -20,16 +20,10 @@
     "default_title": "UserJS Popup",
     "default_popup": "popup.html"
   },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "uscriptplus@mol.com",
-      "strict_min_version": "57.0"
-    }
-  },
   "options_ui": {
     "browser_style": false,
     "page": "options.html",
-    "open_in_tab": false
+    "open_in_tab": true
   },
   "background": {
     "page": "background.html"

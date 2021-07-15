@@ -17,36 +17,45 @@
 }
 /* Dark theme */
 .ivu {
-  &-card-head {
-    border-bottom: 1px solid @white !important;
-    line-height: 2 !important;
-    min-height: 54px !important;
+  &-card{
+    width:100%;
+    height:100%;
+    padding:0px;
+    &-extra {
+      top: 8px !important;
+    }
+    &-head {
+      border-bottom: 1px solid @white !important;
+      padding: 2.5% 16px !important;
+    }
+  }
+  &-badge {
+    padding:0px 5px;
   }
   &-tooltip {
     border-color: @white !important;
     border-radius: 4px !important;
     background-color: @white !important;
   }
-  &-table-body {
-    height: 400px;
-    overflow-x: hidden;
-  }
   &-btn-icon-only,
   &-modal-body,
   &-table {
     color: @white !important;
     background-color: @dark !important;
+    & td,
+    & th {
+      color: @white !important;
+      background-color: @dark !important;
+    }
+    &-body {
+      // height: 400px;
+      overflow-x: hidden;
+    }
+    &-row-highlight,
+    &-row-hover {
+    color: #9cc3e7 !important;
   }
-  &-card,
-  &-table td,
-  &-table th {
-    background-color: @dark !important;
-    border-color: @white !important;
   }
-  &-table-row-highlight,
-  &-table-row-hover {
-  color: #9cc3e7 !important;
-}
 }
 /* General */
 .card-title {
@@ -68,11 +77,11 @@
 .circle {
   width: 56px;
   height: 56px;
-  border-radius: 28px !important;
+  line-height: 56px;
+  border-radius: 28px;
   float: right;
   right: 40px;
 }
-
 .badge {
   top: -17px;
   left: -6%;
@@ -80,5 +89,4 @@
   height: 26px;
   line-height: 26px;
   border-radius: 13px;
-  font-weight: bold;
 }

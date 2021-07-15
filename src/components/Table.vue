@@ -1,12 +1,12 @@
 <template>
   <div>
     <div>
-    <Card :bordered="false" style="width:100%;height:100%;padding:0px">
+    <Card :bordered="false">
       <div slot="title" class="card-title">
         <span v-if="!showSearchInput">
           <i18n path="table.tips" tag="span">
             <template v-slot:count>
-              <Badge :count="count" style="padding:0px 5px;"></Badge>
+              <Badge :count="count"></Badge>
               </template>
           </i18n> - Userscript+
         </span>
@@ -37,7 +37,7 @@
       </span>
       </div>
       <div>
-        <Table highlight-row :columns="columns" :data="data"></Table>
+        <Table highlight-row height="460" :columns="columns" :data="data"></Table>
         <div class="table-footer"></div>
       </div>
     </Card>
@@ -126,7 +126,7 @@
         },
         {
           title: this.$t('table.dailyInstalls'),
-          width: 105,
+          width: 100,
           key: 'daily_installs',
           sortable: true,
           render: (h, params) => {
@@ -168,7 +168,7 @@
                   marginRight: '5px'
                 },
                 on: {
-                  click: () => {
+                  click: _ => {
                     this.$Message.info(this.$t('table.scriptInstalling'))
                     Tools.installUserJs(params.row.code_url)
                   }
@@ -189,68 +189,8 @@
     },
     methods: {
       open (url) {
-        window.open(url)
+        document.open(url,'', 'noopener=true')
       }
     }
   }
 </script>
-
-<style>
-*:not(select) {
-  scrollbar-color: #ffffff #2e323d;
-  scrollbar-width: thin;
-}
-::-webkit-scrollbar-thumb {
-  background: #ffffff;
-}
-::-webkit-scrollbar-track {
-  background-color: #2e323d;
-}
-.card-title {
-  color: #ffffff !important;
-  cursor: pointer;
-}
-.ivu-card-head {
-  padding: 2.5% 16px !important;
-  border-bottom: 1px solid #ffffff !important;
-}
-.ivu-tooltip {
-  border-color: #ffffff !important;
-  border-radius: 4px !important;
-  background-color: #ffffff !important;
-}
-.ivu-table {
-  color: #ffffff !important;
-  background-color: #2e323d !important;
-}
-.ivu-card, .ivu-table td, .ivu-table th {
-  background-color: #2e323d !important;
-  border-color: #ffffff !important;
-}
-.ivu-table-row-highlight, .ivu-table-row-hover {
-  color: #9cc3e7 !important;
-}
-/* Chrome and derivatives*/
-::-webkit-scrollbar {
-  max-width: 8px !important;
-  max-height: 8px !important;
-}
-.ivu-card-extra {
-  top: 8px !important;
-}
-.ivu-table-body {
-  height: 418px;
-  overflow-x: hidden;
-  scrollbar-width: thin !important;
-}
-.table-footer {
-  position: fixed;
-  bottom: 0 ;
-  padding-left: 10px;
-  width: 100%;
-  background-color: #ffffff;
-}
-.table-footer a {
-  color: #ed3f14;
-}
-</style>
