@@ -1,52 +1,49 @@
 # Magic Userscript+
 
-> Finds available UserJS for current site.
+> [09/09/21] Greasy Fork version may not work due to userscript library being removed. Use [GitHub](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/magic-userjs.user.js) version for now.
 
 *Fork of [Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/24508-userscript-show-site-all-userjs). Source code & authors information found [here](https://github.com/jae-jae/Userscript-Plus#userscript).*
 
+> Finds available UserJS for current site.
+
+![Preview](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/resources/preview.png)
+
+***
+
+| Version | Link | Note | Alternative | Build |
+|:----------:|:----------:|:----------:|:----------:|:----------:|
+Chrome | ~~Install [Chrome Web Store]~~ | **There are no excluded websites, use at your own risk.** *Must be installed [manually](#manual-install).* | [Install [GitHub]](https://github.com/magicoflolis/Userscript-Plus/releases) | [Extension](#build-setup)
+Firefox | [Install [Firefox Add-ons]](https://addons.mozilla.org/addon/userscript-plus) | **There are no excluded websites, use at your own risk.** *Can be installed [manually](#manual-install).* | [Install [GitHub]](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on](#build-setup)
+Userscript | [Install [GitHub]](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/magic-userjs.user.js) | The userscript **WON'T** work for all websites, [info](#known-bugs). | [Install [Greasy Fork]](https://greasyfork.org/scripts/421603) | [Userscript](#build-setup)
+
+***
+
 ## Features
 
-*Recommended to install ["Greasyfork Search with Sleazyfork Results include"](https://greasyfork.org/scripts/23840)*
+**_Optional_** *install [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840).*
 
-> Currently [Userscript+](https://github.com/jae-jae/Userscript-Plus#userscript) can only find userscripts through [GreasyFork](https://greasyfork.org), I've added support for [SleazyFork](https://sleazyfork.org) along with a few additional features and tweaks!
+> Currently [Userscript+](https://github.com/jae-jae/Userscript-Plus#userscript) can only find userscripts through __GreasyFork__, I've added support for __SleazyFork__ along with a few additional features and tweaks!
 
 * Tested and compatible with TamperMonkey n ViolentMonkey.
 * Trimmed / moved some @resources to this build.
 * Added [SleazyFork](https://sleazyfork.org).
 * Added Dark Theme.
 * Added extra @excludes.
-* Added built-in ["Greasyfork Search with Sleazyfork Results include"](https://greasyfork.org/scripts/23840)
+* Added built-in [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840).
 
 ```bash
 let sleazyfork_redirect = false; // "true" to enable, "false" to disable
 ```
 
-![Preview](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/resources/preview.png)
+## Known bugs
 
-***
+* [ All ] May leave a opened tab when installing User Scripts.
+* [ User Script ] Found count may not appear.
+* [ User Script ] In some sites below the plug-in interface icon is not displayed
 
-**Chrome:**
+> **Reason**：This is because the security policy of these sites to prevent the plug-in icon font file loading, resulting in the icon does not display properly.
 
-> **There are no excluded websites, use at your own risk.**
-
-* ~~Chrome Web Store~~
-* [GitHub Releases](https://github.com/magicoflolis/Userscript-Plus/releases)
-
-**Firefox:**
-
-> **There are no excluded websites, use at your own risk.**
-
-* [Add-ons web site](https://addons.mozilla.org/firefox/addon/userscript-plus)
-* [GitHub Releases](https://github.com/magicoflolis/Userscript-Plus/releases)
-
-**User Script:**
-
-> The userscript **WON'T** work for all websites, [info.](#known-bugs)
-
-* [Greasy Fork](https://greasyfork.org/scripts/421603)
-* [GitHub Direct Link](https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjs.user.js)
-
-**Manual:**
+## Manual Install
 
 Chromium
 
@@ -69,23 +66,15 @@ Firefox
   * Select the directory `userscript_for_tampermonkey-*` / desired folder.
   * Click *Open*.
 
-***
-
-## Known bugs
-
-* [ All ] May leave a opened tab when installing User Scripts.
-* [ User Script ] Found count may not appear.
-* [ User Script ] In some sites below the plug-in interface icon is not displayed
-
-> **Reason**：This is because the security policy of these sites to prevent the plug-in icon font file loading, resulting in the icon does not display properly.
-
 ## Build Setup
 
-> Additional help
+> Developed using [VSCodium](https://vscodium.com).
 
-* [web-ext documentation](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/)
-* [http-server](https://github.com/http-party/http-server)
-* [How to edit scripts with your favorite editor?](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/#install-a-local-script)
+| Help Links |
+|:----------:|
+[web-ext documentation](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/) |
+[http-server](https://github.com/http-party/http-server) |
+[How to edit scripts with your favorite editor?](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/#install-a-local-script) |
 
 ```bash
 # Install dependencies ( if error use npm i --force )
@@ -105,7 +94,11 @@ npm run dev:browser
 # For Chrome load unpacked, REPLACE manifest.json with chrome-manifest.json
 ```
 
-## License
+## Source Code
+
+* [GitHub](https://github.com/magicoflolis/Userscript-Plus)
+
+### License
 
 MIT
 
