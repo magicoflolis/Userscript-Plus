@@ -14,7 +14,7 @@
 |:----------:|:----------:|:----------:|:----------:|:----------:|
 Chrome | ~~Install [Chrome Web Store]~~ | **There are no excluded websites, use at your own risk.** *Must be installed [manually](#manual-install).* | [Install [GitHub]](https://github.com/magicoflolis/Userscript-Plus/releases) | [Extension](#build-setup)
 Firefox | [Install [Firefox Add-ons]](https://addons.mozilla.org/addon/userscript-plus) | **There are no excluded websites, use at your own risk.** *Can be installed [manually](#manual-install).* | [Install [GitHub]](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on](#build-setup)
-Userscript | [Install [GitHub]](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/magic-userjs.user.js) | The userscript **WON'T** work for all websites, [info](#known-bugs). | [Install [Greasy Fork]](https://greasyfork.org/scripts/421603) | [Userscript](#build-setup)
+Userscript | [Install](#install-area) | The userscript **WON'T** work for all websites, [info](#known-bugs). | [Install [GitHub]](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/dist/magic-userjs.user.js) | [Userscript](#build-setup)
 
 ***
 
