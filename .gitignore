@@ -9,7 +9,6 @@ jspm_packages/
 .vscode/.history
 
 *.bak
-*.code-workspace
 *.web-extension-id
 web-ext-artifacts
 web-ext

@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "globals": {
+    "GM": "writable",
+    "jshead": "writable",
+		"debug": "writable",
+		"debugToggle": "writable",
+    "code": "writable",
+		"browser": "readonly",
+    "chrome": "readonly",
+    "webext": "readonly",
+    "brws": "readonly"
+  },
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "greasemonkey": true,
+    "jquery": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "ecmaFeatures": {
+      "globalReturn": true,
+      "arrowFunctions": true,
+      "modules": true
+    },
+    "ecmaVersion": "latest"
+  },
+  "rules": {}
+}

@@ -1,31 +1,34 @@
 {
-    "version": "0.2.0",
-    "compounds": [
-        {
-          "name": "Attach/Launch",
-          "configurations": ["Attach:Firefox", "Start:Firefox"]
-        }
-      ],
-    "configurations": [
-        {
-          "name": "Attach:Firefox",
-          "type": "firefox",
-          "request": "attach",
-        },
-        {
-          "name": "Start:Firefox",
-          "type": "firefox",
-          "request": "launch",
-          "reAttach": true,
-          "reloadOnAttach": true,
-          "keepProfileChanges": false,
-          "clearConsoleOnReload": true,
-          "url": "https://www.google.com/",
-          "addonPath": "${workspaceFolder}\\dist\\extension",
-          "reloadOnChange": {
-            "watch": [ "${workspaceFolder}/dist/extension/js/*.js" ],
-            "ignore": [ "${workspaceFolder}/node_modules/**" ]
-        }
+  "version": "0.2.0",
+  "compounds": [
+      {
+        "name": "Attach/Launch",
+        "configurations": ["Attach:Firefox", "Start:Firefox"]
       }
-    ]
+    ],
+  "configurations": [
+    {
+      "name": "Attach:Firefox",
+      "type": "firefox",
+      "request": "attach",
+    },
+    {
+      "name": "SF",
+      "type": "firefox",
+      "request": "launch",
+      "clearConsoleOnReload": true,
+      "reAttach": true,
+      "reloadOnAttach": true,
+      "keepProfileChanges": false,
+      "reloadOnChange": "${workspaceFolder}/src/js/**",
+      "url": "https://www.google.com/",
+      "addonPath": "${workspaceFolder}\\tests\\firefox",
+      "pathMappings": [
+        {
+          "url": "webpack:///js",
+          "path": "${workspaceFolder}/src/js"
+        }
+      ]
+    }
+  ]
 }

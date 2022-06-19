@@ -1,0 +1,34 @@
+{
+  "name": "uscript-plus-firefox",
+  "productName": "Magic Userscript+ : Show Site All UserJS",
+  "version": "2.3.13",
+  "description": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey.",
+  "scripts": {
+    "dev:Start": "concurrently \"npm run dev:Userscript\" \"npm run dev:Server\"",
+		"pub:Userscript": "node -r dotenv/config ./tools/userscript.js dotenv_config_path=./dist/.env",
+    "dev:Userscript": "node -r dotenv/config ./tools/userscript.js dotenv_config_path=./src/.env",
+    "dev:Server": "http-server ./dist -c5"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/sass": "^1.43.1",
+    "dotenv": "^16.0.1",
+		"eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "http-server": "^14.1.0",
+    "concurrently": "^7.2.1",
+    "node-watch": "^0.7.3"
+  },
+  "author": "Magic <magicoflolis@tuta.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
+  },
+  "homepage": "https://github.com/magicoflolis/Userscript-Plus",
+  "repository": "git+https://github.com/magicoflolis/Userscript-Plus.git",
+  "keywords": [
+    "userscript",
+    "userjs",
+    "tampermonkey"
+  ]
+}
