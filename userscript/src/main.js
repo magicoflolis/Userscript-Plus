@@ -1,14 +1,15 @@
 /* eslint-disable no-undef */
 (() => {
+	ljs.addAliases({
+		jQuery:'https://cdn.jsdelivr.net/gh/jquery/jquery/dist/jquery.slim.min.js'
+	});
   const win = self ?? window,
   doc = win.document,
   qs = (element, selector) => {
     selector = selector ?? doc ?? doc.body;
     return selector.querySelector(element);
   },
-  delay = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  },
+  delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
   iframe = {
     write: () => {
       const root = qs('#jae_userscript_box > .jae-userscript',doc.body),
@@ -21,18 +22,18 @@
       <body style="background: none transparent">
       <div id="app"></div>
       </body></html>`;
-      if (dom.tagName && "iframe" == dom.tagName.toLowerCase()) {
+      if (dom.tagName && 'iframe' == dom.tagName.toLowerCase()) {
         let c = dom.contentDocument ?? dom.contentWindow.document;
         try {
           c.open();
           c.write(domDoc);
           c.close();
         } catch (d) {
-          err(`loading "${dom.name}"`);
+          err(`loading { ${dom.name} }`);
           if(root) {
-            root.innerHTML = `<span>[ERROR] loading "${dom.name}"</span>`;
+            root.innerHTML = `<span>[ERROR] loading { ${dom.name} }</span>`;
             delay(2500).then(() => {
-              root.innerHTML = "";
+              root.innerHTML = '';
             });
           };
         }
@@ -40,17 +41,17 @@
     }
   },
   sleazy = () => {
-    let otherSite = /greasyfork\.org/.test(location.hostname) ? "sleazyfork" : "greasyfork";
-    qs('span.sign-in-link') ? /scripts\/\d+/.test(location.href) ? !qs("#script-info") && (otherSite == "greasyfork" || qs("div.width-constraint>section>p>a")) ? location.href = location.href.replace(/\/\/([^\.]+\.)?(greasyfork|sleazyfork)\.org/, "//$1" + otherSite + "\.org") : false : false : false;
+    let otherSite = /greasyfork\.org/.test(location.hostname) ? 'sleazyfork' : 'greasyfork';
+    qs('span.sign-in-link') ? /scripts\/\d+/.test(location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
   };
 
   class FetchUserjs {
     constructor() {
-      this.host = win.location.hostname.split(".").splice(-2).join(".");
+      this.host = win.location.hostname.split('.').splice(-2).join('.');
       this.showTime = 10;
-      this.quietKey = "jae_fetch_userjs_quiet";
-      this.countKey = "jae_fetch_userjs_count";
-      this.adultKey = "jae_fetch_userjs_adult";
+      this.quietKey = 'jae_fetch_userjs_quiet';
+      this.countKey = 'jae_fetch_userjs_count';
+      this.adultKey = 'jae_fetch_userjs_adult';
       this.tplBox = `<div id="jae_userscript_box">
     <style>${boxCSS}</style>
     <div class="jae-userscript">
@@ -68,11 +69,12 @@
     }
 
     setSize(w, h) {
-      qs('#jae_userscript_box > .jae-userscript',doc.body).setAttribute('style', `width: ${w}px;height: ${h}px;`);
-      // $('.jae-userscript').css({
-      //   width: w,
-      //   height: h
-      // });
+      if(w.trim() === '90vw') {
+        if(custom_width.trim() !== '') {
+          return qs('#jae_userscript_box > .jae-userscript',doc.body).setAttribute('style', `width: ${custom_width};height: ${h}px;`)
+        }
+      }
+      return qs('#jae_userscript_box > .jae-userscript',doc.body).setAttribute('style', `width: ${w};height: ${h}px;`)
     }
 
     addEventListener(eventName, handler) {
@@ -84,16 +86,11 @@
         qs('#jae_userscript_box').remove();
       }, this.showTime * 1000);
       this.addEventListener('max', () => {
-        this.setSize(860, 492);
-        // qs('#jae_userscript_box > .jae-userscript').classList.add('jae-userscript-shadow');
+        this.setSize('90vw', 492);
         clearTimeout(this.timeId);
       });
       this.addEventListener('min', () => {
-        // qs('#jae_userscript_box > .jae-userscript').classList.remove('jae-userscript-shadow');
-        this.setSize(370, 56);
-        // delay(500).then(() => {
-        //   this.setSize(370, 56);
-        // });
+        this.setSize('370px', 56);
       });
       this.addEventListener('close', () => {
         sessionStorage.setItem(this.quietKey, 1);
@@ -119,7 +116,7 @@
     render() {
       if (!this.isQuiet) {
         if (this.getCountData(this.host)) {
-          $("body").append(this.tplBox);
+          $('body').append(this.tplBox);
           iframe.write();
           this.execFrameJs(jaeFetchUserJSFrame.window);
           this.bindEvent();

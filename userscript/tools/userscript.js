@@ -1,19 +1,16 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-useless-escape */
 /* eslint-env node */
 // import { transformFileSync } from "@swc/core";
 import { readFileSync, writeFile } from "fs";
 import watch from 'node-watch';
 const log = (...message) => {
   console.log(`[NodeJS] DBG ${performance.now()}ms`,...message);
-  //console.log('[%cNodeJS%c] %cDBG', 'color: rgb(0, 186, 124);', '', 'color: rgb(255, 212, 0);', `${[...message]} ${performance.now()}ms`)
 },
 delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 },
 nano = (template, data) => {
   return template.replace(/\{([\w\.]*)\}/g, (str, key) => {
-    let keys = key.split("."),
+    let keys = key.split('.'),
     v = data[keys.shift()];
     for (let i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
     return typeof v !== "undefined" && v !== null ? v : "";

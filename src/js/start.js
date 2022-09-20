@@ -8,25 +8,15 @@ import { format } from "timeago.js";
 import psl from "psl";
 
 let config = {
-    api: "https://greasyfork.org/scripts/by-site/{host}.json",
-    sapi: "https://sleazyfork.org/scripts/by-site/{host}.json"
+    api: 'https://greasyfork.org/scripts/by-site/{host}.json',
+    sapi: 'https://sleazyfork.org/scripts/by-site/{host}.json'
   },
   cfg,
   brws = (typeof browser=="undefined"?chrome:browser),
   msg = brws.runtime.connect({name:"messenger"});
-
   msg.onMessage.addListener((m) => {
     cfg = m.cfg;
     us.log(cfg);
-    // us.fetchURL(`https://greasyfork.org/scripts/by-site/${location.hostname}.json`).then(json => {
-    //   json = json.map(item => {
-    //     item.user = item.users[0];
-    //     return item;
-    //   });
-    //   sessionStorage.setItem(host, JSON.stringify(json));
-    //   callback(json);
-    // })
-    // us.ael(win,"load",loadConfig);
   });
 
 const Tools = {
@@ -101,7 +91,7 @@ const Tools = {
       this.host.then(host => {
         let data = bgSessionStorage.getItem(host),
         fetchJS = (url) => {
-          let f = fetch(url).then(r => r.json())
+          let f = fetch(url).then(r => r.json());
           f.then(json => {
             json = json.map(item => {
               item.user = item.users[0];
@@ -178,18 +168,6 @@ Tools.getData((json) => {
   originData = json,
   count = data.length;
   for (let d of data) {
-    // let container = us.create("div","container"),
-    // arrow = us.create("div","up-arrow"),
-    // order = us.create("div","up-order"),
-    // title = us.create("div","up-title"),
-    // author = us.create("div","up-author"),
-    // daily = us.create("div","up-daily"),
-    // updated = us.create("div","up-updated"),
-    // version = us.create("div","up-version"),
-    // rating = us.create("div","up-raing"),
-    // desc = us.create("div","up-desc"),
-    // installs = us.create("div","up-installs"),
-    // install = us.create("div","up-install");
     itemID+=1;
     let row = us.create("tr","ivu-table-row", {
       innerHTML: `<td class="">

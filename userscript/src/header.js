@@ -7,7 +7,8 @@
  * Включить встроенный "Greasyfork Поиск с Sleazyfork Результаты включают"
  * https://greasyfork.org/scripts/23840
  */
- const sleazyfork_redirect = false, // "true" to enable, "false" to disable
+ const sleazyfork_redirect = false, // 'true' to enable, 'false' to disable
+ custom_width = '', // Default UserJS width: 90vw | Original UserJS width: 860px
  /**
  * Injected stylesheet
  * https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass
@@ -17,7 +18,7 @@
     console.error('[%cUserJS%c] %cERROR', 'color: rgb(29, 155, 240);', '', 'color: rgb(249, 24, 128);', ...error);
   };
 
- if(typeof unsafeWindow === "undefined") {
+ if(typeof unsafeWindow === 'undefined') {
    err('[%cUserJS%c] %cERROR', 'color: rgb(29, 155, 240);', '', 'color: rgb(249, 24, 128);', "Unsupported: unsafeWindow");
  } else {
   unsafeWindow.GmAjax = GM_xmlhttpRequest;

@@ -12,9 +12,8 @@ export const us = {
         elm.addEventListener("touchstart", callback);
         elm.addEventListener("touchend", callback);
       }
-    } else {
-      return elm.addEventListener(event, callback);
-    }
+    };
+    return elm.addEventListener(event, callback);
   },
   /** Waits until args return true */
   async check(args) {
@@ -30,13 +29,8 @@ export const us = {
     if(attrs) {
       for (let key in attrs) {
         el[key] = attrs[key];
-        // // keys
-        // alert( key );  // name, age, isAdmin
-        // // values for the keys
-        // alert( attrs[key] ); // John, 30, true
       }
     }
-
     return el;
   },
   delay(ms) {

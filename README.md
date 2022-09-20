@@ -14,7 +14,7 @@
 |:----------:|:----------:|:----------:|:----------:|
 Chrome / Edge | - | - | Work in progress
 Firefox | - | - | Work in progress
-Userscript | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | [Greasy Fork](https://greasyfork.org/scripts/421603) | -
+Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | -
 
 ***
 
@@ -26,14 +26,18 @@ Userscript | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/
 * Added Dark Theme.
 * Added extra @excludes.
 * Added built-in [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840).
+* Added ability to customize width.
 
-```bash
-let sleazyfork_redirect = false; // "true" to enable, "false" to disable
+```JS
+const sleazyfork_redirect = false, // 'true' to enable, 'false' to disable
+custom_width = '', // Default UserJS width: 90vw | Original UserJS width: 860px
+...
 ```
 
 ## Known bugs
 
-* [ User Script ] *May* conflict with a few running user scripts. (Example: [Twitter External Translator](https://greasyfork.org/scripts/421643))
+* [ Chinese ] List may not display properly.
+* [ User Script ] *May* conflict with any UserJS that runs in iframes.
 * [ All ] May leave a opened tab when installing user scripts.
 * [ User Script ] Found count may not appear.
 * [ User Script ] In some sites below the plug-in interface icon is not displayed
@@ -42,7 +46,7 @@ let sleazyfork_redirect = false; // "true" to enable, "false" to disable
 
 ## Source Code
 
-* [GitHub](https://github.com/magicoflolis/Userscript-Plus/src)
+* [https://github.com/magicoflolis/Userscript-Plus/tree/master/src](https://github.com/magicoflolis/Userscript-Plus/tree/master/src)
 
 ### Contacts
 

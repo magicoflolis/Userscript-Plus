@@ -1,13 +1,13 @@
 {
   "name": "uscript-plus-firefox",
   "productName": "Magic Userscript+ : Show Site All UserJS",
-  "version": "2.3.13",
+  "version": "2.4.13",
   "description": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey.",
   "scripts": {
     "dev:Start": "concurrently \"npm run dev:Userscript\" \"npm run dev:Server\"",
 		"pub:Userscript": "node -r dotenv/config ./tools/userscript.js dotenv_config_path=./dist/.env",
     "dev:Userscript": "node -r dotenv/config ./tools/userscript.js dotenv_config_path=./src/.env",
-    "dev:Server": "http-server ./dist -c5"
+    "dev:Server": "http-server ./dist -s --no-dotfiles -c-1"
   },
   "type": "module",
   "devDependencies": {

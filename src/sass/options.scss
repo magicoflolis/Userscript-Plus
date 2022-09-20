@@ -44,10 +44,7 @@ body.userjs-options {
   .switch {
     position: relative;
     width: 38px;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
+    user-select: none;
     input {
       display: none;
       &:checked+label {
