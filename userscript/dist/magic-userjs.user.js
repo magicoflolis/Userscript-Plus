@@ -73,8 +73,7 @@
 // @exclude      *://*.*.*.gov/*
 // @exclude      *://*.*.*/password_reset
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
-// @require      https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/userjs-base.js?_=1663717034874
-// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js?_=1663717034874
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
