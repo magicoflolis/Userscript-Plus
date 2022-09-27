@@ -14,7 +14,8 @@
 |:----------:|:----------:|:----------:|:----------:|
 Chrome / Edge | - | - | Work in progress
 Firefox | - | - | Work in progress
-Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | -
+Userscript v3 (WIP) | - | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) |  Testing/feedback needed!
+Userscript v2 | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js) | Stable
 
 ***
 
@@ -26,7 +27,7 @@ Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (Gi
 * Added Dark Theme.
 * Added extra @excludes.
 * Added built-in [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840).
-* Added ability to customize width.
+* Added ability to customize width (Thank you [neverWake](https://greasyfork.org/en/scripts/421603/discussions/149978) for the idea)
 
 ```JS
 const sleazyfork_redirect = false, // 'true' to enable, 'false' to disable
@@ -34,15 +35,15 @@ custom_width = '', // Default UserJS width: 90vw | Original UserJS width: 860px
 ...
 ```
 
+## Changelog
+
+> [(GitHub) Full Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
+
 ## Known bugs
 
-* [ Chinese ] List may not display properly.
-* [ User Script ] *May* conflict with any UserJS that runs in iframes.
-* [ All ] May leave a opened tab when installing user scripts.
-* [ User Script ] Found count may not appear.
-* [ User Script ] In some sites below the plug-in interface icon is not displayed
-
-> **Reason**：This is because the security policy of these sites to prevent the plug-in icon font file loading, resulting in the icon does not display properly.
+* *May* conflict with any UserJS that runs in iframes
+* May leave a opened tab when installing user scripts
+* Found count may not appear
 
 ## Source Code
 
