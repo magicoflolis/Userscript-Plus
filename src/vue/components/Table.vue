@@ -13,28 +13,28 @@
         <Input v-else v-model="searchInput"  icon="android-search" placeholder="Enter title、description、author..." style="width: 50%"/>
       </div>
       <div slot="extra">
-      <span>
-        <Tooltip :content="$t('table.search')" placement="bottom">
-          <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
-            <Icon type="android-search" color="white"></Icon>
-          </Button>
-        </Tooltip>
-        <Tooltip :content="$t('table.issue')" placement="bottom">
-          <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
-            <Icon type="bug" color="white"></Icon>
-          </Button>
-        </Tooltip>
-        <Tooltip :content="$t('table.home')" placement="bottom">
-          <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
-            <Icon type="home" color="white"></Icon>
-          </Button>
-        </Tooltip>
-        <Tooltip :content="$t('table.og')" placement="bottom">
-          <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus#readme')" style="background-color: #2e323d">
-            <Icon type="fork" color="white"></Icon>
-          </Button>
-        </Tooltip>
-      </span>
+        <span>
+          <Tooltip :content="$t('table.search')" placement="bottom">
+            <Button type="default" @click="showSearchInput = !showSearchInput" style="background-color: #2e323d">
+              <Icon type="android-search" color="white"></Icon>
+            </Button>
+          </Tooltip>
+          <Tooltip :content="$t('table.issue')" placement="bottom">
+            <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus/issues/new')" style="background-color: #2e323d">
+              <Icon type="bug" color="white"></Icon>
+            </Button>
+          </Tooltip>
+          <Tooltip :content="$t('table.home')" placement="bottom">
+            <Button type="default" @click="open('https://github.com/magicoflolis/Userscript-Plus')" style="background-color: #2e323d">
+              <Icon type="home" color="white"></Icon>
+            </Button>
+          </Tooltip>
+          <Tooltip :content="$t('table.og')" placement="bottom">
+            <Button type="default" @click="open('https://github.com/jae-jae/Userscript-Plus')" style="background-color: #2e323d">
+              <Icon type="fork" color="white"></Icon>
+            </Button>
+          </Tooltip>
+        </span>
       </div>
       <div>
         <Table highlight-row height="460" :columns="columns" :data="data"></Table>

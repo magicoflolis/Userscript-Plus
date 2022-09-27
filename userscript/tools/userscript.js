@@ -32,7 +32,6 @@ renderOut = (outFile, jshead) => {
     jshead: jshead,
     boxCSS: boxCSS,
     code: code,
-    time: +new Date(),
   });
   writeFile(outFile, ujs, (err) => {
     return (err) ? log(err) : log(`Build-path: ${outFile}`);
@@ -113,9 +112,8 @@ jshead_common = `// ==UserScript==
 // @exclude      *://*.*.*/options/*
 // @exclude      *://*.*.*.gov/*
 // @exclude      *://*.*.*/password_reset
-// @require      ${js_env ? `https://cdn.jsdelivr.net/gh/jae-jae/l.js/userjs/l.userjs.min.js` : `https://greasyfork.org/scripts/23419-l-js/code/ljs.js`}
-// @require      ${js_env ? `http://localhost:8080/userjs-base.js?_=${time}` : `https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/userjs-base.js?_=${time}`}
-// @resource     uiJs   ${js_env ? `http://localhost:8080/ui.js?_=${time}` : `https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js?_=${time}`}
+// @require      ${js_env ? `https://cdn.jsdelivr.net/gh/jquery/jquery/dist/jquery.slim.min.js` : `https://code.jquery.com/jquery-3.6.1.slim.min.js`}
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/ui.js
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
@@ -147,3 +145,5 @@ watcher.on('error', (err) => {
     watcher;
   });
 });
+
+// @resource     uiJs   ${js_env ? `http://localhost:8080/ui.js?_=${time}` : `https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js?_=${time}`}

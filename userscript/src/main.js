@@ -1,8 +1,4 @@
-/* eslint-disable no-undef */
 (() => {
-	ljs.addAliases({
-		jQuery:'https://cdn.jsdelivr.net/gh/jquery/jquery/dist/jquery.slim.min.js'
-	});
   const win = self ?? window,
   doc = win.document,
   qs = (element, selector) => {
@@ -19,7 +15,7 @@
       <meta charset="utf-8">
       <title>Show Site All UserJS</title>
       </head>
-      <body style="background: none transparent">
+      <body style="background: none transparent !important;">
       <div id="app"></div>
       </body></html>`;
       if (dom.tagName && 'iframe' == dom.tagName.toLowerCase()) {
@@ -29,9 +25,9 @@
           c.write(domDoc);
           c.close();
         } catch (d) {
-          err(`loading { ${dom.name} }`);
+          err(`loading { ${dom.name} }; [ ${d} ]`);
           if(root) {
-            root.innerHTML = `<span>[ERROR] loading { ${dom.name} }</span>`;
+            root.innerHTML = `<span>[ERROR] loading { ${dom.name} }; [ ${d} ]</span>`;
             delay(2500).then(() => {
               root.innerHTML = '';
             });
@@ -127,9 +123,7 @@
   }
 
   let fu = new FetchUserjs();
-  ljs.exec(['jQuery'], () => {
-    /greasyfork\.org/.test(location.hostname) && sleazyfork_redirect ? sleazy() : false;
-    fu.render();
-  });
+  /greasyfork\.org/.test(location.hostname) && sleazyfork_redirect ? sleazy() : false;
+  fu.render();
 
 })();

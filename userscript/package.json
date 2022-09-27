@@ -1,7 +1,7 @@
 {
   "name": "uscript-plus-firefox",
   "productName": "Magic Userscript+ : Show Site All UserJS",
-  "version": "2.4.13",
+  "version": "2.4.14",
   "description": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey.",
   "scripts": {
     "dev:Start": "concurrently \"npm run dev:Userscript\" \"npm run dev:Server\"",

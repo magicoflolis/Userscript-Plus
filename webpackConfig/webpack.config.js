@@ -22,7 +22,7 @@ const webpack = require("webpack"),
         {
           test: /\.m?js$/,
           exclude: /node_modules/,
-          loader: "babel-loader",
+          loader: "swc-loader",
         },
         {
           test: /\.vue$/,

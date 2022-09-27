@@ -2,15 +2,17 @@
 yarn.lock
 node_modules/
 jspm_packages/
-
-# dotenv environment variables file
-.env
-
-.vscode/.history
-
-*.bak
-*.web-extension-id
+.vscode/.history/
 web-ext-artifacts
 web-ext
+build
+/build/
 Notes
 /Notes/
+chrlauncher
+/chrlauncher/
+
+# dotenv environment variable file
+.env
+*.bak
+*.web-extension-id

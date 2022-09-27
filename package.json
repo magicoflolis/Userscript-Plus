@@ -1,7 +1,7 @@
 {
   "name": "uscript-plus-firefox",
   "productName": "Magic Userscript+ : Show Site All UserJS",
-  "version": "2.3.13",
+  "version": "2.4.14",
   "description": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey.",
   "scripts": {
     "Dev:FF": "concurrently \"npm run Webpack:FF\" \"npm run Start:Sass\"",
@@ -11,17 +11,18 @@
     "Webpack:Cr": "webpack --progress --mode development --config=tools/webpack.config.js --node-env chrome",
     "Start:Sass": "sass -w ./src/sass/magicuserjs.scss:./tests/compiled/magicuserjs.css -s compressed",
     "build:Firefox": "webpack --mode production --config=tools/webpack.config.js --node-env firefox",
-    "build:Chrome": "webpack --mode production --config=tools/webpack.config.js --node-env chrome",
-    "build:Userscript": "npm --prefix ./userscript run pub:Userscript"
+    "build:Chrome": "webpack --mode production --config=tools/webpack.config.js --node-env chrome"
   },
   "devDependencies": {
     "@mdi/font": "^5.9.55",
+    "@plasmo-corp/ewu": "^0.6.0",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.204",
     "@types/psl": "^1.1.0",
     "autoprefixer": "^10.4.7",
     "concurrently": "^7.2.2",
     "copy-webpack-plugin": "^11.0.0",
+    "crx3": "^1.1.3",
     "dotenv": "^16.0.1",
     "eslint-plugin-html": "^6.2.0",
     "path-browserify": "^1.0.1",
