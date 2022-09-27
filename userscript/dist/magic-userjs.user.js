@@ -16,10 +16,10 @@
 // @author       Magic <magicoflolis@tuta.io>
 // @namespace    https://github.com/magicoflolis/Userscript-Plus
 // @homepageURL  https://github.com/magicoflolis/Userscript-Plus
-// @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
-// @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
+// @downloadURL  https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js
+// @updateURL    https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js
 // @supportURL   https://github.com/magicoflolis/Userscript-Plus/issues/new
-// @version      2.4.14
+// @version      2.4.15
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3ggEBCQHM3fXsAAAAVdJREFUOMudkz2qwkAUhc/goBaGJBgUtBCZyj0ILkpwAW7Bws4yO3AHLiCtEFD8KVREkoiFxZzX5A2KGfN4F04zMN+ce+5c4LMUgDmANYBnrnV+plBSi+FwyHq9TgA2LQpvCiEiABwMBtzv95RSfoNEHy8DYBzHrNVqVEr9BWKcqNFoxF6vx3a7zc1mYyC73a4MogBg7vs+z+czO50OW60Wt9stK5UKp9Mpj8cjq9WqDTBHnjAdxzGQZrPJw+HA31oulzbAWgLoA0CWZVBKIY5jzGYzdLtdE9DlcrFNrY98zobqOA6TJKHW2jg4nU5sNBpFDp6mhVe5rsvVasUwDHm9Xqm15u12o+/7Hy0gD8KatOd5vN/v1FozTVN6nkchxFuI6hsAAIMg4OPxMJCXdtTbR7JJCMEgCJhlGUlyPB4XfumozInrupxMJpRSRtZlKoNYl+m/6/wDuWAjtPfsQuwAAAAASUVORK5CYII=
 // @license      MIT
 // @include      *
@@ -73,7 +73,7 @@
 // @exclude      *://*.*.*.gov/*
 // @exclude      *://*.*.*/password_reset
 // @require      https://greasyfork.org/scripts/23419-l-js/code/ljs.js
-// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js
+// @resource     uiJs   https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/ui.js
 // @resource     count  https://greasyfork.org/scripts/by-site.json
 // @resource     adult  https://sleazyfork.org/scripts/by-site.json
 // @grant        GM_xmlhttpRequest
@@ -247,4 +247,3 @@
   });
 
 })();
-
