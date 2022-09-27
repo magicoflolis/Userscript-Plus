@@ -1,0 +1,200 @@
+magic-userjs {
+  cursor: default;
+}
+magic-userjs * {
+  line-height: normal;
+}
+.hidden {
+  display: none !important;
+  z-index: -1 !important;
+}
+.main {
+  position: fixed;
+  height: 492px;
+  max-width: 100%;
+  min-width: 500px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  bottom: 1rem;
+  right: 1rem;
+  background: #495060 !important;
+  color: rgb(255, 255, 255) !important;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 10px;
+  font-size: 14px !important;
+  font-family: arial,sans-serif !important;
+  &:not(.hidden) {
+    z-index: 9999999 !important;
+    display: grid !important;
+  };
+  *:not(magicuserjs-a,magicuserjs-btn,.count) {
+    background: #495060 !important;
+    color: rgb(255, 255, 255) !important;
+  };
+}
+.mainbtn {
+  line-height: 2.5rem;
+  background: #495060 !important;
+  color: rgb(255, 255, 255) !important;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 100%;
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  &:not(.hidden) {
+    z-index: 9999999 !important;
+    display: block;
+  }
+}
+
+.count {
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 100%;
+  width: 2rem !important;
+  height: 2rem !important;
+  line-height: 2rem !important;
+  text-align: center !important;
+}
+
+.magicuserjs-header {
+  border-bottom: 1px solid #ffffff;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  height: fit-content;
+  padding: 10px;
+}
+.magicuserjs-body {
+  overflow-y: scroll;
+  scrollbar-color: #ffffff #2e323d;
+  scrollbar-width: thin;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.magicuserjs-eframe,
+.magicuserjs-header,
+.frame {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  font-size: 1em;
+}
+.frame {
+  @media screen and (max-width: 580px) {
+    grid-auto-flow: row !important;
+    grid-auto-rows: 1fr !important;
+    height: fit-content !important;
+  }
+  border-bottom: 1px solid #ffffff;
+  &:not(.sf) {
+    magicuserjs-a {
+      color: #00b7ff !important;
+    }
+    magicuserjs-btn {
+      color: #fff;
+      background-color: #2d8cf0;
+      border-color: #2d8cf0;
+    }
+  }
+  &.sf {
+    magicuserjs-a {
+      color: #ed3f14 !important;
+    }
+    magicuserjs-btn {
+      background-color: #ed3f14 !important;
+      border-color: #ed3f14 !important;
+    }
+  }
+}
+.magicuserjs-name {
+  font-size: inherit !important;
+  display: grid;
+  margin-left: 1%;
+  margin-top: .67em;
+  margin-bottom: .67em;
+  span {
+    font-size: 0.8em !important;
+  }
+}
+.magicuserjs-eframe {
+  @media screen and (max-width: 580px) {
+    height: fit-content !important;
+  }
+  margin-right: 1%;
+  margin-top: .67em;
+  margin-bottom: .67em;
+}
+.magicuserjs-uframe {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 1em;
+}
+magic-btn {
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  border: 1px solid #ffffff;
+  font-size: 16px;
+  border-radius: 4px;
+  line-height: 1;
+  padding: 6px 15px;
+  width: fit-content;
+}
+magic-column {
+  display: grid;
+  grid-auto-flow: column;
+  width: fit-content;
+  grid-gap: 1rem;
+}
+.search {
+  svg {
+    fill: white;
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+}
+.searcher {
+  right: 9.5rem;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  line-height: 1;
+  padding: 6px 15px;
+  width: 200px;
+  outline: 0px !important;
+  // position: fixed;
+}
+.close {
+  position: fixed;
+  right: 2.5rem;
+}
+magicuserjs-btn {
+  font-size: 12px;
+  border-radius: 3px;
+  font-style: normal;
+  padding: 6px 15%;
+  font-weight: 400;
+  font-variant: normal;
+  line-height: 21px;
+}
+magicuserjs-a,
+magicuserjs-btn,
+.mainbtn,
+magic-btn {
+  cursor: pointer !important;
+}
+.magicuserjs-uframe,
+.magicuserjs-daily,
+.magicuserjs-updated,
+.install,
+.magicuserjs-homepage,
+.magicuserjs-fver,
+.magicuserjs-fdesc {
+  width: fit-content;
+  height: fit-content;
+}

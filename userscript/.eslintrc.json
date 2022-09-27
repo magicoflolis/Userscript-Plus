@@ -2,12 +2,12 @@
   "root": true,
   "globals": {
     "GM": "writable",
-    "jshead": "writable",
-		"debug": "writable",
-		"debugToggle": "writable",
-    "code": "writable",
-		"browser": "readonly",
-    "chrome": "readonly",
+		"err": "readonly",
+    "boxCSS": "readonly",
+		"main_css": "readonly",
+		"custom_width": "readonly",
+		"jaeFetchUserJSFrame": "readonly",
+		"sleazyfork_redirect": "readonly",
     "webext": "readonly",
     "brws": "readonly"
   },
@@ -23,14 +23,15 @@
     "prettier"
   ],
   "parserOptions": {
+		"ecmaVersion": "latest",
     "sourceType": "module",
     "allowImportExportEverywhere": false,
     "ecmaFeatures": {
       "globalReturn": true,
       "arrowFunctions": true,
       "modules": true
-    },
-    "ecmaVersion": "latest"
+    }
   },
+  "ignorePatterns": ["/src/header.js","/tools/userscript.js", "/dist/*.js"],
   "rules": {}
 }

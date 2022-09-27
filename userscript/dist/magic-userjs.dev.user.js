@@ -1,4 +1,107 @@
-const log = (...msg) => console.log('[%cUserJS%c] %cDBG', 'color: rgb(29, 155, 240);', '', 'color: rgb(255, 212, 0);', ...msg),
+// ==UserScript==
+// @name         [Dev] Magic Userscript+ : Show Site All UserJS
+// @name:zh      Magic Userscript+ : 显示当前网站所有可用的UserJS脚本 Jaeger
+// @name:zh-CN   Magic Userscript+ : 显示当前网站所有可用的UserJS脚本 Jaeger
+// @name:zh-TW   Magic Userscript+ : 顯示當前網站所有可用的UserJS腳本 Jaeger
+// @name:ja      Magic Userscript+ : 現在のサイトの利用可能なすべてのUserJSスクリプトを表示するJaeger
+// @name:ru-RU   Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
+// @name:ru      Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
+// @description  Show current site all UserJS, the easier way to install UserJs for Tampermonkey.
+// @description:zh      显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
+// @description:zh-CN   显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
+// @description:zh-TW   顯示當前網站的所有可用UserJS(Tampermonkey)腳本,交流QQ群:104267383
+// @description:ja      現在のサイトで利用可能なすべてのUserJS（Tampermonkey）スクリプトを表示します。
+// @description:ru-RU   Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
+// @description:ru      Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
+// @author       Magic <magicoflolis@tuta.io>
+// @version      1664244945507
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3ggEBCQHM3fXsAAAAVdJREFUOMudkz2qwkAUhc/goBaGJBgUtBCZyj0ILkpwAW7Bws4yO3AHLiCtEFD8KVREkoiFxZzX5A2KGfN4F04zMN+ce+5c4LMUgDmANYBnrnV+plBSi+FwyHq9TgA2LQpvCiEiABwMBtzv95RSfoNEHy8DYBzHrNVqVEr9BWKcqNFoxF6vx3a7zc1mYyC73a4MogBg7vs+z+czO50OW60Wt9stK5UKp9Mpj8cjq9WqDTBHnjAdxzGQZrPJw+HA31oulzbAWgLoA0CWZVBKIY5jzGYzdLtdE9DlcrFNrY98zobqOA6TJKHW2jg4nU5sNBpFDp6mhVe5rsvVasUwDHm9Xqm15u12o+/7Hy0gD8KatOd5vN/v1FozTVN6nkchxFuI6hsAAIMg4OPxMJCXdtTbR7JJCMEgCJhlGUlyPB4XfumozInrupxMJpRSRtZlKoNYl+m/6/wDuWAjtPfsQuwAAAAASUVORK5CYII=
+// @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
+// @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
+// @supportURL   https://github.com/magicoflolis/Userscript-Plus/issues/new
+// @namespace    https://github.com/magicoflolis/Userscript-Plus
+// @homepageURL  https://github.com/magicoflolis/Userscript-Plus
+// @license      MIT
+// @connect      greasyfork.org
+// @connect      sleazyfork.org
+// @connect      cdn.jsdelivr.net
+// @include      *
+// @exclude      *://paypal.com/*
+// @exclude      *://mega.nz
+// @exclude      *://*.alipay.com/*
+// @exclude      *://*bank.*/*
+// @exclude      *://*perfectmoney.*/*
+// @exclude      *://*stripe.com/*
+// @exclude      *://*ica.yandex.com/*
+// @exclude      *://*authorize.net/*
+// @exclude      *://*2checkout.com/*
+// @exclude      *://192.168*
+// @exclude      *://127.0.0*
+// @exclude      *://router.*.*/*
+// @exclude      *://gitlab.com/*
+// @exclude      *://10.0.0*
+// @exclude      *://*skrill.com/*
+// @exclude      *://*zalo.me/*
+// @exclude      *://pay.amazon.*/*
+// @exclude      *://*.opayo.co.uk/*
+// @exclude      *://*.payza.org/*
+// @exclude      *://*.bluesnap.com/*
+// @exclude      *://securionpay.com/*
+// @exclude      *://*.unionpayintl.*/*
+// @exclude      *://*.99bill.com/*
+// @exclude      *://*.yeepay.com/*
+// @exclude      *://*payoneer.com/*
+// @exclude      *://*myetherwallet.com/*
+// @exclude      *://bitpay.com/*
+// @exclude      *://*.*/login
+// @exclude      *://*.*/join
+// @exclude      *://*.*/signin
+// @exclude      *://*.*/signup
+// @exclude      *://*.*/sign-up
+// @exclude      *://*.*/cart
+// @exclude      *://*.*.gov/*
+// @exclude      *://*.*/password_reset
+// @exclude      *://*.*/checkout*
+// @exclude      *://*.*/settings/*
+// @exclude      *://*.*/options/*
+// @exclude      *://*.*.*/login
+// @exclude      *://*.*.*/join
+// @exclude      *://*.*.*/signin
+// @exclude      *://*.*.*/signup
+// @exclude      *://*.*.*/sign-up
+// @exclude      *://*.*.*/cart
+// @exclude      *://*.*.*/checkout*
+// @exclude      *://*.*.*/settings/*
+// @exclude      *://*.*.*/options/*
+// @exclude      *://*.*.*.gov/*
+// @exclude      *://*.*.*/password_reset
+// @grant        GM_xmlhttpRequest
+// @grant        GM_openInTab
+// @compatible   Chrome
+// @compatible   Firefox
+// @compatible   Opera
+// @compatible   Safari
+// @noframes
+// @run-at       document-end
+// ==/UserScript==
+
+/**
+* Enable built-in "Greasyfork Search with Sleazyfork Results include"
+* 启用内置"使用 Sleazyfork 搜索"结果包括"
+* 組み込みの「スライジーフォークの結果を含む脂っこく検索」を有効にする
+* Включить встроенный "Greasyfork Поиск с Sleazyfork Результаты включают"
+* https://greasyfork.org/scripts/23840
+*/
+const sleazyfork_redirect = true, // 'true' to enable, 'false' to disable
+/**
+* Injected stylesheet
+* https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass
+*/
+main_css = `magic-userjs{cursor:default}magic-userjs *{line-height:normal}.hidden{display:none !important;z-index:-1 !important}.main{position:fixed;height:492px;max-width:100%;min-width:500px;margin-left:1rem;margin-right:1rem;bottom:1rem;right:1rem;background:#495060 !important;color:#fff !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-size:14px !important;font-family:arial,sans-serif !important}.main:not(.hidden){z-index:9999999 !important;display:grid !important}.main *:not(magicuserjs-a,magicuserjs-btn,.count){background:#495060 !important;color:#fff !important}.mainbtn{line-height:2.5rem;background:#495060 !important;color:#fff !important;border:2px solid rgba(0,0,0,0);border-radius:100%;width:3rem;height:3rem;text-align:center;position:fixed;bottom:1rem;right:1rem}.mainbtn:not(.hidden){z-index:9999999 !important;display:block}.count{border:2px solid rgba(0,0,0,0);border-radius:100%;width:2rem !important;height:2rem !important;line-height:2rem !important;text-align:center !important}.magicuserjs-header{border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:fit-content;padding:10px}.magicuserjs-body{overflow-y:scroll;scrollbar-color:#fff #2e323d;scrollbar-width:thin;border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}.magicuserjs-eframe,.magicuserjs-header,.frame{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;font-size:1em}.frame{border-bottom:1px solid #fff}@media screen and (max-width: 580px){.frame{grid-auto-flow:row !important;grid-auto-rows:1fr !important;height:fit-content !important}}.frame:not(.sf) magicuserjs-a{color:#00b7ff !important}.frame:not(.sf) magicuserjs-btn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.frame.sf magicuserjs-a{color:#ed3f14 !important}.frame.sf magicuserjs-btn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.magicuserjs-name{font-size:inherit !important;display:grid;margin-left:1%;margin-top:.67em;margin-bottom:.67em}.magicuserjs-name span{font-size:.8em !important}.magicuserjs-eframe{margin-right:1%;margin-top:.67em;margin-bottom:.67em}@media screen and (max-width: 580px){.magicuserjs-eframe{height:fit-content !important}}.magicuserjs-uframe{display:grid;grid-auto-flow:column;grid-gap:1em}magic-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px;width:fit-content}magic-column{display:grid;grid-auto-flow:column;width:fit-content;grid-gap:1rem}.search svg{fill:#fff;width:.8rem;height:.8rem}.searcher{right:9.5rem;border:1px solid #fff;border-radius:4px;line-height:1;padding:6px 15px;width:200px;outline:0px !important}.close{position:fixed;right:2.5rem}magicuserjs-btn{font-size:12px;border-radius:3px;font-style:normal;padding:6px 15%;font-weight:400;font-variant:normal;line-height:21px}magicuserjs-a,magicuserjs-btn,.mainbtn,magic-btn{cursor:pointer !important}.magicuserjs-uframe,.magicuserjs-daily,.magicuserjs-updated,.install,.magicuserjs-homepage,.magicuserjs-fver,.magicuserjs-fdesc{width:fit-content;height:fit-content}
+`;
+
+(() => {
+  const log = (...msg) => console.log('[%cUserJS%c] %cDBG', 'color: rgb(29, 155, 240);', '', 'color: rgb(255, 212, 0);', ...msg),
 err = (...msg) => {console.error('[%cUserJS%c] %cERROR', 'color: rgb(29, 155, 240);', '', 'color: rgb(249, 24, 128);', ...msg)};
 
 let checkGMSupport = typeof GM !== 'undefined' || typeof VM !== 'undefined',
@@ -323,3 +426,5 @@ countsite();
 //   });
 //   return (!doc.head.contains(s)) ? doc.head.appendChild(s) : false;
 // },
+
+})();
