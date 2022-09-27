@@ -419,12 +419,4 @@ if(/greasyfork\.org/.test(doc.location.hostname) && sleazyfork_redirect) {
 };
 
 countsite();
-
-// loadCSS = (css, name = 'common') => {
-//   let s = make('style', `magicuserjscss-${name}`, {
-//     innerHTML: css,
-//   });
-//   return (!doc.head.contains(s)) ? doc.head.appendChild(s) : false;
-// },
-
 })();
