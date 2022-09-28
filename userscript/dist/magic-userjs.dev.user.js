@@ -14,10 +14,10 @@
 // @description:ru-RU   Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @description:ru      Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @author       Magic <magicoflolis@tuta.io>
-// @version      1664244945507
+// @version      1664328414745
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3ggEBCQHM3fXsAAAAVdJREFUOMudkz2qwkAUhc/goBaGJBgUtBCZyj0ILkpwAW7Bws4yO3AHLiCtEFD8KVREkoiFxZzX5A2KGfN4F04zMN+ce+5c4LMUgDmANYBnrnV+plBSi+FwyHq9TgA2LQpvCiEiABwMBtzv95RSfoNEHy8DYBzHrNVqVEr9BWKcqNFoxF6vx3a7zc1mYyC73a4MogBg7vs+z+czO50OW60Wt9stK5UKp9Mpj8cjq9WqDTBHnjAdxzGQZrPJw+HA31oulzbAWgLoA0CWZVBKIY5jzGYzdLtdE9DlcrFNrY98zobqOA6TJKHW2jg4nU5sNBpFDp6mhVe5rsvVasUwDHm9Xqm15u12o+/7Hy0gD8KatOd5vN/v1FozTVN6nkchxFuI6hsAAIMg4OPxMJCXdtTbR7JJCMEgCJhlGUlyPB4XfumozInrupxMJpRSRtZlKoNYl+m/6/wDuWAjtPfsQuwAAAAASUVORK5CYII=
-// @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
-// @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
+// @downloadURL  https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/magic-userjs.dev.user.js
+// @updateURL    https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/magic-userjs.dev.user.js
 // @supportURL   https://github.com/magicoflolis/Userscript-Plus/issues/new
 // @namespace    https://github.com/magicoflolis/Userscript-Plus
 // @homepageURL  https://github.com/magicoflolis/Userscript-Plus
@@ -97,7 +97,7 @@ const sleazyfork_redirect = true, // 'true' to enable, 'false' to disable
 * Injected stylesheet
 * https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass
 */
-main_css = `magic-userjs{cursor:default}magic-userjs *{line-height:normal}.hidden{display:none !important;z-index:-1 !important}.main{position:fixed;height:492px;max-width:100%;min-width:500px;margin-left:1rem;margin-right:1rem;bottom:1rem;right:1rem;background:#495060 !important;color:#fff !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-size:14px !important;font-family:arial,sans-serif !important}.main:not(.hidden){z-index:9999999 !important;display:grid !important}.main *:not(magicuserjs-a,magicuserjs-btn,.count){background:#495060 !important;color:#fff !important}.mainbtn{line-height:2.5rem;background:#495060 !important;color:#fff !important;border:2px solid rgba(0,0,0,0);border-radius:100%;width:3rem;height:3rem;text-align:center;position:fixed;bottom:1rem;right:1rem}.mainbtn:not(.hidden){z-index:9999999 !important;display:block}.count{border:2px solid rgba(0,0,0,0);border-radius:100%;width:2rem !important;height:2rem !important;line-height:2rem !important;text-align:center !important}.magicuserjs-header{border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:fit-content;padding:10px}.magicuserjs-body{overflow-y:scroll;scrollbar-color:#fff #2e323d;scrollbar-width:thin;border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}.magicuserjs-eframe,.magicuserjs-header,.frame{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;font-size:1em}.frame{border-bottom:1px solid #fff}@media screen and (max-width: 580px){.frame{grid-auto-flow:row !important;grid-auto-rows:1fr !important;height:fit-content !important}}.frame:not(.sf) magicuserjs-a{color:#00b7ff !important}.frame:not(.sf) magicuserjs-btn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.frame.sf magicuserjs-a{color:#ed3f14 !important}.frame.sf magicuserjs-btn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.magicuserjs-name{font-size:inherit !important;display:grid;margin-left:1%;margin-top:.67em;margin-bottom:.67em}.magicuserjs-name span{font-size:.8em !important}.magicuserjs-eframe{margin-right:1%;margin-top:.67em;margin-bottom:.67em}@media screen and (max-width: 580px){.magicuserjs-eframe{height:fit-content !important}}.magicuserjs-uframe{display:grid;grid-auto-flow:column;grid-gap:1em}magic-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px;width:fit-content}magic-column{display:grid;grid-auto-flow:column;width:fit-content;grid-gap:1rem}.search svg{fill:#fff;width:.8rem;height:.8rem}.searcher{right:9.5rem;border:1px solid #fff;border-radius:4px;line-height:1;padding:6px 15px;width:200px;outline:0px !important}.close{position:fixed;right:2.5rem}magicuserjs-btn{font-size:12px;border-radius:3px;font-style:normal;padding:6px 15%;font-weight:400;font-variant:normal;line-height:21px}magicuserjs-a,magicuserjs-btn,.mainbtn,magic-btn{cursor:pointer !important}.magicuserjs-uframe,.magicuserjs-daily,.magicuserjs-updated,.install,.magicuserjs-homepage,.magicuserjs-fver,.magicuserjs-fdesc{width:fit-content;height:fit-content}
+main_css = `magic-userjs{cursor:default}magic-userjs *{line-height:normal}.hidden{display:none !important;z-index:-1 !important}.main{position:fixed;height:492px;margin-left:1rem;margin-right:1rem;bottom:1rem;right:1rem;background:#495060 !important;color:#fff !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-size:14px !important;font-family:arial,sans-serif !important}.main:not(.hidden){z-index:100000000000000020 !important;display:grid !important}.main *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count){background:#495060 !important;color:#fff !important}.counterframe{border-radius:100%;padding:.5%}.count{background:rgba(0,0,0,0)}.mainframe{background:#495060 !important;color:#fff !important;border:2px solid rgba(0,0,0,0);border-radius:100%;padding:.5%;position:fixed;bottom:1rem;right:1rem}.mainframe:not(.hidden){z-index:100000000000000020 !important;display:block}count-frame{border:2px solid rgba(0,0,0,0);line-height:2rem;font-size:16px;font-weight:400;min-width:2rem;display:block;text-align:center}.magicuserjs-header{display:flex;gap:10px;border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:fit-content;padding:10px;font-size:1em;justify-content:space-between}.magicuserjs-body{overflow-y:scroll;overflow-x:hidden;scrollbar-color:#fff #2e323d;scrollbar-width:thin;border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}.magicuserjs-eframe,.frame{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;font-size:1em}.frame{border-bottom:1px solid #fff}@media screen and (max-width: 580px){.frame{display:flow-root !important;height:fit-content !important}}.frame:not(.sf) magicuserjs-a{color:#00b7ff !important}.frame:not(.sf) magicuserjs-btn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.frame.sf magicuserjs-a{color:#ed3f14 !important}.frame.sf magicuserjs-btn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.magicuserjs-name{font-size:inherit !important;display:grid;margin-left:1%;margin-top:.67em;margin-bottom:.67em}.magicuserjs-name span{font-size:.8em !important}.magicuserjs-eframe{margin-right:1%;margin-top:.67em;margin-bottom:.67em}@media screen and (max-width: 580px){.magicuserjs-eframe{height:fit-content !important}}.magicuserjs-uframe{display:grid;grid-auto-flow:column;grid-gap:1em}magic-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px;width:fit-content}magic-column{display:flex;gap:10px}.search svg{fill:#fff;width:12px;height:12px}.searcher{border:1px solid #fff;border-radius:4px;line-height:1;width:170px;outline:0px !important}magicuserjs-btn{font-size:12px;border-radius:3px;font-style:normal;padding:6px 15%;font-weight:400;font-variant:normal;line-height:21px}magicuserjs-a,magicuserjs-btn,.mainbtn,.mainframe,magic-btn{cursor:pointer !important}.magicuserjs-uframe,.magicuserjs-daily,.magicuserjs-updated,.install,.magicuserjs-homepage,.magicuserjs-fver,.magicuserjs-fdesc{width:fit-content;height:fit-content}
 `;
 
 (() => {
@@ -205,6 +205,22 @@ sleazy = () => {
   let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
   return qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
 },
+openpage = (url) => {
+  if(checkGMSupport) {
+    MU.openInTab(url, {
+      active: true,
+      insert: true,
+    });
+  } else {
+    let dwnbtn = make('a','magicuserjs-dwnbtn', {
+      href: url,
+      target: '_blank',
+      rel: 'noopener',
+    });
+    dwnbtn.click();
+    dwnbtn.remove();
+  }
+},
 countsite = async () => {
   try {
     let siteujs = [],
@@ -215,20 +231,21 @@ countsite = async () => {
     usercss = make('style', 'primary-stylesheet', {innerHTML: main_css,}),
     tbody = make('magic-userjs','magicuserjs-body'),
     header = make('magic-userjs','magicuserjs-header'),
-    mainbtn = make('magic-userjs','mainbtn', {
-      innerHTML: '0',
+    mainframe = make('magic-userjs','mainframe', {
       onclick: (e) => {
         e.preventDefault();
         main.classList.remove('hidden');
-        mainbtn.classList.add('hidden');
+        mainframe.classList.add('hidden');
       }
     }),
-    searchframe = make('magic-column'),
+    mainbtn = make('count-frame','mainbtn', {
+      innerHTML: '0',
+    }),
     searcher = make('input','searcher hidden', {
       autocomplete: 'off',
       spellcheck: false,
       type: 'text',
-      placeholder: 'Enter title、description、author...',
+      placeholder: 'title | description | author...',
       oninput: (e) => {
         e.preventDefault();
         let v = e.target.value;
@@ -266,22 +283,51 @@ countsite = async () => {
       onclick: (e) => {
         e.preventDefault();
         main.classList.add('hidden');
-        mainbtn.classList.remove('hidden');
-        delay(10000).then(() => {
-          mainbtn.classList.add('hidden');
-        })
+        mainframe.classList.remove('hidden');
+        // delay(10000).then(() => {
+        //   mainframe.classList.add('hidden');
+        // })
       }
     }),
     countframe = make('magic-column'),
-    gfcounter = make('magic-userjs','count', {
-      title: 'https://greasyfork.org',
-      innerHTML: gfCount.length,
+    gfcountframe = make('magic-userjs', 'counterframe', {
       style: 'background: #00b7ff;'
     }),
-    sfcounter = make('magic-userjs','count', {
+    sfcountframe = make('magic-userjs', 'counterframe', {
+      style: 'background: #ed3f14;'
+    }),
+    gfcounter = make('count-frame','count', {
+      title: 'https://greasyfork.org',
+      innerHTML: gfCount.length,
+    }),
+    sfcounter = make('count-frame','count', {
       title: 'https://sleazyfork.org',
       innerHTML: sfCount.length,
-      style: 'background: #ed3f14;'
+    }),
+    btnframe = make('magic-column', 'btnframe'),
+    btnhome = make('magic-btn','github', {
+      title: 'GitHub',
+      innerHTML: 'GitHub',
+      onclick: (e) => {
+        e.preventDefault();
+        openpage('https://github.com/magicoflolis/Userscript-Plus');
+      }
+    }),
+    btngreasy = make('magic-btn','greasy', {
+      title: 'Greasy Fork',
+      innerHTML: 'Greasy Fork',
+      onclick: (e) => {
+        e.preventDefault();
+        openpage('https://github.com/magicoflolis/Userscript-Plus');
+      }
+    }),
+    btnissue = make('magic-btn','issue', {
+      title: 'New Issue',
+      innerHTML: 'Issue',
+      onclick: (e) => {
+        e.preventDefault();
+        openpage('https://github.com/magicoflolis/Userscript-Plus/issues/new');
+      }
     }),
     createjs = (ujs, issleazy) => {
       let frame = make('magic-userjs',`frame ${issleazy ? 'sf' : ''}`),
@@ -291,20 +337,7 @@ countsite = async () => {
         innerHTML: ujs.name,
         onclick: (e) => {
           e.preventDefault();
-          if(checkGMSupport) {
-            MU.openInTab(ujs.url, {
-              active: true,
-              insert: true,
-            });
-          } else {
-            let dwnbtn = make('a','magicuserjs-dwnbtn', {
-              href: ujs.url,
-              target: '_blank',
-              rel: 'noopener',
-            });
-            dwnbtn.click();
-            dwnbtn.remove();
-          }
+          openpage(ujs.url);
         }
       }),
       fver = make('magic-userjs','magicuserjs-fver', {
@@ -327,20 +360,7 @@ countsite = async () => {
         innerHTML: 'Install',
         onclick: (e) => {
           e.preventDefault();
-          if(checkGMSupport) {
-            MU.openInTab(ujs.code_url, {
-              active: true,
-              insert: true,
-            });
-          } else {
-            let dwnbtn = make('a','magicuserjs-dwnbtn', {
-              href: ujs.code_url,
-              target: '_blank',
-              rel: 'noopener',
-            });
-            dwnbtn.click();
-            dwnbtn.remove();
-          }
+          openpage(ujs.code_url);
         },
       });
       for(let u of ujs.users) {
@@ -348,20 +368,7 @@ countsite = async () => {
           innerHTML: u.name,
           onclick: (e) => {
             e.preventDefault();
-            if(checkGMSupport) {
-              MU.openInTab(u.url, {
-                active: true,
-                insert: true,
-              });
-            } else {
-              let dwnbtn = make('a','magicuserjs-dwnbtn', {
-                href: u.url,
-                target: '_blank',
-                rel: 'noopener',
-              });
-              dwnbtn.click();
-              dwnbtn.remove();
-            }
+            openpage(u.url);
           },
         });
         uframe.append(user);
@@ -371,13 +378,16 @@ countsite = async () => {
       frame.append(fname,eframe);
       tbody.append(frame);
     };
-    searchframe.append(searchbtn,searcher);
-    countframe.append(gfcounter,sfcounter);
-    header.append(countframe,searchframe,closebtn);
+    gfcountframe.append(gfcounter);
+    sfcountframe.append(sfcounter);
+    countframe.append(gfcountframe,sfcountframe);
+    btnframe.append(searcher,searchbtn,btnissue,btnhome,btngreasy,closebtn);
+    header.append(countframe,btnframe);
     main.append(header,tbody);
     doc.body.append(container);
     container.attachShadow({ mode: 'open' });
-    container.shadowRoot.append(usercss,mainbtn,main);
+    mainframe.append(mainbtn);
+    container.shadowRoot.append(usercss,mainframe,main);
     for(let ujs of gfCount) {
       if(ujs.deleted) continue;
       siteujs.push(
@@ -397,6 +407,8 @@ countsite = async () => {
       );
     };
     for(let ujs of siteujs) {
+      // ujs.url.description
+      // ujs.url.name
       if(ujs.sleazy) {
         createjs(ujs.url,true)
       } else {
@@ -408,9 +420,9 @@ countsite = async () => {
     } else {
       mainbtn.innerHTML = sfCount.length
     };
-    delay(10000).then(() => {
-      mainbtn.classList.add('hidden');
-    });
+    // delay(10000).then(() => {
+    //   mainframe.classList.add('hidden');
+    // });
   } catch(error) {err(error)}
 };
 
@@ -419,4 +431,12 @@ if(/greasyfork\.org/.test(doc.location.hostname) && sleazyfork_redirect) {
 };
 
 countsite();
+
+// loadCSS = (css, name = 'common') => {
+//   let s = make('style', `magicuserjscss-${name}`, {
+//     innerHTML: css,
+//   });
+//   return (!doc.head.contains(s)) ? doc.head.appendChild(s) : false;
+// },
+
 })();

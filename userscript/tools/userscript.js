@@ -112,10 +112,11 @@ ${langND}
 // @exclude      *://*.*.*/password_reset
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
-// @compatible   Chrome
-// @compatible   Firefox
-// @compatible   Opera
-// @compatible   Safari
+// @compatible   chrome
+// @compatible   firefox
+// @compatible   edge
+// @compatible   opera
+// @compatible   safari
 // @noframes
 // @run-at       document-end
 // ==/UserScript==`;

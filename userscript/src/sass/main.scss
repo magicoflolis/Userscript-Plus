@@ -11,8 +11,6 @@ magic-userjs * {
 .main {
   position: fixed;
   height: 492px;
-  max-width: 100%;
-  min-width: 500px;
   margin-left: 1rem;
   margin-right: 1rem;
   bottom: 1rem;
@@ -24,50 +22,61 @@ magic-userjs * {
   font-size: 14px !important;
   font-family: arial,sans-serif !important;
   &:not(.hidden) {
-    z-index: 9999999 !important;
+    z-index: 99999999999999999 !important;
     display: grid !important;
   };
-  *:not(magicuserjs-a,magicuserjs-btn,.count) {
+  *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count) {
     background: #495060 !important;
     color: rgb(255, 255, 255) !important;
   };
 }
-.mainbtn {
-  line-height: 2.5rem;
+.counterframe {
+  border-radius: 100%;
+  padding: 0.5%;
+}
+.count {
+  background: transparent;
+}
+.mainframe {
   background: #495060 !important;
   color: rgb(255, 255, 255) !important;
   border: 2px solid rgba(0, 0, 0, 0);
   border-radius: 100%;
-  width: 3rem;
-  height: 3rem;
-  text-align: center;
+  padding: 0.5%;
   position: fixed;
   bottom: 1rem;
   right: 1rem;
   &:not(.hidden) {
-    z-index: 9999999 !important;
+    z-index: 99999999999999999 !important;
     display: block;
   }
 }
 
-.count {
+count-frame {
   border: 2px solid rgba(0, 0, 0, 0);
-  border-radius: 100%;
-  width: 2rem !important;
-  height: 2rem !important;
-  line-height: 2rem !important;
-  text-align: center !important;
+  line-height: 2rem;
+  font-size: 16px;
+  font-weight: 400;
+  min-width: 2rem;
+  display: block;
+  text-align: center;
 }
 
 .magicuserjs-header {
+  display: flex;
+  gap: 10px;
   border-bottom: 1px solid #ffffff;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   height: fit-content;
   padding: 10px;
+  font-size: 1em;
+  justify-content: space-between;
 }
 .magicuserjs-body {
+  // width: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-color: #ffffff #2e323d;
   scrollbar-width: thin;
   border: 1px solid rgba(0, 0, 0, 0);
@@ -76,7 +85,6 @@ magic-userjs * {
 }
 
 .magicuserjs-eframe,
-.magicuserjs-header,
 .frame {
   display: grid;
   grid-auto-flow: column;
@@ -85,8 +93,7 @@ magic-userjs * {
 }
 .frame {
   @media screen and (max-width: 580px) {
-    grid-auto-flow: row !important;
-    grid-auto-rows: 1fr !important;
+    display: flow-root !important;
     height: fit-content !important;
   }
   border-bottom: 1px solid #ffffff;
@@ -147,31 +154,27 @@ magic-btn {
   width: fit-content;
 }
 magic-column {
-  display: grid;
-  grid-auto-flow: column;
-  width: fit-content;
-  grid-gap: 1rem;
+  // margin-top: 1%;
+  // margin-right: 1%;
+  // margin-bottom: 1%;
+  // margin-left: 1%;
+  display: flex;
+  gap: 10px;
+  // width: fit-content;
 }
 .search {
   svg {
     fill: white;
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 12px;
+    height: 12px;
   }
 }
 .searcher {
-  right: 9.5rem;
   border: 1px solid #ffffff;
   border-radius: 4px;
   line-height: 1;
-  padding: 6px 15px;
-  width: 200px;
+  width: 170px;
   outline: 0px !important;
-  // position: fixed;
-}
-.close {
-  position: fixed;
-  right: 2.5rem;
 }
 magicuserjs-btn {
   font-size: 12px;
@@ -185,6 +188,7 @@ magicuserjs-btn {
 magicuserjs-a,
 magicuserjs-btn,
 .mainbtn,
+.mainframe,
 magic-btn {
   cursor: pointer !important;
 }

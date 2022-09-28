@@ -102,6 +102,22 @@ sleazy = () => {
   let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
   return qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
 },
+openpage = (url) => {
+  if(checkGMSupport) {
+    MU.openInTab(url, {
+      active: true,
+      insert: true,
+    });
+  } else {
+    let dwnbtn = make('a','magicuserjs-dwnbtn', {
+      href: url,
+      target: '_blank',
+      rel: 'noopener',
+    });
+    dwnbtn.click();
+    dwnbtn.remove();
+  }
+},
 countsite = async () => {
   try {
     let siteujs = [],
@@ -112,20 +128,21 @@ countsite = async () => {
     usercss = make('style', 'primary-stylesheet', {innerHTML: main_css,}),
     tbody = make('magic-userjs','magicuserjs-body'),
     header = make('magic-userjs','magicuserjs-header'),
-    mainbtn = make('magic-userjs','mainbtn', {
-      innerHTML: '0',
+    mainframe = make('magic-userjs','mainframe', {
       onclick: (e) => {
         e.preventDefault();
         main.classList.remove('hidden');
-        mainbtn.classList.add('hidden');
+        mainframe.classList.add('hidden');
       }
     }),
-    searchframe = make('magic-column'),
+    mainbtn = make('count-frame','mainbtn', {
+      innerHTML: '0',
+    }),
     searcher = make('input','searcher hidden', {
       autocomplete: 'off',
       spellcheck: false,
       type: 'text',
-      placeholder: 'Enter title、description、author...',
+      placeholder: 'title | description | author...',
       oninput: (e) => {
         e.preventDefault();
         let v = e.target.value;
@@ -163,22 +180,51 @@ countsite = async () => {
       onclick: (e) => {
         e.preventDefault();
         main.classList.add('hidden');
-        mainbtn.classList.remove('hidden');
-        delay(10000).then(() => {
-          mainbtn.classList.add('hidden');
-        })
+        mainframe.classList.remove('hidden');
+        // delay(10000).then(() => {
+        //   mainframe.classList.add('hidden');
+        // })
       }
     }),
     countframe = make('magic-column'),
-    gfcounter = make('magic-userjs','count', {
-      title: 'https://greasyfork.org',
-      innerHTML: gfCount.length,
+    gfcountframe = make('magic-userjs', 'counterframe', {
       style: 'background: #00b7ff;'
     }),
-    sfcounter = make('magic-userjs','count', {
+    sfcountframe = make('magic-userjs', 'counterframe', {
+      style: 'background: #ed3f14;'
+    }),
+    gfcounter = make('count-frame','count', {
+      title: 'https://greasyfork.org',
+      innerHTML: gfCount.length,
+    }),
+    sfcounter = make('count-frame','count', {
       title: 'https://sleazyfork.org',
       innerHTML: sfCount.length,
-      style: 'background: #ed3f14;'
+    }),
+    btnframe = make('magic-column', 'btnframe'),
+    btnhome = make('magic-btn','github', {
+      title: 'GitHub',
+      innerHTML: 'GitHub',
+      onclick: (e) => {
+        e.preventDefault();
+        openpage('https://github.com/magicoflolis/Userscript-Plus');
+      }
+    }),
+    btngreasy = make('magic-btn','greasy', {
+      title: 'Greasy Fork',
+      innerHTML: 'Greasy Fork',
+      onclick: (e) => {
+        e.preventDefault();
+        openpage('https://github.com/magicoflolis/Userscript-Plus');
+      }
+    }),
+    btnissue = make('magic-btn','issue', {
+      title: 'New Issue',
+      innerHTML: 'Issue',
+      onclick: (e) => {
+        e.preventDefault();
+        openpage('https://github.com/magicoflolis/Userscript-Plus/issues/new');
+      }
     }),
     createjs = (ujs, issleazy) => {
       let frame = make('magic-userjs',`frame ${issleazy ? 'sf' : ''}`),
@@ -188,20 +234,7 @@ countsite = async () => {
         innerHTML: ujs.name,
         onclick: (e) => {
           e.preventDefault();
-          if(checkGMSupport) {
-            MU.openInTab(ujs.url, {
-              active: true,
-              insert: true,
-            });
-          } else {
-            let dwnbtn = make('a','magicuserjs-dwnbtn', {
-              href: ujs.url,
-              target: '_blank',
-              rel: 'noopener',
-            });
-            dwnbtn.click();
-            dwnbtn.remove();
-          }
+          openpage(ujs.url);
         }
       }),
       fver = make('magic-userjs','magicuserjs-fver', {
@@ -224,20 +257,7 @@ countsite = async () => {
         innerHTML: 'Install',
         onclick: (e) => {
           e.preventDefault();
-          if(checkGMSupport) {
-            MU.openInTab(ujs.code_url, {
-              active: true,
-              insert: true,
-            });
-          } else {
-            let dwnbtn = make('a','magicuserjs-dwnbtn', {
-              href: ujs.code_url,
-              target: '_blank',
-              rel: 'noopener',
-            });
-            dwnbtn.click();
-            dwnbtn.remove();
-          }
+          openpage(ujs.code_url);
         },
       });
       for(let u of ujs.users) {
@@ -245,20 +265,7 @@ countsite = async () => {
           innerHTML: u.name,
           onclick: (e) => {
             e.preventDefault();
-            if(checkGMSupport) {
-              MU.openInTab(u.url, {
-                active: true,
-                insert: true,
-              });
-            } else {
-              let dwnbtn = make('a','magicuserjs-dwnbtn', {
-                href: u.url,
-                target: '_blank',
-                rel: 'noopener',
-              });
-              dwnbtn.click();
-              dwnbtn.remove();
-            }
+            openpage(u.url);
           },
         });
         uframe.append(user);
@@ -268,13 +275,16 @@ countsite = async () => {
       frame.append(fname,eframe);
       tbody.append(frame);
     };
-    searchframe.append(searchbtn,searcher);
-    countframe.append(gfcounter,sfcounter);
-    header.append(countframe,searchframe,closebtn);
+    gfcountframe.append(gfcounter);
+    sfcountframe.append(sfcounter);
+    countframe.append(gfcountframe,sfcountframe);
+    btnframe.append(searcher,searchbtn,btnissue,btnhome,btngreasy,closebtn);
+    header.append(countframe,btnframe);
     main.append(header,tbody);
     doc.body.append(container);
     container.attachShadow({ mode: 'open' });
-    container.shadowRoot.append(usercss,mainbtn,main);
+    mainframe.append(mainbtn);
+    container.shadowRoot.append(usercss,mainframe,main);
     for(let ujs of gfCount) {
       if(ujs.deleted) continue;
       siteujs.push(
@@ -294,6 +304,8 @@ countsite = async () => {
       );
     };
     for(let ujs of siteujs) {
+      // ujs.url.description
+      // ujs.url.name
       if(ujs.sleazy) {
         createjs(ujs.url,true)
       } else {
@@ -305,9 +317,9 @@ countsite = async () => {
     } else {
       mainbtn.innerHTML = sfCount.length
     };
-    delay(10000).then(() => {
-      mainbtn.classList.add('hidden');
-    });
+    // delay(10000).then(() => {
+    //   mainframe.classList.add('hidden');
+    // });
   } catch(error) {err(error)}
 };
 
