@@ -33,6 +33,8 @@ magic-userjs * {
 .counterframe {
   border-radius: 100%;
   padding: 0.5%;
+  width: 25px !important;
+  height: 25px !important;
 }
 .count {
   background: transparent;
@@ -42,10 +44,12 @@ magic-userjs * {
   color: rgb(255, 255, 255) !important;
   border: 2px solid rgba(0, 0, 0, 0);
   border-radius: 100%;
-  padding: 0.5%;
+  padding: 0.5% !important;
   position: fixed;
   bottom: 1rem;
   right: 1rem;
+  width: 25px !important;
+  height: 25px !important;
   &:not(.hidden) {
     z-index: 99999999999999999 !important;
     display: block;
@@ -54,14 +58,17 @@ magic-userjs * {
 
 count-frame {
   border: 2px solid rgba(0, 0, 0, 0);
-  line-height: 2rem;
   font-size: 16px;
   font-weight: 400;
-  min-width: 2rem;
   display: block;
   text-align: center;
 }
 
+count-frame {
+  line-height: normal !important;
+  width: auto !important;
+  height: auto !important;
+}
 .magicuserjs-header {
   display: flex;
   gap: 10px;
@@ -162,7 +169,7 @@ magic-column {
   gap: 10px;
   // width: fit-content;
 }
-.search {
+magic-btn {
   svg {
     fill: white;
     width: 12px;
