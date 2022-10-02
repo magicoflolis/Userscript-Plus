@@ -25,8 +25,10 @@ magic-userjs * {
     z-index: 99999999999999999 !important;
     display: grid !important;
   };
-  *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count) {
+  *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count,label,.magicuserjs-switch) {
     background: #495060 !important;
+  };
+  *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count) {
     color: rgb(255, 255, 255) !important;
   };
 }
@@ -81,14 +83,67 @@ count-frame {
   justify-content: space-between;
 }
 .magicuserjs-body {
-  // width: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.magicuserjs-cfg,
+.magicuserjs-body {
   scrollbar-color: #ffffff #2e323d;
   scrollbar-width: thin;
   border: 1px solid rgba(0, 0, 0, 0);
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.magicuserjs-cfg {
+  height: fit-content;
+  mujs-section {
+    &.magicuserjs-checkbox>label,
+    &.magicuserjs-select {
+      display: flex;
+      justify-content: space-between;
+      padding: .5em;
+    }
+  }
+  .magicuserjs-switch {
+    position: relative;
+    width: 38px;
+    border-radius: 20px;
+    user-select: none !important;
+    margin: 5px;
+    >input {
+      display: none;
+    }
+
+    >label {
+      display: block;
+      overflow: hidden;
+      height: 16px;
+      padding: 0;
+      border-radius: 20px;
+      border: 1px solid #ffffff;
+      background-color: rgb(73, 80, 96);
+      &:before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        margin: -2px;
+        background: #ffffff;
+        position: absolute;
+        top: 0;
+        right: 20px;
+        border-radius: 20px;
+      }
+    }
+    >input:checked+label {
+      margin-left: 0;
+      background-color: rgba(0, 183, 255, 0.568);
+      &:before {
+        right: 0px;
+      }
+    }
+  }
 }
 
 .magicuserjs-eframe,
@@ -147,7 +202,7 @@ count-frame {
   grid-auto-flow: column;
   grid-gap: 1em;
 }
-magic-btn {
+mujs-btn {
   font-style: normal;
   font-weight: 400;
   font-variant: normal;
@@ -160,16 +215,16 @@ magic-btn {
   padding: 6px 15px;
   width: fit-content;
 }
-magic-column {
-  // margin-top: 1%;
-  // margin-right: 1%;
-  // margin-bottom: 1%;
-  // margin-left: 1%;
+mujs-column {
   display: flex;
   gap: 10px;
-  // width: fit-content;
 }
-magic-btn {
+mujs-row {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+mujs-btn {
   svg {
     fill: white;
     width: 12px;
@@ -194,18 +249,21 @@ magicuserjs-btn {
 }
 magicuserjs-a,
 magicuserjs-btn,
+.magicuserjs-cfg *,
 .mainbtn,
 .mainframe,
-magic-btn {
+mujs-btn {
   cursor: pointer !important;
 }
+
+.magicuserjs-cfg * {
+  user-select: none !important;
+}
+
 .magicuserjs-uframe,
-.magicuserjs-daily,
-.magicuserjs-updated,
+.magicuserjs-list,
 .install,
-.magicuserjs-homepage,
-.magicuserjs-fver,
-.magicuserjs-fdesc {
+.magicuserjs-homepage {
   width: fit-content;
   height: fit-content;
 }

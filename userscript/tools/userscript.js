@@ -62,7 +62,6 @@ ${langND}
 // @connect      cdn.jsdelivr.net
 // @include      *
 // @exclude      *://paypal.com/*
-// @exclude      *://mega.nz
 // @exclude      *://*.alipay.com/*
 // @exclude      *://*bank.*/*
 // @exclude      *://*perfectmoney.*/*
@@ -73,7 +72,6 @@ ${langND}
 // @exclude      *://192.168*
 // @exclude      *://127.0.0*
 // @exclude      *://router.*.*/*
-// @exclude      *://gitlab.com/*
 // @exclude      *://10.0.0*
 // @exclude      *://*skrill.com/*
 // @exclude      *://*zalo.me/*
@@ -112,6 +110,8 @@ ${langND}
 // @exclude      *://*.*.*/password_reset
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
+// @grant        GM_getValue
+// @grant        GM_setValue
 // @compatible   chrome
 // @compatible   firefox
 // @compatible   edge
@@ -128,7 +128,7 @@ ${langND}
     renderOut(p.pub, buildScript);
   }
 },
-watcher = watch(['./src/'], { delay: 1000, filter: /\.js$/ });
+watcher = watch(['./src/'], { delay: 2000, filter: /\.js$/ });
 
 log(`ENV: ${process.env.JS_ENV}`);
 
