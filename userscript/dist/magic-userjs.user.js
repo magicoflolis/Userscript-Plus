@@ -798,7 +798,9 @@ function main() {
 
 
 async function setupConfig() {
-  let data = await Promise.all([MU.getValue('Config',JSON.stringify(defcfg))]).catch(e => {
+  let data = await Promise.all([
+    checkGMSupport ? MU.getValue('Config',JSON.stringify(defcfg)) : JSON.stringify(defcfg)
+  ]).catch(e => {
     err(e);
   });
   cfg = JSON.parse(localStorage.getItem('MUJSConfig') ?? data[0]);

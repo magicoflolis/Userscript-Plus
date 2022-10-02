@@ -21,6 +21,8 @@ Firefox | - | - | Work in progress
 
 **(Optional) Mobile Bookmarklet:**
 
+> May not work on every site.
+
 ```JS
 javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/magic-userjs.user.js'].map( s => document.body.appendChild(document.createElement('script')).src=s)})();
 ```
@@ -28,8 +30,6 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 ***
 
 ## About
-
-> DOES NOT WORK ON EVERY SINGLE SITE!
 
 Finds available UserJS for current webpage from various UserJS hosts (e.g, [Greasy Fork](https://greasyfork.org)), displays a found count bottom left of the webpage, automatically disappears after 10 seconds.
 
