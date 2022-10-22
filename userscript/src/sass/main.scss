@@ -8,6 +8,11 @@ magic-userjs * {
   display: none !important;
   z-index: -1 !important;
 }
+// .main:not(.cheight) {
+//   @media screen and (max-height: 650px) {
+//     height: 250px !important;
+//   }
+// }
 .main {
   position: fixed;
   height: 492px;
@@ -16,7 +21,6 @@ magic-userjs * {
   bottom: 1rem;
   right: 1rem;
   background: #495060 !important;
-  color: rgb(255, 255, 255) !important;
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 10px;
   font-size: 14px !important;
@@ -97,25 +101,42 @@ count-frame {
 
 .magicuserjs-cfg {
   height: fit-content;
-  mujs-section {
-    &.magicuserjs-checkbox>label,
-    &.magicuserjs-select {
-      display: flex;
-      justify-content: space-between;
-      padding: .5em;
+  mujs-section > label {
+    display: flex;
+    justify-content: space-between;
+    padding: .5em;
+    input[type*="number"] {
+      position: relative;
+      border-radius: 4px;
+      border: 1px solid #fff;
     }
   }
-  .magicuserjs-switch {
+  .magicuserjs-inlab {
     position: relative;
     width: 38px;
     border-radius: 20px;
-    user-select: none !important;
     margin: 5px;
-    >input {
+    input[type*="checkbox"] {
       display: none;
+      &:checked+label {
+        margin-left: 0;
+        background-color: rgb(255, 255, 255, 0.568);
+        &:before {
+          right: 0px;
+        }
+      }
+      &#greasyfork:checked+label,
+      &#sleazyfork:checked+label {
+        background-color: rgba(0, 183, 255, 0.568);
+      }
+      &#openuserjs:checked+label {
+        background-color: rgb(237, 63, 20, 0.568);
+      }
+      &#github:checked+label {
+        background-color: rgb(36, 41, 47, 0.568);
+      }
     }
-
-    >label {
+    label {
       display: block;
       overflow: hidden;
       height: 16px;
@@ -136,13 +157,6 @@ count-frame {
         border-radius: 20px;
       }
     }
-    >input:checked+label {
-      margin-left: 0;
-      background-color: rgba(0, 183, 255, 0.568);
-      &:before {
-        right: 0px;
-      }
-    }
   }
 }
 
@@ -154,7 +168,7 @@ count-frame {
   font-size: 1em;
 }
 .frame {
-  @media screen and (max-width: 580px) {
+  @media screen and (max-width: 800px) {
     display: flow-root !important;
     height: fit-content !important;
   }
@@ -171,11 +185,11 @@ count-frame {
   }
   &.sf {
     magicuserjs-a {
-      color: #ed3f14 !important;
+      color: rgb(231, 85, 49) !important;
     }
     magicuserjs-btn {
-      background-color: #ed3f14 !important;
-      border-color: #ed3f14 !important;
+      background-color: rgb(237, 63, 20) !important;
+      border-color: rgb(237, 63, 20) !important;
     }
   }
 }
@@ -190,7 +204,7 @@ count-frame {
   }
 }
 .magicuserjs-eframe {
-  @media screen and (max-width: 580px) {
+  @media screen and (max-width: 800px) {
     height: fit-content !important;
   }
   margin-right: 1%;
@@ -213,9 +227,14 @@ mujs-btn {
   border-radius: 4px;
   line-height: 1;
   padding: 6px 15px;
-  width: fit-content;
 }
 mujs-column {
+  @media screen and (max-width: 800px) {
+    flex-flow: row wrap;
+    &.btnframe {
+      flex-flow: row wrap-reverse !important;
+    }
+  }
   display: flex;
   gap: 10px;
 }
@@ -227,16 +246,14 @@ mujs-row {
 mujs-btn {
   svg {
     fill: white;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
   }
 }
-.searcher {
-  border: 1px solid #ffffff;
-  border-radius: 4px;
-  line-height: 1;
-  width: 170px;
-  outline: 0px !important;
+input[type*="number"],
+input[type*="text"] {
+  border: transparent;
+  outline: none !important;
 }
 magicuserjs-btn {
   font-size: 12px;
@@ -247,19 +264,22 @@ magicuserjs-btn {
   font-variant: normal;
   line-height: 21px;
 }
+
 magicuserjs-a,
 magicuserjs-btn,
-.magicuserjs-cfg *,
+.magicuserjs-cfg *:not(input[type*="text"],input[type*="number"]),
 .mainbtn,
 .mainframe,
 mujs-btn {
   cursor: pointer !important;
 }
 
-.magicuserjs-cfg * {
+.magicuserjs-cfg *:not(input[type*="text"],input[type*="number"]) {
   user-select: none !important;
 }
 
+mujs-btn,
+input,
 .magicuserjs-uframe,
 .magicuserjs-list,
 .install,

@@ -59,8 +59,51 @@ ${langND}
 // @license      ${jsonData.license}
 // @connect      greasyfork.org
 // @connect      sleazyfork.org
+// @connect      github.com
+// @connect      openuserjs.org
 // @connect      cdn.jsdelivr.net
-// @include      *
+// @match        https://*/*
+// @exclude      http*://*stripe.com/*
+// @exclude      http*://*ica.yandex.com/*
+// @exclude      http*://*skrill.com/*
+// @exclude      http*://*zalo.me/*
+// @exclude      http*://*.bluesnap.com/*
+// @grant        GM_xmlhttpRequest
+// @grant        GM_openInTab
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_info
+// @compatible   chrome
+// @compatible   firefox
+// @compatible   edge
+// @compatible   opera
+// @compatible   safari
+// @noframes
+// @run-at       document-end
+// ==/UserScript==`;
+  if(js_env) {
+    // Development version
+    renderOut(p.dev, buildScript);
+  } else {
+    // Release version
+    renderOut(p.pub, buildScript);
+  }
+},
+watcher = watch(['./src/'], { delay: 2000, filter: /\.js$/ });
+
+log(`ENV: ${process.env.JS_ENV}`);
+
+watcher.on('change', buildUserJS);
+
+watcher.on('error', (e) => {
+  log('ERROR',e);
+  watcher.close();
+  delay(5000).then(() => {buildUserJS()});
+});
+
+watcher.on('ready', buildUserJS);
+// @exclude      /^https:\/\/([^/]*\.)?(\d|pay|bank|money|localhost|authorize|checkout|bill|wallet|router)[0-9]*\./
+// @exclude      /^https:\/\/([^/]*\.)?[\S]*\.(gov|org|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)$/
 // @exclude      *://paypal.com/*
 // @exclude      *://*.alipay.com/*
 // @exclude      *://*bank.*/*
@@ -108,39 +151,6 @@ ${langND}
 // @exclude      *://*.*.*/options/*
 // @exclude      *://*.*.*.gov/*
 // @exclude      *://*.*.*/password_reset
-// @grant        GM_xmlhttpRequest
-// @grant        GM_openInTab
-// @grant        GM_getValue
-// @grant        GM_setValue
-// @compatible   chrome
-// @compatible   firefox
-// @compatible   edge
-// @compatible   opera
-// @compatible   safari
-// @noframes
-// @run-at       document-end
-// ==/UserScript==`;
-  if(js_env) {
-    // Development version
-    renderOut(p.dev, buildScript);
-  } else {
-    // Release version
-    renderOut(p.pub, buildScript);
-  }
-},
-watcher = watch(['./src/'], { delay: 2000, filter: /\.js$/ });
-
-log(`ENV: ${process.env.JS_ENV}`);
-
-watcher.on('change', buildUserJS);
-
-watcher.on('error', (e) => {
-  log('ERROR',e);
-  watcher.close();
-  delay(5000).then(() => {buildUserJS()});
-});
-
-watcher.on('ready', buildUserJS);
 // @grant        GM_getResourceText
 // @grant        GM.getResourceText
 // @grant        GM_getValue
