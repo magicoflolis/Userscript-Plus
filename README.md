@@ -46,6 +46,10 @@ Finds available UserJS for current webpage from various UserJS hosts (e.g, [Grea
 * Available search engines: [Greasy Fork](https://greasyfork.org), [Sleazy Fork](https://sleazyfork.org), [Open UserJS](https://openuserjs.org), [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript=="), [Gist (GitHub)](https://gist.github.com/search?l=JavaScript&o=desc&q="==UserScript==")
 * Built-in [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840).
 
+## Changelog
+
+> [(GitHub) Full Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
+
 ## Known bugs
 
 * Duplicate UserJS listings.
