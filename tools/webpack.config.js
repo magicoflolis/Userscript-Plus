@@ -1,20 +1,18 @@
 /* eslint-env node */
 const {merge} = require('webpack-merge'),
-{ VueLoaderPlugin } = require('vue-loader'),
 CopyPlugin = require('copy-webpack-plugin'),
-path = require("path"),
-TerserPlugin = require("terser-webpack-plugin"),
-webpack = require("webpack"),
-root = path.resolve(__dirname, ".."),
+path = require('path'),
+TerserPlugin = require('terser-webpack-plugin'),
+webpack = require('webpack'),
 brws = process.env.NODE_ENV,
+file = (dir) => path.resolve(path.resolve(__dirname, '..'),dir),
 plugins = [
-  new VueLoaderPlugin(),
   new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
   new CopyPlugin({
     patterns: [
       {
-        from: path.resolve(root,`src/manifest/${brws}.json`),
-        to: path.resolve(root,`tests/${brws}/manifest.json`),
+        from: file(`src/manifest/${brws}.json`),
+        to: file(`tests/${brws}/manifest.json`),
         transform(content) {
           const { version, author, homepage: homepage_url } = require('../package.json')
           const manifest = JSON.parse(content)
@@ -24,94 +22,74 @@ plugins = [
         },
       },
       {
-        from: path.resolve(root, "src/locales"),
-        to: path.resolve(root,`tests/${brws}/_locales`),
+        from: file('src/locales'),
+        to: file(`tests/${brws}/_locales`),
+      },
+      // {
+      //   from: file('src/html'),
+      //   to: file(`tests/${brws}`),
+      // },
+      {
+        from: file('tests/compiled'),
+        to: file(`tests/${brws}/css`),
       },
       {
-        from: path.resolve(root, "src/html"),
-        to: path.resolve(root,`tests/${brws}`),
+        from: file('src/img'),
+        to: file(`tests/${brws}/img`),
       },
       {
-        from: path.resolve(root, "tests/compiled"),
-        to: path.resolve(root,`tests/${brws}/css`),
-      },
-      {
-        from: path.resolve(root, "src/img"),
-        to: path.resolve(root, `tests/${brws}/img`),
-      },
-      {
-        from: path.resolve(root, "src/web_accessible_resources"),
-        to: path.resolve(root, `tests/${brws}/web_accessible_resources`),
+        from: file('src/web_accessible_resources'),
+        to: file(`tests/${brws}/web_accessible_resources`),
         force: true,
       },
-      {
-        from: path.resolve(root, "src/js"),
-        to: path.resolve(root,`tests/${brws}/js`),
-      },
+      // {
+      //   from: file('src/js'),
+      //   to: file(`tests/${brws}/js`),
+      // },
     ],
   }),
   // new webpackEnv(),
 ],
 commonConfig = {
-  context: path.resolve(root, "src"),
+  context: file('src'),
   entry: {
-    start: "./js/start.js",
-    popup: "./vue/main.js",
+    // start: './js/start.js',
   },
   output: {
-    path: path.resolve(root,`tests/${brws}/js`),
-    filename: "[name].js",
+    path: file(`tests/${brws}/js`),
+    filename: '[name].js',
   },
   module: {
     rules: [
-      {
-        test: /\.vue$/,
-        loader: "vue-loader",
-      },
-      {
+			{
         test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
         use: {
-          loader: "swc-loader",
+          loader: 'swc-loader',
           options: {
-            // This makes swc-loader invoke swc synchronously.
             sync: true,
             jsc: {
               parser: {
-                syntax: "ecmascript"
+                syntax: 'ecmascript'
               },
-              target: "es2020",
+              target: 'es2020',
             },
             module: {
-              type: "es6",
+              type: 'es6',
             },
           },
         },
-        exclude: file => (
-          /(node_modules|bower_components)/.test(file) &&
-          !/\.vue\.js/.test(file)
-        )
-      },
-      {
-        test: /\.html$/i,
-        loader: "html-loader",
-      },
-      {
-        test: /\.css$/,
-        use: ["vue-style-loader", "css-loader"],
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: "url-loader",
       },
     ],
   },
   resolve: {
-    extensions: [".js", ".vue"]
+    extensions: ['.js'],
+    fallback: { 'path': require.resolve('path-browserify') }
   },
   plugins,
 },
 productionConfig = {
-  mode: "production",
+  mode: 'production',
   optimization: {
     minimize: true,
     minimizer: [
@@ -127,7 +105,7 @@ productionConfig = {
   },
 },
 developmentConfig = {
-  mode: "development",
+  mode: 'development',
   devtool: 'source-map',
   optimization: {
     minimize: false,
@@ -146,15 +124,13 @@ developmentConfig = {
   },
   watch: true,
   watchOptions: {
-    poll: 1000,
+    poll: 1500,
     aggregateTimeout: 500,
     ignored: /node_modules/,
   },
 };
 
 module.exports = (env,args) => {
-  // log(env)
-  // log("Mode: " + args.mode);
   switch(args.mode) {
     case 'development':
       return merge(commonConfig, developmentConfig);

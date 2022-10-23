@@ -7,5 +7,5 @@
 const main_css = `{main_css}`;
 
 (() => {
-  {code}
+{code}
 })();

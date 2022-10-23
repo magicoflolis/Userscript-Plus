@@ -3,36 +3,28 @@
   "default_locale": "en",
   "name": "__MSG_extName__",
   "description": "__MSG_extShortDesc__",
-  "homepage_url": "https://github.com/magicoflolis/Userscript-Plus",
+  "browser_action": {
+    "default_icon": "img/icon_128.png"
+  },
   "content_scripts": [
-    {
+		{
       "all_frames": true,
-      "js": ["/js/sleazyfork.js"],
-      "matches": ["https://greasyfork.org/*/scripts/*", "https://sleazyfork.org/*/scripts/*"],
+      "matches": [
+        "https://*/*"
+			],
+			"js": ["/web_accessible_resources/magic-userjs.user.js"],
       "run_at": "document_end"
     }
   ],
-  "browser_action": {
-    "browser_style": false,
-    "default_icon": "img/icon_128.png",
-    "default_title": "UserJS Popup",
-    "default_popup": "popup.html"
-  },
+  "permissions": [
+    "<all_urls>"
+  ],
   "browser_specific_settings": {
     "gecko": {
       "id": "uscriptplus@mol.com",
       "strict_min_version": "57.0"
     }
   },
-  "options_ui": {
-    "browser_style": false,
-    "page": "options.html",
-    "open_in_tab": true
-  },
-  "background": {
-    "page": "background.html"
-  },
-  "web_accessible_resources": ["/web_accessible_resources/*"],
   "content_security_policy": "script-src 'self'; object-src 'self'",
   "icons": {
     "16": "img/icon_16.png",
@@ -40,12 +32,6 @@
     "96": "img/icon_96.png",
     "128": "img/icon_128.png"
   },
-  "permissions": [
-    "activeTab",
-    "tabs",
-    "<all_urls>",
-    "storage",
-    "unlimitedStorage"
-  ],
-  "short_name": "uScriptPlus"
+  "short_name": "uScriptPlus",
+  "web_accessible_resources": ["/web_accessible_resources/*"]
 }

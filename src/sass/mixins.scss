@@ -2,7 +2,7 @@ $dark: #2e323d;
 $white: #fff;
 
 @mixin shadow {
-  content: "";
+  content: '';
   position: absolute;
   z-index: -1;
   bottom: 15px;

@@ -15,8 +15,8 @@
 |:----------:|:----------:|:----------:|:----------:|
 Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | -
 Userscript Legacy | [Install (GitHub)](https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js) | - | [Homepage](https://github.com/magicoflolis/Userscript-Plus)
-Chrome/Edge/Opera | - | - | Work in progress
-Firefox | - | - | Work in progress
+Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | - | Work in progress
+Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress
 
 **(Optional) Mobile Bookmarklet:**
 
@@ -46,13 +46,8 @@ Finds available UserJS for current webpage from various UserJS hosts (e.g, [Grea
 * Available search engines: [Greasy Fork](https://greasyfork.org), [Sleazy Fork](https://sleazyfork.org), [Open UserJS](https://openuserjs.org), [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript=="), [Gist (GitHub)](https://gist.github.com/search?l=JavaScript&o=desc&q="==UserScript==")
 * Built-in [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840).
 
-## Changelog
-
-> [(GitHub) Full Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
-
 ## Known bugs
 
-* Duplicate UserJS listings.
 * *May* conflict with any UserJS that runs in iframes.
 * *May* leave a opened tab when installing user scripts.
 

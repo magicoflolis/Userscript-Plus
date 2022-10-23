@@ -8,12 +8,10 @@ magic-userjs * {
   display: none !important;
   z-index: -1 !important;
 }
-// .main:not(.cheight) {
-//   @media screen and (max-height: 650px) {
-//     height: 250px !important;
-//   }
-// }
 .main {
+  @media screen and (max-height: 450px) {
+    height: fit-content !important;
+  }
   position: fixed;
   height: 492px;
   margin-left: 1rem;
@@ -267,7 +265,7 @@ magicuserjs-btn {
 
 magicuserjs-a,
 magicuserjs-btn,
-.magicuserjs-cfg *:not(input[type*="text"],input[type*="number"]),
+.magicuserjs-cfg mujs-section *:not(input[type*="text"],input[type*="number"]),
 .mainbtn,
 .mainframe,
 mujs-btn {

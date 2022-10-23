@@ -2,27 +2,6 @@ const log = (...msg) => console.log('[%cUserJS%c] %cDBG', 'color: rgb(29, 155, 2
 /** Information handling for UserJS */
 info = (...msg) => console.info('[%cUserJS%c] %cINF', 'color: rgb(29, 155, 240);', '', 'color: rgb(0, 186, 124);', ...msg),
 err = (...msg) => console.error('[%cUserJS%c] %cERROR', 'color: rgb(29, 155, 240);', '', 'color: rgb(249, 24, 128);', ...msg);
-let checkGMSupport = !Object.is(GM,undefined),
-MU = {
-  getValue: false,
-  info: {
-    script: {
-      version: 'Bookmarklet'
-    }
-  },
-  openInTab: false,
-  setValue: false,
-  xmlhttpRequest: false,
-};
-if(checkGMSupport) {
-  MU = {
-    getValue: GM_getValue,
-    info: GM_info,
-    openInTab: GM_openInTab,
-    setValue: GM_setValue,
-    xmlhttpRequest: GM_xmlhttpRequest,
-  };
-};
 
 let langs = {
   en: {
@@ -152,9 +131,11 @@ let langs = {
     save: '拯救',
   },
 },
+alang = [],
+clang = navigator.language.split('-')[0] ?? 'en',
 defcfg = {
   cache: true,
-  lang: langs[navigator.language.split('-')[0] ?? 'en'],
+  lang: langs[clang],
   filterlang: false,
   sleazyredirct: false,
   time: 10000,
@@ -163,27 +144,44 @@ defcfg = {
       enabled: true,
       regex: true,
       flags: '',
-      name: 'Default 1',
+      name: 'Blacklist 1',
       url: '(gov|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)',
     },
     {
       enabled: true,
       regex: true,
       flags: '',
-      name: 'Default 2',
+      name: 'Blacklist 2',
       url: '(pay|bank|money|localhost|authorize|checkout|bill|wallet|router)',
+    },
+    {
+      enabled: true,
+      regex: false,
+      flags: '',
+      name: 'Blacklist 3',
+      url: 'https://home.bluesnap.com',
+    },
+    {
+      enabled: true,
+      regex: false,
+      flags: '',
+      name: 'Blacklist 4',
+      url: [
+        'zalo.me',
+        'skrill.com'
+      ],
     },
   ],
   engines: [
     {
       enabled: true,
       name: 'greasyfork',
-      url: 'https://greasyfork.org/scripts/by-site',
+      url: 'https://greasyfork.org',
     },
     {
       enabled: true,
       name: 'sleazyfork',
-      url: 'https://sleazyfork.org/scripts/by-site',
+      url: 'https://sleazyfork.org',
     },
     {
       enabled: false,
@@ -203,23 +201,90 @@ defcfg = {
   ]
 },
 cfg = {},
+urls = [],
 sitegfcount = 0,
-sitesfcount = 0;
+sitesfcount = 0,
+checkGMSupport = typeof GM !== 'undefined',
+MU = {
+  getValue(key,def = {}) {
+    def = JSON.stringify(def ?? {});
+    if(checkGMSupport) {
+      return Promise.resolve(
+        JSON.parse( GM_getValue(key,def) )
+        );
+    };
+    try {
+      if(key.includes('Config')) {
+        return Promise.resolve(
+          JSON.parse( self.localStorage.getItem(`MUJS${key}`) )
+          );
+      };
+      return Promise.resolve(
+        JSON.parse( self.localStorage.getItem(key) )
+        );
+    } catch(ex) {
+      err(ex)
+    };
+    return Promise.resolve(null);
+  },
+  info: {
+    script: {
+      version: 'Bookmarklet'
+    }
+  },
+  openInTab(url,params = {}) {
+    if(!params) {
+      params = {
+        active: true,
+        insert: true,
+      };
+    };
+    if(checkGMSupport) {
+      return GM_openInTab(url, params);
+    };
+    let dwnbtn = self.document.createElement('a');
+    dwnbtn.className = 'magicuserjs-dwnbtn';
+    dwnbtn.href = url;
+    dwnbtn.target = '_blank';
+    dwnbtn.rel = 'noopener';
+    dwnbtn.dispatchEvent(new MouseEvent('click'));
+    return dwnbtn.remove();
+  },
+  setValue(key,v) {
+    v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v;
+    if(checkGMSupport) {
+      if(!cfg.cache) {
+        if(key.includes('Config')) {
+          return Promise.resolve( self.localStorage.setItem(`MUJS${key}`,v) );
+        };
+        return Promise.resolve( self.localStorage.setItem(key,v) );
+      };
+      return Promise.resolve( GM_setValue(key,v) );
+    };
+    if(key.includes('Config')) {
+      return Promise.resolve( self.localStorage.setItem(`MUJS${key}`,v) );
+    };
+    return Promise.resolve( self.localStorage.setItem(key,v) );
+  },
+  xmlhttpRequest: false,
+};
+
+if(checkGMSupport) {
+  Object.assign(MU, {
+    info: GM_info,
+    xmlhttpRequest: GM_xmlhttpRequest,
+  });
+};
+
 function main() {
+  let unsaved = false;
   const win = self ?? window,
   doc = win.document,
   estr = str => Object.is(str,null) || Object.is(str,undefined) || typeof str === 'string' && Object.is(str.trim(),''),
   save = () => {
     try {
-      if(checkGMSupport) {
-        if(!cfg.cache) {
-          localStorage.setItem('MUJSConfig',JSON.stringify(cfg));
-        } else {
-          MU.setValue('Config',JSON.stringify(cfg));
-        };
-      } else {
-        localStorage.setItem('MUJSConfig',JSON.stringify(cfg));
-      };
+      MU.setValue('Config',cfg);
+      unsaved = false;
       log('Saved:',cfg);
     } catch(e) {err(e)};
   },
@@ -284,7 +349,7 @@ function main() {
   sh = element => container.shadowRoot.querySelector(element),
   shA = element => container.shadowRoot.querySelectorAll(element),
   delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
-  clk = e => e.dispatchEvent(new MouseEvent('click')),
+  // clk = e => e.dispatchEvent(new MouseEvent('click')),
   isMobile = () => {
     let a = navigator.userAgent || win.opera;
     return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(a.substr(0,4));
@@ -316,10 +381,27 @@ function main() {
     };
     return info(`Progress: ${e.loaded / e.total}%`)
   },
-  fetchURL = async (url,method = 'GET',responseType = 'json',params = {}, forcefetch) => {
-    try {
-      return new Promise((resolve, reject) => {
-        if(checkGMSupport && !forcefetch) {
+  showError = (msg) => {
+    let txt = make('mujs-row','error', {
+      innerHTML: msg
+    });
+    for(let u of urls) {
+      let dwnbtn = make('a','magicuserjs-urls', {
+        href: u,
+        target: '_blank',
+        rel: 'noopener',
+        innerHTML: u
+      });
+      txt.append(dwnbtn);
+    };
+    if(sh('.magicuserjs-body')) {
+      sh('.magicuserjs-body').prepend(txt);
+    };
+  },
+  fetchURL = (url,method = 'GET',responseType = 'json',params = {}, forcefetch) => {
+    return new Promise((resolve, reject) => {
+      if(checkGMSupport && !forcefetch) {
+        try {
           MU.xmlhttpRequest({
             method: method,
             url,
@@ -332,39 +414,32 @@ function main() {
               resolve(r.response);
             },
           });
-        } else {
-          fetch(url, {
-            method: method,
-            ...params,
-          }).then((response) => {
-            if(!response.ok) reject(response);
-            if(responseType.match(/json/gi)) {
-              resolve(response.json());
-            } else if(responseType.match(/text/gi)) {
-              resolve(response.text());
-            } else if(responseType.match(/blob/gi)) {
-              resolve(response.blob());
-            };
-            resolve(response);
-          });
+        } catch (error) {
+          info(url,method,responseType,params);
+          err(error);
+          showError(error);
         }
-      });
-    } catch (error) {err(error)}
-  },
-  openpage = (url) => {
-    if(checkGMSupport) {
-      return MU.openInTab(url, {
-        active: true,
-        insert: true,
-      });
-    };
-    let dwnbtn = make('a','magicuserjs-dwnbtn', {
-      href: url,
-      target: '_blank',
-      rel: 'noopener',
+      } else {
+        fetch(url, {
+          method: method,
+          ...params,
+        }).then((response) => {
+          if(!response.ok) reject(response);
+          if(responseType.match(/json/gi)) {
+            resolve(response.json());
+          } else if(responseType.match(/text/gi)) {
+            resolve(response.text());
+          } else if(responseType.match(/blob/gi)) {
+            resolve(response.blob());
+          };
+          resolve(response);
+        }).catch((error) => {
+          info(url,method,responseType,params);
+          err(error);
+          showError(error);
+        });
+      };
     });
-    clk(dwnbtn);
-    return dwnbtn.remove();
   },
   createjs = (ujs, issleazy) => {
     let frame = make('magic-userjs',`frame ${issleazy ? 'sf' : ''}`),
@@ -374,7 +449,7 @@ function main() {
       innerHTML: ujs.name,
       onclick: (e) => {
         e.preventDefault();
-        openpage(ujs.url);
+        MU.openInTab(ujs.url);
       }
     }),
     fver = make('magic-userjs','magicuserjs-list', {
@@ -429,7 +504,7 @@ function main() {
       innerHTML: cfg.lang.install,
       onclick: (e) => {
         e.preventDefault();
-        openpage(ujs.code_url);
+        MU.openInTab(ujs.code_url);
       },
     });
     for(let u of ujs.users) {
@@ -437,7 +512,7 @@ function main() {
         innerHTML: u.name,
         onclick: (e) => {
           e.preventDefault();
-          openpage(u.url);
+          MU.openInTab(u.url);
         },
       });
       uframe.append(user);
@@ -463,7 +538,7 @@ function main() {
       tbody = make('magic-userjs','magicuserjs-body'),
       header = make('magic-userjs','magicuserjs-header'),
       cfgpage = make('mujs-row','magicuserjs-cfg hidden', {
-        innerHTML: `<mujs-section>
+        innerHTML: `<mujs-section style='${!checkGMSupport ? 'display: none;' : ''}'>
         <label>
           <magic-userjs>Sync with GM</magic-userjs>
           <magic-userjs class="magicuserjs-inlab">
@@ -574,23 +649,31 @@ function main() {
             url: '',
           }]
         };
-        siteujs = [];
-        sitegfcount = 0;
-        sitesfcount = 0;
-        tbody.innerHTML = '';
-        gfcounter.innerHTML = sitegfcount;
-        sfcounter.innerHTML = sitesfcount;
-        mainbtn.innerHTML = sitegfcount;
         let sites = [],
         custom = [];
         for(let i of cfg.engines) {
           if(i.enabled) {
             if(i.url.match(/fork.org/gi)) {
-              sites.push(fetchURL(`${i.url}/${host}.json`).catch(err),);
+              if(cfg.filterlang) {
+                if(alang.length > 1) {
+                  for(let a of alang) {
+                    // log(`${i.url}/${a}/scripts/by-site/${host}.json`);
+                    urls.push(`${i.url}/${a}/scripts/by-site/${host}.json`);
+                    sites.push(fetchURL(`${i.url}/${a}/scripts/by-site/${host}.json`),);
+                  };
+                } else {
+                  urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
+                  sites.push(fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json`),);
+                };
+              } else {
+                urls.push(`${i.url}/scripts/by-site/${host}.json`);
+                sites.push(fetchURL(`${i.url}/scripts/by-site/${host}.json`),);
+              }
             };
             if(i.url.match(/(openuserjs.org|github.com)/gi)) {
-              log(`${i.url}${host}`);
-              custom.push(fetchURL(`${i.url}${host}`,'GET','text').catch(err),);
+              // log(`${i.url}${host}`);
+              urls.push(`${i.url}${host}`);
+              custom.push(fetchURL(`${i.url}${host}`,'GET','text'),);
             };
           };
         };
@@ -598,7 +681,13 @@ function main() {
         for(let d of data) {
           for(let ujs of d) {
             if(ujs.deleted) continue;
-            if(cfg.filterlang && !ujs.locale.includes(navigator.language.split('-')[0] ?? 'en')) continue;
+            if(cfg.filterlang) {
+              if(alang.length > 1) {
+                for(let a of alang) {
+                  if(!ujs.locale.includes(a)) continue;
+                };
+              } else if(!ujs.locale.includes(clang)) continue;
+            };
             siteujs.push(
               {
                 url: ujs,
@@ -730,37 +819,121 @@ function main() {
             };
           });
         };
-        if(Object.is(data[0].length,0) && Object.is(data[1].length,0) && Object.is(custom.length,0)) {
-          tbody.innerHTML = 'No available UserJS for this webpage';
+        if(Object.is(data[0].length,0) && Object.is(data[1].length,0) && Object.is(custom.length,0)) showError('No available UserJS for this webpage');
+      },
+      preBuild = () => {
+        const bhref = win.top.document.location.href;
+        let blacklisted = false;
+        siteujs = [];
+        urls = [];
+        sitegfcount = 0;
+        sitesfcount = 0;
+        tbody.innerHTML = '';
+        gfcounter.innerHTML = sitegfcount;
+        sfcounter.innerHTML = sitesfcount;
+        mainbtn.innerHTML = sitegfcount;
+        for(let b of cfg.blacklist) {
+          if(!b.enabled) continue;
+          if(b.regex) {
+            let reg = new RegExp(b.url,b.flags),
+            testurl = reg.test(bhref);
+            if(!testurl) continue;
+            blacklisted = true;
+          };
+          if(!Array.isArray(b.url)) {
+            if(!bhref.includes(b.url)) continue;
+            blacklisted = true;
+          };
+          for(let c of b.url) {
+            if(!bhref.includes(c)) continue;
+            blacklisted = true;
+          };
         };
+        if(blacklisted) {
+          urls.push(bhref);
+          return showError('Blacklisted');
+        };
+        return buildlist();
       },
       makecfg = () => {
-        let savebtn = make('mujs-btn', 'save', {
+        let isvalid = true,
+        txta = make('textarea','tarea', {
+          name: 'blacklist',
+          id: 'blacklist',
+          rows: '10',
+          autocomplete: false,
+          spellcheck: false,
+          wrap: 'soft',
+          innerHTML: JSON.stringify(cfg.blacklist, null, ' '),
+          onchange: (e) => {
+            try {
+              cfg.blacklist = JSON.parse(e.target.value);
+              if(!isvalid) {
+                isvalid = true;
+                e.target.setAttribute('style','');
+              };
+            } catch(error) {
+              isvalid = false;
+              err(error);
+            };
+          },
+        }),
+        cbtn = make('magic-userjs', 'b', {
+          style: 'display: flex'
+        }),
+        savebtn = make('mujs-btn', 'save', {
           style: 'margin: auto;',
           innerHTML: cfg.lang.save,
-          onclick: async (e) => {
+          onclick: (e) => {
             halt(e);
             let t = sh('input#time');
             if(t.validity.badInput || t.validity.rangeUnderflow && t.value !== '-1') {
-              t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
-            } else {
-              save();
-              if(rebuild) {
-                buildlist();
-                rebuild = false;
+              return t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
+            };
+            if(!isvalid) {
+              return txta.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
+            };
+            save();
+            if(rebuild) {
+              preBuild();
+              rebuild = false;
+            };
+            if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirct) {
+              let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
+              qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
+            };
+          },
+        }),
+        resetbtn = make('mujs-btn', 'reset', {
+          style: 'margin: auto;',
+          innerHTML: 'Reset',
+          onclick: async (e) => {
+            halt(e);
+            unsaved = true;
+            cfg = defcfg;
+            for(let i of cfg.engines) {
+              if(sh(`#${i.name}`)) {
+                sh(`#${i.name}`).checked = i.enabled;
+                ael(sh(`#${i.name}`),'change', (e) => {
+                  unsaved = true;
+                  i.enabled = e.target.checked;
+                  rebuild = true;
+                });
               };
-              if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirct) {
-                let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
-                qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
-              };
-            }
+            };
+            sh('input#cache').checked = cfg.cache;
+            sh('input#sleazyredirct').checked = cfg.sleazyredirct;
+            sh('input#filter').checked = cfg.filterlang;
+            txta.innerHTML = JSON.stringify(cfg.blacklist, null, ' ');
           },
         });
-        cfgpage.append(savebtn);
+        cbtn.append(savebtn,resetbtn);
+        cfgpage.append(txta,cbtn);
         for(let i of cfg.engines) {
           if(sh(`#${i.name}`)) {
             sh(`#${i.name}`).checked = i.enabled;
             ael(sh(`#${i.name}`),'change', (e) => {
+              unsaved = true;
               i.enabled = e.target.checked;
               rebuild = true;
             });
@@ -768,11 +941,13 @@ function main() {
         };
         sh('input#cache').checked = cfg.cache;
         ael(sh('input#cache'),'change', (e) => {
+          unsaved = true;
           cfg.cache = e.target.checked;
           rebuild = true;
         });
         sh('input#sleazyredirct').checked = cfg.sleazyredirct;
         ael(sh('input#sleazyredirct'),'change', (e) => {
+          unsaved = true;
           cfg.sleazyredirct = e.target.checked;
         });
         ael(sh('input#time'),'beforeinput', (e) => {
@@ -783,8 +958,8 @@ function main() {
           }
         });
         ael(sh('input#time'),'input', (e) => {
+          unsaved = true;
           let t = e.target;
-          log(t.value);
           if(t.validity.badInput || t.validity.rangeUnderflow && t.value !== '-1') {
             t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
           } else {
@@ -794,6 +969,7 @@ function main() {
         });
         sh('input#filter').checked = cfg.filterlang;
         ael(sh('input#filter'),'change', (e) => {
+          unsaved = true;
           cfg.filterlang = e.target.checked;
           rebuild = true;
         });
@@ -869,6 +1045,16 @@ function main() {
         </svg>`,
         onclick: (e) => {
           e.preventDefault();
+          if(sh('.saveerror')) {
+            sh('.saveerror').remove()
+          };
+          if(unsaved) {
+            let txt = make('mujs-row','saveerror', {
+              innerHTML: 'Unsaved changes'
+            });
+            tbody.prepend(txt);
+            delay(10000).then(() => txt.remove());
+          };
           if(cfgpage.classList.contains('hidden')) {
             cfgpage.classList.remove('hidden');
             tbody.classList.add('hidden');
@@ -882,11 +1068,11 @@ function main() {
         },
       }),
       btnhome = make('mujs-btn','github', {
-        title: `GitHub (v${MU.info.script.version.includes('.') ? MU.info.script.version : MU.info.script.version.slice(0,5)})`,
+        title: `GitHub (v${MU.info.script.version.includes('.') || MU.info.script.version.includes('Book') ? MU.info.script.version : MU.info.script.version.slice(0,5)})`,
         innerHTML: `<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>`,
         onclick: (e) => {
           e.preventDefault();
-          openpage('https://github.com/magicoflolis/Userscript-Plus');
+          MU.openInTab('https://github.com/magicoflolis/Userscript-Plus');
         }
       }),
       btnissue = make('mujs-btn','issue', {
@@ -894,7 +1080,7 @@ function main() {
         innerHTML: `<svg viewBox="0 0 24 24"><path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/></svg>`,
         onclick: (e) => {
           e.preventDefault();
-          openpage('https://github.com/magicoflolis/Userscript-Plus/issues/new');
+          MU.openInTab('https://github.com/magicoflolis/Userscript-Plus/issues/new');
         }
       }),
       btngreasy = make('mujs-btn','greasy', {
@@ -902,40 +1088,29 @@ function main() {
         innerHTML: `<svg viewBox="0 0 510.4 510.4"><g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g></svg>`,
         onclick: (e) => {
           e.preventDefault();
-          openpage('https://greasyfork.org/scripts/421603');
-        }
-      }),
-      btnlegacy = make('mujs-btn','legacy', {
-        title: cfg.lang.legacy,
-        innerHTML: `<svg viewBox="0 0 510.4 510.4"><g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g></svg>`,
-        onclick: (e) => {
-          e.preventDefault();
-          openpage('https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js');
+          MU.openInTab('https://greasyfork.org/scripts/421603');
         }
       });
       gfcountframe.append(gfcounter);
       sfcountframe.append(sfcounter);
       countframe.append(gfcountframe,sfcountframe);
       fsearch.append(searcher);
-      btnframe.append(fsearch,searchbtn,btncfg,btnissue,btnhome,btngreasy,btnlegacy,closebtn);
+      btnframe.append(fsearch,searchbtn,btncfg,btnissue,btnhome,btngreasy,closebtn);
       header.append(countframe,btnframe);
       main.append(header,tbody,cfgpage);
       mainframe.append(mainbtn);
       container.shadowRoot.append(usercss,mainframe,main);
-      for(let b of cfg.blacklist) {
-        if(!b.enabled) continue;
-        const bhref = win.top.document.location.href;
-        if(b.regex) {
-          let reg = new RegExp(b.url,b.flags),
-          testurl = reg.test(bhref);
-          if(!testurl) buildlist();
-          break;
-        };
-        if(!bhref.includes(b.url)) buildlist();
-        break;
-      }
+      preBuild();
       makecfg();
     } catch(error) {err(error)}
+  };
+  if(!estr(navigator.languages)) {
+    for(let nlang of navigator.languages) {
+      let lg = nlang.split('-')[0];
+      if(alang.indexOf(lg) === -1) {
+        alang.push(lg);
+      };
+    };
   };
   if(doc.readyState === 'complete') {
     countsite();
@@ -948,9 +1123,9 @@ function main() {
 async function setupConfig() {
   try {
     let data = await Promise.all([
-      checkGMSupport ? MU.getValue('Config',JSON.stringify(defcfg)) : JSON.stringify(defcfg)
+      MU.getValue('Config',defcfg)
     ]).catch(err);
-    cfg = JSON.parse(localStorage.getItem('MUJSConfig') ?? data[0]);
+    cfg = data[0] ?? defcfg;
     for (const key in defcfg) {
       if(!Object.prototype.hasOwnProperty.call(cfg, key)) {
         cfg[key] = defcfg[key];

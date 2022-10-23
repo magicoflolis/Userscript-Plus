@@ -2,7 +2,7 @@
   "name": "uscript-plus-firefox",
   "description": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey.",
   "author": "Magic <magicoflolis@tuta.io>",
-  "version": "3.7.15",
+  "version": "3.8.17",
   "license": "MIT",
   "userJS": {
     "name": "Magic Userscript+ : Show Site All UserJS",

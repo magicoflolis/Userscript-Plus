@@ -61,13 +61,7 @@ ${langND}
 // @connect      sleazyfork.org
 // @connect      github.com
 // @connect      openuserjs.org
-// @connect      cdn.jsdelivr.net
 // @match        https://*/*
-// @exclude      http*://*stripe.com/*
-// @exclude      http*://*ica.yandex.com/*
-// @exclude      http*://*skrill.com/*
-// @exclude      http*://*zalo.me/*
-// @exclude      http*://*.bluesnap.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @grant        GM_getValue

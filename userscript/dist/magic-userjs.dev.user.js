@@ -14,7 +14,7 @@
 // @description:ru-RU   Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @description:ru      Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @author       Magic <magicoflolis@tuta.io>
-// @version      1666472881415
+// @version      1666565576202
 // @icon         data:image/png;base64,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
 // @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
 // @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
@@ -26,13 +26,7 @@
 // @connect      sleazyfork.org
 // @connect      github.com
 // @connect      openuserjs.org
-// @connect      cdn.jsdelivr.net
 // @match        https://*/*
-// @exclude      http*://*stripe.com/*
-// @exclude      http*://*ica.yandex.com/*
-// @exclude      http*://*skrill.com/*
-// @exclude      http*://*zalo.me/*
-// @exclude      http*://*.bluesnap.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @grant        GM_getValue
@@ -51,7 +45,7 @@
 * Injected stylesheet
 * https://github.com/magicoflolis/Userscript-Plus/tree/master/userscript/src/sass
 */
-const main_css = `magic-userjs{cursor:default}magic-userjs *{line-height:normal}.hidden{display:none !important;z-index:-1 !important}.main{position:fixed;height:492px;margin-left:1rem;margin-right:1rem;bottom:1rem;right:1rem;background:#495060 !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-size:14px !important;font-family:arial,sans-serif !important}.main:not(.hidden){z-index:100000000000000020 !important;display:grid !important}.main *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count,label,.magicuserjs-switch){background:#495060 !important}.main *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count){color:#fff !important}.counterframe{border-radius:100%;padding:.5%;width:25px !important;height:25px !important}.count{background:rgba(0,0,0,0)}.mainframe{background:#495060 !important;color:#fff !important;border:2px solid rgba(0,0,0,0);border-radius:100%;padding:.5% !important;position:fixed;bottom:1rem;right:1rem;width:25px !important;height:25px !important}.mainframe:not(.hidden){z-index:100000000000000020 !important;display:block}count-frame{border:2px solid rgba(0,0,0,0);font-size:16px;font-weight:400;display:block;text-align:center}count-frame{line-height:normal !important;width:auto !important;height:auto !important}.magicuserjs-header{display:flex;gap:10px;border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:fit-content;padding:10px;font-size:1em;justify-content:space-between}.magicuserjs-body{overflow-y:scroll;overflow-x:hidden}.magicuserjs-cfg,.magicuserjs-body{scrollbar-color:#fff #2e323d;scrollbar-width:thin;border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}.magicuserjs-cfg{height:fit-content}.magicuserjs-cfg mujs-section>label{display:flex;justify-content:space-between;padding:.5em}.magicuserjs-cfg mujs-section>label input[type*=number]{position:relative;border-radius:4px;border:1px solid #fff}.magicuserjs-cfg .magicuserjs-inlab{position:relative;width:38px;border-radius:20px;margin:5px}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]{display:none}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]:checked+label{margin-left:0;background-color:rgba(255,255,255,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]:checked+label:before{right:0px}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#greasyfork:checked+label,.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#sleazyfork:checked+label{background-color:rgba(0,183,255,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#openuserjs:checked+label{background-color:rgba(237,63,20,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#github:checked+label{background-color:rgba(36,41,47,.568)}.magicuserjs-cfg .magicuserjs-inlab label{display:block;overflow:hidden;height:16px;padding:0;border-radius:20px;border:1px solid #fff;background-color:#495060}.magicuserjs-cfg .magicuserjs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:#fff;position:absolute;top:0;right:20px;border-radius:20px}.magicuserjs-eframe,.frame{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;font-size:1em}.frame{border-bottom:1px solid #fff}@media screen and (max-width: 800px){.frame{display:flow-root !important;height:fit-content !important}}.frame:not(.sf) magicuserjs-a{color:#00b7ff !important}.frame:not(.sf) magicuserjs-btn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.frame.sf magicuserjs-a{color:#e75531 !important}.frame.sf magicuserjs-btn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.magicuserjs-name{font-size:inherit !important;display:grid;margin-left:1%;margin-top:.67em;margin-bottom:.67em}.magicuserjs-name span{font-size:.8em !important}.magicuserjs-eframe{margin-right:1%;margin-top:.67em;margin-bottom:.67em}@media screen and (max-width: 800px){.magicuserjs-eframe{height:fit-content !important}}.magicuserjs-uframe{display:grid;grid-auto-flow:column;grid-gap:1em}mujs-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-column{display:flex;gap:10px}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}mujs-column.btnframe{flex-flow:row wrap-reverse !important}}mujs-row{display:flex;gap:10px;flex-direction:column}mujs-btn svg{fill:#fff;width:14px;height:14px}input[type*=number],input[type*=text]{border:rgba(0,0,0,0);outline:none !important}magicuserjs-btn{font-size:12px;border-radius:3px;font-style:normal;padding:6px 15%;font-weight:400;font-variant:normal;line-height:21px}magicuserjs-a,magicuserjs-btn,.magicuserjs-cfg *:not(input[type*=text],input[type*=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}.magicuserjs-cfg *:not(input[type*=text],input[type*=number]){user-select:none !important}mujs-btn,input,.magicuserjs-uframe,.magicuserjs-list,.install,.magicuserjs-homepage{width:fit-content;height:fit-content}
+const main_css = `magic-userjs{cursor:default}magic-userjs *{line-height:normal}.hidden{display:none !important;z-index:-1 !important}.main{position:fixed;height:492px;margin-left:1rem;margin-right:1rem;bottom:1rem;right:1rem;background:#495060 !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-size:14px !important;font-family:arial,sans-serif !important}@media screen and (max-height: 450px){.main{height:fit-content !important}}.main:not(.hidden){z-index:100000000000000000 !important;display:grid !important}.main *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count,label,.magicuserjs-switch){background:#495060 !important}.main *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count){color:#fff !important}.counterframe{border-radius:100%;padding:.5%;width:25px !important;height:25px !important}.count{background:rgba(0,0,0,0)}.mainframe{background:#495060 !important;color:#fff !important;border:2px solid rgba(0,0,0,0);border-radius:100%;padding:.5% !important;position:fixed;bottom:1rem;right:1rem;width:25px !important;height:25px !important}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border:2px solid rgba(0,0,0,0);font-size:16px;font-weight:400;display:block;text-align:center}count-frame{line-height:normal !important;width:auto !important;height:auto !important}.magicuserjs-header{display:flex;gap:10px;border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:fit-content;padding:10px;font-size:1em;justify-content:space-between}.magicuserjs-body{overflow-y:scroll;overflow-x:hidden}.magicuserjs-cfg,.magicuserjs-body{scrollbar-color:#fff #2e323d;scrollbar-width:thin;border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}.magicuserjs-cfg{height:fit-content}.magicuserjs-cfg mujs-section>label{display:flex;justify-content:space-between;padding:.5em}.magicuserjs-cfg mujs-section>label input[type*=number]{position:relative;border-radius:4px;border:1px solid #fff}.magicuserjs-cfg .magicuserjs-inlab{position:relative;width:38px;border-radius:20px;margin:5px}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]{display:none}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]:checked+label{margin-left:0;background-color:rgba(255,255,255,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]:checked+label:before{right:0px}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#greasyfork:checked+label,.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#sleazyfork:checked+label{background-color:rgba(0,183,255,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#openuserjs:checked+label{background-color:rgba(237,63,20,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#github:checked+label{background-color:rgba(36,41,47,.568)}.magicuserjs-cfg .magicuserjs-inlab label{display:block;overflow:hidden;height:16px;padding:0;border-radius:20px;border:1px solid #fff;background-color:#495060}.magicuserjs-cfg .magicuserjs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:#fff;position:absolute;top:0;right:20px;border-radius:20px}.magicuserjs-eframe,.frame{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;font-size:1em}.frame{border-bottom:1px solid #fff}@media screen and (max-width: 800px){.frame{display:flow-root !important;height:fit-content !important}}.frame:not(.sf) magicuserjs-a{color:#00b7ff !important}.frame:not(.sf) magicuserjs-btn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.frame.sf magicuserjs-a{color:#e75531 !important}.frame.sf magicuserjs-btn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.magicuserjs-name{font-size:inherit !important;display:grid;margin-left:1%;margin-top:.67em;margin-bottom:.67em}.magicuserjs-name span{font-size:.8em !important}.magicuserjs-eframe{margin-right:1%;margin-top:.67em;margin-bottom:.67em}@media screen and (max-width: 800px){.magicuserjs-eframe{height:fit-content !important}}.magicuserjs-uframe{display:grid;grid-auto-flow:column;grid-gap:1em}mujs-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-column{display:flex;gap:10px}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}mujs-column.btnframe{flex-flow:row wrap-reverse !important}}mujs-row{display:flex;gap:10px;flex-direction:column}mujs-btn svg{fill:#fff;width:14px;height:14px}input[type*=number],input[type*=text]{border:rgba(0,0,0,0);outline:none !important}magicuserjs-btn{font-size:12px;border-radius:3px;font-style:normal;padding:6px 15%;font-weight:400;font-variant:normal;line-height:21px}magicuserjs-a,magicuserjs-btn,.magicuserjs-cfg mujs-section *:not(input[type*=text],input[type*=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}.magicuserjs-cfg *:not(input[type*=text],input[type*=number]){user-select:none !important}mujs-btn,input,.magicuserjs-uframe,.magicuserjs-list,.install,.magicuserjs-homepage{width:fit-content;height:fit-content}
 `;
 
 (() => {
@@ -59,27 +53,6 @@ const log = (...msg) => console.log('[%cUserJS%c] %cDBG', 'color: rgb(29, 155, 2
 /** Information handling for UserJS */
 info = (...msg) => console.info('[%cUserJS%c] %cINF', 'color: rgb(29, 155, 240);', '', 'color: rgb(0, 186, 124);', ...msg),
 err = (...msg) => console.error('[%cUserJS%c] %cERROR', 'color: rgb(29, 155, 240);', '', 'color: rgb(249, 24, 128);', ...msg);
-let checkGMSupport = !Object.is(GM,undefined),
-MU = {
-  getValue: false,
-  info: {
-    script: {
-      version: 'Bookmarklet'
-    }
-  },
-  openInTab: false,
-  setValue: false,
-  xmlhttpRequest: false,
-};
-if(checkGMSupport) {
-  MU = {
-    getValue: GM_getValue,
-    info: GM_info,
-    openInTab: GM_openInTab,
-    setValue: GM_setValue,
-    xmlhttpRequest: GM_xmlhttpRequest,
-  };
-};
 
 let langs = {
   en: {
@@ -209,9 +182,11 @@ let langs = {
     save: '拯救',
   },
 },
+alang = [],
+clang = navigator.language.split('-')[0] ?? 'en',
 defcfg = {
   cache: true,
-  lang: langs[navigator.language.split('-')[0] ?? 'en'],
+  lang: langs[clang],
   filterlang: false,
   sleazyredirct: false,
   time: 10000,
@@ -220,15 +195,32 @@ defcfg = {
       enabled: true,
       regex: true,
       flags: '',
-      name: 'Default 1',
+      name: 'Blacklist 1',
       url: '(gov|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)',
     },
     {
       enabled: true,
       regex: true,
       flags: '',
-      name: 'Default 2',
+      name: 'Blacklist 2',
       url: '(pay|bank|money|localhost|authorize|checkout|bill|wallet|router)',
+    },
+    {
+      enabled: true,
+      regex: false,
+      flags: '',
+      name: 'Blacklist 3',
+      url: 'https://home.bluesnap.com',
+    },
+    {
+      enabled: true,
+      regex: false,
+      flags: '',
+      name: 'Blacklist 4',
+      url: [
+        'zalo.me',
+        'skrill.com'
+      ],
     },
   ],
   engines: [
@@ -260,23 +252,90 @@ defcfg = {
   ]
 },
 cfg = {},
+urls = [],
 sitegfcount = 0,
-sitesfcount = 0;
+sitesfcount = 0,
+checkGMSupport = typeof GM !== 'undefined',
+MU = {
+  getValue(key,def = {}) {
+    def = JSON.stringify(def ?? {});
+    if(checkGMSupport) {
+      return Promise.resolve(
+        JSON.parse( GM_getValue(key,def) )
+        );
+    };
+    try {
+      if(key.includes('Config')) {
+        return Promise.resolve(
+          JSON.parse( self.localStorage.getItem(`MUJS${key}`) )
+          );
+      };
+      return Promise.resolve(
+        JSON.parse( self.localStorage.getItem(key) )
+        );
+    } catch(ex) {
+      err(ex)
+    };
+    return Promise.resolve(null);
+  },
+  info: {
+    script: {
+      version: 'Bookmarklet'
+    }
+  },
+  openInTab(url,params = {}) {
+    if(!params) {
+      params = {
+        active: true,
+        insert: true,
+      };
+    };
+    if(checkGMSupport) {
+      return GM_openInTab(url, params);
+    };
+    let dwnbtn = self.document.createElement('a');
+    dwnbtn.className = 'magicuserjs-dwnbtn';
+    dwnbtn.href = url;
+    dwnbtn.target = '_blank';
+    dwnbtn.rel = 'noopener';
+    dwnbtn.dispatchEvent(new MouseEvent('click'));
+    return dwnbtn.remove();
+  },
+  setValue(key,v) {
+    v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v;
+    if(checkGMSupport) {
+      if(!cfg.cache) {
+        if(key.includes('Config')) {
+          return Promise.resolve( self.localStorage.setItem(`MUJS${key}`,v) );
+        };
+        return Promise.resolve( self.localStorage.setItem(key,v) );
+      };
+      return Promise.resolve( GM_setValue(key,v) );
+    };
+    if(key.includes('Config')) {
+      return Promise.resolve( self.localStorage.setItem(`MUJS${key}`,v) );
+    };
+    return Promise.resolve( self.localStorage.setItem(key,v) );
+  },
+  xmlhttpRequest: false,
+};
+
+if(checkGMSupport) {
+  Object.assign(MU, {
+    info: GM_info,
+    xmlhttpRequest: GM_xmlhttpRequest,
+  });
+};
+
 function main() {
+  let unsaved = false;
   const win = self ?? window,
   doc = win.document,
   estr = str => Object.is(str,null) || Object.is(str,undefined) || typeof str === 'string' && Object.is(str.trim(),''),
   save = () => {
     try {
-      if(checkGMSupport) {
-        if(!cfg.cache) {
-          localStorage.setItem('MUJSConfig',JSON.stringify(cfg));
-        } else {
-          MU.setValue('Config',JSON.stringify(cfg));
-        };
-      } else {
-        localStorage.setItem('MUJSConfig',JSON.stringify(cfg));
-      };
+      MU.setValue('Config',cfg);
+      unsaved = false;
       log('Saved:',cfg);
     } catch(e) {err(e)};
   },
@@ -341,7 +400,7 @@ function main() {
   sh = element => container.shadowRoot.querySelector(element),
   shA = element => container.shadowRoot.querySelectorAll(element),
   delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
-  clk = e => e.dispatchEvent(new MouseEvent('click')),
+  // clk = e => e.dispatchEvent(new MouseEvent('click')),
   isMobile = () => {
     let a = navigator.userAgent || win.opera;
     return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(a.substr(0,4));
@@ -373,10 +432,27 @@ function main() {
     };
     return info(`Progress: ${e.loaded / e.total}%`)
   },
-  fetchURL = async (url,method = 'GET',responseType = 'json',params = {}, forcefetch) => {
-    try {
-      return new Promise((resolve, reject) => {
-        if(checkGMSupport && !forcefetch) {
+  showError = (msg) => {
+    let txt = make('mujs-row','error', {
+      innerHTML: msg
+    });
+    for(let u of urls) {
+      let dwnbtn = make('a','magicuserjs-urls', {
+        href: u,
+        target: '_blank',
+        rel: 'noopener',
+        innerHTML: u
+      });
+      txt.append(dwnbtn);
+    };
+    if(sh('.magicuserjs-body')) {
+      sh('.magicuserjs-body').prepend(txt);
+    };
+  },
+  fetchURL = (url,method = 'GET',responseType = 'json',params = {}, forcefetch) => {
+    return new Promise((resolve, reject) => {
+      if(checkGMSupport && !forcefetch) {
+        try {
           MU.xmlhttpRequest({
             method: method,
             url,
@@ -389,39 +465,32 @@ function main() {
               resolve(r.response);
             },
           });
-        } else {
-          fetch(url, {
-            method: method,
-            ...params,
-          }).then((response) => {
-            if(!response.ok) reject(response);
-            if(responseType.match(/json/gi)) {
-              resolve(response.json());
-            } else if(responseType.match(/text/gi)) {
-              resolve(response.text());
-            } else if(responseType.match(/blob/gi)) {
-              resolve(response.blob());
-            };
-            resolve(response);
-          });
+        } catch (error) {
+          info(url,method,responseType,params);
+          err(error);
+          showError(error);
         }
-      });
-    } catch (error) {err(error)}
-  },
-  openpage = (url) => {
-    if(checkGMSupport) {
-      return MU.openInTab(url, {
-        active: true,
-        insert: true,
-      });
-    };
-    let dwnbtn = make('a','magicuserjs-dwnbtn', {
-      href: url,
-      target: '_blank',
-      rel: 'noopener',
+      } else {
+        fetch(url, {
+          method: method,
+          ...params,
+        }).then((response) => {
+          if(!response.ok) reject(response);
+          if(responseType.match(/json/gi)) {
+            resolve(response.json());
+          } else if(responseType.match(/text/gi)) {
+            resolve(response.text());
+          } else if(responseType.match(/blob/gi)) {
+            resolve(response.blob());
+          };
+          resolve(response);
+        }).catch((error) => {
+          info(url,method,responseType,params);
+          err(error);
+          showError(error);
+        });
+      };
     });
-    clk(dwnbtn);
-    return dwnbtn.remove();
   },
   createjs = (ujs, issleazy) => {
     let frame = make('magic-userjs',`frame ${issleazy ? 'sf' : ''}`),
@@ -431,7 +500,7 @@ function main() {
       innerHTML: ujs.name,
       onclick: (e) => {
         e.preventDefault();
-        openpage(ujs.url);
+        MU.openInTab(ujs.url);
       }
     }),
     fver = make('magic-userjs','magicuserjs-list', {
@@ -486,7 +555,7 @@ function main() {
       innerHTML: cfg.lang.install,
       onclick: (e) => {
         e.preventDefault();
-        openpage(ujs.code_url);
+        MU.openInTab(ujs.code_url);
       },
     });
     for(let u of ujs.users) {
@@ -494,7 +563,7 @@ function main() {
         innerHTML: u.name,
         onclick: (e) => {
           e.preventDefault();
-          openpage(u.url);
+          MU.openInTab(u.url);
         },
       });
       uframe.append(user);
@@ -520,7 +589,7 @@ function main() {
       tbody = make('magic-userjs','magicuserjs-body'),
       header = make('magic-userjs','magicuserjs-header'),
       cfgpage = make('mujs-row','magicuserjs-cfg hidden', {
-        innerHTML: `<mujs-section>
+        innerHTML: `<mujs-section style='${!checkGMSupport ? 'display: none;' : ''}'>
         <label>
           <magic-userjs>Sync with GM</magic-userjs>
           <magic-userjs class="magicuserjs-inlab">
@@ -631,27 +700,31 @@ function main() {
             url: '',
           }]
         };
-        siteujs = [];
-        sitegfcount = 0;
-        sitesfcount = 0;
-        tbody.innerHTML = '';
-        gfcounter.innerHTML = sitegfcount;
-        sfcounter.innerHTML = sitesfcount;
-        mainbtn.innerHTML = sitegfcount;
         let sites = [],
         custom = [];
         for(let i of cfg.engines) {
           if(i.enabled) {
             if(i.url.match(/fork.org/gi)) {
               if(cfg.filterlang) {
-                sites.push(fetchURL(`${i.url}/${navigator.language.split('-')[0] ?? 'en'}/scripts/by-site/${host}.json`).catch(err),);
+                if(alang.length > 1) {
+                  for(let a of alang) {
+                    // log(`${i.url}/${a}/scripts/by-site/${host}.json`);
+                    urls.push(`${i.url}/${a}/scripts/by-site/${host}.json`);
+                    sites.push(fetchURL(`${i.url}/${a}/scripts/by-site/${host}.json`),);
+                  };
+                } else {
+                  urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
+                  sites.push(fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json`),);
+                };
               } else {
-                sites.push(fetchURL(`${i.url}/scripts/by-site/${host}.json`).catch(err),);
+                urls.push(`${i.url}/scripts/by-site/${host}.json`);
+                sites.push(fetchURL(`${i.url}/scripts/by-site/${host}.json`),);
               }
             };
             if(i.url.match(/(openuserjs.org|github.com)/gi)) {
-              log(`${i.url}${host}`);
-              custom.push(fetchURL(`${i.url}${host}`,'GET','text').catch(err),);
+              // log(`${i.url}${host}`);
+              urls.push(`${i.url}${host}`);
+              custom.push(fetchURL(`${i.url}${host}`,'GET','text'),);
             };
           };
         };
@@ -659,7 +732,13 @@ function main() {
         for(let d of data) {
           for(let ujs of d) {
             if(ujs.deleted) continue;
-            if(cfg.filterlang && !ujs.locale.includes(navigator.language.split('-')[0] ?? 'en')) continue;
+            if(cfg.filterlang) {
+              if(alang.length > 1) {
+                for(let a of alang) {
+                  if(!ujs.locale.includes(a)) continue;
+                };
+              } else if(!ujs.locale.includes(clang)) continue;
+            };
             siteujs.push(
               {
                 url: ujs,
@@ -791,33 +870,89 @@ function main() {
             };
           });
         };
-        if(Object.is(data[0].length,0) && Object.is(data[1].length,0) && Object.is(custom.length,0)) {
-          tbody.innerHTML = 'No available UserJS for this webpage';
+        if(Object.is(data[0].length,0) && Object.is(data[1].length,0) && Object.is(custom.length,0)) showError('No available UserJS for this webpage');
+      },
+      preBuild = () => {
+        const bhref = win.top.document.location.href;
+        let blacklisted = false;
+        siteujs = [];
+        urls = [];
+        sitegfcount = 0;
+        sitesfcount = 0;
+        tbody.innerHTML = '';
+        gfcounter.innerHTML = sitegfcount;
+        sfcounter.innerHTML = sitesfcount;
+        mainbtn.innerHTML = sitegfcount;
+        for(let b of cfg.blacklist) {
+          if(!b.enabled) continue;
+          if(b.regex) {
+            let reg = new RegExp(b.url,b.flags),
+            testurl = reg.test(bhref);
+            if(!testurl) continue;
+            blacklisted = true;
+          };
+          if(!Array.isArray(b.url)) {
+            if(!bhref.includes(b.url)) continue;
+            blacklisted = true;
+          };
+          for(let c of b.url) {
+            if(!bhref.includes(c)) continue;
+            blacklisted = true;
+          };
         };
+        if(blacklisted) {
+          urls.push(bhref);
+          return showError('Blacklisted');
+        };
+        return buildlist();
       },
       makecfg = () => {
-        let cbtn = make('magic-userjs', 'b', {
+        let isvalid = true,
+        txta = make('textarea','tarea', {
+          name: 'blacklist',
+          id: 'blacklist',
+          rows: '10',
+          autocomplete: false,
+          spellcheck: false,
+          wrap: 'soft',
+          innerHTML: JSON.stringify(cfg.blacklist, null, ' '),
+          onchange: (e) => {
+            try {
+              cfg.blacklist = JSON.parse(e.target.value);
+              if(!isvalid) {
+                isvalid = true;
+                e.target.setAttribute('style','');
+              };
+            } catch(error) {
+              isvalid = false;
+              err(error);
+            };
+          },
+        }),
+        cbtn = make('magic-userjs', 'b', {
           style: 'display: flex'
         }),
-          savebtn = make('mujs-btn', 'save', {
+        savebtn = make('mujs-btn', 'save', {
           style: 'margin: auto;',
           innerHTML: cfg.lang.save,
-          onclick: async (e) => {
+          onclick: (e) => {
             halt(e);
             let t = sh('input#time');
             if(t.validity.badInput || t.validity.rangeUnderflow && t.value !== '-1') {
-              t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
-            } else {
-              save();
-              if(rebuild) {
-                buildlist();
-                rebuild = false;
-              };
-              if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirct) {
-                let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
-                qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
-              };
-            }
+              return t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
+            };
+            if(!isvalid) {
+              return txta.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
+            };
+            save();
+            if(rebuild) {
+              preBuild();
+              rebuild = false;
+            };
+            if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirct) {
+              let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
+              qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
+            };
           },
         }),
         resetbtn = make('mujs-btn', 'reset', {
@@ -825,11 +960,13 @@ function main() {
           innerHTML: 'Reset',
           onclick: async (e) => {
             halt(e);
+            unsaved = true;
             cfg = defcfg;
             for(let i of cfg.engines) {
               if(sh(`#${i.name}`)) {
                 sh(`#${i.name}`).checked = i.enabled;
                 ael(sh(`#${i.name}`),'change', (e) => {
+                  unsaved = true;
                   i.enabled = e.target.checked;
                   rebuild = true;
                 });
@@ -838,14 +975,16 @@ function main() {
             sh('input#cache').checked = cfg.cache;
             sh('input#sleazyredirct').checked = cfg.sleazyredirct;
             sh('input#filter').checked = cfg.filterlang;
+            txta.innerHTML = JSON.stringify(cfg.blacklist, null, ' ');
           },
         });
         cbtn.append(savebtn,resetbtn);
-        cfgpage.append(cbtn);
+        cfgpage.append(txta,cbtn);
         for(let i of cfg.engines) {
           if(sh(`#${i.name}`)) {
             sh(`#${i.name}`).checked = i.enabled;
             ael(sh(`#${i.name}`),'change', (e) => {
+              unsaved = true;
               i.enabled = e.target.checked;
               rebuild = true;
             });
@@ -853,11 +992,13 @@ function main() {
         };
         sh('input#cache').checked = cfg.cache;
         ael(sh('input#cache'),'change', (e) => {
+          unsaved = true;
           cfg.cache = e.target.checked;
           rebuild = true;
         });
         sh('input#sleazyredirct').checked = cfg.sleazyredirct;
         ael(sh('input#sleazyredirct'),'change', (e) => {
+          unsaved = true;
           cfg.sleazyredirct = e.target.checked;
         });
         ael(sh('input#time'),'beforeinput', (e) => {
@@ -868,8 +1009,8 @@ function main() {
           }
         });
         ael(sh('input#time'),'input', (e) => {
+          unsaved = true;
           let t = e.target;
-          log(t.value);
           if(t.validity.badInput || t.validity.rangeUnderflow && t.value !== '-1') {
             t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
           } else {
@@ -879,6 +1020,7 @@ function main() {
         });
         sh('input#filter').checked = cfg.filterlang;
         ael(sh('input#filter'),'change', (e) => {
+          unsaved = true;
           cfg.filterlang = e.target.checked;
           rebuild = true;
         });
@@ -954,6 +1096,16 @@ function main() {
         </svg>`,
         onclick: (e) => {
           e.preventDefault();
+          if(sh('.saveerror')) {
+            sh('.saveerror').remove()
+          };
+          if(unsaved) {
+            let txt = make('mujs-row','saveerror', {
+              innerHTML: 'Unsaved changes'
+            });
+            tbody.prepend(txt);
+            delay(10000).then(() => txt.remove());
+          };
           if(cfgpage.classList.contains('hidden')) {
             cfgpage.classList.remove('hidden');
             tbody.classList.add('hidden');
@@ -967,11 +1119,11 @@ function main() {
         },
       }),
       btnhome = make('mujs-btn','github', {
-        title: `GitHub (v${MU.info.script.version.includes('.') ? MU.info.script.version : MU.info.script.version.slice(0,5)})`,
+        title: `GitHub (v${MU.info.script.version.includes('.') || MU.info.script.version.includes('Book') ? MU.info.script.version : MU.info.script.version.slice(0,5)})`,
         innerHTML: `<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>`,
         onclick: (e) => {
           e.preventDefault();
-          openpage('https://github.com/magicoflolis/Userscript-Plus');
+          MU.openInTab('https://github.com/magicoflolis/Userscript-Plus');
         }
       }),
       btnissue = make('mujs-btn','issue', {
@@ -979,7 +1131,7 @@ function main() {
         innerHTML: `<svg viewBox="0 0 24 24"><path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/></svg>`,
         onclick: (e) => {
           e.preventDefault();
-          openpage('https://github.com/magicoflolis/Userscript-Plus/issues/new');
+          MU.openInTab('https://github.com/magicoflolis/Userscript-Plus/issues/new');
         }
       }),
       btngreasy = make('mujs-btn','greasy', {
@@ -987,40 +1139,29 @@ function main() {
         innerHTML: `<svg viewBox="0 0 510.4 510.4"><g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g></svg>`,
         onclick: (e) => {
           e.preventDefault();
-          openpage('https://greasyfork.org/scripts/421603');
-        }
-      }),
-      btnlegacy = make('mujs-btn','legacy', {
-        title: cfg.lang.legacy,
-        innerHTML: `<svg viewBox="0 0 510.4 510.4"><g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g></svg>`,
-        onclick: (e) => {
-          e.preventDefault();
-          openpage('https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js');
+          MU.openInTab('https://greasyfork.org/scripts/421603');
         }
       });
       gfcountframe.append(gfcounter);
       sfcountframe.append(sfcounter);
       countframe.append(gfcountframe,sfcountframe);
       fsearch.append(searcher);
-      btnframe.append(fsearch,searchbtn,btncfg,btnissue,btnhome,btngreasy,btnlegacy,closebtn);
+      btnframe.append(fsearch,searchbtn,btncfg,btnissue,btnhome,btngreasy,closebtn);
       header.append(countframe,btnframe);
       main.append(header,tbody,cfgpage);
       mainframe.append(mainbtn);
       container.shadowRoot.append(usercss,mainframe,main);
-      for(let b of cfg.blacklist) {
-        if(!b.enabled) continue;
-        const bhref = win.top.document.location.href;
-        if(b.regex) {
-          let reg = new RegExp(b.url,b.flags),
-          testurl = reg.test(bhref);
-          if(!testurl) buildlist();
-          break;
-        };
-        if(!bhref.includes(b.url)) buildlist();
-        break;
-      }
+      preBuild();
       makecfg();
     } catch(error) {err(error)}
+  };
+  if(!estr(navigator.languages)) {
+    for(let nlang of navigator.languages) {
+      let lg = nlang.split('-')[0];
+      if(alang.indexOf(lg) === -1) {
+        alang.push(lg);
+      };
+    };
   };
   if(doc.readyState === 'complete') {
     countsite();
@@ -1033,9 +1174,9 @@ function main() {
 async function setupConfig() {
   try {
     let data = await Promise.all([
-      checkGMSupport ? MU.getValue('Config',JSON.stringify(defcfg)) : JSON.stringify(defcfg)
+      MU.getValue('Config',defcfg)
     ]).catch(err);
-    cfg = JSON.parse(localStorage.getItem('MUJSConfig') ?? data[0]);
+    cfg = data[0] ?? defcfg;
     for (const key in defcfg) {
       if(!Object.prototype.hasOwnProperty.call(cfg, key)) {
         cfg[key] = defcfg[key];
