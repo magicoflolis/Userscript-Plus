@@ -1,7 +1,11 @@
 const log = (...msg) => console.log('[%cUserJS%c] %cDBG', 'color: rgb(29, 155, 240);', '', 'color: rgb(255, 212, 0);', ...msg),
-/** Information handling for UserJS */
 info = (...msg) => console.info('[%cUserJS%c] %cINF', 'color: rgb(29, 155, 240);', '', 'color: rgb(0, 186, 124);', ...msg),
-err = (...msg) => console.error('[%cUserJS%c] %cERROR', 'color: rgb(29, 155, 240);', '', 'color: rgb(249, 24, 128);', ...msg);
+err = (...msg) => console.error('[%cUserJS%c] %cERROR', 'color: rgb(29, 155, 240);', '', 'color: rgb(249, 24, 128);', ...msg),
+isNull = obj => Object.is(obj,null) || Object.is(obj,undefined),
+isEmpty = obj => typeof obj === 'string' && Object.is(obj.trim(),'') || Object.is(Object.keys(obj).length,0),
+estr = str => isNull(str) || isEmpty(str);
+
+info('Loading...');
 
 let langs = {
   en: {
@@ -135,6 +139,7 @@ alang = [],
 clang = navigator.language.split('-')[0] ?? 'en',
 defcfg = {
   cache: true,
+  autoexpand: false,
   lang: langs[clang],
   filterlang: false,
   sleazyredirct: false,
@@ -206,11 +211,11 @@ sitegfcount = 0,
 sitesfcount = 0,
 checkGMSupport = typeof GM !== 'undefined',
 MU = {
-  getValue(key,def = {}) {
-    def = JSON.stringify(def ?? {});
+  getValue(key,v = {}) {
+    v = JSON.stringify(v ?? {});
     if(checkGMSupport) {
       return Promise.resolve(
-        JSON.parse( GM_getValue(key,def) )
+        JSON.parse( GM_getValue(key,v) )
         );
     };
     try {
@@ -241,30 +246,34 @@ MU = {
     };
     if(checkGMSupport) {
       return GM_openInTab(url, params);
+    } else {
+      return window.open(url,'_blank');
     };
-    let dwnbtn = self.document.createElement('a');
-    dwnbtn.className = 'magicuserjs-dwnbtn';
-    dwnbtn.href = url;
-    dwnbtn.target = '_blank';
-    dwnbtn.rel = 'noopener';
-    dwnbtn.dispatchEvent(new MouseEvent('click'));
-    return dwnbtn.remove();
+    // let dwnbtn = self.document.createElement('a');
+    // dwnbtn.className = 'magicuserjs-dwnbtn';
+    // dwnbtn.href = url;
+    // dwnbtn.target = '_blank';
+    // dwnbtn.rel = 'noopener';
+    // dwnbtn.dispatchEvent(new MouseEvent('click'));
+    // return dwnbtn.remove();
   },
   setValue(key,v) {
-    v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v;
-    if(checkGMSupport) {
-      if(!cfg.cache) {
-        if(key.includes('Config')) {
-          return Promise.resolve( self.localStorage.setItem(`MUJS${key}`,v) );
+    return new Promise((resolve) => {
+      v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v;
+      if(checkGMSupport) {
+        if(!cfg.cache) {
+          if(key.includes('Config')) {
+            resolve(self.localStorage.setItem(`MUJS${key}`,v));
+          };
+          resolve(self.localStorage.setItem(key,v));
         };
-        return Promise.resolve( self.localStorage.setItem(key,v) );
+        resolve(GM_setValue(key,v));
       };
-      return Promise.resolve( GM_setValue(key,v) );
-    };
-    if(key.includes('Config')) {
-      return Promise.resolve( self.localStorage.setItem(`MUJS${key}`,v) );
-    };
-    return Promise.resolve( self.localStorage.setItem(key,v) );
+      if(key.includes('Config')) {
+        resolve(self.localStorage.setItem(`MUJS${key}`,v));
+      };
+      resolve(self.localStorage.setItem(key,v));
+    });
   },
   xmlhttpRequest: false,
 };
@@ -276,11 +285,34 @@ if(checkGMSupport) {
   });
 };
 
+class Timeout {
+  constructor() {
+    this.ids = [];
+  }
+  set = (delay, reason) => {
+    return new Promise((resolve, reject) => {
+      const id = setTimeout(() => {
+        isNull(reason) ? resolve() : reject(reason);
+        this.clear(id);
+      }, delay);
+      this.ids.push(id);
+    });
+  };
+  clear = (...ids) => {
+    this.ids = this.ids.filter(id => {
+      if (ids.includes(id)) {
+        clearTimeout(id);
+        return false;
+      };
+      return true;
+    });
+  };
+};
+
 function main() {
   let unsaved = false;
   const win = self ?? window,
   doc = win.document,
-  estr = str => Object.is(str,null) || Object.is(str,undefined) || typeof str === 'string' && Object.is(str.trim(),''),
   save = () => {
     try {
       MU.setValue('Config',cfg);
@@ -288,64 +320,76 @@ function main() {
       log('Saved:',cfg);
     } catch(e) {err(e)};
   },
-  /** Can create various elements */
+  qs = (element, root) => {
+    root = root ?? doc ?? doc.body;
+    return root.querySelector(element);
+  },
+  qsA = (element, root) => {
+    root = root ?? doc ?? doc.body;
+    return root.querySelectorAll(element);
+  },
+  /** Wait until element exists */
+  query = async (element, root) => {
+    root = root ?? doc ?? doc.body;
+    while(isNull(root.querySelector(element))) {
+      await new Promise(resolve => requestAnimationFrame(resolve))
+    };
+    return root.querySelector(element);
+  },
+  /** Create various elements */
   make = (element,cname,attrs = {}) => {
-    let el = doc.createElement(element);
-    if(!estr(cname)) {
-      el.className = cname;
-    };
-    if(attrs) {
-      for(let key in attrs) {
-        el[key] = attrs[key]
-      }
-    };
-    return el;
-  },
-  ifram = make('iframe','', {
-    src: 'about:blank',
-    style: `position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    height: 525px;
-    width: 90%;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    z-index: 100000000000000020 !important;
-    `
-  }),
-  container = make('magic-userjs');
-  if(estr(container.attachShadow)) {
-    doc.body.append(ifram);
-    ifram.onload = () => {
-      ifram.contentDocument.body.append(container);
-      if(estr(container.attachShadow)) {
-        ifram.contentDocument.body.setAttribute('style','background-color: black;color: white;');
-        ifram.contentDocument.body.innerHTML = '[ERROR] Unsupported { attachShadow }... yeah still need to work on that :)';
-        delay(5000).then(() => ifram.remove());
-      } else {
-        container.attachShadow({ mode: 'open' });
+    let el;
+    try {
+      el = doc.createElement(element);
+      if(!estr(cname)) {
+        el.className = cname;
       };
-    };
-  } else {
-    container.attachShadow({ mode: 'open' });
-    doc.body.append(container);
+      if(attrs) {
+        for(let key in attrs) el[key] = attrs[key];
+      };
+      return el;
+    } catch(ex) {
+      err(ex)
+    }
   };
-  const qs = (element, selector) => {
-    selector = selector ?? doc ?? doc.body;
-    return selector.querySelector(element);
-  },
-  qsA = (element, selector) => {
-    selector = selector ?? doc ?? doc.body;
-    return selector.querySelectorAll(element);
-  },
-  /** Waits until element exists */
-  query = async (element, selector) => {
-    selector = selector ?? doc ?? doc.body;
-    while(estr(selector.querySelector(element))) {
-      await new Promise(resolve => requestAnimationFrame(resolve) )
+  let container = make('magic-userjs','mujs-primary'),
+  ifram = make('iframe','mujs-iframe', {
+    src: 'about:blank',
+    onload: () => {
+      try {
+        ifram.contentDocument.body.append(container);
+        container.attachShadow({ mode: 'open' });
+      } catch(ex) {
+        err(ex);
+        ifram.contentDocument.body.setAttribute('style','background-color: black;color: white;');
+        ifram.contentDocument.body.innerHTML = 'Error occured while injecting Container [ yeah still need to work on that :) ]';
+        delay(5000).then(() => ifram.remove());
+      };
+    },
+  }),
+  injContainer = () => {
+    info('Injecting Container...');
+    if(isNull(container.attachShadow)) {
+      let ifcss = make('style', 'frame-stylesheet', {
+        innerHTML: `iframe.mujs-iframe {
+          position: fixed;
+          bottom: 1rem;
+          right: 1rem;
+          height: 525px;
+          width: 90%;
+          margin-left: 1rem;
+          margin-right: 1rem;
+          z-index: 100000000000000020 !important;
+        }`,
+      });
+      doc.body.append(ifcss,ifram);
+    } else {
+      container.attachShadow({ mode: 'open' });
+      doc.body.append(container);
     };
-    return selector.querySelector(element);
-  },
+  };
+  injContainer();
+  const timeout = new Timeout(),
   sh = element => container.shadowRoot.querySelector(element),
   shA = element => container.shadowRoot.querySelectorAll(element),
   delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
@@ -354,7 +398,7 @@ function main() {
     let a = navigator.userAgent || win.opera;
     return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(a.substr(0,4));
   },
-  halt= (e) => {
+  halt = (e) => {
     e.preventDefault();
     e.stopPropagation();
   },
@@ -375,13 +419,22 @@ function main() {
       err(error);
     };
   },
+  formatBytes = (bytes, decimals = 2) => {
+    if (!+bytes) return '0 Bytes';
+    const k = 1024,
+    dm = decimals < 0 ? 0 : decimals,
+    sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  },
   pbar = (e) => {
-    if(e.total === 0) {
-      return info(`Loaded: ${e.loaded}`)
+    if(Object.is(e.total,0)) {
+      return info(`Progress: ${formatBytes(e.loaded)}`);
     };
-    return info(`Progress: ${e.loaded / e.total}%`)
+    return info(`Progress: ${e.loaded / e.total}%`);
   },
   showError = (msg) => {
+    err(msg);
     let txt = make('mujs-row','error', {
       innerHTML: msg
     });
@@ -406,9 +459,9 @@ function main() {
             method: method,
             url,
             responseType,
-            ...params,
             onprogress: pbar,
-            onerror: e => reject(e),
+            onerror: reject,
+            ...params,
             onload: (r) => {
               if(r.status !== 200) reject(`${r.status} ${url}`);
               resolve(r.response);
@@ -416,7 +469,6 @@ function main() {
           });
         } catch (error) {
           info(url,method,responseType,params);
-          err(error);
           showError(error);
         }
       } else {
@@ -435,7 +487,6 @@ function main() {
           resolve(response);
         }).catch((error) => {
           info(url,method,responseType,params);
-          err(error);
           showError(error);
         });
       };
@@ -448,7 +499,7 @@ function main() {
       title: ujs.name,
       innerHTML: ujs.name,
       onclick: (e) => {
-        e.preventDefault();
+        halt(e);
         MU.openInTab(ujs.url);
       }
     }),
@@ -481,7 +532,7 @@ function main() {
       title: ujs.description,
       innerHTML: ujs.description,
       onclick: (e) => {
-        e.preventDefault();
+        halt(e);
         if(fmore.classList.contains('hidden')) {
           fmore.classList.remove('hidden');
         } else {
@@ -503,7 +554,7 @@ function main() {
       title: `${cfg.lang.install} '${ujs.name}'`,
       innerHTML: cfg.lang.install,
       onclick: (e) => {
-        e.preventDefault();
+        halt(e);
         MU.openInTab(ujs.code_url);
       },
     });
@@ -511,7 +562,7 @@ function main() {
       let user = make('magicuserjs-a','magicuserjs-euser', {
         innerHTML: u.name,
         onclick: (e) => {
-          e.preventDefault();
+          halt(e);
           MU.openInTab(u.url);
         },
       });
@@ -537,86 +588,61 @@ function main() {
       usercss = make('style', 'primary-stylesheet', {innerHTML: main_css,}),
       tbody = make('magic-userjs','magicuserjs-body'),
       header = make('magic-userjs','magicuserjs-header'),
-      cfgpage = make('mujs-row','magicuserjs-cfg hidden', {
-        innerHTML: `<mujs-section style='${!checkGMSupport ? 'display: none;' : ''}'>
-        <label>
-          <magic-userjs>Sync with GM</magic-userjs>
-          <magic-userjs class="magicuserjs-inlab">
-            <input type="checkbox" name="cache" id="cache">
-            <label></label>
-          </magic-userjs>
-        </label>
-      </mujs-section>
-      <mujs-section>
-          <label>
-            <magic-userjs>${cfg.lang.redirect}</magic-userjs>
-            <magic-userjs class="magicuserjs-inlab">
-              <input type="checkbox" name="sleazyredirct" id="sleazyredirct">
-              <label></label>
-            </magic-userjs>
-          </label>
-        </mujs-section>
-        <mujs-section>
-          <label>
-            <magic-userjs>${cfg.lang.filter}</magic-userjs>
-            <magic-userjs class="magicuserjs-inlab">
-              <input type="checkbox" name="filter" id="filter">
-              <label></label>
-            </magic-userjs>
-          </label>
-        </mujs-section>
-        <mujs-section>
-          <label>
-            <magic-userjs>Greasy Fork</magic-userjs>
-            <magic-userjs class="magicuserjs-inlab">
-              <input type="checkbox" name="greasyfork" id="greasyfork">
-              <label></label>
-            </magic-userjs>
-          </label>
-        </mujs-section>
-        <mujs-section>
-          <label>
-            <magic-userjs>Sleazy Fork</magic-userjs>
-            <magic-userjs class="magicuserjs-inlab">
-              <input type="checkbox" name="sleazyfork" id="sleazyfork">
-              <label></label>
-            </magic-userjs>
-          </label>
-        </mujs-section>
-        <mujs-section>
-          <label>
-            <magic-userjs>Open UserJS</magic-userjs>
-            <magic-userjs class="magicuserjs-inlab">
-              <input type="checkbox" name="openuserjs" id="openuserjs">
-              <label></label>
-            </magic-userjs>
-          </label>
-        </mujs-section>
-        <mujs-section>
-          <label>
-            <magic-userjs>GitHub</magic-userjs>
-            <magic-userjs class="magicuserjs-inlab">
-              <input type="checkbox" name="github" id="github">
-              <label></label>
-            </magic-userjs>
-          </label>
-        </mujs-section>
-        <mujs-section>
-          <label>
-            <magic-userjs>Gist (GitHub)</magic-userjs>
-            <magic-userjs class="magicuserjs-inlab">
-              <input type="checkbox" name="gist" id="gist">
-              <label></label>
-            </magic-userjs>
-          </label>
-        </mujs-section>
-        <mujs-section>
-          <label>
-            <magic-userjs>${cfg.lang.dtime} (ms)</magic-userjs>
-            <input type="number" name="time" id="time" defaultValue="10000" value='${cfg.time}' min="0" step="500">
-          </label>
-        </mujs-section>`
-      }),
+      cfgpage = make('mujs-row','magicuserjs-cfg hidden'),
+      makerow = (desc,type,nm,attrs = {}) => {
+        let sec = make('mujs-section','', {
+          style: nm === 'cache' ? 'display: none;' : ''
+        }),
+        lb = make('label'),
+        divDesc = make('magic-userjs','', {
+          innerHTML: desc,
+        }),
+        inp = make('input','', {
+          type: type,
+          id: nm,
+          name: nm,
+          ...attrs
+        });
+        if(type === 'checkbox') {
+          let inlab = make('magic-userjs','magicuserjs-inlab'),
+          la = make('label','', {
+            onclick: () => inp.click()
+          });
+          inlab.append(inp,la);
+          lb.append(divDesc,inlab);
+          if(nm.match(/((greasy|sleazy)fork|openuserjs|gi(thub|st))/gi)) {
+            for(let i of cfg.engines) {
+              if(i.name === nm) {
+                inp.checked = i.enabled;
+                ael(inp,'change', (e) => {
+                  unsaved = true;
+                  i.enabled = e.target.checked;
+                  rebuild = true;
+                });
+              };
+            };
+          } else {
+            inp.checked = cfg[nm];
+            if(nm.match(/(autoexpand|sleazyredirct)/gi)) {
+              ael(inp,'change', (e) => {
+                unsaved = true;
+                cfg[nm] = e.target.checked;
+              });
+            } else {
+              ael(inp,'change', (e) => {
+                unsaved = true;
+                cfg[nm] = e.target.checked;
+                rebuild = true;
+              });
+            };
+          };
+        } else {
+          lb.append(divDesc,inp);
+        };
+        sec.append(lb);
+        cfgpage.append(sec);
+        return inp;
+      },
       countframe = make('mujs-column'),
       gfcountframe = make('magic-userjs', 'counterframe', {
         style: 'background: #00b7ff;'
@@ -671,34 +697,37 @@ function main() {
               }
             };
             if(i.url.match(/(openuserjs.org|github.com)/gi)) {
-              // log(`${i.url}${host}`);
               urls.push(`${i.url}${host}`);
               custom.push(fetchURL(`${i.url}${host}`,'GET','text'),);
             };
           };
         };
         let data = await Promise.all(sites).catch(err);
-        for(let d of data) {
-          for(let ujs of d) {
-            if(ujs.deleted) continue;
-            if(cfg.filterlang) {
-              if(alang.length > 1) {
-                for(let a of alang) {
-                  if(!ujs.locale.includes(a)) continue;
-                };
-              } else if(!ujs.locale.includes(clang)) continue;
+        if(data) {
+          for(let d of data) {
+            for(let ujs of d) {
+              if(ujs.deleted) continue;
+              if(cfg.filterlang) {
+                if(alang.length > 1) {
+                  for(let a of alang) {
+                    if(!ujs.locale.includes(a)) continue;
+                  };
+                } else if(!ujs.locale.includes(clang)) continue;
+              };
+              siteujs.push(
+                {
+                  url: ujs,
+                  sleazy: false,
+                },
+              );
+              sitegfcount++;
             };
-            siteujs.push(
-              {
-                url: ujs,
-                sleazy: false,
-              },
-            );
-            sitegfcount++;
           };
-        };
-        for(let ujs of siteujs) {
-          createjs(ujs.url,ujs.sleazy);
+          for(let ujs of siteujs) {
+            createjs(ujs.url,ujs.sleazy);
+          };
+        } else {
+          showError('Error occured while loading UserJS for this webpage')
         };
         gfcounter.innerHTML = sitegfcount;
         mainbtn.innerHTML = sitesfcount + sitegfcount;
@@ -726,7 +755,7 @@ function main() {
                 }]
               };
               for(const key in template) {
-                if(!Object.prototype.hasOwnProperty.call(layout, key)) {
+                if(!Object.hasOwn(layout, key)) {
                   layout[key] = template[key];
                 };
               };
@@ -752,7 +781,7 @@ function main() {
                 }]
               });
               for (const key in template) {
-                if(!Object.prototype.hasOwnProperty.call(layout, key)) {
+                if(!Object.hasOwn(layout, key)) {
                   layout[key] = template[key];
                 };
               };
@@ -798,7 +827,7 @@ function main() {
                   }
                 };
                 for (const key in template) {
-                  if(!Object.prototype.hasOwnProperty.call(layout, key)) {
+                  if(!Object.hasOwn(layout, key)) {
                     layout[key] = template[key];
                   };
                 };
@@ -811,15 +840,18 @@ function main() {
           sfcounter.innerHTML = sitesfcount;
           mainbtn.innerHTML = sitesfcount + sitegfcount;
         };
-        if(!isNaN(cfg.time)) {
-          delay(cfg.time).then(() => {
-            if(!mainframe.classList.contains('hidden')) {
-              mainframe.classList.add('hidden');
-              ifram.setAttribute('style','display:none;');
-            };
-          });
+        if(typeof cfg.time === 'number' && !isNaN(cfg.time)) {
+          timeout.clear(...timeout.ids);
+          await timeout.set(cfg.time);
+          if(!mainframe.classList.contains('hidden')) {
+            mainframe.classList.add('hidden');
+            ifram.setAttribute('style','display:none;');
+          };
+          timeout.clear(...timeout.ids);
         };
-        if(Object.is(data[0].length,0) && Object.is(data[1].length,0) && Object.is(custom.length,0)) showError('No available UserJS for this webpage');
+        if(data) {
+          if(Object.is(data.length,0) && Object.is(custom.length,0)) showError('No available UserJS for this webpage');
+        };
       },
       preBuild = () => {
         const bhref = win.top.document.location.href;
@@ -856,6 +888,50 @@ function main() {
         return buildlist();
       },
       makecfg = () => {
+        makerow('Sync with GM','checkbox','cache');
+        makerow('Auto Fullscreen','checkbox','autoexpand', {
+          onchange: (e) => {
+            if(e.target.checked) {
+              btnfullscreen.classList.add('expanded');
+              main.classList.add('expanded');
+              btnfullscreen.innerHTML = fcclose;
+            } else {
+              btnfullscreen.classList.remove('expanded');
+              main.classList.remove('expanded');
+              btnfullscreen.innerHTML = fcopen;
+            };
+          },
+        });
+        makerow(cfg.lang.redirect,'checkbox','sleazyredirect');
+        makerow(cfg.lang.filter,'checkbox','filter');
+        makerow('Greasy Fork','checkbox','greasyfork');
+        makerow('Sleazy Fork','checkbox','sleazyfork');
+        makerow('Open UserJS','checkbox','openuserjs');
+        makerow('GitHub','checkbox','github');
+        makerow('Gist (GitHub)','checkbox','gist');
+        let rtime = makerow(`${cfg.lang.dtime} (ms)`,'number','time', {
+          defaultValue: 10000,
+          value: cfg.time,
+          min: 0,
+          step: 500,
+          onbeforeinput: (e) => {
+            if(e.target.validity.badInput) {
+              e.target.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
+            } else {
+              e.target.setAttribute('style','');
+            }
+          },
+          oninput: (e) => {
+            unsaved = true;
+            let t = e.target;
+            if(t.validity.badInput || t.validity.rangeUnderflow && t.value !== '-1') {
+              t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
+            } else {
+              t.setAttribute('style','');
+              cfg.time = estr(t.value) ? cfg.time : parseFloat(t.value);
+            }
+          }
+        });
         let isvalid = true,
         txta = make('textarea','tarea', {
           name: 'blacklist',
@@ -864,8 +940,8 @@ function main() {
           autocomplete: false,
           spellcheck: false,
           wrap: 'soft',
-          innerHTML: JSON.stringify(cfg.blacklist, null, ' '),
-          onchange: (e) => {
+          value: JSON.stringify(cfg.blacklist, null, ' '),
+          oninput: (e) => {
             try {
               cfg.blacklist = JSON.parse(e.target.value);
               if(!isvalid) {
@@ -886,9 +962,8 @@ function main() {
           innerHTML: cfg.lang.save,
           onclick: (e) => {
             halt(e);
-            let t = sh('input#time');
-            if(t.validity.badInput || t.validity.rangeUnderflow && t.value !== '-1') {
-              return t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
+            if(rtime.validity.badInput || rtime.validity.rangeUnderflow && rtime.value !== '-1') {
+              return rtime.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
             };
             if(!isvalid) {
               return txta.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
@@ -911,74 +986,50 @@ function main() {
             halt(e);
             unsaved = true;
             cfg = defcfg;
+            txta.value = JSON.stringify(cfg.blacklist, null, ' ');
             for(let i of cfg.engines) {
               if(sh(`#${i.name}`)) {
                 sh(`#${i.name}`).checked = i.enabled;
-                ael(sh(`#${i.name}`),'change', (e) => {
-                  unsaved = true;
-                  i.enabled = e.target.checked;
-                  rebuild = true;
-                });
               };
             };
-            sh('input#cache').checked = cfg.cache;
-            sh('input#sleazyredirct').checked = cfg.sleazyredirct;
-            sh('input#filter').checked = cfg.filterlang;
-            txta.innerHTML = JSON.stringify(cfg.blacklist, null, ' ');
+            for(let i of shA('.magicuserjs-inlab input[type="checkbox"]')) {
+              if(!i.name.match(/((greasy|sleazy)fork|openuserjs|gi(thub|st))/gi)) {
+                i.checked = cfg[i.name];
+              };
+            };
           },
         });
         cbtn.append(savebtn,resetbtn);
         cfgpage.append(txta,cbtn);
-        for(let i of cfg.engines) {
-          if(sh(`#${i.name}`)) {
-            sh(`#${i.name}`).checked = i.enabled;
-            ael(sh(`#${i.name}`),'change', (e) => {
-              unsaved = true;
-              i.enabled = e.target.checked;
-              rebuild = true;
-            });
-          };
-        };
-        sh('input#cache').checked = cfg.cache;
-        ael(sh('input#cache'),'change', (e) => {
-          unsaved = true;
-          cfg.cache = e.target.checked;
-          rebuild = true;
-        });
-        sh('input#sleazyredirct').checked = cfg.sleazyredirct;
-        ael(sh('input#sleazyredirct'),'change', (e) => {
-          unsaved = true;
-          cfg.sleazyredirct = e.target.checked;
-        });
-        ael(sh('input#time'),'beforeinput', (e) => {
-          if(e.target.validity.badInput) {
-            e.target.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
-          } else {
-            e.target.setAttribute('style','');
-          }
-        });
-        ael(sh('input#time'),'input', (e) => {
-          unsaved = true;
-          let t = e.target;
-          if(t.validity.badInput || t.validity.rangeUnderflow && t.value !== '-1') {
-            t.setAttribute('style','border-radius: 8px; border-width: 2px !important; border-style: solid; border-color: red !important;');
-          } else {
-            t.setAttribute('style','');
-            cfg.time = estr(t.value) ? cfg.time : parseFloat(t.value);
-          }
-        });
-        sh('input#filter').checked = cfg.filterlang;
-        ael(sh('input#filter'),'change', (e) => {
-          unsaved = true;
-          cfg.filterlang = e.target.checked;
-          rebuild = true;
-        });
       },
+      fcopen = `<svg viewBox="0 0 96 96"><g><path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/><path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/><path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/><path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/></g></svg>`,
+      fcclose = `<svg viewBox="0 0 385.331 385.331"><g><path d="M264.943,156.665h108.273c6.833,0,11.934-5.39,11.934-12.211c0-6.833-5.101-11.85-11.934-11.838h-96.242V36.181 c0-6.833-5.197-12.03-12.03-12.03s-12.03,5.197-12.03,12.03v108.273c0,0.036,0.012,0.06,0.012,0.084 c0,0.036-0.012,0.06-0.012,0.096C252.913,151.347,258.23,156.677,264.943,156.665z"/><path d="M120.291,24.247c-6.821,0-11.838,5.113-11.838,11.934v96.242H12.03c-6.833,0-12.03,5.197-12.03,12.03 c0,6.833,5.197,12.03,12.03,12.03h108.273c0.036,0,0.06-0.012,0.084-0.012c0.036,0,0.06,0.012,0.096,0.012 c6.713,0,12.03-5.317,12.03-12.03V36.181C132.514,29.36,127.124,24.259,120.291,24.247z"/><path d="M120.387,228.666H12.115c-6.833,0.012-11.934,5.39-11.934,12.223c0,6.833,5.101,11.85,11.934,11.838h96.242v96.423 c0,6.833,5.197,12.03,12.03,12.03c6.833,0,12.03-5.197,12.03-12.03V240.877c0-0.036-0.012-0.06-0.012-0.084 c0-0.036,0.012-0.06,0.012-0.096C132.418,233.983,127.1,228.666,120.387,228.666z"/><path d="M373.3,228.666H265.028c-0.036,0-0.06,0.012-0.084,0.012c-0.036,0-0.06-0.012-0.096-0.012 c-6.713,0-12.03,5.317-12.03,12.03v108.273c0,6.833,5.39,11.922,12.223,11.934c6.821,0.012,11.838-5.101,11.838-11.922v-96.242 H373.3c6.833,0,12.03-5.197,12.03-12.03S380.134,228.678,373.3,228.666z"/></g></svg>`,
+      btnfullscreen = make('mujs-btn','fullscreen', {
+        title: 'Fullscreen',
+        innerHTML: `<svg viewBox="0 0 96 96"><g><path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/><path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/><path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/><path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/></g></svg>`,
+        onclick: (e) => {
+          halt(e);
+          if(btnfullscreen.classList.contains('expanded')) {
+            btnfullscreen.classList.remove('expanded');
+            main.classList.remove('expanded');
+            btnfullscreen.innerHTML = fcopen;
+          } else {
+            btnfullscreen.classList.add('expanded');
+            main.classList.add('expanded');
+            btnfullscreen.innerHTML = fcclose;
+          };
+        }
+      }),
       mainframe = make('magic-userjs','mainframe', {
         onclick: (e) => {
           e.preventDefault();
           main.classList.remove('hidden');
           mainframe.classList.add('hidden');
+          if(cfg.autoexpand) {
+            btnfullscreen.classList.add('expanded');
+            main.classList.add('expanded');
+            btnfullscreen.innerHTML = fcclose;
+          };
         }
       }),
       mainbtn = make('count-frame','mainbtn', {
@@ -1024,15 +1075,16 @@ function main() {
       closebtn = make('mujs-btn','close', {
         title: cfg.lang.close,
         innerHTML: `<svg viewBox="0 0 47.971 47.971"><g><path d="M28.228,23.986L47.092,5.122c1.172-1.171,1.172-3.071,0-4.242c-1.172-1.172-3.07-1.172-4.242,0L23.986,19.744L5.121,0.88 c-1.172-1.172-3.07-1.172-4.242,0c-1.172,1.171-1.172,3.071,0,4.242l18.865,18.864L0.879,42.85c-1.172,1.171-1.172,3.071,0,4.242 C1.465,47.677,2.233,47.97,3,47.97s1.535-0.293,2.121-0.879l18.865-18.864L42.85,47.091c0.586,0.586,1.354,0.879,2.121,0.879 s1.535-0.293,2.121-0.879c1.172-1.171,1.172-3.071,0-4.242L28.228,23.986z"/></g></svg>`,
-        onclick: (e) => {
-          e.preventDefault();
+        onclick: async (e) => {
+          halt(e);
           main.classList.add('hidden');
           mainframe.classList.remove('hidden');
-          if(!isNaN(cfg.time)) {
-            delay(cfg.time).then(() => {
-              mainframe.classList.add('hidden');
-              ifram.setAttribute('style','display:none;');
-            })
+          if(typeof cfg.time === 'number' && !isNaN(cfg.time)) {
+            timeout.clear(...timeout.ids);
+            await timeout.set(cfg.time);
+            mainframe.classList.add('hidden');
+            ifram.setAttribute('style','display:none;');
+            return timeout.clear(...timeout.ids);
           };
         }
       }),
@@ -1046,7 +1098,7 @@ function main() {
         onclick: (e) => {
           e.preventDefault();
           if(sh('.saveerror')) {
-            sh('.saveerror').remove()
+            sh('.saveerror').remove();
           };
           if(unsaved) {
             let txt = make('mujs-row','saveerror', {
@@ -1058,24 +1110,32 @@ function main() {
           if(cfgpage.classList.contains('hidden')) {
             cfgpage.classList.remove('hidden');
             tbody.classList.add('hidden');
-            main.setAttribute('style','height: auto !important;');
+            if(!main.classList.contains('expanded')) {
+              main.setAttribute('style','height: auto;');
+            };
+            if(ifram) {
+              ifram.setAttribute('style','height: 100%;');
+            };
           } else {
             cfgpage.classList.add('hidden');
             tbody.classList.remove('hidden');
             main.setAttribute('style','');
+            if(ifram) {
+              ifram.setAttribute('style','');
+            };
           };
           rebuild = false;
         },
       }),
-      btnhome = make('mujs-btn','github', {
+      btnhome = make('mujs-btn','github hidden', {
         title: `GitHub (v${MU.info.script.version.includes('.') || MU.info.script.version.includes('Book') ? MU.info.script.version : MU.info.script.version.slice(0,5)})`,
         innerHTML: `<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>`,
         onclick: (e) => {
-          e.preventDefault();
+          halt(e);
           MU.openInTab('https://github.com/magicoflolis/Userscript-Plus');
         }
       }),
-      btnissue = make('mujs-btn','issue', {
+      btnissue = make('mujs-btn','issue hidden', {
         title: cfg.lang.issue,
         innerHTML: `<svg viewBox="0 0 24 24"><path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/></svg>`,
         onclick: (e) => {
@@ -1083,25 +1143,41 @@ function main() {
           MU.openInTab('https://github.com/magicoflolis/Userscript-Plus/issues/new');
         }
       }),
-      btngreasy = make('mujs-btn','greasy', {
+      btngreasy = make('mujs-btn','greasy hidden', {
         title: 'Greasy Fork',
         innerHTML: `<svg viewBox="0 0 510.4 510.4"><g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g></svg>`,
         onclick: (e) => {
           e.preventDefault();
           MU.openInTab('https://greasyfork.org/scripts/421603');
         }
+      }),
+      btnnav = make('mujs-btn','nav', {
+        title: 'Navigation',
+        innerHTML: `<svg viewBox="0 0 24 24"><g><path d="M3,17 L21,17 C21.5522847,17 22,17.4477153 22,18 C22,18.5128358 21.6139598,18.9355072 21.1166211,18.9932723 L21,19 L3,19 C2.44771525,19 2,18.5522847 2,18 C2,17.4871642 2.38604019,17.0644928 2.88337887,17.0067277 L3,17 L21,17 L3,17 Z M2.99987969,11 L20.9998797,10.9978344 C21.5521644,10.9977679 22,11.4454293 22,11.997714 C22,12.5105499 21.6140635,12.9332676 21.1167397,12.9910926 L21.0001203,12.9978344 L3.00012031,13 C2.44783557,13.0000664 2.00000001,12.5524051 2.00000001,12.0001203 C2.00000001,11.4872845 2.38593645,11.0645667 2.88326032,11.0067418 L2.99987969,11 L20.9998797,10.9978344 L2.99987969,11 Z M3,5 L21,5 C21.5522847,5 22,5.44771525 22,6 C22,6.51283584 21.6139598,6.93550716 21.1166211,6.99327227 L21,7 L3,7 C2.44771525,7 2,6.55228475 2,6 C2,5.48716416 2.38604019,5.06449284 2.88337887,5.00672773 L3,5 L21,5 L3,5 Z"></path></g></svg>`,
+        onclick: (e) => {
+          halt(e);
+          if(btngreasy.classList.contains('hidden')) {
+            btnissue.classList.remove('hidden');
+            btnhome.classList.remove('hidden');
+            btngreasy.classList.remove('hidden');
+          } else {
+            btnissue.classList.add('hidden');
+            btnhome.classList.add('hidden');
+            btngreasy.classList.add('hidden');
+          };
+        }
       });
       gfcountframe.append(gfcounter);
       sfcountframe.append(sfcounter);
       countframe.append(gfcountframe,sfcountframe);
       fsearch.append(searcher);
-      btnframe.append(fsearch,searchbtn,btncfg,btnissue,btnhome,btngreasy,closebtn);
+      btnframe.append(fsearch,searchbtn,btncfg,btnissue,btnhome,btngreasy,btnnav,btnfullscreen,closebtn);
       header.append(countframe,btnframe);
       main.append(header,tbody,cfgpage);
       mainframe.append(mainbtn);
       container.shadowRoot.append(usercss,mainframe,main);
-      preBuild();
       makecfg();
+      preBuild();
     } catch(error) {err(error)}
   };
   if(!estr(navigator.languages)) {
@@ -1119,39 +1195,36 @@ function main() {
   };
 };
 
-
 async function setupConfig() {
   try {
-    let data = await Promise.all([
-      MU.getValue('Config',defcfg)
-    ]).catch(err);
-    cfg = data[0] ?? defcfg;
+    cfg = await MU.getValue('Config',defcfg).catch(err) ?? defcfg;
     for (const key in defcfg) {
-      if(!Object.prototype.hasOwnProperty.call(cfg, key)) {
+      if(!Object.hasOwn(cfg, key)) {
         cfg[key] = defcfg[key];
       } else if (key === 'lang') {
         for (const keyl in defcfg[key]) {
-          if(!Object.prototype.hasOwnProperty.call(cfg[key], keyl)) {
+          if(!Object.hasOwn(cfg[key], keyl)) {
             cfg[key][keyl] = defcfg[key][keyl];
           };
         };
       } else if (key === 'engines') {
         for (const key2 in defcfg[key]) {
-          if(!Object.prototype.hasOwnProperty.call(cfg[key], key2)) {
+          if(!Object.hasOwn(cfg[key], key2)) {
             cfg[key][key2] = defcfg[key][key2];
           };
         };
       } else if (key === 'blacklist') {
         for (const key3 in defcfg[key]) {
-          if(!Object.prototype.hasOwnProperty.call(cfg[key], key3)) {
+          if(!Object.hasOwn(cfg[key], key3)) {
             cfg[key][key3] = defcfg[key][key3];
           };
         };
       }
     };
     log('Config:',cfg);
-    main();
-  } catch(error) {err(error)}
+  } catch(ex) {
+    err(ex)
+  };
 };
 
-setupConfig();
+setupConfig().then(main);

@@ -10,14 +10,27 @@ magic-userjs * {
 }
 .main {
   @media screen and (max-height: 450px) {
-    height: fit-content !important;
-  }
-  position: fixed;
+    height: 100% !important;
+    bottom: 0rem !important;
+    margin-left: 0rem !important;
+    margin-right: 0rem !important;
+    right: 0rem !important;
+  };
+  &.expanded {
+    height: 100% !important;
+    bottom: 0rem  !important;
+  };
+  &:not(.expanded) {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  };
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
   height: 492px;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  bottom: 1rem;
-  right: 1rem;
+  position: fixed;
   background: #495060 !important;
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 10px;
@@ -25,7 +38,8 @@ magic-userjs * {
   font-family: arial,sans-serif !important;
   &:not(.hidden) {
     z-index: 99999999999999999 !important;
-    display: grid !important;
+    display: flex !important;
+    flex-direction: column !important;
   };
   *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count,label,.magicuserjs-switch) {
     background: #495060 !important;
@@ -74,19 +88,25 @@ count-frame {
   height: auto !important;
 }
 .magicuserjs-header {
+  order: 0;
   display: flex;
   gap: 10px;
   border-bottom: 1px solid #ffffff;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
   height: fit-content;
   padding: 10px;
   font-size: 1em;
   justify-content: space-between;
 }
 .magicuserjs-body {
-  overflow-y: scroll;
+  // overflow-y: scroll;
   overflow-x: hidden;
+  order: 1;
+  display: flex;
+  flex-direction: column;
 }
 .magicuserjs-cfg,
 .magicuserjs-body {
@@ -98,6 +118,17 @@ count-frame {
 }
 
 .magicuserjs-cfg {
+  @media screen and (max-width: 1150px) {
+    margin: 0px auto 1rem auto !important;
+  };
+  @media screen and (max-height: 812px) {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+  };
+  order: 2;
+  margin: 0px 25rem 1rem 25rem;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
   height: fit-content;
   mujs-section > label {
     display: flex;
@@ -168,6 +199,8 @@ count-frame {
 .frame {
   @media screen and (max-width: 800px) {
     display: flow-root !important;
+    height: -webkit-fit-content !important;
+    height: -moz-fit-content !important;
     height: fit-content !important;
   }
   border-bottom: 1px solid #ffffff;
@@ -203,6 +236,8 @@ count-frame {
 }
 .magicuserjs-eframe {
   @media screen and (max-width: 800px) {
+    height: -webkit-fit-content !important;
+    height: -moz-fit-content !important;
     height: fit-content !important;
   }
   margin-right: 1%;
@@ -273,7 +308,10 @@ mujs-btn {
 }
 
 .magicuserjs-cfg *:not(input[type*="text"],input[type*="number"]) {
-  user-select: none !important;
+  -webkit-user-select: none !important;
+     -moz-user-select: none !important;
+      -ms-user-select: none !important;
+          user-select: none !important;
 }
 
 mujs-btn,
@@ -282,6 +320,10 @@ input,
 .magicuserjs-list,
 .install,
 .magicuserjs-homepage {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
   height: fit-content;
 }

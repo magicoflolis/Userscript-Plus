@@ -1,0 +1,72 @@
+{
+  "name": "uscript-plus-firefox",
+  "productName": "Magic Userscript+ : Show Site All UserJS",
+  "version": "2.4.14",
+  "description": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey.",
+  "scripts": {
+    "Dev:FF": "concurrently \"npm run Webpack:FF\" \"npm run Start:Sass\"",
+    "Dev:Cr": "concurrently \"npm run Webpack:Cr\" \"npm run Start:Sass\"",
+    "Dev:Userscript": "npm --prefix ./userscript run dev:Start",
+    "Webpack:FF": "webpack --progress --mode development --config=tools/webpack.config.js --node-env firefox",
+    "Webpack:Cr": "webpack --progress --mode development --config=tools/webpack.config.js --node-env chrome",
+    "Start:Sass": "sass -w ./src/sass/magicuserjs.scss:./tests/compiled/magicuserjs.css -s compressed",
+    "build:Firefox": "webpack --mode production --config=tools/webpack.config.js --node-env firefox",
+    "build:Chrome": "webpack --mode production --config=tools/webpack.config.js --node-env chrome"
+  },
+  "devDependencies": {
+    "@mdi/font": "^5.9.55",
+    "@plasmo-corp/ewu": "^0.6.0",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.204",
+    "@types/psl": "^1.1.0",
+    "autoprefixer": "^10.4.7",
+    "concurrently": "^7.2.2",
+    "copy-webpack-plugin": "^11.0.0",
+    "crx3": "^1.1.3",
+    "dotenv": "^16.0.1",
+    "eslint-plugin-html": "^6.2.0",
+    "path-browserify": "^1.0.1",
+    "standard": "*",
+    "swc-loader": "^0.2.3",
+    "terser-webpack-plugin": "^5.3.3",
+    "url-loader": "^4.1.1",
+    "vue-loader": "^17.0.0",
+    "vue-style-loader": ">=4.1.3",
+    "vue-template-compiler": ">=2.6.14",
+    "web-ext": "^7.0.0",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "animate.css": "^3.5.2",
+    "css-loader": "^6.7.1",
+    "fuzzy.js": "^0.1.0",
+    "iview": "2.12.0",
+    "style-loader": "^3.3.1",
+    "timeago.js": "^4.0.2",
+    "vue": "^3.2.37",
+    "vue-i18n": ">=9.1.10"
+  },
+  "author": "Magic <magicoflolis@tuta.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
+  },
+  "repository": "git+https://github.com/magicoflolis/Userscript-Plus.git",
+  "keywords": [
+    "userscript",
+    "userjs",
+    "tampermonkey"
+  ],
+  "homepage": "https://github.com/magicoflolis/Userscript-Plus",
+  "webExt": {
+    "sourceDir": "./dist/extension/",
+    "artifactsDir": "./build/"
+  },
+  "standard": {
+    "ignore": [
+      "user.js"
+    ]
+  }
+}
