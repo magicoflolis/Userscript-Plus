@@ -4,6 +4,7 @@ import watch from 'node-watch';
 const log = (...msg) => console.log(`[NodeJS] DBG ${[...msg]} ${performance.now()}ms`),
 delay = ms => new Promise(resolve => setTimeout(resolve,ms)),
 nano = (template, data) => {
+  // eslint-disable-next-line no-useless-escape
   return template.replace(/\{([\w\.]*)\}/g, (str, key) => {
     let keys = key.split('.'),
     v = data[keys.shift()];
@@ -17,6 +18,7 @@ p = {
 },
 js_env = process.env.JS_ENV === 'development',
 jsonData = JSON.parse(readFileSync('./package.json', 'utf-8')),
+// eslint-disable-next-line no-unused-vars
 buildUserJS = (evt, name) => {
   let header = readFileSync('./userscript/src/header.js').toString(),
   main_css = readFileSync('./tests/compiled/muserjs.css').toString(),
@@ -71,7 +73,7 @@ ${langND}
 // @compatible   opera
 // @compatible   safari
 // @noframes
-// @run-at       document-end
+// @run-at       document-start
 // ==/UserScript==`;
   const ujs = nano(header, {
     jshead: buildScript,

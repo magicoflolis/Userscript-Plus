@@ -41,10 +41,10 @@ magic-userjs * {
     display: flex !important;
     flex-direction: column !important;
   };
-  *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count,label,.magicuserjs-switch) {
+  *:not(magicuserjs-a,magicuserjs-btn,magicuserjs-btn > svg,count-frame,.counterframe,.count,label,.magicuserjs-switch) {
     background: #495060 !important;
   };
-  *:not(magicuserjs-a,magicuserjs-btn,count-frame,.counterframe,.count) {
+  *:not(magicuserjs-a,magicuserjs-btn,magicuserjs-btn > svg,count-frame,.counterframe,.count) {
     color: rgb(255, 255, 255) !important;
   };
 }
@@ -56,6 +56,7 @@ magic-userjs * {
 }
 .count {
   background: transparent;
+  padding: 10%;
 }
 .mainframe {
   background: #495060 !important;
@@ -99,7 +100,7 @@ count-frame {
   height: fit-content;
   padding: 10px;
   font-size: 1em;
-  justify-content: space-between;
+  place-content: space-between;
 }
 .magicuserjs-body {
   // overflow-y: scroll;
@@ -212,6 +213,12 @@ count-frame {
       color: #fff;
       background-color: #2d8cf0;
       border-color: #2d8cf0;
+      svg {
+        fill: white;
+        background-color: #2d8cf0;
+        width: 14px;
+        height: 14px;
+      }
     }
   }
   &.sf {
@@ -264,9 +271,6 @@ mujs-btn {
 mujs-column {
   @media screen and (max-width: 800px) {
     flex-flow: row wrap;
-    &.btnframe {
-      flex-flow: row wrap-reverse !important;
-    }
   }
   display: flex;
   gap: 10px;
@@ -289,13 +293,13 @@ input[type*="text"] {
   outline: none !important;
 }
 magicuserjs-btn {
-  font-size: 12px;
-  border-radius: 3px;
+  font-size: 14px;
+  border-radius: 4px;
   font-style: normal;
-  padding: 6px 15%;
+  padding: 7px 15%;
   font-weight: 400;
   font-variant: normal;
-  line-height: 21px;
+  line-height: normal;
 }
 
 magicuserjs-a,
