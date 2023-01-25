@@ -1,3 +1,30 @@
+html.webext-page,
+body.webext-page {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: #495060;
+  color: rgb(255, 255, 255);
+}
+.magicuserjs-body,
+mujs-column,
+mujs-row {
+  display: flex;
+}
+mujs-column,
+mujs-row {
+  gap: 10px;
+}
+mujs-column {
+  @media screen and (max-width: 800px) {
+    flex-flow: row wrap;
+  }
+}
+.magicuserjs-body,
+mujs-row {
+  flex-direction: column;
+}
 magic-userjs {
   cursor: default;
 }
@@ -25,6 +52,9 @@ magic-userjs * {
     margin-right: 1rem;
     right: 1rem;
     bottom: 1rem;
+    &.auto-height {
+      height: auto;
+    }
   };
   width: 100%;
   width: -moz-available;
@@ -49,10 +79,12 @@ magic-userjs * {
   };
 }
 .counterframe {
-  border-radius: 100%;
-  padding: 0.5%;
+  border-radius: 16px;
+  line-height: 1;
+  padding: 2px;
   width: 25px !important;
   height: 25px !important;
+  margin: auto;
 }
 .count {
   background: transparent;
@@ -81,13 +113,11 @@ count-frame {
   font-weight: 400;
   display: block;
   text-align: center;
+  line-height: normal;
+  width: auto;
+  height: auto;
 }
 
-count-frame {
-  line-height: normal !important;
-  width: auto !important;
-  height: auto !important;
-}
 .magicuserjs-header {
   order: 0;
   display: flex;
@@ -102,13 +132,14 @@ count-frame {
   font-size: 1em;
   place-content: space-between;
 }
+body.webext-page,
 .magicuserjs-body {
   // overflow-y: scroll;
   overflow-x: hidden;
   order: 1;
-  display: flex;
-  flex-direction: column;
 }
+html.webext-page,
+body.webext-page,
 .magicuserjs-cfg,
 .magicuserjs-body {
   scrollbar-color: #ffffff #2e323d;
@@ -123,14 +154,15 @@ count-frame {
     margin: 0px auto 1rem auto !important;
   };
   @media screen and (max-height: 812px) {
-    flex-direction: row !important;
-    flex-wrap: wrap;
+    &:not(.webext-page) {
+      flex-wrap: wrap;
+      flex-direction: row !important;
+    }
   };
-  order: 2;
-  margin: 0px 25rem 1rem 25rem;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
+  order: 2;
   mujs-section > label {
     display: flex;
     justify-content: space-between;
@@ -145,7 +177,7 @@ count-frame {
     position: relative;
     width: 38px;
     border-radius: 20px;
-    margin: 5px;
+    // margin: 5px;
     input[type*="checkbox"] {
       display: none;
       &:checked+label {
@@ -188,6 +220,12 @@ count-frame {
       }
     }
   }
+  .webext-page {
+    height: 900px;
+  }
+  &:not(.webext-page) {
+    margin: 0px 25rem 1rem 25rem;
+  }
 }
 
 .magicuserjs-eframe,
@@ -205,6 +243,11 @@ count-frame {
     height: fit-content !important;
   }
   border-bottom: 1px solid #ffffff;
+  magicuserjs-btn svg {
+    fill: #fff;
+    width: 14px;
+    height: 14px;
+  }
   &:not(.sf) {
     magicuserjs-a {
       color: #00b7ff !important;
@@ -213,12 +256,6 @@ count-frame {
       color: #fff;
       background-color: #2d8cf0;
       border-color: #2d8cf0;
-      svg {
-        fill: white;
-        background-color: #2d8cf0;
-        width: 14px;
-        height: 14px;
-      }
     }
   }
   &.sf {
@@ -268,21 +305,9 @@ mujs-btn {
   line-height: 1;
   padding: 6px 15px;
 }
-mujs-column {
-  @media screen and (max-width: 800px) {
-    flex-flow: row wrap;
-  }
-  display: flex;
-  gap: 10px;
-}
-mujs-row {
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-}
 mujs-btn {
   svg {
-    fill: white;
+    fill: #fff;
     width: 14px;
     height: 14px;
   }

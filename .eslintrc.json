@@ -3,6 +3,8 @@
   "globals": {
     "GM": "writable",
 		"err": "readonly",
+    "browser": "readonly",
+    "chrome": "readonly",
     "boxCSS": "readonly",
 		"main_css": "readonly",
 		"custom_width": "readonly",
@@ -13,9 +15,8 @@
   },
   "env": {
     "browser": true,
-    "es2021": true,
+    "es2022": true,
     "greasemonkey": true,
-    "jquery": true,
     "node": true
   },
   "extends": [

@@ -2,9 +2,11 @@
 
 *Fork of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript). Source code & authors information found [here](https://github.com/jae-jae/Userscript-Plus).*
 
-> Finds available UserJS for current webpage **( may not work on every webpage )**
+> The power of [Greasy Fork](https://greasyfork.org) on the go! Finds available UserJS for the current webpage **( may not work on every webpage )**
 
 ## About
+
+> [Changelog (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases)
 
 Finds available UserJS for current webpage from various UserJS hosts (e.g, [Greasy Fork](https://greasyfork.org)), displays a found count bottom right of the webpage, automatically disappears after 10 seconds (can be configured).
 
@@ -42,6 +44,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 > Tested and compatible with TamperMonkey and ViolentMonkey.
 
 * Multilingual support.
+* User can search + load results for UserJS on an entirely different webpage!
 * Config can be synced with current user script manager.
 * Automatically finds language through ``navigator.language``, all dates will match your current language.
 * List displays the following information for each UserJS: name, description, creation date, author(s), version, daily installs, total installs, user ratings.
