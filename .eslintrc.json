@@ -1,6 +1,7 @@
 {
   "root": true,
   "globals": {
+    "MU": "writable",
     "GM": "writable",
 		"err": "readonly",
     "browser": "readonly",
@@ -33,6 +34,17 @@
       "modules": true
     }
   },
-  "ignorePatterns": ["/src/header.js","/tools/userscript.js", "/dist/*.js"],
-  "rules": {}
+  "ignorePatterns": [
+    "/src/header.js",
+    "/tools/userscript.js",
+    "/tests/*.js",
+    "/dist/*.js"
+  ],
+  "rules": {
+    "quotes": [
+      "error",
+      "single",
+      { "avoidEscape": true, "allowTemplateLiterals": false }
+    ]
+  }
 }

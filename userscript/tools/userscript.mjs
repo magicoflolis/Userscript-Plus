@@ -17,20 +17,12 @@ p = {
   pub: './userscript/dist/magic-userjs.user.js',
 },
 js_env = process.env.JS_ENV === 'development',
-jsonData = JSON.parse(readFileSync('./package.json', 'utf-8')),
+jsonData = JSON.parse(readFileSync('./package.json', { encoding: 'utf8' })),
 // eslint-disable-next-line no-unused-vars
 buildUserJS = (evt, name) => {
-  let header = readFileSync('./userscript/src/header.js').toString(),
-  main_css = readFileSync('./tests/compiled/muserjs.css').toString(),
-  code = readFileSync('./userscript/src/main.js').toString(),
-  // renderOut = (outFile, jshead) => {
-  //   let ujs = nano(header, {
-  //     jshead: jshead,
-  //     main_css: main_css,
-  //     code: code,
-  //   });
-  //   writeFile(outFile, ujs, e => log(e ?? `Build-path: ${outFile}`));
-  // },
+  let header = readFileSync('./userscript/src/header.js', { encoding: 'utf8' }).toString(),
+  main_css = readFileSync('./tests/compiled/magicuserjs.css', { encoding: 'utf8' }).toString(),
+  code = readFileSync('./userscript/src/main.js', { encoding: 'utf8' }).toString(),
   time = +new Date(),
   langND = `// @name         ${js_env ? `[Dev] ${jsonData.userJS.name}` : jsonData.userJS.name}
 // @name:zh      Magic Userscript+ : 显示当前网站所有可用的UserJS脚本 Jaeger
@@ -83,7 +75,6 @@ ${langND}
   outFile = js_env ? p.dev : p.pub;
   // Development version : Release version
   writeFile(outFile, ujs, e => log(e ?? `Build-path: ${outFile}`));
-  // renderOut(js_env ? p.dev : p.pub, buildScript);
 },
 watcher = watch(['./userscript/src/'], { delay: 2000, filter: /\.js$/ });
 
@@ -100,68 +91,3 @@ if(js_env) {
 } else {
   buildUserJS();
 };
-
-
-// @exclude      /^https:\/\/([^/]*\.)?(\d|pay|bank|money|localhost|authorize|checkout|bill|wallet|router)[0-9]*\./
-// @exclude      /^https:\/\/([^/]*\.)?[\S]*\.(gov|org|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)$/
-// @exclude      *://paypal.com/*
-// @exclude      *://*.alipay.com/*
-// @exclude      *://*bank.*/*
-// @exclude      *://*perfectmoney.*/*
-// @exclude      *://*stripe.com/*
-// @exclude      *://*ica.yandex.com/*
-// @exclude      *://*authorize.net/*
-// @exclude      *://*2checkout.com/*
-// @exclude      *://192.168*
-// @exclude      *://127.0.0*
-// @exclude      *://router.*.*/*
-// @exclude      *://10.0.0*
-// @exclude      *://*skrill.com/*
-// @exclude      *://*zalo.me/*
-// @exclude      *://pay.amazon.*/*
-// @exclude      *://*.opayo.co.uk/*
-// @exclude      *://*.payza.org/*
-// @exclude      *://*.bluesnap.com/*
-// @exclude      *://securionpay.com/*
-// @exclude      *://*.unionpayintl.*/*
-// @exclude      *://*.99bill.com/*
-// @exclude      *://*.yeepay.com/*
-// @exclude      *://*payoneer.com/*
-// @exclude      *://*myetherwallet.com/*
-// @exclude      *://bitpay.com/*
-// @exclude      *://*.*/login
-// @exclude      *://*.*/join
-// @exclude      *://*.*/signin
-// @exclude      *://*.*/signup
-// @exclude      *://*.*/sign-up
-// @exclude      *://*.*/cart
-// @exclude      *://*.*.gov/*
-// @exclude      *://*.*/password_reset
-// @exclude      *://*.*/checkout*
-// @exclude      *://*.*/settings/*
-// @exclude      *://*.*/options/*
-// @exclude      *://*.*.*/login
-// @exclude      *://*.*.*/join
-// @exclude      *://*.*.*/signin
-// @exclude      *://*.*.*/signup
-// @exclude      *://*.*.*/sign-up
-// @exclude      *://*.*.*/cart
-// @exclude      *://*.*.*/checkout*
-// @exclude      *://*.*.*/settings/*
-// @exclude      *://*.*.*/options/*
-// @exclude      *://*.*.*.gov/*
-// @exclude      *://*.*.*/password_reset
-// @grant        GM_getResourceText
-// @grant        GM.getResourceText
-// @grant        GM_getValue
-// @grant        GM.getValue
-// @grant        GM_setValue
-// @grant        GM.setValue
-// @grant        unsafeWindow
-// @require      ${js_env ? `http://localhost:8080/jquery.slim.min.js` : `https://code.jquery.com/jquery-3.6.1.slim.min.js`}
-// @resource     uiJs   ${js_env ? `http://localhost:8080/ui.js?_=${time}` : `https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js`}
-// @resource     gfcount  https://greasyfork.org/scripts/by-site.json
-// @resource     sfcount  https://sleazyfork.org/scripts/by-site.json
-// @resource     sfcount  https://sleazyfork.org/scripts/by-site.json
-// @require      ${js_env ? `https://cdn.jsdelivr.net/gh/jquery/jquery/dist/jquery.slim.min.js` : `https://code.jquery.com/jquery-3.6.1.slim.min.js`}
-// @resource     uiJs   ${js_env ? `http://localhost:8080/ui.js?_=${time}` : `https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/dist/ui.js`}

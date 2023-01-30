@@ -1,7 +1,5 @@
 html.webext-page,
 body.webext-page {
-  height: 100%;
-  width: 100%;
   padding: 0;
   margin: 0;
   background: #495060;
@@ -47,20 +45,26 @@ magic-userjs * {
     height: 100% !important;
     bottom: 0rem  !important;
   };
-  &:not(.expanded) {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    right: 1rem;
-    bottom: 1rem;
-    &.auto-height {
-      height: auto;
-    }
+  &.webext {
+    min-width: 50%;
+    height: 100%;
+  };
+  &:not(.webext) {
+    position: fixed;
+    height: 492px;
+    &:not(.expanded) {
+      margin-left: 1rem;
+      margin-right: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      &.auto-height {
+        height: auto;
+      }
+    };
   };
   width: 100%;
   width: -moz-available;
   width: -webkit-fill-available;
-  height: 492px;
-  position: fixed;
   background: #495060 !important;
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 10px;
@@ -132,7 +136,6 @@ count-frame {
   font-size: 1em;
   place-content: space-between;
 }
-body.webext-page,
 .magicuserjs-body {
   // overflow-y: scroll;
   overflow-x: hidden;

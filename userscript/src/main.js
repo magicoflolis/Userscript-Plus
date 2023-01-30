@@ -1,36 +1,4 @@
 const win = window,
-// /**
-//  * Network Format Bytes
-//  * @param {number} bytes - Number of total bytes
-//  * @param {number} decimals - toFixed decimal point
-//  * @example <caption>Example usage</caption>
-//  * // returns 1 KB
-//  * formatBytes(1024); // OR formatBytes(1024,2);
-//  * @returns {string} Formated bytes
-//  */
-// formatBytes = (bytes, decimals = 2) => {
-//   if (!+bytes) return '0 Bytes';
-//   const k = 1024,
-//   dm = decimals < 0 ? 0 : decimals,
-//   sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-//   i = Math.floor(Math.log(bytes) / Math.log(k));
-//   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-// },
-// /**
-//  * Network Progress Indicator
-//  * @param {Object} evt - Onprogress event for XHR
-//  * @example <caption>Example usage</caption>
-//  * // returns 1%
-//  * pbar({total: ..., loaded: 1024});
-//  * // returns 1 KB
-//  * pbar({total: 0, loaded: 1024});
-//  * @returns {string} Returns bytes, if evt.total === 0 then file size format, otherwise % format
-//  */
-// pbar = (evt) => {
-//   let forumla = Object.is(evt.total,0) ? formatBytes(evt.loaded) : `${+(evt.loaded / evt.total * 100).toFixed(2)}%`;
-//   dbg(forumla);
-//   return forumla;
-// },
 /**
  * Object is Null
  * @param {Object} obj - Object
@@ -210,6 +178,7 @@ let langs = {
     created: 'Créé',
     redirect: 'Greasy Fork pour les adultes',
     filter: 'Filtrer les autres langues',
+    // eslint-disable-next-line quotes
     dtime: `Délai d'affichage`,
     save: 'Sauvez',
   },
@@ -246,7 +215,7 @@ defcfg = {
   cache: true,
   autoexpand: false,
   filterlang: false,
-  sleazyredirct: false,
+  sleazyredirect: false,
   time: 10000,
   blacklist: [
     {
@@ -320,10 +289,7 @@ MU = {
       if(isGM) {
         resolve(JSON.parse( GM_getValue(key,def) ));
       };
-      if(!key.includes('Config')) {
-        resolve(JSON.parse( win.localStorage.getItem(key) ));
-      };
-      resolve(JSON.parse( win.localStorage.getItem(`MUJS${key}`) ?? def ));
+      resolve(win.localStorage.getItem(`MUJS${key}`) ? JSON.parse( win.localStorage.getItem(`MUJS${key}`) ) : def);
     });
   },
   info: {
@@ -495,24 +461,25 @@ make = (element, cname, attrs = {}) => {
   } catch(ex) {handleError(ex)}
 },
 iconSVG = {
-  cfg: `<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7848 0.449982C13.8239 0.449982 14.7167 1.16546 14.9122 2.15495L14.9991 2.59495C15.3408 4.32442 17.1859 5.35722 18.9016 4.7794L19.3383 4.63233C20.3199 4.30175 21.4054 4.69358 21.9249 5.56605L22.7097 6.88386C23.2293 7.75636 23.0365 8.86366 22.2504 9.52253L21.9008 9.81555C20.5267 10.9672 20.5267 13.0328 21.9008 14.1844L22.2504 14.4774C23.0365 15.1363 23.2293 16.2436 22.7097 17.1161L21.925 18.4339C21.4054 19.3064 20.3199 19.6982 19.3382 19.3676L18.9017 19.2205C17.1859 18.6426 15.3408 19.6754 14.9991 21.405L14.9122 21.845C14.7167 22.8345 13.8239 23.55 12.7848 23.55H11.2152C10.1761 23.55 9.28331 22.8345 9.08781 21.8451L9.00082 21.4048C8.65909 19.6754 6.81395 18.6426 5.09822 19.2205L4.66179 19.3675C3.68016 19.6982 2.59465 19.3063 2.07505 18.4338L1.2903 17.1161C0.770719 16.2436 0.963446 15.1363 1.74956 14.4774L2.09922 14.1844C3.47324 13.0327 3.47324 10.9672 2.09922 9.8156L1.74956 9.52254C0.963446 8.86366 0.77072 7.75638 1.2903 6.8839L2.07508 5.56608C2.59466 4.69359 3.68014 4.30176 4.66176 4.63236L5.09831 4.77939C6.81401 5.35722 8.65909 4.32449 9.00082 2.59506L9.0878 2.15487C9.28331 1.16542 10.176 0.449982 11.2152 0.449982H12.7848ZM12 15.3C13.8225 15.3 15.3 13.8225 15.3 12C15.3 10.1774 13.8225 8.69998 12 8.69998C10.1774 8.69998 8.69997 10.1774 8.69997 12C8.69997 13.8225 10.1774 15.3 12 15.3Z" fill="#ffffff"></path> </g></svg>`,
-  close: `<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M4.70718 2.58574C4.31666 2.19522 3.68349 2.19522 3.29297 2.58574L2.58586 3.29285C2.19534 3.68337 2.19534 4.31654 2.58586 4.70706L9.87877 12L2.5859 19.2928C2.19537 19.6834 2.19537 20.3165 2.5859 20.7071L3.293 21.4142C3.68353 21.8047 4.31669 21.8047 4.70722 21.4142L12.0001 14.1213L19.293 21.4142C19.6835 21.8047 20.3167 21.8047 20.7072 21.4142L21.4143 20.7071C21.8048 20.3165 21.8048 19.6834 21.4143 19.2928L14.1214 12L21.4143 4.70706C21.8048 4.31654 21.8048 3.68337 21.4143 3.29285L20.7072 2.58574C20.3167 2.19522 19.6835 2.19522 19.293 2.58574L12.0001 9.87865L4.70718 2.58574Z" fill="#ffffff"></path></g></svg>`,
-  filter: `<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M4.22657 2C2.50087 2 1.58526 4.03892 2.73175 5.32873L8.99972 12.3802V19C8.99972 19.3788 9.21373 19.725 9.55251 19.8944L13.5525 21.8944C13.8625 22.0494 14.2306 22.0329 14.5255 21.8507C14.8203 21.6684 14.9997 21.3466 14.9997 21V12.3802L21.2677 5.32873C22.4142 4.03893 21.4986 2 19.7729 2H4.22657Z" fill="#ffffff"/> </g></svg>`,
-  fsClose: `<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M7 9.5C8.38071 9.5 9.5 8.38071 9.5 7V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H7.5C6.94772 1.5 6.5 1.94772 6.5 2.5V6.5H2.5C1.94772 6.5 1.5 6.94772 1.5 7.5V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H7Z" fill="#ffffff"></path> <path d="M17 9.5C15.6193 9.5 14.5 8.38071 14.5 7V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H16.5C17.0523 1.5 17.5 1.94772 17.5 2.5V6.5H21.5C22.0523 6.5 22.5 6.94772 22.5 7.5V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H17Z" fill="#ffffff"></path> <path d="M17 14.5C15.6193 14.5 14.5 15.6193 14.5 17V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H16.5C17.0523 22.5 17.5 22.0523 17.5 21.5V17.5H21.5C22.0523 17.5 22.5 17.0523 22.5 16.5V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H17Z" fill="#ffffff"></path> <path d="M9.5 17C9.5 15.6193 8.38071 14.5 7 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V16.5C1.5 17.0523 1.94772 17.5 2.5 17.5H6.5V21.5C6.5 22.0523 6.94772 22.5 7.5 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V17Z" fill="#ffffff"></path></g></svg>`,
-  fsOpen: `<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M4 1.5C2.61929 1.5 1.5 2.61929 1.5 4V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H3.5C4.05228 9.5 4.5 9.05228 4.5 8.5V4.5H8.5C9.05228 4.5 9.5 4.05228 9.5 3.5V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H4Z" fill="#ffffff"></path> <path d="M20 1.5C21.3807 1.5 22.5 2.61929 22.5 4V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H20.5C19.9477 9.5 19.5 9.05228 19.5 8.5V4.5H15.5C14.9477 4.5 14.5 4.05228 14.5 3.5V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H20Z" fill="#ffffff"></path> <path d="M20 22.5C21.3807 22.5 22.5 21.3807 22.5 20V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H20.5C19.9477 14.5 19.5 14.9477 19.5 15.5V19.5H15.5C14.9477 19.5 14.5 19.9477 14.5 20.5V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H20Z" fill="#ffffff"></path> <path d="M1.5 20C1.5 21.3807 2.61929 22.5 4 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V20.5C9.5 19.9477 9.05228 19.5 8.5 19.5H4.5V15.5C4.5 14.9477 4.05228 14.5 3.5 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V20Z" fill="#ffffff"></path></g></svg>`,
-  fullscreen: `<svg viewBox="0 0 96 96"><g><path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/><path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/><path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/><path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/></g></svg>`,
-  gf: `<svg viewBox="0 0 510.4 510.4"><g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g></svg>`,
-  gh: `<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>`,
-  hide: `<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5L21 10.5C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="#ffffff"></path></g></svg>`,
-  install: `<svg viewBox="0 0 16 16"><g><path d="M8.75 1.75a.75.75 0 00-1.5 0v6.59L5.3 6.24a.75.75 0 10-1.1 1.02L7.45 10.76a.78.78 0 00.038.038.748.748 0 001.063-.037l3.25-3.5a.75.75 0 10-1.1-1.02l-1.95 2.1V1.75z"/><path d="M1.75 9a.75.75 0 01.75.75v3c0 .414.336.75.75.75h9.5a.75.75 0 00.75-.75v-3a.75.75 0 011.5 0v3A2.25 2.25 0 0112.75 15h-9.5A2.25 2.25 0 011 12.75v-3A.75.75 0 011.75 9z"/></g></svg>`,
-  issue: `<svg viewBox="0 0 24 24"><path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/></svg>`,
-  nav: `<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M2 5.5C2 4.94772 2.44772 4.5 3 4.5H21C21.5523 4.5 22 4.94772 22 5.5V6.5C22 7.05228 21.5523 7.5 21 7.5H3C2.44772 7.5 2 7.05228 2 6.5V5.5Z" fill="#ffffff"></path> <path d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5H21C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="#ffffff"></path> <path d="M3 16.5C2.44772 16.5 2 16.9477 2 17.5V18.5C2 19.0523 2.44772 19.5 3 19.5H21C21.5523 19.5 22 19.0523 22 18.5V17.5C22 16.9477 21.5523 16.5 21 16.5H3Z" fill="#ffffff"></path> </g></svg>`,
-  plus: `<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M13.5 3C13.5 2.44772 13.0523 2 12.5 2H11.5C10.9477 2 10.5 2.44772 10.5 3V10.5H3C2.44772 10.5 2 10.9477 2 11.5V12.5C2 13.0523 2.44772 13.5 3 13.5H10.5V21C10.5 21.5523 10.9477 22 11.5 22H12.5C13.0523 22 13.5 21.5523 13.5 21V13.5H21C21.5523 13.5 22 13.0523 22 12.5V11.5C22 10.9477 21.5523 10.5 21 10.5H13.5V3Z" fill="#ffffff"/> </g></svg>`,
-  search: `<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.5C4.75329 0.5 0.5 4.75329 0.5 10C0.5 15.2467 4.75329 19.5 10 19.5C12.082 19.5 14.0076 18.8302 15.5731 17.6944L20.2929 22.4142C20.6834 22.8047 21.3166 22.8047 21.7071 22.4142L22.4142 21.7071C22.8047 21.3166 22.8047 20.6834 22.4142 20.2929L17.6944 15.5731C18.8302 14.0076 19.5 12.082 19.5 10C19.5 4.75329 15.2467 0.5 10 0.5ZM3.5 10C3.5 6.41015 6.41015 3.5 10 3.5C13.5899 3.5 16.5 6.41015 16.5 10C16.5 13.5899 13.5899 16.5 10 16.5C6.41015 16.5 3.5 13.5899 3.5 10Z" fill="#ffffff"/> </g></svg>`,
+  cfg: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7848 0.449982C13.8239 0.449982 14.7167 1.16546 14.9122 2.15495L14.9991 2.59495C15.3408 4.32442 17.1859 5.35722 18.9016 4.7794L19.3383 4.63233C20.3199 4.30175 21.4054 4.69358 21.9249 5.56605L22.7097 6.88386C23.2293 7.75636 23.0365 8.86366 22.2504 9.52253L21.9008 9.81555C20.5267 10.9672 20.5267 13.0328 21.9008 14.1844L22.2504 14.4774C23.0365 15.1363 23.2293 16.2436 22.7097 17.1161L21.925 18.4339C21.4054 19.3064 20.3199 19.6982 19.3382 19.3676L18.9017 19.2205C17.1859 18.6426 15.3408 19.6754 14.9991 21.405L14.9122 21.845C14.7167 22.8345 13.8239 23.55 12.7848 23.55H11.2152C10.1761 23.55 9.28331 22.8345 9.08781 21.8451L9.00082 21.4048C8.65909 19.6754 6.81395 18.6426 5.09822 19.2205L4.66179 19.3675C3.68016 19.6982 2.59465 19.3063 2.07505 18.4338L1.2903 17.1161C0.770719 16.2436 0.963446 15.1363 1.74956 14.4774L2.09922 14.1844C3.47324 13.0327 3.47324 10.9672 2.09922 9.8156L1.74956 9.52254C0.963446 8.86366 0.77072 7.75638 1.2903 6.8839L2.07508 5.56608C2.59466 4.69359 3.68014 4.30176 4.66176 4.63236L5.09831 4.77939C6.81401 5.35722 8.65909 4.32449 9.00082 2.59506L9.0878 2.15487C9.28331 1.16542 10.176 0.449982 11.2152 0.449982H12.7848ZM12 15.3C13.8225 15.3 15.3 13.8225 15.3 12C15.3 10.1774 13.8225 8.69998 12 8.69998C10.1774 8.69998 8.69997 10.1774 8.69997 12C8.69997 13.8225 10.1774 15.3 12 15.3Z" fill="#ffffff"></path> </g></svg>',
+  close: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M4.70718 2.58574C4.31666 2.19522 3.68349 2.19522 3.29297 2.58574L2.58586 3.29285C2.19534 3.68337 2.19534 4.31654 2.58586 4.70706L9.87877 12L2.5859 19.2928C2.19537 19.6834 2.19537 20.3165 2.5859 20.7071L3.293 21.4142C3.68353 21.8047 4.31669 21.8047 4.70722 21.4142L12.0001 14.1213L19.293 21.4142C19.6835 21.8047 20.3167 21.8047 20.7072 21.4142L21.4143 20.7071C21.8048 20.3165 21.8048 19.6834 21.4143 19.2928L14.1214 12L21.4143 4.70706C21.8048 4.31654 21.8048 3.68337 21.4143 3.29285L20.7072 2.58574C20.3167 2.19522 19.6835 2.19522 19.293 2.58574L12.0001 9.87865L4.70718 2.58574Z" fill="#ffffff"></path></g></svg>',
+  filter: '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M4.22657 2C2.50087 2 1.58526 4.03892 2.73175 5.32873L8.99972 12.3802V19C8.99972 19.3788 9.21373 19.725 9.55251 19.8944L13.5525 21.8944C13.8625 22.0494 14.2306 22.0329 14.5255 21.8507C14.8203 21.6684 14.9997 21.3466 14.9997 21V12.3802L21.2677 5.32873C22.4142 4.03893 21.4986 2 19.7729 2H4.22657Z" fill="#ffffff"/> </g></svg>',
+  fsClose: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M7 9.5C8.38071 9.5 9.5 8.38071 9.5 7V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H7.5C6.94772 1.5 6.5 1.94772 6.5 2.5V6.5H2.5C1.94772 6.5 1.5 6.94772 1.5 7.5V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H7Z" fill="#ffffff"></path> <path d="M17 9.5C15.6193 9.5 14.5 8.38071 14.5 7V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H16.5C17.0523 1.5 17.5 1.94772 17.5 2.5V6.5H21.5C22.0523 6.5 22.5 6.94772 22.5 7.5V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H17Z" fill="#ffffff"></path> <path d="M17 14.5C15.6193 14.5 14.5 15.6193 14.5 17V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H16.5C17.0523 22.5 17.5 22.0523 17.5 21.5V17.5H21.5C22.0523 17.5 22.5 17.0523 22.5 16.5V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H17Z" fill="#ffffff"></path> <path d="M9.5 17C9.5 15.6193 8.38071 14.5 7 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V16.5C1.5 17.0523 1.94772 17.5 2.5 17.5H6.5V21.5C6.5 22.0523 6.94772 22.5 7.5 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V17Z" fill="#ffffff"></path></g></svg>',
+  fsOpen: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M4 1.5C2.61929 1.5 1.5 2.61929 1.5 4V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H3.5C4.05228 9.5 4.5 9.05228 4.5 8.5V4.5H8.5C9.05228 4.5 9.5 4.05228 9.5 3.5V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H4Z" fill="#ffffff"></path> <path d="M20 1.5C21.3807 1.5 22.5 2.61929 22.5 4V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H20.5C19.9477 9.5 19.5 9.05228 19.5 8.5V4.5H15.5C14.9477 4.5 14.5 4.05228 14.5 3.5V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H20Z" fill="#ffffff"></path> <path d="M20 22.5C21.3807 22.5 22.5 21.3807 22.5 20V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H20.5C19.9477 14.5 19.5 14.9477 19.5 15.5V19.5H15.5C14.9477 19.5 14.5 19.9477 14.5 20.5V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H20Z" fill="#ffffff"></path> <path d="M1.5 20C1.5 21.3807 2.61929 22.5 4 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V20.5C9.5 19.9477 9.05228 19.5 8.5 19.5H4.5V15.5C4.5 14.9477 4.05228 14.5 3.5 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V20Z" fill="#ffffff"></path></g></svg>',
+  fullscreen: '<svg viewBox="0 0 96 96"><g><path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/><path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/><path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/><path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/></g></svg>',
+  gf: '<svg viewBox="0 0 510.4 510.4"><g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g></svg>',
+  gh: '<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>',
+  hide: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5L21 10.5C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="#ffffff"></path></g></svg>',
+  install: '<svg viewBox="0 0 16 16"><g><path d="M8.75 1.75a.75.75 0 00-1.5 0v6.59L5.3 6.24a.75.75 0 10-1.1 1.02L7.45 10.76a.78.78 0 00.038.038.748.748 0 001.063-.037l3.25-3.5a.75.75 0 10-1.1-1.02l-1.95 2.1V1.75z"/><path d="M1.75 9a.75.75 0 01.75.75v3c0 .414.336.75.75.75h9.5a.75.75 0 00.75-.75v-3a.75.75 0 011.5 0v3A2.25 2.25 0 0112.75 15h-9.5A2.25 2.25 0 011 12.75v-3A.75.75 0 011.75 9z"/></g></svg>',
+  issue: '<svg viewBox="0 0 24 24"><path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/></svg>',
+  nav: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M2 5.5C2 4.94772 2.44772 4.5 3 4.5H21C21.5523 4.5 22 4.94772 22 5.5V6.5C22 7.05228 21.5523 7.5 21 7.5H3C2.44772 7.5 2 7.05228 2 6.5V5.5Z" fill="#ffffff"></path> <path d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5H21C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="#ffffff"></path> <path d="M3 16.5C2.44772 16.5 2 16.9477 2 17.5V18.5C2 19.0523 2.44772 19.5 3 19.5H21C21.5523 19.5 22 19.0523 22 18.5V17.5C22 16.9477 21.5523 16.5 21 16.5H3Z" fill="#ffffff"></path> </g></svg>',
+  plus: '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M13.5 3C13.5 2.44772 13.0523 2 12.5 2H11.5C10.9477 2 10.5 2.44772 10.5 3V10.5H3C2.44772 10.5 2 10.9477 2 11.5V12.5C2 13.0523 2.44772 13.5 3 13.5H10.5V21C10.5 21.5523 10.9477 22 11.5 22H12.5C13.0523 22 13.5 21.5523 13.5 21V13.5H21C21.5523 13.5 22 13.0523 22 12.5V11.5C22 10.9477 21.5523 10.5 21 10.5H13.5V3Z" fill="#ffffff"/> </g></svg>',
+  search: '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.5C4.75329 0.5 0.5 4.75329 0.5 10C0.5 15.2467 4.75329 19.5 10 19.5C12.082 19.5 14.0076 18.8302 15.5731 17.6944L20.2929 22.4142C20.6834 22.8047 21.3166 22.8047 21.7071 22.4142L22.4142 21.7071C22.8047 21.3166 22.8047 20.6834 22.4142 20.2929L17.6944 15.5731C18.8302 14.0076 19.5 12.082 19.5 10C19.5 4.75329 15.2467 0.5 10 0.5ZM3.5 10C3.5 6.41015 6.41015 3.5 10 3.5C13.5899 3.5 16.5 6.41015 16.5 10C16.5 13.5899 13.5899 16.5 10 16.5C6.41015 16.5 3.5 13.5899 3.5 10Z" fill="#ffffff"/> </g></svg>',
 },
 container = make('main-userjs','mujs-primary'),
 ifram = make('iframe','mujs-iframe', {
   src: 'about:blank',
+  style: 'position: fixed; bottom: 1rem; right: 1rem; height: 525px; width: 90%; margin-left: 1rem; margin-right: 1rem; z-index: 100000000000000020 !important;'
 });
 
 function main() {
@@ -523,7 +490,7 @@ function main() {
   thisHost = location.hostname.split('.').splice(-2).join('.');
   const save = () => {
     try {
-      MU.setValue('Config',cfg);
+      MU.setValue('Config', cfg);
       unsaved = false;
       log('Saved:',cfg);
     } catch(e) {err(e)};
@@ -540,7 +507,6 @@ function main() {
   },
   sh = elem => injCon.querySelector(elem),
   shA = elem => injCon.querySelectorAll(elem),
-  // clk = e => e.dispatchEvent(new MouseEvent('click')),
   showError = (msg) => {
     err(msg);
     let txt = make('mujs-row','error', {
@@ -582,17 +548,24 @@ function main() {
     ftotal = make('magic-userjs','magicuserjs-list', {
       innerHTML: `${lang.total}: ${ujs.total_installs}`,
     }),
-    fgood = make('magic-userjs','magicuserjs-list', {
-      title: lang.good,
-      innerHTML: `${lang.rating}: ${ujs.good_ratings}`,
+    fratings = make('magic-userjs','magicuserjs-list', {
+      title: lang.rating,
+      innerHTML: `${lang.rating}:`,
     }),
-    fok = make('magic-userjs','magicuserjs-list', {
+    fgood = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
+      title: lang.good,
+      innerHTML: ujs.good_ratings,
+      style: 'border-color: rgb(51, 155, 51); background-color: #339b331a; color: #339b33;',
+    }),
+    fok = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.ok,
       innerHTML: ujs.ok_ratings,
+      style: 'border-color: rgb(155, 155, 0); background-color: #9b9b001a; color: #9b9b00;',
     }),
-    fbad = make('magic-userjs','magicuserjs-list', {
+    fbad = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.bad,
       innerHTML: ujs.bad_ratings,
+      style: 'border-color: red; background-color: #9b33331a; color: red;',
     }),
     fdesc = make('magic-userjs','magicuserjs-list', {
       style: 'cursor: pointer; margin-top: 3px;',
@@ -607,7 +580,7 @@ function main() {
         }
         },
     }),
-    eframe = make('magic-userjs','magicuserjs-eframe'),
+    eframe = make('magic-userjs', 'install-btn'),
     uframe = make('magic-userjs','magicuserjs-uframe'),
     fdaily = make('magic-userjs','magicuserjs-list', {
       title: lang.daily,
@@ -635,10 +608,10 @@ function main() {
       });
       uframe.append(user);
     };
-    eframe.append(uframe,fdaily,fupdated,fdwn);
-    fmore.append(ftotal,fgood,fok,fbad,fver,fcreated);
+    eframe.append(fdwn);
+    fmore.append(ftotal,fratings,fgood,fok,fbad,fver,fcreated);
     fname.append(ftitle,fdesc,fmore);
-    frame.append(fname,eframe);
+    frame.append(fname,uframe,fdaily,fupdated,eframe);
     sh('.magicuserjs-body').append(frame);
   };
   if(!isEmpty(navigator.languages)) {
@@ -650,7 +623,7 @@ function main() {
     };
   };
   try {
-    if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirct) {
+    if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirect) {
       let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
       qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
     };
@@ -695,7 +668,7 @@ function main() {
           };
         } else {
           inp.checked = cfg[nm];
-          if(nm.match(/(autoexpand|sleazyredirct)/gi)) {
+          if(nm.match(/(autoexpand|sleazyredirect)/gi)) {
             ael(inp,'change', (e) => {
               unsaved = true;
               cfg[nm] = e.target.checked;
@@ -716,17 +689,15 @@ function main() {
       return inp;
     },
     countframe = make('mujs-column'),
-    gfcountframe = make('magic-userjs', 'counterframe', {
-      style: 'background: #00b7ff;'
-    }),
-    sfcountframe = make('magic-userjs', 'counterframe', {
-      style: 'background: #ed3f14;'
-    }),
+    gfcountframe = make('magic-userjs', 'counterframe'),
+    sfcountframe = make('magic-userjs', 'counterframe'),
     gfcounter = make('count-frame','count', {
       title: 'https://greasyfork.org + https://sleazyfork.org',
+      style: 'background: #00b7ff;'
     }),
     sfcounter = make('count-frame','count', {
       title: 'https://openuserjs.org',
+      style: 'background: #ed3f14;'
     }),
     buildlist = async (host) => {
       try {
@@ -746,10 +717,12 @@ function main() {
           code_url: 'about:blank',
           created_at: Date.now(),
           code_updated_at: Date.now(),
-          users: [{
-            name: '',
-            url: '',
-          }]
+          users: [
+            {
+              name: '',
+              url: '',
+            }
+          ]
         };
         let sites = [],
         custom = [],
@@ -760,50 +733,90 @@ function main() {
               if(alang.length > 1) {
                 for(let a of alang) {
                   urls.push(`${i.url}/${a}/scripts/by-site/${host}.json`);
-                  sites.push(MU.fetchURL(`${i.url}/${a}/scripts/by-site/${host}.json`),);
+                  sites.push(MU.fetchURL(`${i.url}/${a}/scripts/by-site/${host}.json?page=1`),);
                 };
-              } else {
-                urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
-                sites.push(MU.fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json`),);
+                continue;
               };
-            } else {
-              urls.push(`${i.url}/scripts/by-site/${host}.json`);
-              sites.push(MU.fetchURL(`${i.url}/scripts/by-site/${host}.json`),);
-            }
-          };
-          if(i.url.match(/(openuserjs.org|github.com)/gi)) {
+              urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
+              sites.push(MU.fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json?page=1`),);
+              continue;
+            };
+            urls.push(`${i.url}/scripts/by-site/${host}.json`);
+            sites.push(MU.fetchURL(`${i.url}/scripts/by-site/${host}.json`),);
+          } else if(i.url.match(/(openuserjs.org|github.com)/gi)) {
             urls.push(`${i.url}${host}`);
             custom.push(MU.fetchURL(`${i.url}${host}`,'GET','text'),);
           };
         };
         info('Fetching data',host);
-        let data = await Promise.all(sites).catch((e) => {throw new MUError('Data',e)});
-        if(data) {
-          for(let d of data) {
-            for(let ujs of d) {
-              if(ujs.deleted) continue;
-              if(cfg.filterlang) {
-                if(alang.length > 1) {
-                  for(let a of alang) {
-                    if(!ujs.locale.includes(a)) continue;
-                  };
-                } else if(!ujs.locale.includes(clang)) continue;
+        if(!isBlank(sites)) {
+          let hideData = [];
+          let data = await Promise.all(sites).catch((e) => {throw new MUError('Data',e)}),
+          joinData = [...new Set([...data[0], ...data[1]])],
+          filterDeleted = joinData.filter(ujs => !ujs.deleted),
+          filterLang = cfg.filterlang ? filterDeleted.filter((d) => {
+            let dlocal = d.locale.split('-')[0] ?? d.locale;
+            if(alang.length > 1) {
+              for(let a of alang) {
+                if(dlocal.includes(a)) {
+                  return true;
+                };
               };
-              siteujs.push(
-                {
-                  url: ujs,
-                  sleazy: false,
-                },
-              );
-              sitegfcount++;
+            } else if(dlocal.includes(clang)) {
+              return true;
             };
+            hideData.push(d);
+            return false;
+          }) : filterDeleted,
+          finalList = filterLang;
+
+          if(!isBlank(hideData)) {
+            let hds = [];
+            for(let h of hideData) {
+              let txt = await MU.fetchURL(h.code_url,'GET','text');
+              let headers = txt.match(/\/\/\s@[\w][\s\S]+/gi) || [];
+              if(headers.length > 0) {
+                let regName = new RegExp(`// @name:${clang}\\s+.+`,'gi'),
+                findName = headers[0].match(regName) || [];
+
+                if(isEmpty(findName)) {
+                  dbg(txt);
+                  continue;
+                };
+                let cReg = new RegExp(`// @name:${clang}\\s+`,'gi'),
+                cutName = findName[0].replace(cReg, '');
+                Object.assign(h, {
+                  name: cutName
+                });
+
+                let regDesc = new RegExp(`// @description:${clang}\\s+.+`,'gi'),
+                findDesc = headers[0].match(regDesc) || [];
+                if(isEmpty(findDesc)) {
+                  dbg(txt);
+                  continue;
+                };
+                let dReg = new RegExp(`// @description:${clang}\\s+`,'gi'),
+                cutDesc = findDesc[0].replace(dReg, '');
+                Object.assign(h, {
+                  description: cutDesc
+                });
+                hds.push(h);
+              };
+            };
+            finalList = [...new Set([...hds, ...filterLang])];
+            // dbg(finalList);
+
           };
-          // seen.add({
-          //   host: host,
-          //   data: siteujs,
-          //   gfcount: sitegfcount,
-          //   sfcount: sitesfcount,
-          // });
+
+          for(let ujs of finalList) {
+            siteujs.push(
+              {
+                url: ujs,
+                sleazy: false,
+              },
+            );
+            sitegfcount++;
+          };
           for(let ujs of siteujs) {
             createjs(ujs.url,ujs.sleazy);
           };
@@ -821,20 +834,22 @@ function main() {
           if(qs('.col-sm-8 .tr-link',selected)) {
             for(let i of qsA('.col-sm-8 .tr-link',selected)) {
               await query('.script-version',i);
-              let fixurl = qs('.tr-link-a',i).href.replaceAll(doc.location.origin,'https://openuserjs.org'),
+              let fixurl = qs('.tr-link-a',i).href.replace(new RegExp(doc.location.origin, 'gi'),'https://openuserjs.org'),
               layout = {
                 name: qs('.tr-link-a',i).textContent,
                 description: qs('p',i).textContent,
                 version: qs('.script-version',i).textContent,
                 url: fixurl,
-                code_url: `${fixurl.replaceAll('/scripts','/install')}.user.js`,
+                code_url: `${fixurl.replace(new RegExp('/scripts', 'gi'),'/install')}.user.js`,
                 total_installs: qs('td:nth-child(2) p',i).textContent,
                 created_at: qs('td:nth-child(4) time',i).getAttribute('datetime'),
                 code_updated_at: qs('td:nth-child(4) time',i).getAttribute('datetime'),
-                users: [{
-                  name: qs('.inline-block a',i).textContent,
-                  url: qs('.inline-block a',i).href,
-                }]
+                users: [
+                  {
+                    name: qs('.inline-block a',i).textContent,
+                    url: qs('.inline-block a',i).href,
+                  }
+                ]
               };
               for(const key in template) {
                 if(!Object.hasOwn(layout, key)) {
@@ -850,7 +865,7 @@ function main() {
           if(qs('.repo-list-item',selected)) {
             for(let r of qsA('.repo-list-item',selected)) {
               let layout = {},
-              fixurl = qs('a',r).href.replaceAll(doc.location.origin,'https://github.com');
+              fixurl = qs('a',r).href.replace(new RegExp(doc.location.origin, 'gi'),'https://github.com');
               layout = Object.assign(layout, {
                 name: qs('a',r).textContent,
                 description: qs('p.mb-1',r).textContent.trim(),
@@ -878,14 +893,15 @@ function main() {
             for(let g of qsA('div.gist-snippet',selected)) {
               if(qs('span > a:nth-child(2)',g).textContent.includes('.user.js')) {
                 let layout = {},
-                fixurl = qs('span > a:nth-child(2)',g).href.replaceAll(doc.location.origin,'https://gist.github.com');
+                fixurl = qs('span > a:nth-child(2)',g).href.replace(new RegExp(doc.location.origin, 'gi'),'https://gist.github.com');
                 layout = Object.assign(layout, {
                   url: fixurl,
                   code_url: `${fixurl}/raw/${qs('span > a:nth-child(2)',g).textContent}`,
+                  // qs('time-ago.no-wrap',g)
                   created_at: qs('time-ago.no-wrap',g).getAttribute('datetime'),
                   users: [{
                     name: qs('span > a[data-hovercard-type]',g).textContent,
-                    url: qs('span > a[data-hovercard-type]',g).href.replaceAll(doc.location.origin,'https://gist.github.com'),
+                    url: qs('span > a[data-hovercard-type]',g).href.replace(new RegExp(doc.location.origin, 'gi'),'https://gist.github.com'),
                   }]
                 });
                 for(let i of qsA('.file-box table tr .blob-code',g)) {
@@ -939,7 +955,7 @@ function main() {
             sfcount: sitesfcount,
           });
         };
-        if(isBlank(data) && isBlank(custom)) showError('No available UserJS for this webpage');
+        if(isBlank(sites) && isBlank(custom)) showError('No available UserJS for this webpage');
       } catch(ex) {
         showError(ex);
       };
@@ -999,11 +1015,6 @@ function main() {
           }
         };
       };
-      // if(!isEmpty(site)) {
-      //   if(site !== '*') {
-      //     return buildlist(site);
-      //   };
-      // };
       return buildlist(site);
     },
     //#region Make Config
@@ -1023,7 +1034,7 @@ function main() {
         },
       });
       makerow(lang.redirect,'checkbox','sleazyredirect');
-      makerow(lang.filter,'checkbox','filter');
+      makerow(lang.filter,'checkbox','filterlang');
       makerow('Greasy Fork','checkbox','greasyfork');
       makerow('Sleazy Fork','checkbox','sleazyfork');
       makerow('Open UserJS','checkbox','openuserjs');
@@ -1068,9 +1079,9 @@ function main() {
               isvalid = true;
               e.target.setAttribute('style','');
             };
-          } catch(error) {
+          } catch(ex) {
             isvalid = false;
-            err(error);
+            err(ex);
           };
         },
       }),
@@ -1094,7 +1105,7 @@ function main() {
             rebuild = false;
             preBuild();
           };
-          if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirct) {
+          if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirect) {
             let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
             qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
           };
@@ -1103,8 +1114,9 @@ function main() {
       resetbtn = make('mujs-btn', 'reset', {
         style: 'margin: auto;',
         innerHTML: 'Reset',
-        onclick: async (e) => {
+        onclick: (e) => {
           halt(e);
+          MU.setValue('Config');
           unsaved = true;
           cfg = defcfg;
           txta.value = JSON.stringify(cfg.blacklist, null, ' ');
@@ -1145,11 +1157,11 @@ function main() {
           btnfullscreen.classList.remove('expanded');
           main.classList.remove('expanded');
           btnfullscreen.innerHTML = fcopen;
-        } else {
-          btnfullscreen.classList.add('expanded');
-          main.classList.add('expanded');
-          btnfullscreen.innerHTML = fcclose;
+          return;
         };
+        btnfullscreen.classList.add('expanded');
+        main.classList.add('expanded');
+        btnfullscreen.innerHTML = fcclose;
       }
     }),
     mainframe = make('magic-userjs','mainframe', {
@@ -1339,20 +1351,13 @@ function containerInject() {
       container.attachShadow({mode: 'open'});
       return main();
     };
-    let ifcss = make('style', 'frame-stylesheet', {
-      innerHTML: `iframe.mujs-iframe {
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        height: 525px;
-        width: 90%;
-        margin-left: 1rem;
-        margin-right: 1rem;
-        z-index: 100000000000000020 !important;
-      }`,
+    ael(ifram, 'load', () => {
+      ifram.contentDocument.documentElement.classList.add('mujs-iframe');
+      ifram.contentDocument.body.classList.add('mujs-iframe');
+      main();
     });
-    ifram.onload = main;
-    doc.body.append(ifcss,ifram);
+    // ifram.onload = main;
+    doc.body.append(ifram);
   } catch(ex) {handleError(ex)}
 };
 
