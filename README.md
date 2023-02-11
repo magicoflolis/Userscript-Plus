@@ -10,7 +10,7 @@
 
 Finds available UserJS for current webpage from various UserJS hosts (e.g, [Greasy Fork](https://greasyfork.org)), displays a found count bottom right of the webpage, automatically disappears after 10 seconds (can be configured).
 
-**Known bugs:**
+**Known Issues:**
 
 * May conflict with any UserJS that executes in an iframe.
 

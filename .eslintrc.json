@@ -35,8 +35,8 @@
     }
   },
   "ignorePatterns": [
-    "/src/header.js",
-    "/tools/userscript.js",
+    "/userscript/src/header.js",
+    "/userscript/tools/userscript.mjs",
     "/tests/*.js",
     "/dist/*.js"
   ],

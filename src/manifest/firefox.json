@@ -3,20 +3,43 @@
   "default_locale": "en",
   "name": "__MSG_extName__",
   "description": "__MSG_extShortDesc__",
+  "short_name": "uScriptPlus",
+  "background": {
+    "page": "background.html"
+  },
   "browser_action": {
-    "default_icon": "img/icon_128.png"
+    "default_icon": {
+			"32": "img/icon_32.png",
+      "128": "img/icon_128.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "UserJS - Popup"
+  },
+  "options_ui": {
+    "page": "settings.html",
+    "open_in_tab": true
   },
   "content_scripts": [
 		{
-      "all_frames": true,
+      "all_frames": false,
+			"js": [
+        "/js/mu.js",
+        "/js/mu-hermes.js",
+        "/js/mu-common.js",
+        "/js/start.js"
+      ],
       "matches": [
         "https://*/*"
 			],
-			"js": ["/web_accessible_resources/magic-userjs.user.js"],
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ],
   "permissions": [
+    "tabs",
+    "storage",
+    "unlimitedStorage",
+    "webNavigation",
+    "webRequest",
     "<all_urls>"
   ],
   "browser_specific_settings": {
@@ -32,6 +55,11 @@
     "96": "img/icon_96.png",
     "128": "img/icon_128.png"
   },
-  "short_name": "uScriptPlus",
-  "web_accessible_resources": ["/web_accessible_resources/*"]
+  "web_accessible_resources": [
+    "/web_accessible_resources/*"
+  ],
+  "storage": {
+    "managed_schema": "managed_storage.json"
+  },
+  "commands": {}
 }

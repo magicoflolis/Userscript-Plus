@@ -1,0 +1,433 @@
+$appBGColor: #495060;
+$appTXTColor: #ffffff;
+
+@at-root * {
+  @supports not (scrollbar-width: thin) {
+    ::-webkit-scrollbar {
+      width: 1.4vw;
+      height: 3.3vh;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: #2e323d;
+      border-radius: 10px;
+      margin-top: 3px;
+      margin-bottom: 3px;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: $appTXTColor;
+      background-image: -webkit-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.2) 75%,
+        transparent 75%,
+        transparent
+      );
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: $appTXTColor;
+    }
+  }
+  scrollbar-color: $appTXTColor #2e323d;
+  scrollbar-width: thin;
+  &:not(.mujs-iframe) {
+    background: $appBGColor;
+    color: $appTXTColor;
+  }
+}
+
+@at-root magic-userjs {
+  line-height: normal;
+}
+@at-root .magicuserjs-cfg {
+  line-height: 1.5;
+}
+
+body.webext-page,
+.main {
+  font-size: 14px;
+}
+
+// .magicuserjs-body,
+mujs-column,
+mujs-row {
+  display: flex;
+}
+
+mujs-column,
+mujs-row {
+  gap: 10px;
+}
+
+mujs-column {
+  @media screen and (max-width: 800px) {
+    flex-flow: row wrap;
+  }
+}
+
+mujs-row {
+  flex-direction: column;
+}
+
+magic-userjs {
+  cursor: default;
+}
+
+.hidden {
+  display: none !important;
+  z-index: -1 !important;
+}
+
+.main {
+  @media screen and (max-height: 450px) {
+    &:not(.webext-page) {
+      height: 100% !important;
+      bottom: 0rem !important;
+      margin-left: 0rem !important;
+      margin-right: 0rem !important;
+      right: 0rem !important;
+    }
+  }
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  background: $appBGColor !important;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  &.expanded {
+    height: 100% !important;
+    bottom: 0rem !important;
+  }
+  &:not(.webext-page) {
+    position: fixed;
+    height: 492px;
+    &:not(.expanded) {
+      margin-left: 1rem;
+      margin-right: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      &.auto-height {
+        height: auto;
+      }
+    }
+  }
+  &:not(.hidden) {
+    z-index: 99999999999999999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
+
+.count {
+  background: transparent;
+}
+
+.mainframe {
+  background: transparent;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  &:not(.hidden) {
+    z-index: 99999999999999999 !important;
+    display: block;
+  }
+  count-frame {
+    width: 2em;
+    height: 1em;
+  }
+}
+
+count-frame {
+  border-radius: 16px;
+  padding: 0 .25em;
+  border: 2px solid rgba(0, 0, 0, 0);
+  font-size: 16px;
+  font-weight: 400;
+  display: inline-block;
+  text-align: center;
+  min-width: 1em;
+}
+
+.magicuserjs-header {
+  order: 0;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid $appTXTColor;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  padding: 10px;
+  font-size: 1em;
+  place-content: space-between;
+}
+
+.magicuserjs-body {
+  overflow-x: hidden;
+  order: 1;
+  .magicuserjs-ratings {
+    padding: 0 .25em;
+    border: 1px solid $appTXTColor;
+    border-radius: 10px;
+  }
+  magicuserjs-btn svg {
+    fill: $appTXTColor;
+    width: 14px;
+    height: 14px;
+    background: transparent;
+  }
+}
+
+.magicuserjs-cfg,
+.magicuserjs-body {
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+@media screen and (max-width: 1150px) {
+  .magicuserjs-cfg {
+    margin: 0px auto 1rem auto !important;
+  }
+}
+
+.magicuserjs-cfg {
+  @media screen and (max-height: 812px) {
+    &:not(.webext-page) {
+      flex-wrap: wrap;
+      flex-direction: row !important;
+    }
+  }
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  mujs-section {
+    // padding: 0.5em;
+    > label {
+      display: flex;
+      justify-content: space-between;
+      input[type*='number'] {
+        position: relative;
+        border-radius: 4px;
+        border: 1px solid $appTXTColor;
+      }
+    }
+  }
+  .magicuserjs-inlab {
+    position: relative;
+    width: 38px;
+    // border-radius: 20px;
+    input[type*='checkbox'] {
+      display: none;
+      &:checked + label {
+        margin-left: 0;
+        background-color: rgb(255, 255, 255, 0.568);
+        &:before {
+          right: 0px;
+        }
+      }
+      &#greasyfork:checked + label,
+      &#sleazyfork:checked + label {
+        background-color: rgba(0, 183, 255, 0.568);
+      }
+      &#openuserjs:checked + label {
+        background-color: rgb(237, 63, 20, 0.568);
+      }
+      &#github:checked + label {
+        background-color: rgb(36, 41, 47, 0.568);
+      }
+    }
+    label {
+      padding: 0;
+      display: block;
+      overflow: hidden;
+      height: 16px;
+      border-radius: 20px;
+      border: 1px solid $appTXTColor;
+      background-color: rgb(73, 80, 96);
+      &:before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        margin: -2px;
+        background: $appTXTColor;
+        position: absolute;
+        top: 0;
+        right: 20px;
+        border-radius: 20px;
+      }
+    }
+  }
+  #blacklist {
+    overflow-y: auto;
+    background: #000;
+    color: $appTXTColor;
+    resize: vertical;
+    outline: none;
+    border-style: none;
+    font-family: monospace;
+    &:focus {
+      outline: none;
+    }
+  }
+  &:not(.webext-page) {
+    order: 2;
+    margin: 0px 25rem 1rem 25rem;
+  }
+}
+
+table {
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+
+  thead > tr {
+    @media screen and (max-width: 800px) {
+      display: grid;
+      grid-auto-flow: column;
+    }
+    @media screen and (max-width: 500px) {
+      display: none !important;
+    }
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid $appTXTColor;
+  }
+  td {
+    &.magicuserjs-uframe,
+    &.magicuserjs-list,
+    &.install-btn {
+      text-align: center;
+    }
+  }
+  th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    &.mujs-header-name {
+      @media screen and (max-width: 800px) {
+        width: auto !important;
+      }
+      width: 50%;
+    }
+  }
+}
+
+magicuserjs-a {
+  display: inline-block;
+  &.magicuserjs-euser {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+.frame {
+  @media screen and (max-width: 800px) {
+    &:not(.webext-page) {
+      display: grid;
+      magicuserjs-btn {
+        margin-left: 25%;
+        margin-right: 25%;
+      }
+    }
+  }
+  &.sf {
+    magicuserjs-a {
+      color: rgb(231, 85, 49) !important;
+    }
+    magicuserjs-btn {
+      background-color: rgb(237, 63, 20) !important;
+      border-color: rgb(237, 63, 20) !important;
+    }
+  }
+  &:not(.sf) {
+    magicuserjs-a {
+      color: #00b7ff !important;
+    }
+    magicuserjs-btn {
+      color: $appTXTColor;
+      background-color: #2d8cf0;
+      border-color: #2d8cf0;
+    }
+  }
+}
+
+.magicuserjs-name {
+  display: grid;
+  span {
+    font-size: 0.8em !important;
+  }
+}
+
+mujs-btn {
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  border: 1px solid $appTXTColor;
+  font-size: 16px;
+  border-radius: 4px;
+  line-height: 1;
+  padding: 6px 15px;
+  svg {
+    fill: $appTXTColor;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+magicuserjs-btn {
+  font-size: 14px;
+  border-radius: 4px;
+  font-style: normal;
+  padding: 7px 15%;
+  font-weight: 400;
+  font-variant: normal;
+  line-height: normal;
+  display: block;
+}
+
+input[type*='number'],
+input[type*='text'] {
+  border: transparent;
+  outline: none !important;
+}
+
+magicuserjs-a,
+magicuserjs-btn,
+.mujs-pointer,
+.magicuserjs-cfg mujs-section *:not(input[type*='text'], input[type*='number']),
+.mainbtn,
+.mainframe,
+mujs-btn {
+  cursor: pointer !important;
+}
+
+th,
+.magicuserjs-cfg *:not(input[type*='text'], input[type*='number']) {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+mujs-btn,
+input,
+.magicuserjs-homepage {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}

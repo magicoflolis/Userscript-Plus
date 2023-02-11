@@ -1,0 +1,80 @@
+{
+  "extName": {
+    "message": "Magic Userscript+",
+    "description": "Must not exceed 45 characters"
+  },
+  "extDesc": {
+    "message": "The power of Greasy Fork on the go! Finds available UserJS for the current webpage.",
+    "description": "Must not exceed 132 characters"
+  },
+  "extShortDesc": {
+    "message": "Finds available UserJS for the current webpage.",
+    "description": "Must not exceed 112 characters"
+  },
+  "muDailyInstalls": {
+    "message": "Daily Installs"
+  },
+  "muClose": {
+    "message": "Close"
+  },
+  "muFilter": {
+    "message": "Filter"
+  },
+  "muMin": {
+    "message": "Minimize"
+  },
+  "muMax": {
+    "message": "Maximize"
+  },
+  "muSearch": {
+    "message": "Search"
+  },
+  "muSearchDesc": {
+    "message": "Title | Description | Author..."
+  },
+  "muInstall": {
+    "message": "Install"
+  },
+  "muIssue": {
+    "message": "New Issue"
+  },
+  "muVersion": {
+    "message": "Version"
+  },
+  "muLastUpdated": {
+    "message": "Last Updated"
+  },
+  "muLegacy": {
+    "message": "Legacy"
+  },
+  "muTotalInstalls": {
+    "message": "Total Installs"
+  },
+  "muRating": {
+    "message": "Ratings"
+  },
+  "muGood": {
+    "message": "Good"
+  },
+  "muOk": {
+    "message": "Ok"
+  },
+  "muBad": {
+    "message": "Bad"
+  },
+  "muCreated": {
+    "message": "Created"
+  },
+  "muRedirect": {
+    "message": "Greasy Fork for adults"
+  },
+  "muFilterLanguages": {
+    "message": "Filter out other languages"
+  },
+  "muDisplayTime": {
+    "message": "Display Timeout"
+  },
+  "muSave": {
+    "message": "Save"
+  }
+}

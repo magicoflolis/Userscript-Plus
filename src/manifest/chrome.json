@@ -3,14 +3,15 @@
   "default_locale": "en",
   "name": "__MSG_extName__",
   "description": "__MSG_extShortDesc__",
+  "short_name": "uScriptPlus",
   "content_scripts": [
 		{
-      "all_frames": true,
+      "all_frames": false,
       "matches": [
         "https://*/*"
 			],
 			"js": ["/web_accessible_resources/magic-userjs.user.js"],
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ],
   "optional_host_permissions": [
@@ -22,7 +23,6 @@
     "96": "img/icon_96.png",
     "128": "img/icon_128.png"
   },
-  "short_name": "uScriptPlus",
   "web_accessible_resources": [
     {
       "resources": [
@@ -33,5 +33,6 @@
       ],
       "use_dynamic_url": true
     }
-  ]
+  ],
+  "commands": {}
 }

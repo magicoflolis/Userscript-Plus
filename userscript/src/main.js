@@ -59,7 +59,6 @@ class MUError extends Error {
   };
 };
 
-// TODO: Add tabs allowing the ability to search multiple sites @ once
 let langs = {
   en: {
     daily: 'Daily Installs',
@@ -283,44 +282,93 @@ urls = [],
 sitegfcount = 0,
 sitesfcount = 0,
 MU = {
-  getValue(key,def = {}) {
-    return new Promise((resolve) => {
-      def = JSON.stringify(def ?? {});
-      if(isGM) {
-        resolve(JSON.parse( GM_getValue(key,def) ));
-      };
-      resolve(win.localStorage.getItem(`MUJS${key}`) ? JSON.parse( win.localStorage.getItem(`MUJS${key}`) ) : def);
-    });
-  },
-  info: {
-    script: {
-      version: 'Bookmarklet'
+  /**
+   * Get Value
+   * @param {string} key - Key to get the value of
+   * @param {Object} def - Fallback default value of key
+   * @returns {Object} Value or default value of key
+   * @link https://violentmonkey.github.io/api/gm/#gm_getvalue
+   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+   */
+  async getValue(key,def = {}) {
+    try {
+      return await new Promise((resolve) => {
+        const params = JSON.stringify(def ?? {});
+        if (isGM) {
+          resolve(JSON.parse(GM_getValue(key, params)));
+        } else {
+          resolve(localStorage.getItem(`MUJS${key}`) ? JSON.parse(localStorage.getItem(`MUJS${key}`)) : def);
+        };
+      });
+    } catch (ex) {
+      err(ex);
+      return def;
     }
   },
   /**
-  * @param {string} url - URL of webpage to open
-  * @param {object} params - GM parameters
-  */
-  openInTab(url,params = {}) {
-    if(isGM) {
-      params = Object.is(params,{}) ? {
-        active: true,
-        insert: true,
-      } : params;
-    } else {
-      params = Object.is(params,{}) ? '_blank' : params;
+   * Get info of script
+   * @returns {Object} Script info
+   * @link https://violentmonkey.github.io/api/gm/#gm_info
+   */
+  info() {
+    return isGM ? GM_info : {
+      script: {
+        updateURL: '',
+        version: 'Bookmarklet'
+      }
+    }
+  },
+  /**
+   * Open a new window
+   * @param {string} url - URL of webpage to open
+   * @param {object} params - GM parameters
+   * @returns {object} GM_openInTab object with Window object as a fallback
+   * @link https://violentmonkey.github.io/api/gm/#gm_openintab
+   * @link https://developer.mozilla.org/docs/Web/API/Window/open
+   */
+  openInTab(url, params = {
+    active: true,
+    insert: true,
+  }, features) {
+    if(!isGM && isBlank(params)) {
+      params = '_blank';
+    };
+    if(features) {
+      return win.open(url, params, features);
     };
     return isGM ? GM_openInTab(url, params) : win.open(url, params);
   },
+  /**
+   * Set value
+   * @param {string} key - Key to set the value of
+   * @param {Object} v - Value of key
+   * @returns {Promise} Saves key to either GM managed storage or webpages localstorage
+   * @link https://violentmonkey.github.io/api/gm/#gm_setvalue
+   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+   */
   setValue(key,v) {
     return new Promise((resolve) => {
       v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v;
       if(isGM && cfg.cache) {
         resolve( GM_setValue(key,v) );
+      } else {
+        resolve( win.localStorage.setItem(`MUJS${key}`,v) );
       };
-      resolve( win.localStorage.setItem(`MUJS${key}`,v) );
     });
   },
+  /**
+   * Fetch a URL with fetch API as fallback
+   *
+   * When GM is supported, makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy
+   * @param {string} url - The URL to fetch
+   * @param {string} method - Fetch method
+   * @param {string} responseType - Response type
+   * @param {Object} extras - Fetch parameters
+   * @param {boolean} forcefetch - Force use fetch API
+   * @returns {*} Fetch results
+   * @link https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest
+   * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
+   */
   fetchURL(url,method = 'GET',responseType = 'json',extras = {},forcefetch) {
     return new Promise((resolve, reject) => {
       if(isGM && !forcefetch) {
@@ -354,12 +402,6 @@ MU = {
       };
     });
   },
-};
-
-if(isGM) {
-  Object.assign(MU, {
-    info: GM_info,
-  });
 };
 
 const doc = document,
@@ -487,6 +529,7 @@ function main() {
   let unsaved = false,
   isBlacklisted = false,
   seen = new Set(),
+  switchRows = true,
   thisHost = location.hostname.split('.').splice(-2).join('.');
   const save = () => {
     try {
@@ -507,6 +550,18 @@ function main() {
   },
   sh = elem => injCon.querySelector(elem),
   shA = elem => injCon.querySelectorAll(elem),
+  table = make('table'),
+  tabbody = make('tbody'),
+  tabhead = make('thead'),
+  makeTHead = (rows = []) => {
+    let tr = make('tr');
+    for(let r of rows) {
+      let tparent = make('th', r.class ?? '', r);
+      tr.append(tparent);
+    };
+    tabhead.append(tr);
+    table.append(tabhead, tabbody);
+  },
   showError = (msg) => {
     err(msg);
     let txt = make('mujs-row','error', {
@@ -525,9 +580,39 @@ function main() {
       sh('.magicuserjs-body').prepend(txt);
     };
   },
+  sortRowBy = (cellIndex) => {
+    const rows = Array.from(tabbody.rows);
+    rows.sort((tr1, tr2) => {
+      const t1cell = tr1.cells[cellIndex],
+      t2cell = tr2.cells[cellIndex],
+      tr1Text = (t1cell.firstElementChild ?? t1cell).textContent,
+      tr2Text = (t2cell.firstElementChild ?? t2cell).textContent,
+      t1pDate = Date.parse(tr1Text),
+      t2pDate = Date.parse(tr2Text);
+      if(!Number.isNaN(t1pDate) && !Number.isNaN(t2pDate)) {
+        return new Date(t1pDate) - new Date(t2pDate);
+      };
+      if(Number(tr1Text) && Number(tr2Text)) {
+        return tr1Text - tr2Text;
+      };
+      return tr1Text.localeCompare(tr2Text);
+    });
+    if(switchRows) {
+      rows.reverse()
+    };
+    switchRows = !switchRows;
+    tabbody.append(...rows);
+  },
   createjs = (ujs, issleazy) => {
-    let frame = make('magic-userjs',`frame ${issleazy ? 'sf' : ''}`),
-    fname = make('magic-userjs','magicuserjs-name'),
+    let eframe = make('td', 'install-btn'),
+    uframe = make('td','magicuserjs-uframe'),
+    fdaily = make('td','magicuserjs-list', {
+      innerHTML: ujs.daily_installs,
+    }),
+    fupdated = make('td','magicuserjs-list', {
+      innerHTML: new Intl.DateTimeFormat(navigator.language).format(new Date(ujs.code_updated_at)),
+    }),
+    fname = make('td','magicuserjs-name'),
     ftitle = make('magicuserjs-a','magicuserjs-homepage', {
       title: ujs.name,
       innerHTML: ujs.name,
@@ -580,18 +665,8 @@ function main() {
         }
         },
     }),
-    eframe = make('magic-userjs', 'install-btn'),
-    uframe = make('magic-userjs','magicuserjs-uframe'),
-    fdaily = make('magic-userjs','magicuserjs-list', {
-      title: lang.daily,
-      innerHTML: ujs.daily_installs,
-    }),
-    fupdated = make('magic-userjs','magicuserjs-list', {
-      title: lang.updated,
-      innerHTML: new Intl.DateTimeFormat(navigator.language).format(new Date(ujs.code_updated_at)),
-    }),
     fdwn = make('magicuserjs-btn','install', {
-      title: `${lang.install} '${ujs.name}'`,
+      title: `${lang.install} { ${ujs.name} }`,
       innerHTML: `${iconSVG.install} ${lang.install}`,
       onclick: (e) => {
         halt(e);
@@ -611,8 +686,12 @@ function main() {
     eframe.append(fdwn);
     fmore.append(ftotal,fratings,fgood,fok,fbad,fver,fcreated);
     fname.append(ftitle,fdesc,fmore);
-    frame.append(fname,uframe,fdaily,fupdated,eframe);
-    sh('.magicuserjs-body').append(frame);
+    let tr = make('tr', `frame ${issleazy ? 'sf' : ''}`);
+    for(let e of [fname,uframe,fdaily,fupdated,eframe]) {
+      tr.append(e);
+    };
+    tabbody.append(tr);
+
   };
   if(!isEmpty(navigator.languages)) {
     for(let nlang of navigator.languages) {
@@ -749,6 +828,7 @@ function main() {
           };
         };
         info('Fetching data',host);
+
         if(!isBlank(sites)) {
           let hideData = [];
           let data = await Promise.all(sites).catch((e) => {throw new MUError('Data',e)}),
@@ -780,7 +860,6 @@ function main() {
                 findName = headers[0].match(regName) || [];
 
                 if(isEmpty(findName)) {
-                  dbg(txt);
                   continue;
                 };
                 let cReg = new RegExp(`// @name:${clang}\\s+`,'gi'),
@@ -792,7 +871,6 @@ function main() {
                 let regDesc = new RegExp(`// @description:${clang}\\s+.+`,'gi'),
                 findDesc = headers[0].match(regDesc) || [];
                 if(isEmpty(findDesc)) {
-                  dbg(txt);
                   continue;
                 };
                 let dReg = new RegExp(`// @description:${clang}\\s+`,'gi'),
@@ -804,8 +882,6 @@ function main() {
               };
             };
             finalList = [...new Set([...hds, ...filterLang])];
-            // dbg(finalList);
-
           };
 
           for(let ujs of finalList) {
@@ -897,7 +973,6 @@ function main() {
                 layout = Object.assign(layout, {
                   url: fixurl,
                   code_url: `${fixurl}/raw/${qs('span > a:nth-child(2)',g).textContent}`,
-                  // qs('time-ago.no-wrap',g)
                   created_at: qs('time-ago.no-wrap',g).getAttribute('datetime'),
                   users: [{
                     name: qs('span > a[data-hovercard-type]',g).textContent,
@@ -956,6 +1031,11 @@ function main() {
           });
         };
         if(isBlank(sites) && isBlank(custom)) showError('No available UserJS for this webpage');
+
+        staticRows = Array.from(tabbody.rows);
+
+        sortRowBy(2);
+
       } catch(ex) {
         showError(ex);
       };
@@ -967,7 +1047,10 @@ function main() {
       urls = [];
       sitegfcount = 0;
       sitesfcount = 0;
-      tbody.innerHTML = '';
+      tabbody.innerHTML = '';
+      if(sh('.error')) {
+        sh('.error').remove();
+      };
       gfcounter.innerHTML = sitegfcount;
       sfcounter.innerHTML = sitesfcount;
       mainbtn.innerHTML = sitegfcount;
@@ -1015,6 +1098,7 @@ function main() {
           }
         };
       };
+
       return buildlist(site);
     },
     //#region Make Config
@@ -1219,14 +1303,13 @@ function main() {
       }
     }),
     siteSearcher = make('input','searcher', {
-      style: 'width: 75px;',
+      style: 'width: 100px;',
       autocomplete: 'off',
       spellcheck: false,
       type: 'text',
       placeholder: thisHost,
       onchange: (e) => {
         e.preventDefault();
-        // seen.clear();
         preBuild(e.target.value);
       },
     }),
@@ -1283,7 +1366,7 @@ function main() {
       },
     }),
     btnhome = make('mujs-btn','github hidden', {
-      title: `GitHub (v${MU.info.script.version.includes('.') || MU.info.script.version.includes('Book') ? MU.info.script.version : MU.info.script.version.slice(0,5)})`,
+      title: `GitHub (v${MU.info().script.version.includes('.') || MU.info().script.version.includes('Book') ? MU.info().script.version : MU.info().script.version.slice(0,5)})`,
       innerHTML: iconSVG.gh,
       onclick: (e) => {
         halt(e);
@@ -1330,6 +1413,32 @@ function main() {
     btnHandles.append(btnHide,btnfullscreen,closebtn);
     btnframe.append(fsearch,filterBtn,ssearch,siteSearchbtn,btncfg,btnissue,btnhome,btngreasy,btnnav,btnHandles);
     header.append(countframe,btnframe);
+    tbody.append(table);
+    makeTHead([
+      {
+        class: 'mujs-header-name',
+        textContent: 'Name'
+      },
+      {
+        textContent: 'Created by',
+      },
+      {
+        textContent: lang.daily,
+      },
+      {
+        textContent: lang.updated,
+      },
+      {
+        textContent: lang.install,
+      },
+    ]);
+    for (const th of tabhead.rows[0].cells) {
+      if(th.textContent === lang.install) continue;
+      th.classList.add('mujs-pointer');
+      ael(th, 'click', () => {
+        sortRowBy(th.cellIndex);
+      });
+    };
     main.append(header,tbody,cfgpage);
     mainframe.append(mainbtn);
     injCon.append(usercss,mainframe,main);
@@ -1356,7 +1465,6 @@ function containerInject() {
       ifram.contentDocument.body.classList.add('mujs-iframe');
       main();
     });
-    // ifram.onload = main;
     doc.body.append(ifram);
   } catch(ex) {handleError(ex)}
 };
@@ -1370,7 +1478,7 @@ async function stateChange(event) {
 
 async function setupConfig() {
   try {
-    cfg = await MU.getValue('Config',defcfg).catch(handleError);
+    cfg = await MU.getValue('Config',defcfg);
     for (const key in defcfg) {
       if(!Object.hasOwn(cfg, key)) {
         cfg[key] = defcfg[key];

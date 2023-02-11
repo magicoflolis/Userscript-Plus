@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "userSettings": {
+      "title": "A list of [name,value] pairs to populate user settings",
+      "type": "array",
+      "items": {
+        "title": "A [name,value] pair",
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  }
+}
