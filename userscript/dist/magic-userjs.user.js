@@ -14,7 +14,7 @@
 // @description:ru-RU   Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @description:ru      Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @author       Magic <magicoflolis@tuta.io>
-// @version      5.11.20
+// @version      5.11.21
 // @icon         data:image/png;base64,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
 // @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
 // @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
@@ -43,30 +43,44 @@
 
 /**
 * Injected stylesheet
-* https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass
+* https://github.com/magicoflolis/Userscript-Plus/tree/master/userscript/src/sass
 */
 const main_css = `*{scrollbar-color:#fff #2e323d;scrollbar-width:thin}@supports not (scrollbar-width: thin){* ::-webkit-scrollbar{width:1.4vw;height:3.3vh}* ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:10px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}* ::-webkit-scrollbar-thumb{border-radius:10px;background-color:#fff;background-image:-webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent)}* ::-webkit-scrollbar-thumb:hover{background-color:#fff}}*:not(.mujs-iframe){background:#495060;color:#fff}magic-userjs{line-height:normal}.magicuserjs-cfg{line-height:1.5}body.webext-page,.main{font-size:14px}mujs-column,mujs-row{display:flex}mujs-column,mujs-row{gap:10px}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-row{flex-direction:column}magic-userjs{cursor:default}.hidden{display:none !important;z-index:-1 !important}.main{width:100%;width:-moz-available;width:-webkit-fill-available;background:#495060 !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-family:Arial,Helvetica,sans-serif}@media screen and (max-height: 450px){.main:not(.webext-page){height:100% !important;bottom:0rem !important;margin-left:0rem !important;margin-right:0rem !important;right:0rem !important}}.main.expanded{height:100% !important;bottom:0rem !important}.main:not(.webext-page){position:fixed;height:492px}.main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}.main:not(.webext-page):not(.expanded).auto-height{height:auto}.main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}.count{background:rgba(0,0,0,0)}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:1rem;right:1rem}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}.mainframe count-frame{width:2em;height:1em}count-frame{border-radius:16px;padding:0 .25em;border:2px solid rgba(0,0,0,0);font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em}.magicuserjs-header{order:0;display:flex;gap:10px;border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;padding:10px;font-size:1em;place-content:space-between}.magicuserjs-body{overflow-x:hidden;order:1}.magicuserjs-body .magicuserjs-ratings{padding:0 .25em;border:1px solid #fff;border-radius:10px}.magicuserjs-body magicuserjs-btn svg{fill:#fff;width:14px;height:14px;background:rgba(0,0,0,0)}.magicuserjs-cfg,.magicuserjs-body{border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}@media screen and (max-width: 1150px){.magicuserjs-cfg{margin:0px auto 1rem auto !important}}.magicuserjs-cfg{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}@media screen and (max-height: 812px){.magicuserjs-cfg:not(.webext-page){flex-wrap:wrap;flex-direction:row !important}}.magicuserjs-cfg mujs-section>label{display:flex;justify-content:space-between}.magicuserjs-cfg mujs-section>label input[type*=number]{position:relative;border-radius:4px;border:1px solid #fff}.magicuserjs-cfg .magicuserjs-inlab{position:relative;width:38px}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]{display:none}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]:checked+label{margin-left:0;background-color:rgba(255,255,255,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]:checked+label:before{right:0px}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#greasyfork:checked+label,.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#sleazyfork:checked+label{background-color:rgba(0,183,255,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#openuserjs:checked+label{background-color:rgba(237,63,20,.568)}.magicuserjs-cfg .magicuserjs-inlab input[type*=checkbox]#github:checked+label{background-color:rgba(36,41,47,.568)}.magicuserjs-cfg .magicuserjs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid #fff;background-color:#495060}.magicuserjs-cfg .magicuserjs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:#fff;position:absolute;top:0;right:20px;border-radius:20px}.magicuserjs-cfg #blacklist{overflow-y:auto;background:#000;color:#fff;resize:vertical;outline:none;border-style:none;font-family:monospace}.magicuserjs-cfg #blacklist:focus{outline:none}.magicuserjs-cfg:not(.webext-page){order:2;margin:0px 25rem 1rem 25rem}table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 800px){table thead>tr{display:grid;grid-auto-flow:column}}@media screen and (max-width: 500px){table thead>tr{display:none !important}}table th,table td{border-bottom:1px solid #fff}table td.magicuserjs-uframe,table td.magicuserjs-list,table td.install-btn{text-align:center}table th{position:-webkit-sticky;position:sticky;top:0}table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){table th.mujs-header-name{width:auto !important}}magicuserjs-a{display:inline-block}magicuserjs-a.magicuserjs-euser{padding-left:.5rem;padding-right:.5rem}@media screen and (max-width: 800px){.frame:not(.webext-page){display:grid}.frame:not(.webext-page) magicuserjs-btn{margin-left:25%;margin-right:25%}}.frame.sf magicuserjs-a{color:#e75531 !important}.frame.sf magicuserjs-btn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.frame:not(.sf) magicuserjs-a{color:#00b7ff !important}.frame:not(.sf) magicuserjs-btn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.magicuserjs-name{display:grid}.magicuserjs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:#fff;width:14px;height:14px}magicuserjs-btn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block}input[type*=number],input[type*=text]{border:rgba(0,0,0,0);outline:none !important}magicuserjs-a,magicuserjs-btn,.mujs-pointer,.magicuserjs-cfg mujs-section *:not(input[type*=text],input[type*=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}th,.magicuserjs-cfg *:not(input[type*=text],input[type*=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}mujs-btn,input,.magicuserjs-homepage{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}`;
 
 (() => {
 const win = window,
+doc = document,
 /**
  * Object is Null
  * @param {Object} obj - Object
  * @returns {boolean} Returns if statement true or false
  */
-isNull = obj => (Object.is(obj,null) || Object.is(obj,undefined)),
+isNull = (obj) => {
+  return (Object.is(obj,null) || Object.is(obj,undefined));
+},
 /**
  * Object is Blank
- * @param {(Object|Object[]|string)} obj - Array, object or string
+ * @param {(Object|Object[]|string)} obj - Array, Set, Object or String
  * @returns {boolean} Returns if statement true or false
  */
-isBlank = obj => typeof obj === 'string' && Object.is(obj.trim(),'') || typeof obj === 'object' && Object.is(Object.keys(obj).length,0),
+isBlank = (obj) => {
+  return typeof obj === 'string' && Object.is(obj.trim(),'') ||
+  obj instanceof Set && Object.is(obj.size,0) ||
+  Array.isArray(obj) && Object.is(obj.length,0) ||
+  obj instanceof Object && typeof obj.entries !== 'function' && Object.is(Object.keys(obj).length,0);
+},
 /**
  * Object is Empty
  * @param {(Object|Object[]|string)} obj - Array, object or string
  * @returns {boolean} Returns if statement true or false
  */
-isEmpty = obj => isNull(obj) || isBlank(obj);
+isEmpty = obj => isNull(obj) || isBlank(obj),
+/**
+ * setTimeout w/ Promise
+ * @param {number} ms - Timeout in milliseconds (ms)
+ * @returns {Promise} Promise object
+ */
+delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 class Timeout {
   constructor() {
     this.ids = [];
@@ -95,7 +109,7 @@ class MUError extends Error {
    * @param {string} fnName - (Optional) Function name
    * @param {...string} params - Extra error parameters
    */
-  constructor(fnName = 'AFError',...params) {
+  constructor(fnName = 'MUError',...params) {
     super(...params);
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, MUError)
@@ -109,7 +123,8 @@ class MUError extends Error {
   };
 };
 
-let langs = {
+let cfg = {},
+langs = {
   en: {
     daily: 'Daily Installs',
     close: 'Close',
@@ -255,12 +270,36 @@ let langs = {
     dtime: '显示超时',
     save: '拯救',
   },
+  nl: {
+    daily: 'Dagelijkse Installaties',
+    close: 'Sluit',
+    filterA: 'Filter',
+    max: 'Maximaliseer',
+    min: 'Minimaliseer',
+    search: 'Zoek',
+    searcher: 'Titel | Beschrijving | Auteur...',
+    install: 'Installeer',
+    issue: 'Nieuw Issue',
+    version: 'Versie',
+    updated: 'Laatste Update',
+    legacy: 'Legacy',
+    total: 'Totale Installaties',
+    rating: 'Beoordeling',
+    good: 'Goed',
+    ok: 'Ok',
+    bad: 'Slecht',
+    created: 'Aangemaakt',
+    redirect: 'Greasy Fork voor volwassenen',
+    filter: 'Filter andere talen',
+    dtime: 'Weergave timeout',
+    save: 'Opslaan',
+  },
 },
 alang = [],
-clang = navigator.language.split('-')[0] ?? 'en',
-lang = langs[clang],
-isGM = typeof GM !== 'undefined',
+navLang = navigator.language.split('-')[0] ?? 'en',
+lang = langs[navLang] || langs['en'],
 defcfg = {
+  injection: 'interactive',
   cache: true,
   autoexpand: false,
   filterlang: false,
@@ -327,10 +366,10 @@ defcfg = {
     },
   ]
 },
-cfg = {},
 urls = [],
 sitegfcount = 0,
 sitesfcount = 0,
+isGM = typeof GM !== 'undefined',
 MU = {
   /**
    * Get Value
@@ -340,19 +379,15 @@ MU = {
    * @link https://violentmonkey.github.io/api/gm/#gm_getvalue
    * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
    */
-  async getValue(key,def = {}) {
+  getValue(key, def = {}) {
     try {
-      return await new Promise((resolve) => {
-        const params = JSON.stringify(def ?? {});
-        if (isGM) {
-          resolve(JSON.parse(GM_getValue(key, params)));
-        } else {
-          resolve(localStorage.getItem(`MUJS${key}`) ? JSON.parse(localStorage.getItem(`MUJS${key}`)) : def);
-        };
-      });
+      const params = JSON.stringify(def);
+      if (isGM) {
+        return JSON.parse(GM_getValue(key, params));
+      };
+      return localStorage.getItem(`MUJS${key}`) ? JSON.parse(localStorage.getItem(`MUJS${key}`)) : def;
     } catch (ex) {
-      err(ex);
-      return def;
+      handleError(ex);
     }
   },
   /**
@@ -396,10 +431,10 @@ MU = {
    * @link https://violentmonkey.github.io/api/gm/#gm_setvalue
    * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
    */
-  setValue(key,v) {
+  setValue(key, v) {
     return new Promise((resolve) => {
       v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v;
-      if(isGM && cfg.cache) {
+      if(isGM) {
         resolve( GM_setValue(key,v) );
       } else {
         resolve( win.localStorage.setItem(`MUJS${key}`,v) );
@@ -419,56 +454,60 @@ MU = {
    * @link https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest
    * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
    */
-  fetchURL(url,method = 'GET',responseType = 'json',extras = {},forcefetch) {
-    return new Promise((resolve, reject) => {
-      if(isGM && !forcefetch) {
-        GM_xmlhttpRequest({
-          method: method,
-          url,
-          responseType,
-          ...extras,
-          onerror: e => reject(e),
-          onload: (r) => {
-            if(r.status !== 200) reject(`${r.status} ${url}`);
-            if(responseType.match(/basic/gi)) resolve(r);
-            resolve(r.response);
-          },
-        });
-      } else {
-        fetch(url, {
-          method: method,
-          ...extras,
-        }).then((response) => {
-          if(!response.ok) reject(response);
-          if(responseType.match(/json/gi)) {
-            resolve(response.json());
-          } else if(responseType.match(/text/gi)) {
-            resolve(response.text());
-          } else if(responseType.match(/blob/gi)) {
-            resolve(response.blob());
-          };
-          resolve(response);
-        }).catch(handleError);
-      };
-    });
+  fetchURL(url, method = 'GET', responseType = 'json', extras = {}, forcefetch) {
+    return Promise.race([
+      new Promise((resolve, reject) => {
+        if(responseType.match(/buffer/gi)) {
+          fetch(url, {
+            method: method,
+            ...extras,
+          }).then((response) => {
+            if(!response.ok) reject(response);
+            resolve(response.arrayBuffer());
+          }).catch(reject);
+        } else if(isGM && !forcefetch) {
+          GM_xmlhttpRequest({
+            method: method,
+            url,
+            responseType,
+            ...extras,
+            onerror: e => reject(e),
+            onload: (r) => {
+              if(r.status !== 200) reject(`${r.status} ${url}`);
+              if(responseType.match(/basic/gi)) resolve(r);
+              resolve(r.response);
+            },
+          });
+        } else {
+          fetch(url, {
+            method: method,
+            ...extras,
+          }).then((response) => {
+            if(!response.ok) reject(response);
+            if(responseType.match(/json/gi)) {
+              resolve(response.json());
+            } else if(responseType.match(/text/gi)) {
+              resolve(response.text());
+            } else if(responseType.match(/blob/gi)) {
+              resolve(response.blob());
+            };
+            resolve(response);
+          }).catch(reject);
+        };
+      }),
+      delay(30000).then(() => Promise.reject(new MUError('FetchURL','Request timed out'))),
+    ]);
   },
 };
 
-const doc = document,
 /**
  * preventDefault + stopPropagation
  * @param {Object} e - Selected Element
  */
-halt = (e) => {
+const halt = (e) => {
   e.preventDefault();
   e.stopPropagation();
 },
-/**
- * setTimeout w/ Promise
- * @param {number} ms - Timeout in milliseconds (ms)
- * @returns {Promise} Promise object
- */
-delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
 /**
  * Add Event Listener
  * @param {Object} root - Selected Element
@@ -479,17 +518,12 @@ delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
  */
 ael = (root, event, callback, options = {}) => {
   try {
-    let isMobile = () => {
-      let a = navigator.userAgent || win.opera;
-      return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(a.substr(0,4));
-    };
+    let isMobile = /Mobi/.test(navigator.userAgent);
     root = (root || doc || doc.documentElement);
-    if(isMobile()) {
-      if(event === 'click') {
-        event = 'mouseup';
-        root.addEventListener('touchstart', callback);
-        root.addEventListener('touchend', callback);
-      };
+    if(isMobile && event === 'click') {
+      event = 'mouseup';
+      root.addEventListener('touchstart', callback);
+      root.addEventListener('touchend', callback);
     };
     if(event === 'fclick') {event = 'click'};
     return root.addEventListener(event, callback, {...options});
@@ -504,7 +538,7 @@ ael = (root, event, callback, options = {}) => {
  * @returns {Object} Returns root.querySelectorAll(element)
  */
 qsA = (element, root) => {
-  root = root ?? doc ?? doc.body;
+  root = (root || doc || doc.body);
   return root.querySelectorAll(element);
 },
 /**
@@ -514,7 +548,7 @@ qsA = (element, root) => {
  * @returns {Object} Returns root.querySelector(element)
  */
 qs = (element, root) => {
-  root = root ?? doc ?? doc.body;
+  root = (root || doc || doc.body);
   return root.querySelector(element);
 },
 /**
@@ -523,12 +557,21 @@ qs = (element, root) => {
  * @param {Object} [root=document] - Root selector Element
  * @returns {Object} Returns root.querySelector(element)
  */
-query = async (element, root) => {
-  root = root ?? doc ?? doc.body;
-  while(isNull(root.querySelector(element))) {
-    await new Promise(resolve=>requestAnimationFrame(resolve))
+query = (element, root) => {
+  root = (root || document || document.body);
+  if(isNull(root.querySelector(element))) {
+    const loop = async () => {
+      while(isNull(root.querySelector(element))) {
+        await new Promise(resolve=>requestAnimationFrame(resolve))
+      };
+      return root.querySelector(element);
+    };
+    return Promise.any([
+      loop(),
+      delay(5000).then(() => Promise.reject(new MUError('Unable to locate element'))),
+    ]);
   };
-  return root.querySelector(element);
+  return Promise.resolve(root.querySelector(element));
 },
 /**
  * Create/Make Element
@@ -538,19 +581,30 @@ query = async (element, root) => {
  * @returns {Object} Returns created Element
  */
 make = (element, cname, attrs = {}) => {
-  let el;
   try {
-    el = doc.createElement(element);
+    const el = doc.createElement(element);
     if(!isEmpty(cname)) {
       el.className = cname;
     };
     if(!isEmpty(attrs)) {
       for (const key in attrs) {
-        el[key] = attrs[key];
+        if (key === 'dataset') {
+          for(const key2 in attrs[key]) {
+            el[key][key2] = attrs[key][key2];
+          };
+        } else {
+          el[key] = attrs[key];
+        };
       };
     };
     return el;
   } catch(ex) {handleError(ex)}
+},
+sleazyRedirect = () => {
+  if(/greasyfork\.org/.test(location.hostname) && cfg.sleazyredirect) {
+    let otherSite = /greasyfork\.org/.test(location.hostname) ? 'sleazyfork' : 'greasyfork';
+    qs('span.sign-in-link') ? /scripts\/\d+/.test(location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
+  }
 },
 iconSVG = {
   cfg: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7848 0.449982C13.8239 0.449982 14.7167 1.16546 14.9122 2.15495L14.9991 2.59495C15.3408 4.32442 17.1859 5.35722 18.9016 4.7794L19.3383 4.63233C20.3199 4.30175 21.4054 4.69358 21.9249 5.56605L22.7097 6.88386C23.2293 7.75636 23.0365 8.86366 22.2504 9.52253L21.9008 9.81555C20.5267 10.9672 20.5267 13.0328 21.9008 14.1844L22.2504 14.4774C23.0365 15.1363 23.2293 16.2436 22.7097 17.1161L21.925 18.4339C21.4054 19.3064 20.3199 19.6982 19.3382 19.3676L18.9017 19.2205C17.1859 18.6426 15.3408 19.6754 14.9991 21.405L14.9122 21.845C14.7167 22.8345 13.8239 23.55 12.7848 23.55H11.2152C10.1761 23.55 9.28331 22.8345 9.08781 21.8451L9.00082 21.4048C8.65909 19.6754 6.81395 18.6426 5.09822 19.2205L4.66179 19.3675C3.68016 19.6982 2.59465 19.3063 2.07505 18.4338L1.2903 17.1161C0.770719 16.2436 0.963446 15.1363 1.74956 14.4774L2.09922 14.1844C3.47324 13.0327 3.47324 10.9672 2.09922 9.8156L1.74956 9.52254C0.963446 8.86366 0.77072 7.75638 1.2903 6.8839L2.07508 5.56608C2.59466 4.69359 3.68014 4.30176 4.66176 4.63236L5.09831 4.77939C6.81401 5.35722 8.65909 4.32449 9.00082 2.59506L9.0878 2.15487C9.28331 1.16542 10.176 0.449982 11.2152 0.449982H12.7848ZM12 15.3C13.8225 15.3 15.3 13.8225 15.3 12C15.3 10.1774 13.8225 8.69998 12 8.69998C10.1774 8.69998 8.69997 10.1774 8.69997 12C8.69997 13.8225 10.1774 15.3 12 15.3Z" fill="#ffffff"></path> </g></svg>',
@@ -576,9 +630,9 @@ ifram = make('iframe','mujs-iframe', {
 
 function main() {
   const injCon = container.attachShadow instanceof Function ? container.shadowRoot : ifram.contentDocument.body;
-  let unsaved = false,
+  let seen = new Set(),
+  unsaved = false,
   isBlacklisted = false,
-  seen = new Set(),
   switchRows = true,
   thisHost = location.hostname.split('.').splice(-2).join('.');
   const save = () => {
@@ -690,17 +744,17 @@ function main() {
     fgood = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.good,
       innerHTML: ujs.good_ratings,
-      style: 'border-color: rgb(51, 155, 51); background-color: #339b331a; color: #339b33;',
+      style: 'border-color: rgb(51, 155, 51); background-color: #339b331a; color: rgb(51, 255, 51);',
     }),
     fok = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.ok,
       innerHTML: ujs.ok_ratings,
-      style: 'border-color: rgb(155, 155, 0); background-color: #9b9b001a; color: #9b9b00;',
+      style: 'border-color: rgb(155, 155, 0); background-color: #9b9b001a; color: rgb(255, 255, 0);',
     }),
     fbad = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.bad,
       innerHTML: ujs.bad_ratings,
-      style: 'border-color: red; background-color: #9b33331a; color: red;',
+      style: 'border-color: rgb(155, 0, 0); background-color: #9b33331a; color: rgb(255, 0, 0);',
     }),
     fdesc = make('magic-userjs','magicuserjs-list', {
       style: 'cursor: pointer; margin-top: 3px;',
@@ -713,7 +767,7 @@ function main() {
         } else {
           fmore.classList.add('hidden');
         }
-        },
+      },
     }),
     fdwn = make('magicuserjs-btn','install', {
       title: `${lang.install} { ${ujs.name} }`,
@@ -723,7 +777,7 @@ function main() {
         MU.openInTab(ujs.code_url);
       },
     });
-    for(let u of ujs.users) {
+    for(const u of ujs.users) {
       let user = make('magicuserjs-a','magicuserjs-euser', {
         innerHTML: u.name,
         onclick: (e) => {
@@ -752,10 +806,7 @@ function main() {
     };
   };
   try {
-    if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirect) {
-      let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
-      qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
-    };
+    sleazyRedirect();
     let rebuild = false,
     siteujs = [],
     main = make('magic-userjs','main hidden'),
@@ -866,8 +917,8 @@ function main() {
                 };
                 continue;
               };
-              urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
-              sites.push(MU.fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json?page=1`),);
+              urls.push(`${i.url}/${navLang}/scripts/by-site/${host}.json`);
+              sites.push(MU.fetchURL(`${i.url}/${navLang}/scripts/by-site/${host}.json?page=1`),);
               continue;
             };
             urls.push(`${i.url}/scripts/by-site/${host}.json`);
@@ -878,7 +929,6 @@ function main() {
           };
         };
         info('Fetching data',host);
-
         if(!isBlank(sites)) {
           let hideData = [];
           let data = await Promise.all(sites).catch((e) => {throw new MUError('Data',e)}),
@@ -892,7 +942,7 @@ function main() {
                   return true;
                 };
               };
-            } else if(dlocal.includes(clang)) {
+            } else if(dlocal.includes(navLang)) {
               return true;
             };
             hideData.push(d);
@@ -906,24 +956,24 @@ function main() {
               let txt = await MU.fetchURL(h.code_url,'GET','text');
               let headers = txt.match(/\/\/\s@[\w][\s\S]+/gi) || [];
               if(headers.length > 0) {
-                let regName = new RegExp(`// @name:${clang}\\s+.+`,'gi'),
+                let regName = new RegExp(`// @name:${navLang}\\s+.+`,'gi'),
                 findName = headers[0].match(regName) || [];
 
                 if(isEmpty(findName)) {
                   continue;
                 };
-                let cReg = new RegExp(`// @name:${clang}\\s+`,'gi'),
+                let cReg = new RegExp(`// @name:${navLang}\\s+`,'gi'),
                 cutName = findName[0].replace(cReg, '');
                 Object.assign(h, {
                   name: cutName
                 });
 
-                let regDesc = new RegExp(`// @description:${clang}\\s+.+`,'gi'),
+                let regDesc = new RegExp(`// @description:${navLang}\\s+.+`,'gi'),
                 findDesc = headers[0].match(regDesc) || [];
                 if(isEmpty(findDesc)) {
                   continue;
                 };
-                let dReg = new RegExp(`// @description:${clang}\\s+`,'gi'),
+                let dReg = new RegExp(`// @description:${navLang}\\s+`,'gi'),
                 cutDesc = findDesc[0].replace(dReg, '');
                 Object.assign(h, {
                   description: cutDesc
@@ -934,7 +984,7 @@ function main() {
             finalList = [...new Set([...hds, ...filterLang])];
           };
 
-          for(let ujs of finalList) {
+          for(const ujs of finalList) {
             siteujs.push(
               {
                 url: ujs,
@@ -943,7 +993,7 @@ function main() {
             );
             sitegfcount++;
           };
-          for(let ujs of siteujs) {
+          for(const ujs of siteujs) {
             createjs(ujs.url,ujs.sleazy);
           };
         } else {
@@ -1157,11 +1207,11 @@ function main() {
           if(e.target.checked) {
             btnfullscreen.classList.add('expanded');
             main.classList.add('expanded');
-            btnfullscreen.innerHTML = fcclose;
+            btnfullscreen.innerHTML = iconSVG.fsClose;
           } else {
             btnfullscreen.classList.remove('expanded');
             main.classList.remove('expanded');
-            btnfullscreen.innerHTML = fcopen;
+            btnfullscreen.innerHTML = iconSVG.fsOpen;
           };
         },
       });
@@ -1237,10 +1287,7 @@ function main() {
             rebuild = false;
             preBuild();
           };
-          if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirect) {
-            let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
-            qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
-          };
+          sleazyRedirect();
         },
       }),
       resetbtn = make('mujs-btn', 'reset', {
@@ -1268,8 +1315,6 @@ function main() {
       cfgpage.append(txta,cbtn);
     },
     //#endregion
-    fcopen = iconSVG.fsOpen,
-    fcclose = iconSVG.fsClose,
     btnHide = make('mujs-btn','hide-list', {
       title: lang.min,
       innerHTML: iconSVG.hide,
@@ -1288,12 +1333,12 @@ function main() {
         if(btnfullscreen.classList.contains('expanded')) {
           btnfullscreen.classList.remove('expanded');
           main.classList.remove('expanded');
-          btnfullscreen.innerHTML = fcopen;
+          btnfullscreen.innerHTML = iconSVG.fsOpen;
           return;
         };
         btnfullscreen.classList.add('expanded');
         main.classList.add('expanded');
-        btnfullscreen.innerHTML = fcclose;
+        btnfullscreen.innerHTML = iconSVG.fsClose;
       }
     }),
     mainframe = make('magic-userjs','mainframe', {
@@ -1305,7 +1350,7 @@ function main() {
         if(cfg.autoexpand) {
           btnfullscreen.classList.add('expanded');
           main.classList.add('expanded');
-          btnfullscreen.innerHTML = fcclose;
+          btnfullscreen.innerHTML = iconSVG.fsClose;
         };
       }
     }),
@@ -1500,8 +1545,12 @@ function main() {
   } catch(ex) {handleError(ex)}
 };
 
-function containerInject() {
+async function containerInject() {
   try {
+    if(!doc.body) {
+      info('Waiting for document.body...');
+      await query('body');
+    };
     info('Injecting Container...');
     if(container.attachShadow instanceof Function) {
       doc.body.append(container);
@@ -1517,16 +1566,10 @@ function containerInject() {
   } catch(ex) {handleError(ex)}
 };
 
-async function stateChange(event) {
-  const evt = event.target ?? doc;
-  if(Object.is(evt.readyState,'complete')) {
-    containerInject();
-  };
-};
-
-async function setupConfig() {
+function setupConfig() {
   try {
-    cfg = await MU.getValue('Config',defcfg);
+    // cfg = await MU.getValue('Config',defcfg);
+    cfg = MU.getValue('Config',defcfg);
     for (const key in defcfg) {
       if(!Object.hasOwn(cfg, key)) {
         cfg[key] = defcfg[key];
@@ -1550,11 +1593,17 @@ async function setupConfig() {
         };
       }
     };
-    dbg('Config:',cfg);
+    lang = langs[cfg.language] || langs[navLang] || langs.en;
+    dbg('Config:', cfg);
     if(Object.is(doc.readyState,'complete')) {
       containerInject();
     } else {
-      ael(doc,'readystatechange',stateChange);
+      ael(doc,'readystatechange', (event) => {
+        const evt = event.target ?? doc;
+        if(Object.is(evt.readyState, cfg.injection)) {
+          containerInject();
+        };
+      });
     };
   } catch(ex) {
     handleError(ex)
@@ -1585,7 +1634,7 @@ function log(...msg) {
 };
 //#endregion
 
-if(!win.frameElement) {
+if(!win.frameElement && doc) {
   setupConfig();
 };
 

@@ -1,22 +1,36 @@
 const win = window,
+doc = document,
 /**
  * Object is Null
  * @param {Object} obj - Object
  * @returns {boolean} Returns if statement true or false
  */
-isNull = obj => (Object.is(obj,null) || Object.is(obj,undefined)),
+isNull = (obj) => {
+  return (Object.is(obj,null) || Object.is(obj,undefined));
+},
 /**
  * Object is Blank
- * @param {(Object|Object[]|string)} obj - Array, object or string
+ * @param {(Object|Object[]|string)} obj - Array, Set, Object or String
  * @returns {boolean} Returns if statement true or false
  */
-isBlank = obj => typeof obj === 'string' && Object.is(obj.trim(),'') || typeof obj === 'object' && Object.is(Object.keys(obj).length,0),
+isBlank = (obj) => {
+  return typeof obj === 'string' && Object.is(obj.trim(),'') ||
+  obj instanceof Set && Object.is(obj.size,0) ||
+  Array.isArray(obj) && Object.is(obj.length,0) ||
+  obj instanceof Object && typeof obj.entries !== 'function' && Object.is(Object.keys(obj).length,0);
+},
 /**
  * Object is Empty
  * @param {(Object|Object[]|string)} obj - Array, object or string
  * @returns {boolean} Returns if statement true or false
  */
-isEmpty = obj => isNull(obj) || isBlank(obj);
+isEmpty = obj => isNull(obj) || isBlank(obj),
+/**
+ * setTimeout w/ Promise
+ * @param {number} ms - Timeout in milliseconds (ms)
+ * @returns {Promise} Promise object
+ */
+delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 class Timeout {
   constructor() {
     this.ids = [];
@@ -45,7 +59,7 @@ class MUError extends Error {
    * @param {string} fnName - (Optional) Function name
    * @param {...string} params - Extra error parameters
    */
-  constructor(fnName = 'AFError',...params) {
+  constructor(fnName = 'MUError',...params) {
     super(...params);
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, MUError)
@@ -59,7 +73,8 @@ class MUError extends Error {
   };
 };
 
-let langs = {
+let cfg = {},
+langs = {
   en: {
     daily: 'Daily Installs',
     close: 'Close',
@@ -205,12 +220,36 @@ let langs = {
     dtime: '显示超时',
     save: '拯救',
   },
+  nl: {
+    daily: 'Dagelijkse Installaties',
+    close: 'Sluit',
+    filterA: 'Filter',
+    max: 'Maximaliseer',
+    min: 'Minimaliseer',
+    search: 'Zoek',
+    searcher: 'Titel | Beschrijving | Auteur...',
+    install: 'Installeer',
+    issue: 'Nieuw Issue',
+    version: 'Versie',
+    updated: 'Laatste Update',
+    legacy: 'Legacy',
+    total: 'Totale Installaties',
+    rating: 'Beoordeling',
+    good: 'Goed',
+    ok: 'Ok',
+    bad: 'Slecht',
+    created: 'Aangemaakt',
+    redirect: 'Greasy Fork voor volwassenen',
+    filter: 'Filter andere talen',
+    dtime: 'Weergave timeout',
+    save: 'Opslaan',
+  },
 },
 alang = [],
-clang = navigator.language.split('-')[0] ?? 'en',
-lang = langs[clang],
-isGM = typeof GM !== 'undefined',
+navLang = navigator.language.split('-')[0] ?? 'en',
+lang = langs[navLang] || langs['en'],
 defcfg = {
+  injection: 'interactive',
   cache: true,
   autoexpand: false,
   filterlang: false,
@@ -277,10 +316,10 @@ defcfg = {
     },
   ]
 },
-cfg = {},
 urls = [],
 sitegfcount = 0,
 sitesfcount = 0,
+isGM = typeof GM !== 'undefined',
 MU = {
   /**
    * Get Value
@@ -290,21 +329,32 @@ MU = {
    * @link https://violentmonkey.github.io/api/gm/#gm_getvalue
    * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
    */
-  async getValue(key,def = {}) {
+  getValue(key, def = {}) {
     try {
-      return await new Promise((resolve) => {
-        const params = JSON.stringify(def ?? {});
-        if (isGM) {
-          resolve(JSON.parse(GM_getValue(key, params)));
-        } else {
-          resolve(localStorage.getItem(`MUJS${key}`) ? JSON.parse(localStorage.getItem(`MUJS${key}`)) : def);
-        };
-      });
+      const params = JSON.stringify(def);
+      if (isGM) {
+        return JSON.parse(GM_getValue(key, params));
+      };
+      return localStorage.getItem(`MUJS${key}`) ? JSON.parse(localStorage.getItem(`MUJS${key}`)) : def;
     } catch (ex) {
-      err(ex);
-      return def;
+      handleError(ex);
     }
   },
+  // async getValue(key,def = {}) {
+  //   try {
+  //     return await new Promise((resolve) => {
+  //       const params = JSON.stringify(def ?? {});
+  //       if (isGM) {
+  //         resolve(JSON.parse(GM_getValue(key, params)));
+  //       } else {
+  //         resolve(localStorage.getItem(`MUJS${key}`) ? JSON.parse(localStorage.getItem(`MUJS${key}`)) : def);
+  //       };
+  //     });
+  //   } catch (ex) {
+  //     err(ex);
+  //     return def;
+  //   }
+  // },
   /**
    * Get info of script
    * @returns {Object} Script info
@@ -346,10 +396,10 @@ MU = {
    * @link https://violentmonkey.github.io/api/gm/#gm_setvalue
    * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
    */
-  setValue(key,v) {
+  setValue(key, v) {
     return new Promise((resolve) => {
       v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v;
-      if(isGM && cfg.cache) {
+      if(isGM) {
         resolve( GM_setValue(key,v) );
       } else {
         resolve( win.localStorage.setItem(`MUJS${key}`,v) );
@@ -369,56 +419,60 @@ MU = {
    * @link https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest
    * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
    */
-  fetchURL(url,method = 'GET',responseType = 'json',extras = {},forcefetch) {
-    return new Promise((resolve, reject) => {
-      if(isGM && !forcefetch) {
-        GM_xmlhttpRequest({
-          method: method,
-          url,
-          responseType,
-          ...extras,
-          onerror: e => reject(e),
-          onload: (r) => {
-            if(r.status !== 200) reject(`${r.status} ${url}`);
-            if(responseType.match(/basic/gi)) resolve(r);
-            resolve(r.response);
-          },
-        });
-      } else {
-        fetch(url, {
-          method: method,
-          ...extras,
-        }).then((response) => {
-          if(!response.ok) reject(response);
-          if(responseType.match(/json/gi)) {
-            resolve(response.json());
-          } else if(responseType.match(/text/gi)) {
-            resolve(response.text());
-          } else if(responseType.match(/blob/gi)) {
-            resolve(response.blob());
-          };
-          resolve(response);
-        }).catch(handleError);
-      };
-    });
+  fetchURL(url, method = 'GET', responseType = 'json', extras = {}, forcefetch) {
+    return Promise.race([
+      new Promise((resolve, reject) => {
+        if(responseType.match(/buffer/gi)) {
+          fetch(url, {
+            method: method,
+            ...extras,
+          }).then((response) => {
+            if(!response.ok) reject(response);
+            resolve(response.arrayBuffer());
+          }).catch(reject);
+        } else if(isGM && !forcefetch) {
+          GM_xmlhttpRequest({
+            method: method,
+            url,
+            responseType,
+            ...extras,
+            onerror: e => reject(e),
+            onload: (r) => {
+              if(r.status !== 200) reject(`${r.status} ${url}`);
+              if(responseType.match(/basic/gi)) resolve(r);
+              resolve(r.response);
+            },
+          });
+        } else {
+          fetch(url, {
+            method: method,
+            ...extras,
+          }).then((response) => {
+            if(!response.ok) reject(response);
+            if(responseType.match(/json/gi)) {
+              resolve(response.json());
+            } else if(responseType.match(/text/gi)) {
+              resolve(response.text());
+            } else if(responseType.match(/blob/gi)) {
+              resolve(response.blob());
+            };
+            resolve(response);
+          }).catch(reject);
+        };
+      }),
+      delay(30000).then(() => Promise.reject(new MUError('FetchURL','Request timed out'))),
+    ]);
   },
 };
 
-const doc = document,
 /**
  * preventDefault + stopPropagation
  * @param {Object} e - Selected Element
  */
-halt = (e) => {
+const halt = (e) => {
   e.preventDefault();
   e.stopPropagation();
 },
-/**
- * setTimeout w/ Promise
- * @param {number} ms - Timeout in milliseconds (ms)
- * @returns {Promise} Promise object
- */
-delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
 /**
  * Add Event Listener
  * @param {Object} root - Selected Element
@@ -429,17 +483,12 @@ delay = ms => new Promise(resolve => setTimeout(resolve, ms)),
  */
 ael = (root, event, callback, options = {}) => {
   try {
-    let isMobile = () => {
-      let a = navigator.userAgent || win.opera;
-      return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(a.substr(0,4));
-    };
+    let isMobile = /Mobi/.test(navigator.userAgent);
     root = (root || doc || doc.documentElement);
-    if(isMobile()) {
-      if(event === 'click') {
-        event = 'mouseup';
-        root.addEventListener('touchstart', callback);
-        root.addEventListener('touchend', callback);
-      };
+    if(isMobile && event === 'click') {
+      event = 'mouseup';
+      root.addEventListener('touchstart', callback);
+      root.addEventListener('touchend', callback);
     };
     if(event === 'fclick') {event = 'click'};
     return root.addEventListener(event, callback, {...options});
@@ -454,7 +503,7 @@ ael = (root, event, callback, options = {}) => {
  * @returns {Object} Returns root.querySelectorAll(element)
  */
 qsA = (element, root) => {
-  root = root ?? doc ?? doc.body;
+  root = (root || doc || doc.body);
   return root.querySelectorAll(element);
 },
 /**
@@ -464,7 +513,7 @@ qsA = (element, root) => {
  * @returns {Object} Returns root.querySelector(element)
  */
 qs = (element, root) => {
-  root = root ?? doc ?? doc.body;
+  root = (root || doc || doc.body);
   return root.querySelector(element);
 },
 /**
@@ -473,12 +522,21 @@ qs = (element, root) => {
  * @param {Object} [root=document] - Root selector Element
  * @returns {Object} Returns root.querySelector(element)
  */
-query = async (element, root) => {
-  root = root ?? doc ?? doc.body;
-  while(isNull(root.querySelector(element))) {
-    await new Promise(resolve=>requestAnimationFrame(resolve))
+query = (element, root) => {
+  root = (root || document || document.body);
+  if(isNull(root.querySelector(element))) {
+    const loop = async () => {
+      while(isNull(root.querySelector(element))) {
+        await new Promise(resolve=>requestAnimationFrame(resolve))
+      };
+      return root.querySelector(element);
+    };
+    return Promise.any([
+      loop(),
+      delay(5000).then(() => Promise.reject(new MUError('Unable to locate element'))),
+    ]);
   };
-  return root.querySelector(element);
+  return Promise.resolve(root.querySelector(element));
 },
 /**
  * Create/Make Element
@@ -488,19 +546,30 @@ query = async (element, root) => {
  * @returns {Object} Returns created Element
  */
 make = (element, cname, attrs = {}) => {
-  let el;
   try {
-    el = doc.createElement(element);
+    const el = doc.createElement(element);
     if(!isEmpty(cname)) {
       el.className = cname;
     };
     if(!isEmpty(attrs)) {
       for (const key in attrs) {
-        el[key] = attrs[key];
+        if (key === 'dataset') {
+          for(const key2 in attrs[key]) {
+            el[key][key2] = attrs[key][key2];
+          };
+        } else {
+          el[key] = attrs[key];
+        };
       };
     };
     return el;
   } catch(ex) {handleError(ex)}
+},
+sleazyRedirect = () => {
+  if(/greasyfork\.org/.test(location.hostname) && cfg.sleazyredirect) {
+    let otherSite = /greasyfork\.org/.test(location.hostname) ? 'sleazyfork' : 'greasyfork';
+    qs('span.sign-in-link') ? /scripts\/\d+/.test(location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
+  }
 },
 iconSVG = {
   cfg: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7848 0.449982C13.8239 0.449982 14.7167 1.16546 14.9122 2.15495L14.9991 2.59495C15.3408 4.32442 17.1859 5.35722 18.9016 4.7794L19.3383 4.63233C20.3199 4.30175 21.4054 4.69358 21.9249 5.56605L22.7097 6.88386C23.2293 7.75636 23.0365 8.86366 22.2504 9.52253L21.9008 9.81555C20.5267 10.9672 20.5267 13.0328 21.9008 14.1844L22.2504 14.4774C23.0365 15.1363 23.2293 16.2436 22.7097 17.1161L21.925 18.4339C21.4054 19.3064 20.3199 19.6982 19.3382 19.3676L18.9017 19.2205C17.1859 18.6426 15.3408 19.6754 14.9991 21.405L14.9122 21.845C14.7167 22.8345 13.8239 23.55 12.7848 23.55H11.2152C10.1761 23.55 9.28331 22.8345 9.08781 21.8451L9.00082 21.4048C8.65909 19.6754 6.81395 18.6426 5.09822 19.2205L4.66179 19.3675C3.68016 19.6982 2.59465 19.3063 2.07505 18.4338L1.2903 17.1161C0.770719 16.2436 0.963446 15.1363 1.74956 14.4774L2.09922 14.1844C3.47324 13.0327 3.47324 10.9672 2.09922 9.8156L1.74956 9.52254C0.963446 8.86366 0.77072 7.75638 1.2903 6.8839L2.07508 5.56608C2.59466 4.69359 3.68014 4.30176 4.66176 4.63236L5.09831 4.77939C6.81401 5.35722 8.65909 4.32449 9.00082 2.59506L9.0878 2.15487C9.28331 1.16542 10.176 0.449982 11.2152 0.449982H12.7848ZM12 15.3C13.8225 15.3 15.3 13.8225 15.3 12C15.3 10.1774 13.8225 8.69998 12 8.69998C10.1774 8.69998 8.69997 10.1774 8.69997 12C8.69997 13.8225 10.1774 15.3 12 15.3Z" fill="#ffffff"></path> </g></svg>',
@@ -526,9 +595,9 @@ ifram = make('iframe','mujs-iframe', {
 
 function main() {
   const injCon = container.attachShadow instanceof Function ? container.shadowRoot : ifram.contentDocument.body;
-  let unsaved = false,
+  let seen = new Set(),
+  unsaved = false,
   isBlacklisted = false,
-  seen = new Set(),
   switchRows = true,
   thisHost = location.hostname.split('.').splice(-2).join('.');
   const save = () => {
@@ -640,17 +709,17 @@ function main() {
     fgood = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.good,
       innerHTML: ujs.good_ratings,
-      style: 'border-color: rgb(51, 155, 51); background-color: #339b331a; color: #339b33;',
+      style: 'border-color: rgb(51, 155, 51); background-color: #339b331a; color: rgb(51, 255, 51);',
     }),
     fok = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.ok,
       innerHTML: ujs.ok_ratings,
-      style: 'border-color: rgb(155, 155, 0); background-color: #9b9b001a; color: #9b9b00;',
+      style: 'border-color: rgb(155, 155, 0); background-color: #9b9b001a; color: rgb(255, 255, 0);',
     }),
     fbad = make('magic-userjs','magicuserjs-list magicuserjs-ratings', {
       title: lang.bad,
       innerHTML: ujs.bad_ratings,
-      style: 'border-color: red; background-color: #9b33331a; color: red;',
+      style: 'border-color: rgb(155, 0, 0); background-color: #9b33331a; color: rgb(255, 0, 0);',
     }),
     fdesc = make('magic-userjs','magicuserjs-list', {
       style: 'cursor: pointer; margin-top: 3px;',
@@ -663,7 +732,7 @@ function main() {
         } else {
           fmore.classList.add('hidden');
         }
-        },
+      },
     }),
     fdwn = make('magicuserjs-btn','install', {
       title: `${lang.install} { ${ujs.name} }`,
@@ -673,7 +742,7 @@ function main() {
         MU.openInTab(ujs.code_url);
       },
     });
-    for(let u of ujs.users) {
+    for(const u of ujs.users) {
       let user = make('magicuserjs-a','magicuserjs-euser', {
         innerHTML: u.name,
         onclick: (e) => {
@@ -702,10 +771,7 @@ function main() {
     };
   };
   try {
-    if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirect) {
-      let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
-      qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
-    };
+    sleazyRedirect();
     let rebuild = false,
     siteujs = [],
     main = make('magic-userjs','main hidden'),
@@ -816,8 +882,8 @@ function main() {
                 };
                 continue;
               };
-              urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
-              sites.push(MU.fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json?page=1`),);
+              urls.push(`${i.url}/${navLang}/scripts/by-site/${host}.json`);
+              sites.push(MU.fetchURL(`${i.url}/${navLang}/scripts/by-site/${host}.json?page=1`),);
               continue;
             };
             urls.push(`${i.url}/scripts/by-site/${host}.json`);
@@ -828,7 +894,6 @@ function main() {
           };
         };
         info('Fetching data',host);
-
         if(!isBlank(sites)) {
           let hideData = [];
           let data = await Promise.all(sites).catch((e) => {throw new MUError('Data',e)}),
@@ -842,7 +907,7 @@ function main() {
                   return true;
                 };
               };
-            } else if(dlocal.includes(clang)) {
+            } else if(dlocal.includes(navLang)) {
               return true;
             };
             hideData.push(d);
@@ -856,24 +921,24 @@ function main() {
               let txt = await MU.fetchURL(h.code_url,'GET','text');
               let headers = txt.match(/\/\/\s@[\w][\s\S]+/gi) || [];
               if(headers.length > 0) {
-                let regName = new RegExp(`// @name:${clang}\\s+.+`,'gi'),
+                let regName = new RegExp(`// @name:${navLang}\\s+.+`,'gi'),
                 findName = headers[0].match(regName) || [];
 
                 if(isEmpty(findName)) {
                   continue;
                 };
-                let cReg = new RegExp(`// @name:${clang}\\s+`,'gi'),
+                let cReg = new RegExp(`// @name:${navLang}\\s+`,'gi'),
                 cutName = findName[0].replace(cReg, '');
                 Object.assign(h, {
                   name: cutName
                 });
 
-                let regDesc = new RegExp(`// @description:${clang}\\s+.+`,'gi'),
+                let regDesc = new RegExp(`// @description:${navLang}\\s+.+`,'gi'),
                 findDesc = headers[0].match(regDesc) || [];
                 if(isEmpty(findDesc)) {
                   continue;
                 };
-                let dReg = new RegExp(`// @description:${clang}\\s+`,'gi'),
+                let dReg = new RegExp(`// @description:${navLang}\\s+`,'gi'),
                 cutDesc = findDesc[0].replace(dReg, '');
                 Object.assign(h, {
                   description: cutDesc
@@ -884,7 +949,7 @@ function main() {
             finalList = [...new Set([...hds, ...filterLang])];
           };
 
-          for(let ujs of finalList) {
+          for(const ujs of finalList) {
             siteujs.push(
               {
                 url: ujs,
@@ -893,7 +958,7 @@ function main() {
             );
             sitegfcount++;
           };
-          for(let ujs of siteujs) {
+          for(const ujs of siteujs) {
             createjs(ujs.url,ujs.sleazy);
           };
         } else {
@@ -1032,8 +1097,6 @@ function main() {
         };
         if(isBlank(sites) && isBlank(custom)) showError('No available UserJS for this webpage');
 
-        staticRows = Array.from(tabbody.rows);
-
         sortRowBy(2);
 
       } catch(ex) {
@@ -1109,11 +1172,11 @@ function main() {
           if(e.target.checked) {
             btnfullscreen.classList.add('expanded');
             main.classList.add('expanded');
-            btnfullscreen.innerHTML = fcclose;
+            btnfullscreen.innerHTML = iconSVG.fsClose;
           } else {
             btnfullscreen.classList.remove('expanded');
             main.classList.remove('expanded');
-            btnfullscreen.innerHTML = fcopen;
+            btnfullscreen.innerHTML = iconSVG.fsOpen;
           };
         },
       });
@@ -1189,10 +1252,7 @@ function main() {
             rebuild = false;
             preBuild();
           };
-          if(/greasyfork\.org/.test(doc.location.hostname) && cfg.sleazyredirect) {
-            let otherSite = /greasyfork\.org/.test(document.location.hostname) ? 'sleazyfork' : 'greasyfork';
-            qs('span.sign-in-link') ? /scripts\/\d+/.test(document.location.href) ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a')) ? location.href = location.href.replace(/\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/, '//$1' + otherSite + '.org') : false : false : false;
-          };
+          sleazyRedirect();
         },
       }),
       resetbtn = make('mujs-btn', 'reset', {
@@ -1220,8 +1280,6 @@ function main() {
       cfgpage.append(txta,cbtn);
     },
     //#endregion
-    fcopen = iconSVG.fsOpen,
-    fcclose = iconSVG.fsClose,
     btnHide = make('mujs-btn','hide-list', {
       title: lang.min,
       innerHTML: iconSVG.hide,
@@ -1240,12 +1298,12 @@ function main() {
         if(btnfullscreen.classList.contains('expanded')) {
           btnfullscreen.classList.remove('expanded');
           main.classList.remove('expanded');
-          btnfullscreen.innerHTML = fcopen;
+          btnfullscreen.innerHTML = iconSVG.fsOpen;
           return;
         };
         btnfullscreen.classList.add('expanded');
         main.classList.add('expanded');
-        btnfullscreen.innerHTML = fcclose;
+        btnfullscreen.innerHTML = iconSVG.fsClose;
       }
     }),
     mainframe = make('magic-userjs','mainframe', {
@@ -1257,7 +1315,7 @@ function main() {
         if(cfg.autoexpand) {
           btnfullscreen.classList.add('expanded');
           main.classList.add('expanded');
-          btnfullscreen.innerHTML = fcclose;
+          btnfullscreen.innerHTML = iconSVG.fsClose;
         };
       }
     }),
@@ -1452,8 +1510,12 @@ function main() {
   } catch(ex) {handleError(ex)}
 };
 
-function containerInject() {
+async function containerInject() {
   try {
+    if(!doc.body) {
+      info('Waiting for document.body...');
+      await query('body');
+    };
     info('Injecting Container...');
     if(container.attachShadow instanceof Function) {
       doc.body.append(container);
@@ -1469,16 +1531,10 @@ function containerInject() {
   } catch(ex) {handleError(ex)}
 };
 
-async function stateChange(event) {
-  const evt = event.target ?? doc;
-  if(Object.is(evt.readyState,'complete')) {
-    containerInject();
-  };
-};
-
-async function setupConfig() {
+function setupConfig() {
   try {
-    cfg = await MU.getValue('Config',defcfg);
+    // cfg = await MU.getValue('Config',defcfg);
+    cfg = MU.getValue('Config',defcfg);
     for (const key in defcfg) {
       if(!Object.hasOwn(cfg, key)) {
         cfg[key] = defcfg[key];
@@ -1502,11 +1558,17 @@ async function setupConfig() {
         };
       }
     };
-    dbg('Config:',cfg);
+    lang = langs[cfg.language] || langs[navLang] || langs.en;
+    dbg('Config:', cfg);
     if(Object.is(doc.readyState,'complete')) {
       containerInject();
     } else {
-      ael(doc,'readystatechange',stateChange);
+      ael(doc,'readystatechange', (event) => {
+        const evt = event.target ?? doc;
+        if(Object.is(evt.readyState, cfg.injection)) {
+          containerInject();
+        };
+      });
     };
   } catch(ex) {
     handleError(ex)
@@ -1537,6 +1599,6 @@ function log(...msg) {
 };
 //#endregion
 
-if(!win.frameElement) {
+if(!win.frameElement && doc) {
   setupConfig();
 };

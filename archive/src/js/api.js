@@ -1,88 +1,100 @@
 'use strict';
 
-let win = self ?? window,
-doc = win.document;
-
-export const us = {
-  ael(elm,event,callback){
+const win = self ?? window,
+doc = win.document,
+us = {
+  estr(str) {
+    return Object.is(str,null) || Object.is(str,undefined) || typeof str === 'string' && Object.is(str.trim(),'')
+  },
+  ael(elm,event,callback) {
     elm = elm ?? doc;
     if(typeof screen.orientation === 'undefined' || (navigator.maxTouchPoints || 'ontouchstart' in document.documentElement)) {
-      if(event === "click") {
-        elm.addEventListener("mouseup", callback);
-        elm.addEventListener("touchstart", callback);
-        elm.addEventListener("touchend", callback);
+      if(event === 'click') {
+        elm.addEventListener('mouseup', callback);
+        elm.addEventListener('touchstart', callback);
+        elm.addEventListener('touchend', callback);
       }
     };
     return elm.addEventListener(event, callback);
   },
   /** Waits until args return true */
   async check(args) {
-    while (args === null) {
-      await new Promise( resolve =>  requestAnimationFrame(resolve) )
-    }
+    while (this.estr(args)) {
+      await new Promise(resolve => requestAnimationFrame(resolve) )
+    };
     return args;
   },
-  /** Can create various elements */
-  create(element,cname,attrs = {}) {
-    let el = doc.createElement(element);
-    cname ? (el.className = cname) : false;
+  /** Can make various elements */
+  make(elm,cname,attrs = {}) {
+    let el = doc.createElement(elm);
+    if(cname || !this.estr(cname)) {
+      el.className = `mujs-${cname}`;
+    };
     if(attrs) {
       for (let key in attrs) {
         el[key] = attrs[key];
-      }
-    }
+      };
+    };
     return el;
   },
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   },
-  err(...error) {
-    console.error('[%cUserJS%c] %cERROR', 'color: rgb(237,63,20);', '', 'color: rgb(249, 24, 128);', ...error);
-  },
   getItem(key) {
     return localStorage.getItem(key);
   },
-  html: doc.documentElement,
-  async fe(elements,callback) {
-    try {
-      return await new Promise((resolve, reject) => {
-        elements = elements ?? reject(new Error(`Element(s) not found ${elements})`));
-        this.qa(elements).then(e => resolve(e.forEach(callback)))
-      });
-    } catch (error) {
-      return this.err(error.message);
-    }
+  fetchURL(url,method = 'GET',responseType = 'json',params = {}) {
+    return new Promise((resolve, reject) => {
+      fetch(url, {
+        method: method,
+        ...params,
+      }).then((response) => {
+        if(!response.ok) reject(response);
+        if(responseType.match(/json/gi)) {
+          resolve(response.json());
+        } else if(responseType.match(/text/gi)) {
+          resolve(response.text());
+        } else if(responseType.match(/blob/gi)) {
+          resolve(response.blob());
+        };
+        resolve(response);
+      }).catch(reason => console.info(reason));
+    });
   },
-  async fetchURL(url) {
-    let f = await fetch(url),
-    response = await f.json();
-    return response;
+  fetchFile(path,responseType = 'text') {
+    return new Promise((resolve, reject) => {
+      fetch(path).then((response) => {
+        if(!response.ok) reject(response);
+        if(responseType.match(/json/gi)) {
+          resolve(response.json());
+        } else if(responseType.match(/text/gi)) {
+          resolve(response.text());
+        } else if(responseType.match(/blob/gi)) {
+          resolve(response.blob());
+        };
+        resolve(response);
+      }).catch(reason => console.info(reason));
+    });
   },
   halt(e) {
     e.preventDefault();
     e.stopPropagation();
   },
-  info(...message){
-    console.info('[%cUserJS%c] %cINF', 'color: rgb(237,63,20);', '', 'color: rgb(0, 186, 124);', ...message);
-  },
   inject(src) {
-    let s;
-    s = this.create("script","Injected","text/javascript");
-    s.innerHTML = src;
-    (doc.head || this.html || doc).appendChild(s);
-    this.log(`Injected: ${s.innerHTML}`);
+    let s = this.make('script','injected', {
+      type: 'text/javascript',
+      innerHTML: src,
+    });
+    (doc.head || doc.documentElement || doc).appendChild(s);
     if(s) {
       s.remove();
-    }
+    };
   },
-  log(...message) {
-    console.log('[%cUserJS%c] %cDBG', 'color: rgb(237,63,20);', '', 'color: rgb(255, 212, 0);', ...message);
-  },
-/**
- * @param {Node} element
- * @param {MutationCallback} callback
- * @param {MutationObserverInit} options
- */
+  /**
+  * @param {Node} element
+  * @param {MutationCallback} callback
+  * @param {MutationObserverInit} options
+  */
   observe(element, callback, options = {subtree:true,childList:true}) {
     let observer = new MutationObserver(callback);
     callback([], observer);
@@ -92,25 +104,10 @@ export const us = {
   /** Waits until element exists */
   async query(selector,root) {
     root = root ?? doc;
-    while ( root.querySelector(selector) === null) {
-      await new Promise( resolve =>  requestAnimationFrame(resolve) )
-    }
+    while(this.estr(root.querySelector(selector))) {
+      await new Promise(resolve => requestAnimationFrame(resolve))
+    };
     return root.querySelector(selector);
-  },
-  /** If element exists then querySelectorAll */
-  async qa(selector,root) {
-    try {
-      return await new Promise((resolve, reject) => {
-        root = root ?? doc;
-        if (root.querySelector(selector) === null) {
-          reject(new Error(`Element(s) not found ${root}.querySelector(${selector})`));
-        } else {
-          resolve(root.querySelectorAll(selector));
-        }
-      });
-    } catch (error) {
-      return this.err(error.message);
-    }
   },
   removeItem(key) {
     return localStorage.removeItem(key);
@@ -119,3 +116,5 @@ export const us = {
     return localStorage.setItem(key,value);
   },
 };
+
+export { us };
