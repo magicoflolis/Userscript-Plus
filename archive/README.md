@@ -6,14 +6,14 @@
 
 | Preview(s) |
 |:----------:|
-![Preview](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/asssets/preview.png)|
+![Preview](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/archive/resources/preview.png)|
 
 ***
 
 | Version | Link | Alternative | Note |
 |:----------:|:----------:|:----------:|:----------:|
-Chrome / Edge | - | - | Work in progress
-Firefox | - | - | Work in progress
+Chrome / Edge | [GitHub](https://github.com/magicoflolis/Userscript-Plus/tree/master/archive/dist) | - | -
+Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/tree/master/archive/dist) | - | -
 Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | -
 Userscript Legacy | [Install (GitHub)](https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js) | - | -
 
@@ -41,7 +41,7 @@ custom_width = '', // Default UserJS width: 90vw | Original UserJS width: 860px
 
 ## Source Code
 
-* [https://github.com/magicoflolis/Userscript-Plus/tree/master/src](https://github.com/magicoflolis/Userscript-Plus/tree/master/src)
+* [https://github.com/magicoflolis/Userscript-Plus/tree/master/archive/src](https://github.com/magicoflolis/Userscript-Plus/tree/master/archive/src)
 
 ### Contacts
 

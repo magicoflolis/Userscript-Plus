@@ -16,9 +16,9 @@ Finds available UserJS for current webpage from various UserJS hosts (e.g, [Grea
 
 | Preview(s) |
 |:----------:|
-![Demo 1](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/asssets/demo3.gif)|
-![Demo 2](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/asssets/demo2.gif)|
-![Demo 3](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/asssets/demo1.png)|
+![Demo 1](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo3.gif)|
+![Demo 2](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo2.gif)|
+![Demo 3](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo1.png)|
 
 ## Downloads
 

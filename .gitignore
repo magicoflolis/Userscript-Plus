@@ -1,16 +1,15 @@
 # Dependency directories
+**/node_modules/**
 yarn.lock
-node_modules/
-jspm_packages/
-.vscode/.history/
+.vscode/.history
 web-ext-artifacts
+tests/firefox/*
+tests/chrome/*
+tests/userscript/magic-userjs.dev.user.js
 web-ext
-build
-/build/
-Notes
-/Notes/
-chrlauncher
-/chrlauncher/
+**/build/**
+**/Notes/**
+**/chrlauncher/**
 
 # dotenv environment variable file
 .env

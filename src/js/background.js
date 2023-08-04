@@ -1,5 +1,5 @@
 'use strict';
-import { dbg, log } from './logger.js';
+import { dbg, log, err } from './logger.js';
 import Config from './config.js';
 
 const hermes = MU.hermes;
@@ -27,14 +27,12 @@ webext.runtime.onConnect.addListener((p) => {
     if (root.channel === 'Reset') {
       Config.resetToDefault();
     }
-    // if (r.delete) {
-    //   Config.local.handler.deleteProperty(r.delete);
-    // }
   });
 });
+
 let alang = [],
   clang = navigator.language.split('-')[0] ?? 'en',
-  formatURL = txt => txt.split('.').splice(-2).join('.').replace(/\/|https:/g, '');;
+  formatURL = txt => txt.split('.').splice(-2).join('.').replace(/\/|https:/g, '');
 
 if(!MU.isEmpty(navigator.languages)) {
   for(let nlang of navigator.languages) {
@@ -46,93 +44,97 @@ if(!MU.isEmpty(navigator.languages)) {
 };
 
 let cache = [];
-let host = '';
 let isCached = txt => cache.filter(c => Object.is(txt,c.host));
+
+const webFetcher = (loc) => {
+  let host = formatURL(loc);
+  let cfg = Config.cachedLocalStorage,
+    urls = [],
+    sites = [],
+    custom = [],
+    engines = cfg.engines.filter(e => e.enabled),
+    blacklist = cfg.blacklist.filter(b => b.enabled),
+    isBlacklisted = false;
+  let cacheFilter = isCached(host);
+  if(!MU.isEmpty(cacheFilter)) {
+    dbg('Cache', cacheFilter[0].data);
+    return Promise.resolve(cacheFilter[0].data);
+  };
+  for (const b of blacklist) {
+    if (b.regex) {
+      let reg = new RegExp(b.url, b.flags);
+      if (!reg.test(host)) continue;
+      isBlacklisted = true;
+    }
+    if (!Array.isArray(b.url)) {
+      if (!host.includes(b.url)) continue;
+      isBlacklisted = true;
+    }
+    for (const c of b.url) {
+      if (!host.includes(c)) continue;
+      isBlacklisted = true;
+    }
+  }
+  log('Blacklisted: ', isBlacklisted, host);
+  if (isBlacklisted) {
+    return log(isBlacklisted);
+  };
+  for(const i of engines) {
+    if(i.url.match(/fork.org/gi)) {
+      if(cfg.filterlang) {
+        if(alang.length > 1) {
+          for(const a of alang) {
+            urls.push(`${i.url}/${a}/scripts/by-site/${host}.json`);
+            sites.push(MU.fetchURL(`${i.url}/${a}/scripts/by-site/${host}.json`),);
+          };
+          continue;
+        };
+        urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
+        sites.push(MU.fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json`),);
+        continue;
+      };
+      urls.push(`${i.url}/scripts/by-site/${host}.json`);
+      sites.push(MU.fetchURL(`${i.url}/scripts/by-site/${host}.json`),);
+    } else if(i.url.match(/(openuserjs.org|github.com)/gi)) {
+      urls.push(`${i.url}${host}`);
+      custom.push(MU.fetchURL(`${i.url}${host}`,'GET','text'),);
+    };
+  };
+  return Promise.all(sites).then((data) => {
+    let filterDeleted = data.filter(d => d.filter(ujs => !ujs.deleted)),
+    joinData = [...new Set([...filterDeleted[0], ...filterDeleted[1]])],
+    filterLang = joinData.filter((d) => {
+      if(cfg.filterlang) {
+        if(alang.length > 1) {
+          let rvalue = true;
+          for(const a of alang) {
+            if(!d.locale.includes(a)) {
+              rvalue = false;
+              continue;
+            };
+          };
+          return rvalue;
+        } else if(!d.locale.includes(clang)) return false;
+      };
+      return true;
+    });
+    cache.push({
+      host: host,
+      data: filterLang
+    });
+    dbg('Data', filterLang);
+    return filterLang;
+    // hermes.send('Data', {
+    //   list: filterLang
+    // });
+  }).catch(err);
+};
 
 webext.webRequest.onHeadersReceived.addListener(
   (e) => {
     if (Object.is(e.type, 'main_frame')) {
-      host = formatURL(e.url);
-      let cfg = Config.cachedLocalStorage,
-        testCache = isCached(host),
-        urls = [],
-        sites = [],
-        custom = [],
-        engines = cfg.engines.filter(e => e.enabled),
-        blacklist = cfg.blacklist.filter((b) => b.enabled),
-        isBlacklisted = false;
-      for (let b of blacklist) {
-        if (b.regex) {
-          let reg = new RegExp(b.url, b.flags),
-            testurl = reg.test(host);
-          if (!testurl) continue;
-          isBlacklisted = true;
-        }
-        if (!Array.isArray(b.url)) {
-          if (!host.includes(b.url)) continue;
-          isBlacklisted = true;
-        }
-        for (let c of b.url) {
-          if (!host.includes(c)) continue;
-          isBlacklisted = true;
-        }
-      }
-      log('Blacklisted: ', isBlacklisted, host);
-      if (isBlacklisted) {
-        return log(isBlacklisted);
-      };
-      if(!MU.isEmpty(testCache)) {
-        return;
-      };
-
-      for(let i of engines) {
-        if(i.url.match(/fork.org/gi)) {
-          if(cfg.filterlang) {
-            if(alang.length > 1) {
-              for(let a of alang) {
-                urls.push(`${i.url}/${a}/scripts/by-site/${host}.json`);
-                sites.push(MU.fetchURL(`${i.url}/${a}/scripts/by-site/${host}.json`),);
-              };
-              continue;
-            };
-            urls.push(`${i.url}/${clang}/scripts/by-site/${host}.json`);
-            sites.push(MU.fetchURL(`${i.url}/${clang}/scripts/by-site/${host}.json`),);
-            continue;
-          };
-          urls.push(`${i.url}/scripts/by-site/${host}.json`);
-          sites.push(MU.fetchURL(`${i.url}/scripts/by-site/${host}.json`),);
-        } else if(i.url.match(/(openuserjs.org|github.com)/gi)) {
-          urls.push(`${i.url}${host}`);
-          custom.push(MU.fetchURL(`${i.url}${host}`,'GET','text'),);
-        };
-      };
-      Promise.all(sites).then((data) => {
-        let filterDeleted = data.filter(d => d.filter(ujs => !ujs.deleted)),
-        joinData = [...new Set([...filterDeleted[0], ...filterDeleted[1]])],
-        filterLang = joinData.filter((d) => {
-          if(cfg.filterlang) {
-            if(alang.length > 1) {
-              let rvalue = true;
-              for(let a of alang) {
-                if(!d.locale.includes(a)) {
-                  rvalue = false;
-                  continue;
-                };
-              };
-              return rvalue;
-            } else if(!d.locale.includes(clang)) return false;
-          };
-          return true;
-        });
-        cache.push({
-          host: host,
-          data: filterLang
-        });
-        dbg(filterLang);
-        // hermes.send('Data', {
-        //   list: filterLang
-        // });
-      }).catch((e) => {throw new MU.error('Data',e)});
+      const loc = new URL(e.url);
+      webFetcher(loc.host);
     }
   },
   {
@@ -142,6 +144,8 @@ webext.webRequest.onHeadersReceived.addListener(
     ],
   }
 );
+
+
 /**
  * [handleMessage description]
  * @param  msg      The message itself. This is a JSON-ifiable object.
@@ -150,14 +154,20 @@ webext.webRequest.onHeadersReceived.addListener(
  */
 function handleMessage(msg, sender, response) {
   // log('Message Handler:', sender, msg);
-
   if (sender.url.includes('popup.html')) {
-    webext.tabs.query({ currentWindow: true, active: true }).then((tab) => {
-      let c = isCached(formatURL(tab[0].url));
-      if(!MU.isEmpty(c)) {
-        response(c[0].data);
-      };
-    });
+    if(msg.location) {
+      webFetcher(msg.location).then(data => response(data));
+    } else {
+      webext.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+        for (const tab of tabs) {
+          const loc = new URL(tab.url);
+          let cacheFilter = isCached(formatURL(loc.host));
+          if(!MU.isEmpty(cacheFilter)) {
+            response(cacheFilter[0].data);
+          };
+        };
+      });
+    };
   };
 
   if (msg.name) {

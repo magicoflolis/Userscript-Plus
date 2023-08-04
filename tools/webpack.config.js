@@ -17,7 +17,12 @@ module.exports = (env,args) => {
           transform(content) {
             const { version, description, author, homepage: homepage_url } = require('../package.json');
             const manifest = JSON.parse(content);
-            return JSON.stringify(Object.assign(manifest, { version, description, author, homepage_url }),null,' ');
+            return JSON.stringify(Object.assign(manifest, {
+              version,
+              description,
+              author,
+              homepage_url
+            }),null,' ');
           },
         },
         {
@@ -93,7 +98,7 @@ module.exports = (env,args) => {
       }
     },
     plugins,
-    experiments: {topLevelAwait: true,},
+    // experiments: {topLevelAwait: true,},
   },
   productionConfig = {
     mode: 'production',
@@ -101,6 +106,8 @@ module.exports = (env,args) => {
       minimize: true,
       minimizer: [
       new TerserPlugin({
+        // test: /\.m?js$/,
+        // minify: TerserPlugin.swcMinify,
         terserOptions: {
           format: {
             comments: false,
@@ -115,25 +122,13 @@ module.exports = (env,args) => {
     mode: 'development',
     devtool: 'source-map',
     optimization: {
-      minimize: false,
-      minimizer: [
-      new TerserPlugin({
-        // test: /\.m?js$/,
-        // minify: TerserPlugin.swcMinify,
-        terserOptions: {
-          format: {
-            comments: true,
-          },
-        },
-        extractComments: true,
-        parallel: true,
-      })],
+      minimize: false
     },
     watch: true,
     watchOptions: {
       poll: 1000,
       aggregateTimeout: 500,
-      ignored: /node_modules/,
+      ignored: /(node_modules|bower_components)/,
     },
   };
   switch(args.mode) {

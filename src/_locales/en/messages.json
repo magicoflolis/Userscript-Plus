@@ -20,11 +20,11 @@
   "muFilter": {
     "message": "Filter"
   },
-  "muMin": {
-    "message": "Minimize"
-  },
   "muMax": {
     "message": "Maximize"
+  },
+  "muMin": {
+    "message": "Minimize"
   },
   "muSearch": {
     "message": "Search"
@@ -43,9 +43,6 @@
   },
   "muLastUpdated": {
     "message": "Last Updated"
-  },
-  "muLegacy": {
-    "message": "Legacy"
   },
   "muTotalInstalls": {
     "message": "Total Installs"

@@ -1,11 +1,26 @@
 {
+	"$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
     "parser": {
-      "syntax": "ecmascript"
+      "syntax": "ecmascript",
+      "jsx": false,
+      "dynamicImport": false,
+      "privateMethod": false,
+      "functionBind": false,
+      "exportDefaultFrom": false,
+      "exportNamespaceFrom": false,
+      "decorators": false,
+      "decoratorsBeforeExport": false,
+      "topLevelAwait": false,
+      "importMeta": false
     },
     "target": "es2020"
   },
   "module": {
-    "type": "es6"
+    "type": "es6",
+    "strict": false,
+    "strictMode": true,
+    "lazy": false,
+    "noInterop": false
   }
 }

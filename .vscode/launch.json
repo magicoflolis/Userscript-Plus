@@ -3,7 +3,7 @@
   "compounds": [
       {
         "name": "Attach/Launch",
-        "configurations": ["Attach:Firefox", "Start:Firefox"]
+        "configurations": ["Attach:Firefox", "SF"]
       }
     ],
   "configurations": [
