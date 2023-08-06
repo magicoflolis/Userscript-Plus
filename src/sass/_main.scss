@@ -1,7 +1,18 @@
 $appBGColor: #495060;
 $appTXTColor: #ffffff;
+$chDefault: rgb(255, 255, 255, 0.568);
+$chGF: rgba(0, 183, 255, 0.568);
+$chGit: rgb(36, 41, 47, 0.568);
+$chOpen: rgb(237, 63, 20, 0.568);
+$gfColor: #2d8cf0;
+$labColor: rgb(73, 80, 96);
+$mujsA: rgb(231, 85, 49);
+$mujsAColor: #00b7ff;
+$mainbColor: rgba(0, 0, 0, 0);
+$mujsBtn: rgb(237, 63, 20);
+$txtAreaBG: #000;
 
-@at-root * {
+mujs-root * {
   @supports not (scrollbar-width: thin) {
     ::-webkit-scrollbar {
       width: 1.4vw;
@@ -34,16 +45,14 @@ $appTXTColor: #ffffff;
   }
   scrollbar-color: $appTXTColor #2e323d;
   scrollbar-width: thin;
-  &:not(.mujs-iframe) {
-    background: $appBGColor;
-    color: $appTXTColor;
-  }
+  background: $appBGColor;
+  color: $appTXTColor;
 }
 
-@at-root magic-userjs {
+@at-root mu-js {
   line-height: normal;
 }
-@at-root .magicuserjs-cfg {
+@at-root .mujs-cfg {
   line-height: 1.5;
 }
 
@@ -53,7 +62,8 @@ body.webext-page,
 }
 
 mujs-column,
-mujs-row {
+mujs-row,
+.mujs-sty-flex {
   display: flex;
 }
 
@@ -72,7 +82,7 @@ mujs-row {
   flex-direction: column;
 }
 
-magic-userjs {
+mu-js {
   cursor: default;
 }
 
@@ -95,7 +105,7 @@ magic-userjs {
   width: -moz-available;
   width: -webkit-fill-available;
   background: $appBGColor !important;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid $mainbColor;
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
   &.expanded {
@@ -122,29 +132,26 @@ magic-userjs {
   }
 }
 
-.count {
-  background: transparent;
-}
-
 .mainframe {
   background: transparent;
   position: fixed;
   bottom: 1rem;
   right: 1rem;
-  &:not(.hidden) {
-    z-index: 99999999999999999 !important;
-    display: block;
-  }
   count-frame {
     width: 2em;
     height: 1em;
+  }
+  &:not(.hidden) {
+    z-index: 99999999999999999 !important;
+    display: block;
   }
 }
 
 count-frame {
   border-radius: 16px;
-  padding: 0 .25em;
-  border: 2px solid rgba(0, 0, 0, 0);
+  // padding: 0.25em;
+  padding: 5px;
+  border: 2px solid $mainbColor;
   font-size: 16px;
   font-weight: 400;
   display: inline-block;
@@ -152,7 +159,7 @@ count-frame {
   min-width: 1em;
 }
 
-.magicuserjs-header {
+.mujs-header-prim {
   order: 0;
   display: flex;
   gap: 10px;
@@ -167,15 +174,15 @@ count-frame {
   place-content: space-between;
 }
 
-.magicuserjs-body {
+.mujs-body {
   overflow-x: hidden;
   order: 1;
-  .magicuserjs-ratings {
-    padding: 0 .25em;
+  .mujs-ratings {
+    padding: 0 0.25em;
     border: 1px solid $appTXTColor;
     border-radius: 10px;
   }
-  magicuserjs-btn svg {
+  mu-jsbtn svg {
     fill: $appTXTColor;
     width: 14px;
     height: 14px;
@@ -183,20 +190,20 @@ count-frame {
   }
 }
 
-.magicuserjs-cfg,
-.magicuserjs-body {
-  border: 1px solid rgba(0, 0, 0, 0);
+.mujs-cfg,
+.mujs-body {
+  border: 1px solid $mainbColor;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
 @media screen and (max-width: 1150px) {
-  .magicuserjs-cfg {
+  .mujs-cfg {
     margin: 0px auto 1rem auto !important;
   }
 }
 
-.magicuserjs-cfg {
+.mujs-cfg {
   @media screen and (max-height: 812px) {
     &:not(.webext-page) {
       flex-wrap: wrap;
@@ -211,35 +218,34 @@ count-frame {
     > label {
       display: flex;
       justify-content: space-between;
-      input[type*='number'] {
+      input:not([type='checkbox']) {
         position: relative;
         border-radius: 4px;
         border: 1px solid $appTXTColor;
       }
     }
   }
-  .magicuserjs-inlab {
+  .mujs-inlab {
     position: relative;
     width: 38px;
-    // border-radius: 20px;
     input[type*='checkbox'] {
       display: none;
       &:checked + label {
         margin-left: 0;
-        background-color: rgb(255, 255, 255, 0.568);
+        background-color: $chDefault;
         &:before {
           right: 0px;
         }
       }
-      &#greasyfork:checked + label,
-      &#sleazyfork:checked + label {
-        background-color: rgba(0, 183, 255, 0.568);
+      &[id='greasyfork']:checked + label,
+      &[id='sleazyfork']:checked + label {
+        background-color: $chGF;
       }
-      &#openuserjs:checked + label {
-        background-color: rgb(237, 63, 20, 0.568);
+      &[id='openuserjs']:checked + label {
+        background-color: $chOpen;
       }
-      &#github:checked + label {
-        background-color: rgb(36, 41, 47, 0.568);
+      &[id='github']:checked + label {
+        background-color: $chGit;
       }
     }
     label {
@@ -249,7 +255,7 @@ count-frame {
       height: 16px;
       border-radius: 20px;
       border: 1px solid $appTXTColor;
-      background-color: rgb(73, 80, 96);
+      background-color: $labColor;
       &:before {
         content: '';
         display: block;
@@ -264,9 +270,9 @@ count-frame {
       }
     }
   }
-  #blacklist {
+  [id='blacklist'] {
     overflow-y: auto;
-    background: #000;
+    background: $txtAreaBG;
     color: $appTXTColor;
     resize: vertical;
     outline: none;
@@ -302,8 +308,8 @@ table {
     border-bottom: 1px solid $appTXTColor;
   }
   td {
-    &.magicuserjs-uframe,
-    &.magicuserjs-list,
+    &.mujs-uframe,
+    &.mujs-list,
     &.install-btn {
       text-align: center;
     }
@@ -321,9 +327,9 @@ table {
   }
 }
 
-magicuserjs-a {
+mujs-a {
   display: inline-block;
-  &.magicuserjs-euser {
+  &.mujs-euser {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
@@ -333,35 +339,38 @@ magicuserjs-a {
   @media screen and (max-width: 800px) {
     &:not(.webext-page) {
       display: grid;
-      magicuserjs-btn {
+      mu-jsbtn {
         margin-left: 25%;
         margin-right: 25%;
       }
     }
   }
   &.sf {
-    magicuserjs-a {
-      color: rgb(231, 85, 49) !important;
+    mujs-a {
+      color: $mujsA !important;
     }
-    magicuserjs-btn {
-      background-color: rgb(237, 63, 20) !important;
-      border-color: rgb(237, 63, 20) !important;
+    mu-jsbtn {
+      background-color: $mujsBtn !important;
+      border-color: $mujsBtn !important;
     }
   }
   &:not(.sf) {
-    magicuserjs-a {
-      color: #00b7ff !important;
+    mujs-a {
+      color: $mujsAColor;
     }
-    magicuserjs-btn {
+    mu-jsbtn {
       color: $appTXTColor;
-      background-color: #2d8cf0;
-      border-color: #2d8cf0;
+      background-color: $gfColor;
+      border-color: $gfColor;
     }
   }
 }
 
-.magicuserjs-name {
+.mujs-name {
   display: grid;
+  > *:not(.mujs-homepage) {
+    margin-top: 3px;
+  }
   span {
     font-size: 0.8em !important;
   }
@@ -385,7 +394,7 @@ mujs-btn {
   }
 }
 
-magicuserjs-btn {
+mu-jsbtn {
   font-size: 14px;
   border-radius: 4px;
   font-style: normal;
@@ -396,16 +405,21 @@ magicuserjs-btn {
   display: block;
 }
 
-input[type*='number'],
-input[type*='text'] {
+// input[type*='number'],
+// input[type*='text'] {
+//   border: transparent;
+//   outline: none !important;
+// }
+// input[type='checkbox']
+input:not([type='checkbox']) {
   border: transparent;
   outline: none !important;
 }
 
-magicuserjs-a,
-magicuserjs-btn,
+mujs-a,
+mu-jsbtn,
 .mujs-pointer,
-.magicuserjs-cfg mujs-section *:not(input[type*='text'], input[type*='number']),
+.mujs-cfg mujs-section *:not(input[type='password'], input[type='text'], input[type='number']),
 .mainbtn,
 .mainframe,
 mujs-btn {
@@ -413,7 +427,7 @@ mujs-btn {
 }
 
 th,
-.magicuserjs-cfg *:not(input[type*='text'], input[type*='number']) {
+.mujs-cfg *:not(input[type='password'], input[type='text'], input[type='number']) {
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
   -ms-user-select: none !important;
@@ -422,11 +436,30 @@ th,
 
 mujs-btn,
 input,
-.magicuserjs-homepage {
+.mujs-homepage {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
+}
+
+.mujs-fltlist {
+  width: 170px;
+}
+
+.mujs-searcher {
+  width: 100px;
+}
+
+.mujs-sty-flex > mujs-btn {
+  margin: auto;
+}
+
+.mujs-invalid {
+  border-radius: 8px !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-color: red !important;
 }
