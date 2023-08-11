@@ -1992,17 +1992,17 @@ const onDomReady = () => {
       }
     }
 
-    cfg = MU.getValue('Config', defcfg)
-    const setConfig = (config) => {
-      for (const key in config) {
-        if (typeof config[key] === 'object') {
-          setConfig(cfg[key], config[key])
-        } else if (!hasOwn(cfg, key)) {
-          cfg[key] = defcfg[key]
+    const setConfig = (config = {}, lcfg = {}) => {
+      for (const [key, value] of Object.entries(config)) {
+        if (!hasOwn(lcfg, key)) {
+          lcfg[key] = config[key]
+        } else if (typeof value === 'object') {
+          setConfig(config[key], lcfg[key])
         }
       }
+      return lcfg
     }
-    setConfig(defcfg)
+    cfg = setConfig(defcfg, MU.getValue('Config'))
     sleazyRedirect()
     lang = langs[cfg.language] || langs[navLang] || langs.en
 
