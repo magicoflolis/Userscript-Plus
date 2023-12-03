@@ -9,7 +9,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
   },
   "userJS": {
-    "version": "6.0.1",
+    "version": "6.1.0",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues/new",
     "homepage": "https://github.com/magicoflolis/Userscript-Plus",
@@ -25,7 +25,7 @@
     "Dev:Server": "http-server ./tests/userscript -s --no-dotfiles -c-1",
     "build:Cr": "webpack --mode production --config=tools/webpack.config.js --env brws=chrome",
     "build:FF": "webpack --mode production --config=tools/webpack.config.js --env brws=firefox",
-    "Pub:UserJS": "concurrently \"pnpm run Pub:Sass\" \"node -r dotenv/config ./tools/userscript.mjs dotenv_config_path=./userscript/.env\"",
+    "Pub:UserJS": "concurrently \"pnpm run Pub:Sass\" \"node -r dotenv/config ./tools/userscript.mjs dotenv_config_path=./dist/.env\"",
     "Pub:Sass": "sass --no-source-map ./src/sass:./tests/compiled -s compressed",
     "Webpack:Cr": "webpack --progress --mode development --config=tools/webpack.config.js --env brws=chrome",
     "Webpack:FF": "webpack --progress --mode development --config=tools/webpack.config.js --env brws=firefox",

@@ -6,33 +6,42 @@
 	],
 	"settings": {
     "search.exclude": {
-      "**/node_modules": true,
-      "**/chrome_dist/js": true,
-      "**/dist/js": true
+      "**/build/**": true,
+      "**/dist/**": true,
+      "**/node_modules/**": true,
+      "**/Notes/**": true
     },
     "editor.formatOnSaveMode": "modifications",
-    "files.trimTrailingWhitespace": true,
-    "files.associations": {
-      ".eslintrc": "jsonc"
-    },
     "editor.codeActionsOnSave": {
       "source.fixAll": false,
       "source.fixAll.eslint": true
     },
-    "local-history.daysLimit": 7,
+    "explorer.excludeGitIgnore": true,
+    "files.exclude": {
+        "**/build/**": true,
+        "**/dist/**": true,
+        "**/node_modules/**": true,
+        "**/Notes/**": true
+    },
+    "files.trimTrailingWhitespace": true,
+    "local-history.daysLimit": 2,
     "local-history.maxDisplay": 10,
     "local-history.saveDelay": 0,
     "local-history.dateLocale": "en-US",
     "local-history.exclude": [
-      "**/.history/**",
-      "**/.vscode/**",
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/chrome_dist/**",
       "**/build/**",
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/Notes/**",
+      "**/.history/**",
+      "**/.vscode**",
+      "**/typings/**",
+      "**/out/**",
+      "**/chrome_dist/**",
       "**/*.code-workspace",
       "**/src/sass/**",
     ],
     "local-history.path": "${workspaceFolder}/.vscode",
+    "local-history.enabled": 2,
 	}
 }

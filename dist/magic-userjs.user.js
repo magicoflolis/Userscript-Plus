@@ -14,7 +14,7 @@
 // @description:ru-RU   Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @description:ru      Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
 // @author       Magic <magicoflolis@tuta.io>
-// @version      6.0.1
+// @version      6.1.0
 // @icon         data:image/png;base64,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
 // @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
 // @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
@@ -27,6 +27,11 @@
 // @connect      github.com
 // @connect      openuserjs.org
 // @match        https://*/*
+// @grant        GM.xmlHttpRequest
+// @grant        GM.openInTab
+// @grant        GM.getValue
+// @grant        GM.setValue
+// @grant        GM.info
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @grant        GM_getValue
@@ -42,7 +47,8 @@
 // ==/UserScript==
 
 /** Injected stylesheet https://github.com/magicoflolis/Userscript-Plus/tree/master/userscript/src/sass */
-const main_css = `mujs-root *{scrollbar-color:#fff #2e323d;scrollbar-width:thin;background:#495060;color:#fff}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:10px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:10px;background-color:#fff;background-image:-webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background-color:#fff}}mu-js{line-height:normal}.mujs-cfg{line-height:1.5}body.webext-page,.main{font-size:14px}mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:10px}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-row{flex-direction:column}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}.main{width:100%;width:-moz-available;width:-webkit-fill-available;background:#495060 !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-family:Arial,Helvetica,sans-serif}@media screen and (max-height: 450px){.main:not(.webext-page){height:100% !important;bottom:0rem !important;margin-left:0rem !important;margin-right:0rem !important;right:0rem !important}}.main.expanded{height:100% !important;bottom:0rem !important}.main:not(.webext-page){position:fixed;height:492px}.main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}.main:not(.webext-page):not(.expanded).auto-height{height:auto}.main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:1rem;right:1rem}.mainframe count-frame{width:2em;height:1em}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:16px;padding:5px;border:2px solid rgba(0,0,0,0);font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em}.mujs-header-prim{order:0;display:flex;gap:10px;border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;padding:10px;font-size:1em;place-content:space-between}.mujs-body{overflow-x:hidden;order:1}.mujs-body .mujs-ratings{padding:0 .25em;border:1px solid #fff;border-radius:10px}.mujs-body mu-jsbtn svg{fill:#fff;width:14px;height:14px;background:rgba(0,0,0,0)}.mujs-cfg,.mujs-body{border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}@media screen and (max-height: 812px){.mujs-cfg:not(.webext-page){flex-wrap:wrap;flex-direction:row !important}}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){position:relative;border-radius:4px;border:1px solid #fff}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type*=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type*=checkbox]:checked+label{margin-left:0;background-color:rgba(255,255,255,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type*=checkbox][id=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type*=checkbox][id=sleazyfork]:checked+label{background-color:rgba(0,183,255,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox][id=openuserjs]:checked+label{background-color:rgba(237,63,20,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox][id=github]:checked+label{background-color:rgba(36,41,47,.568)}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid #fff;background-color:#495060}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:#fff;position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg [id=blacklist]{overflow-y:auto;background:#000;color:#fff;resize:vertical;outline:none;border-style:none;font-family:monospace}.mujs-cfg [id=blacklist]:focus{outline:none}.mujs-cfg:not(.webext-page){order:2;margin:0px 25rem 1rem 25rem}table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 800px){table thead>tr{display:grid;grid-auto-flow:column}}@media screen and (max-width: 500px){table thead>tr{display:none !important}}table th,table td{border-bottom:1px solid #fff}table td.mujs-uframe,table td.mujs-list,table td.install-btn{text-align:center}table th{position:-webkit-sticky;position:sticky;top:0}table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){table th.mujs-header-name{width:auto !important}}mujs-a{display:inline-block}mujs-a.mujs-euser{padding-left:.5rem;padding-right:.5rem}@media screen and (max-width: 800px){.frame:not(.webext-page){display:grid}.frame:not(.webext-page) mu-jsbtn{margin-left:25%;margin-right:25%}}.frame.sf mujs-a{color:#e75531 !important}.frame.sf mu-jsbtn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.frame:not(.sf) mujs-a{color:#00b7ff}.frame:not(.sf) mu-jsbtn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.mujs-name{display:grid}.mujs-name>*:not(.mujs-homepage){margin-top:3px}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:#fff;width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block}input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}th,.mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}mujs-btn,input,.mujs-homepage{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}.mujs-fltlist{width:170px}.mujs-searcher{width:100px}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}`;
+const main_css = `mujs-root *{scrollbar-color:#fff #2e323d;scrollbar-width:thin;background:#495060;color:#fff}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:10px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:10px;background-color:#fff;background-image:-webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background-color:#fff}}mu-js{line-height:normal}.mujs-cfg{line-height:1.5}body.webext-page,.main{font-size:14px}mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:10px}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-row{flex-direction:column}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}.main{width:100%;width:-moz-available;width:-webkit-fill-available;background:#495060 !important;border:1px solid rgba(0,0,0,0);border-radius:10px;font-family:Arial,Helvetica,sans-serif}@media screen and (max-height: 450px){.main:not(.webext-page){height:100% !important;bottom:0rem !important;margin-left:0rem !important;margin-right:0rem !important;right:0rem !important}}.main.expanded{height:100% !important;bottom:0rem !important}.main:not(.webext-page){position:fixed;height:492px}.main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}.main:not(.webext-page):not(.expanded).auto-height{height:auto}.main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:1rem;right:1rem}.mainframe count-frame{width:2em;height:1em}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:16px;padding:5px;border:2px solid rgba(0,0,0,0);font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em}.mujs-header-prim{order:0;display:flex;gap:10px;border-bottom:1px solid #fff;border-top-left-radius:10px;border-top-right-radius:10px;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;padding:10px;font-size:1em;place-content:space-between}.mujs-body{overflow-x:hidden;order:1}.mujs-body .mujs-ratings{padding:0 .25em;border:1px solid #fff;border-radius:10px}.mujs-body mu-jsbtn svg{fill:#fff;width:14px;height:14px;background:rgba(0,0,0,0)}.mujs-cfg,.mujs-body{border:1px solid rgba(0,0,0,0);border-bottom-left-radius:10px;border-bottom-right-radius:10px}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}@media screen and (max-height: 812px){.mujs-cfg:not(.webext-page){flex-wrap:wrap;flex-direction:row !important}}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){position:relative;border-radius:4px;border:1px solid #fff}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type*=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type*=checkbox]:checked+label{margin-left:0;background-color:rgba(255,255,255,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type*=checkbox][id=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type*=checkbox][id=sleazyfork]:checked+label{background-color:rgba(0,183,255,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox][id=openuserjs]:checked+label{background-color:rgba(237,63,20,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox][id=github]:checked+label{background-color:rgba(36,41,47,.568)}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid #fff;background-color:#495060}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:#fff;position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg [id=blacklist]{overflow-y:auto;background:#000;color:#fff;resize:vertical;outline:none;border-style:none;font-family:monospace}.mujs-cfg [id=blacklist]:focus{outline:none}.mujs-cfg:not(.webext-page){order:2;margin:0px 25rem 1rem 25rem}table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 800px){table thead>tr{display:grid;grid-auto-flow:column}}@media screen and (max-width: 500px){table thead>tr{display:none !important}}table th,table td{border-bottom:1px solid #fff}table td.mujs-uframe,table td.mujs-list,table td.install-btn{text-align:center}table th{position:-webkit-sticky;position:sticky;top:0}table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){table th.mujs-header-name{width:auto !important}}mujs-a{display:inline-block}mujs-a.mujs-euser{padding-left:.5rem;padding-right:.5rem}@media screen and (max-width: 800px){.frame:not(.webext-page){display:grid}.frame:not(.webext-page) mu-jsbtn{margin-left:25%;margin-right:25%}}.frame.sf mujs-a{color:#e75531 !important}.frame.sf mu-jsbtn{background-color:#ed3f14 !important;border-color:#ed3f14 !important}.frame:not(.sf) mujs-a{color:#00b7ff}.frame:not(.sf) mu-jsbtn{color:#fff;background-color:#2d8cf0;border-color:#2d8cf0}.mujs-name{display:grid}.mujs-name>*:not(.mujs-homepage){margin-top:3px}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:400;font-variant:normal;text-transform:none;text-rendering:auto;border:1px solid #fff;font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:#fff;width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block}input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}th,.mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}mujs-btn,input,.mujs-homepage{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}.mujs-fltlist{width:170px}.mujs-searcher{width:100px}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}
+`;
 
 (() => {
 let userjs = (self.userjs = {})
@@ -90,20 +96,91 @@ const log = (...msg) => {
   )
 }
 //#endregion
+const MU = {}
 const hasOwn = Object.hasOwn || Object.prototype.hasOwnProperty.call
-const normalizeTarget = (target, root = document) => {
-  if (typeof target === 'string') {
-    return Array.from(root.querySelectorAll(target))
+const isElem = (obj) => {
+  /** @type { string } */
+  const s = Object.prototype.toString.call(obj)
+  return s.includes('Element')
+}
+const isStr = (obj) => {
+  /** @type { string } */
+  const s = Object.prototype.toString.call(obj)
+  return s.includes('String')
+}
+const isObj = (obj) => {
+  /** @type { string } */
+  const s = Object.prototype.toString.call(obj)
+  return s.includes('Object')
+}
+const isFN = (obj) => {
+  /** @type { string } */
+  const s = Object.prototype.toString.call(obj)
+  return s.includes('Function')
+}
+/**
+ * Object is Null
+ * @param {*} obj - Object
+ * @returns {boolean} Returns if statement true or false
+ */
+const isNull = (obj) => {
+  return Object.is(obj, null) || Object.is(obj, undefined)
+}
+/**
+ * Object is Blank
+ * @param {*} obj - Array, Set, Object or String
+ * @returns {boolean} Returns if statement true or false
+ */
+const isBlank = (obj) => {
+  return (
+    (typeof obj === 'string' && Object.is(obj.trim(), '')) ||
+    ((obj instanceof Set || obj instanceof Map) && Object.is(obj.size, 0)) ||
+    (Array.isArray(obj) && Object.is(obj.length, 0)) ||
+    (isObj(obj) && Object.is(Object.keys(obj).length, 0))
+  )
+}
+/**
+ * Object is Empty
+ * @param {*} obj - Array, object or string
+ * @returns {boolean} Returns if statement true or false
+ */
+const isEmpty = (obj) => {
+  return isNull(obj) || isBlank(obj)
+}
+/**
+ * @template B
+ * @param { {} } objA
+ * @param { B } objB
+ * @returns { B }
+ */
+const setObj = (objA = {}, objB = {}) => {
+  objA = objA || {}
+  objB = objB || {}
+  for (const [key, value] of Object.entries(objA)) {
+    if (!hasOwn(objB, key)) {
+      objB[key] = value
+    } else if (typeof value === 'object') {
+      setObj(value, objB[key])
+    }
   }
-  if (target instanceof Element) {
-    return [target]
-  }
-  if (target === null) {
+  return objB
+}
+const normalizeTarget = (target, root = document, toQuery = true) => {
+  if (isNull(target)) {
     return []
   }
   if (Array.isArray(target)) {
     return target
   }
+  if (isStr(target)) {
+    return toQuery ? Array.from(root.querySelectorAll(target)) : [target]
+  }
+  if (isElem(target)) {
+    return [target]
+  }
+  // if (target instanceof Element) {
+  //   return [target]
+  // }
   return Array.from(target)
 }
 class dom {
@@ -120,6 +197,11 @@ class dom {
     }
   }
 
+  /**
+   * @template { keyof HTMLElementTagNameMap } K
+   * @param { K } a
+   * @returns { HTMLElementTagNameMap[K] | undefined }
+   */
   static create(a) {
     if (typeof a === 'string') {
       return document.createElement(a)
@@ -187,47 +269,11 @@ dom.cl = class {
     return false
   }
 }
-const isGM = typeof GM !== 'undefined'
+class Supports {
+  static gm = typeof GM !== 'undefined'
+}
 const isMobile = /Mobile|Tablet/.test(navigator.userAgent)
 const navLang = navigator.language.split('-')[0] ?? 'en'
-/**
- * Object is Null
- * @param {Object} obj - Object
- * @returns {boolean} Returns if statement true or false
- */
-const isNull = (obj) => {
-  return Object.is(obj, null) || Object.is(obj, undefined)
-}
-/**
- * Object is Blank
- * @param {(Object|Object[]|string)} obj - Array, Set, Object or String
- * @returns {boolean} Returns if statement true or false
- */
-const isBlank = (obj) => {
-  return (
-    (typeof obj === 'string' && Object.is(obj.trim(), '')) ||
-    (obj instanceof Set && Object.is(obj.size, 0)) ||
-    (Array.isArray(obj) && Object.is(obj.length, 0)) ||
-    (obj instanceof Object &&
-      typeof obj.entries !== 'function' &&
-      Object.is(Object.keys(obj).length, 0))
-  )
-}
-/**
- * Object is Empty
- * @param {(Object|Object[]|string)} obj - Array, object or string
- * @returns {boolean} Returns if statement true or false
- */
-const isEmpty = (obj) => isNull(obj) || isBlank(obj)
-const isFunction = (obj) => {
-  return typeof obj === 'function' || obj instanceof Function
-}
-/**
- * setTimeout w/ Promise
- * @param {number} ms - Timeout in milliseconds (ms)
- * @returns {Promise} Promise object
- */
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const alang = []
 const defcfg = {
   injection: 'interactive',
@@ -475,7 +521,7 @@ const langs = {
 }
 /**
  * preventDefault + stopPropagation
- * @param {Object} e - Selected Element
+ * @param {Event} e - Selected Element
  */
 const halt = (e) => {
   e.preventDefault()
@@ -483,131 +529,131 @@ const halt = (e) => {
 }
 /**
  * Add Event Listener
- * @param {Object} root - Selected Element
- * @param {string} type - root Event Listener
- * @param {Function} callback - Callback function
- * @param {Object} [options={}] - (Optional) Options
- * @returns {Object} Returns selected Element
+ * @template { keyof HTMLElementEventMap } K
+ * @template { HTMLElement } R
+ * @param { R } root - Selected Element
+ * @param { K } event - root Event Listener
+ * @param { (this: R, ev: HTMLElementEventMap[K]) => any } callback - Callback function
+ * @param { boolean | AddEventListenerOptions } [options={}] - (Optional) Options
  */
-const ael = (root = document, type, callback, options = {}) => {
+const ael = (root, event, callback, options = {}) => {
+  let el
   try {
-    root =
+    el =
       root ||
+      document ||
+      document.querySelector(':root') ||
       document.documentElement ||
-      document.body ||
       document.head ||
-      document.querySelector(':root')
-    if (isMobile && type === 'click') {
-      type = 'mouseup'
-      root.addEventListener('touchstart', callback)
-      root.addEventListener('touchend', callback)
+      document.body
+    if (isMobile && event === 'click') {
+      event = 'mouseup'
+      el.addEventListener('touchstart', callback)
+      el.addEventListener('touchend', callback)
     }
-    if (type === 'fclick') {
-      type = 'click'
+    if (event === 'fclick') {
+      event = 'click'
     }
-    return root.addEventListener(type, callback, options)
+    el.addEventListener(event, callback, options)
   } catch (ex) {
-    return err(ex)
+    err(ex)
   }
 }
 /**
- * Prefix for document.querySelectorAll()
- * @param {Object} element - Elements for query selection
- * @param {Object} [root=document] - Root selector Element
- * @returns {Object} Returns root.querySelectorAll(element)
+ * Prefix for `document.querySelectorAll()`
+ * @template { Element } E
+ * @param { string } selectors - Elements for query selection
+ * @param { E } root - Root selector Element
+ * @returns { NodeListOf<E> }
  */
-const qsA = (element, root = document) => {
-  root =
-    root ||
-    document.documentElement ||
-    document.body ||
-    document.head ||
-    document.querySelector(':root')
-  return root.querySelectorAll(element)
+const qsA = (selectors, root) => {
+  try {
+    return (root || document).querySelectorAll(selectors)
+  } catch (ex) {
+    err(ex)
+  }
+  return []
 }
 /**
- * Prefix for document.querySelector()
- * @param {Object} element - Element for query selection
- * @param {Object} [root=document] - Root selector Element
- * @returns {Object} Returns root.querySelector(element)
+ * Prefix for `document.querySelector()`
+ * @template { Element } E
+ * @param { string } selector - Element for query selection
+ * @param { E } root - Root selector Element
+ * @returns { E | null }
  */
-const qs = (element, root = document) => {
-  root =
-    root ||
-    document.documentElement ||
-    document.body ||
-    document.head ||
-    document.querySelector(':root')
-  return root.querySelector(element)
+const qs = (selector, root) => {
+  try {
+    return (root || document).querySelector(selector)
+  } catch (ex) {
+    err(ex)
+  }
+  return null
 }
 /**
- * Prefix for document.querySelector() w/ Promise
- * @param {Object} element - Element for query selection
- * @param {Object} [root=document] - Root selector Element
- * @returns {Object} Returns root.querySelector(element)
+ * Prefix for `document.querySelector()` w/ Promise
+ * @template { Element } E
+ * @param { string } selector - Element for query selection
+ * @param { E } root - Root selector Element
+ * @returns { Promise<E | null> }
  */
-const query = async (element, root = document) => {
-  const waitForElement = async () => {
-    while (isNull(root.querySelector(element))) {
+const query = async (selector, root) => {
+  let el = null
+  try {
+    el = root || document
+    while (isNull(el.querySelector(selector))) {
       await new Promise((resolve) => requestAnimationFrame(resolve))
     }
-    return root.querySelector(element)
+    return el.querySelector(selector)
+  } catch (ex) {
+    err(ex)
   }
-  return Promise.any([
-    waitForElement(),
-    delay(5000).then(() =>
-      Promise.reject(new Error('Unable to locate element')),
-    ),
-  ])
+  return el
+}
+const formAttrs = (elem, attr = {}) => {
+  if (isElem(elem)) {
+    for (const key in attr) {
+      if (isObj(attr[key])) {
+        formAttrs(elem[key], attr[key])
+      } else if (isFN(attr[key])) {
+        if (key === 'container') {
+          key()
+          continue
+        }
+        if (/^on/.test(key)) {
+          elem[key] = attr[key]
+          continue
+        }
+        ael(elem, key, attr[key])
+      } else if (key === 'class') {
+        elem.className = attr[key]
+      } else {
+        elem[key] = attr[key]
+      }
+    }
+  }
 }
 /**
  * Create/Make Element
- * @param {string} element - Element to create
- * @param {string} cname - (Optional) Element class name
- * @param {Object} [attrs={}] - (Optional) Element attributes
- * @returns {Object} Returns created Element
+ * @template { keyof HTMLElementTagNameMap } K
+ * @param { K } tagName - Element to create
+ * @param { string } cname - (Optional) Element class name
+ * @param { keyof HTMLElement } [attrs={}] - (Optional) Element attributes
+ * @returns { HTMLElementTagNameMap[K] } Returns created Element
  */
-const make = (element, cname, attrs = {}) => {
+const make = (tagName, cname, attrs = {}) => {
   let el
   try {
-    el = dom.create(element)
-    if (!isEmpty(cname)) {
-      if (typeof cname === 'string') {
-        el.className = cname
-      }
+    el = dom.create(tagName)
+    if (!isEmpty(cname) && isStr(cname)) {
+      el.className = cname
     }
-    if (!isEmpty(attrs)) {
-      /**
-       * Form Attributes of Element
-       * @param {Object} element - Element
-       * @param {Object} [attrib={}] - (Optional) Element attributes
-       */
-      const formAttrs = (element, attr = {}) => {
-        for (const key in attr) {
-          if (typeof attr[key] === 'object') {
-            formAttrs(element[key], attr[key])
-          } else if (typeof attr[key] === 'function') {
-            if (key === 'container') {
-              key()
-              continue
-            }
-            if (/^on/.test(key)) {
-              element[key] = attr[key]
-              continue
-            }
-            ael(element, key, attrs[key])
-          } else {
-            element[key] = attr[key]
-          }
-        }
-      }
+    if (!isEmpty(attrs) && isObj(attrs)) {
       formAttrs(el, attrs)
     }
-    return el
   } catch (ex) {
     err(ex)
-    return el
   }
+  return el
 }
 const iconSVG = {
   cfg: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7848 0.449982C13.8239 0.449982 14.7167 1.16546 14.9122 2.15495L14.9991 2.59495C15.3408 4.32442 17.1859 5.35722 18.9016 4.7794L19.3383 4.63233C20.3199 4.30175 21.4054 4.69358 21.9249 5.56605L22.7097 6.88386C23.2293 7.75636 23.0365 8.86366 22.2504 9.52253L21.9008 9.81555C20.5267 10.9672 20.5267 13.0328 21.9008 14.1844L22.2504 14.4774C23.0365 15.1363 23.2293 16.2436 22.7097 17.1161L21.925 18.4339C21.4054 19.3064 20.3199 19.6982 19.3382 19.3676L18.9017 19.2205C17.1859 18.6426 15.3408 19.6754 14.9991 21.405L14.9122 21.845C14.7167 22.8345 13.8239 23.55 12.7848 23.55H11.2152C10.1761 23.55 9.28331 22.8345 9.08781 21.8451L9.00082 21.4048C8.65909 19.6754 6.81395 18.6426 5.09822 19.2205L4.66179 19.3675C3.68016 19.6982 2.59465 19.3063 2.07505 18.4338L1.2903 17.1161C0.770719 16.2436 0.963446 15.1363 1.74956 14.4774L2.09922 14.1844C3.47324 13.0327 3.47324 10.9672 2.09922 9.8156L1.74956 9.52254C0.963446 8.86366 0.77072 7.75638 1.2903 6.8839L2.07508 5.56608C2.59466 4.69359 3.68014 4.30176 4.66176 4.63236L5.09831 4.77939C6.81401 5.35722 8.65909 4.32449 9.00082 2.59506L9.0878 2.15487C9.28331 1.16542 10.176 0.449982 11.2152 0.449982H12.7848ZM12 15.3C13.8225 15.3 15.3 13.8225 15.3 12C15.3 10.1774 13.8225 8.69998 12 8.69998C10.1774 8.69998 8.69997 10.1774 8.69997 12C8.69997 13.8225 10.1774 15.3 12 15.3Z" fill="#ffffff"></path> </g></svg>',
@@ -658,118 +704,41 @@ const Timeout = class {
     })
   }
 }
-const MU = {
-  /**
-   * Get Value
-   * @param {string} key - Key to get the value of
-   * @param {Object} def - Fallback default value of key
-   * @returns {Object} Value or default value of key
-   * @link https://violentmonkey.github.io/api/gm/#gm_getvalue
-   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
-   */
-  getValue(key, def = {}) {
-    try {
-      const params = JSON.stringify(def)
-      if (isGM) {
-        return JSON.parse(GM_getValue(key, params))
-      }
-      return window.localStorage.getItem(`MUJS-${key}`)
-        ? JSON.parse(window.localStorage.getItem(`MUJS-${key}`))
-        : def
-    } catch (ex) {
-      err(ex)
-    }
-  },
-  /**
-   * Get info of script
-   * @returns {Object} Script info
-   * @link https://violentmonkey.github.io/api/gm/#gm_info
-   */
-  info: isGM
-    ? GM_info
-    : {
-        script: {
-          icon: '',
-          name: 'Magic Userscript+',
-          namespace: 'https://github.com/magicoflolis/Userscript-Plus',
-          updateURL: 'https://github.com/magicoflolis/Userscript-Plus/releases',
-          version: 'Bookmarklet',
-        },
-      },
-  /**
-   * Open a new window
-   * @param {string} url - URL of webpage to open
-   * @param {object} params - GM parameters
-   * @returns {object} GM_openInTab object with Window object as a fallback
-   * @link https://violentmonkey.github.io/api/gm/#gm_openintab
-   * @link https://developer.mozilla.org/docs/Web/API/Window/open
-   */
-  openInTab(
-    url,
-    params = {
-      active: true,
-      insert: true,
-    },
-    features,
-  ) {
-    if (!isGM && isBlank(params)) {
-      params = '_blank'
-    }
-    if (features) {
-      return window.open(url, params, features)
-    }
-    return isGM ? GM_openInTab(url, params) : window.open(url, params)
-  },
-  /**
-   * Set value
-   * @param {string} key - Key to set the value of
-   * @param {Object} v - Value of key
-   * @returns {Promise} Saves key to either GM managed storage or webpages localstorage
-   * @link https://violentmonkey.github.io/api/gm/#gm_setvalue
-   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
-   */
-  setValue(key, v) {
-    return new Promise((resolve) => {
-      v = typeof v !== 'string' ? JSON.stringify(v ?? {}) : v
-      if (isGM) {
-        resolve(GM_setValue(key, v))
-      } else {
-        resolve(window.localStorage.setItem(`MUJS-${key}`, v))
-      }
-    })
-  },
-  xmlRequest: isGM
-    ? GM_xmlhttpRequest
-    : () => {
-        return {}
-      },
+const bscStr = (str = '', lowerCase = true) => {
+  const txt = str[lowerCase ? 'toLowerCase' : 'toUpperCase']()
+  return txt.replaceAll(/\W/g, '')
+}
+const Network = {
   /**
    * Fetch a URL with fetch API as fallback
-   *
+   * @param { RequestInfo | URL } url
+   * @param { GM.Request["method"] | Request["method"] } method
+   * @param { GM.Request["responseType"] | Network["responseType"] } responseType
+   * @param { RequestInit | GM.Request | XMLHttpRequest } data
+   * @param { boolean } forcefetch
+   * @returns { Promise<GM.Response<any> | Response> }
    * When GM is supported, makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy
-   * @param {string} url - The URL to fetch
-   * @param {string} method - Fetch method
-   * @param {string} responseType - Response type
-   * @param {Object} data - Fetch parameters
-   * @param {boolean} forcefetch - Force use fetch API
-   * @returns {*} Fetch results
    * @link https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest
    * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
    */
   fetchURL(
-    url = '',
+    url,
     method = 'GET',
     responseType = 'json',
     data = {},
     forcefetch = false,
   ) {
     return new Promise((resolve, reject) => {
-      responseType = responseType.toLocaleLowerCase()
+      if (isEmpty(url)) {
+        reject(new Error('URL field is blank'))
+      }
+      method = bscStr(method, false)
+      responseType = bscStr(responseType)
       const params = {
-        method: method.toLocaleUpperCase(),
+        method,
         ...data,
       }
-      if (isGM && !forcefetch) {
+      if (Supports.gm && !forcefetch) {
         if (params.credentials) {
           Object.assign(params, {
             anonymous: false,
@@ -781,78 +750,263 @@ const MU = {
           }
           delete params.credentials
         }
-      } else {
-        if (params.onprogress) {
-          delete params.onprogress
-        }
+      } else if (params.onprogress) {
+        delete params.onprogress
       }
-      if (/buffer/i.test(responseType)) {
-        fetch(url, params)
-          .then((response) => {
-            if (!response.ok) reject(response)
-            resolve(response.arrayBuffer())
-          })
-          .catch(reject)
-      } else if (isGM && !forcefetch) {
-        MU.xmlRequest({
+      /**
+       * @param { Response } response
+       * @returns { Response | Document }
+       */
+      const fetchResp = (response) => {
+        if (!response.ok) reject(response)
+        const check = (str = 'text') => {
+          return isFN(response[str]) ? response[str]() : response
+        }
+        if (responseType.match(/buffer/i)) {
+          resolve(check('arrayBuffer'))
+        } else if (responseType.match(/json/i)) {
+          resolve(check('json'))
+        } else if (responseType.match(/text/i)) {
+          resolve(check('text'))
+        } else if (responseType.match(/blob/i)) {
+          resolve(check('blob'))
+        } else if (responseType.match(/formdata/i)) {
+          resolve(check('formData'))
+        } else if (responseType.match(/clone/i)) {
+          resolve(check('clone'))
+        } else if (responseType.match(/document/i) && isFN(response.text)) {
+          const respData = new DOMParser().parseFromString(
+            response.text(),
+            'text/html',
+          )
+          resolve(respData)
+        }
+        resolve(response)
+      }
+      if (responseType.match(/buffer/i)) {
+        fetch(url, params).then(fetchResp)
+      } else if (Supports.gm && !forcefetch) {
+        Network.xmlRequest({
           url,
           responseType,
           ...params,
           onerror: reject,
           onload: (r) => {
             if (r.status !== 200) reject(new Error(`${r.status} ${url}`))
-            if (/basic/i.test(responseType)) resolve(r)
+            if (responseType.match(/basic/i)) resolve(r)
             resolve(r.response)
           },
         })
       } else {
-        fetch(url, params)
-          .then((response) => {
-            if (!response.ok) reject(response)
-            if (/json/i.test(responseType)) {
-              resolve(response.json())
-            } else if (/text/i.test(responseType)) {
-              resolve(response.text())
-            } else if (/blob/i.test(responseType)) {
-              resolve(response.blob())
-            } else if (/document/i.test(responseType)) {
-              const data = new DOMParser().parseFromString(
-                response.text(),
-                'text/html',
-              )
-              resolve(data)
+        fetch(url, params).then(fetchResp)
+      }
+    }).catch(err)
+  },
+  format(bytes, decimals = 2) {
+    if (Number.isNaN(bytes)) return '0 Bytes'
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${
+      Network.sizes[i]
+    }`
+  },
+  prog(evt) {
+    return Object.is(evt.total, 0)
+      ? Network.format(evt.loaded)
+      : `${+((evt.loaded / evt.total) * 100).toFixed(2)}%`
+  },
+  sizes: ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+  xmlRequest(details) {
+    try {
+      if (Supports.gm) {
+        const req = isFN(GM.xmlHttpRequest)
+          ? GM.xmlHttpRequest
+          : GM_xmlhttpRequest
+        return req(details)
+      }
+      return new Promise((resolve, reject) => {
+        const req = new XMLHttpRequest()
+        let method = 'GET'
+        let url = 'about:blank'
+        let body
+        for (const [key, value] of Object.entries(details)) {
+          if (key === 'onload') {
+            req.addEventListener('load', () => {
+              if (isFN(value)) {
+                value(req)
+              }
+              resolve(req)
+            })
+          } else if (key === 'onerror') {
+            req.addEventListener('error', (evt) => {
+              if (isFN(value)) {
+                value(evt)
+              }
+              reject(evt)
+            })
+          } else if (key === 'onabort') {
+            req.addEventListener('abort', (evt) => {
+              if (isFN(value)) {
+                value(evt)
+              }
+              reject(evt)
+            })
+          } else if (key === 'onprogress') {
+            req.addEventListener('progress', value)
+          } else if (key === 'responseType') {
+            if (value.match(/buffer|blob|document|json|text/i)) {
+              if (value.match(/buffer/i)) {
+                req.responseType = 'arraybuffer'
+              } else {
+                req.responseType = value
+              }
             }
-            resolve(response)
-          })
-          .catch(reject)
+          } else if (key === 'method') {
+            method = value
+          } else if (key === 'url') {
+            url = value
+          } else if (key === 'body') {
+            body = value
+          }
+        }
+        req.open(method, url)
+
+        if (isEmpty(req.responseType)) {
+          req.responseType = 'text'
+        }
+
+        if (body) {
+          req.send(body)
+        } else {
+          req.send()
+        }
+      })
+    } catch (ex) {
+      err(ex)
+    }
+  },
+}
+/**
+ * Get info of script
+ * @returns {object} Script info
+ * @link https://violentmonkey.github.io/api/gm/#gm_info
+ */
+MU.info = Supports.gm
+  ? isFN(GM.info)
+    ? GM.info
+    : GM_info
+  : {
+      script: {
+        icon: '',
+        name: 'Magic Userscript+',
+        namespace: 'https://github.com/magicoflolis/Userscript-Plus',
+        updateURL: 'https://github.com/magicoflolis/Userscript-Plus/releases',
+        version: 'Bookmarklet',
+      },
+    }
+
+MU.tab = {
+  /**
+   * Open a new window
+   * @param {string} url - URL of webpage to open
+   * @param {object} params - GM parameters
+   * @returns {object} GM_openInTab object with Window object as a fallback
+   * @link https://violentmonkey.github.io/api/gm/#gm_openintab
+   * @link https://developer.mozilla.org/docs/Web/API/Window/open
+   */
+  open(
+    url,
+    params = {
+      active: true,
+      insert: true,
+    },
+    features,
+  ) {
+    if (!Supports.gm && isBlank(params)) {
+      params = '_blank'
+    }
+    if (features) {
+      return window.open(url, params, features)
+    }
+    if (Supports.gm) {
+      let GMType
+      if (isFN(GM.openInTab)) {
+        GMType = GM.openInTab(url, params)
+      } else {
+        GMType = GM_openInTab(url, params)
+      }
+      return GMType
+    }
+    return window.open(url, params)
+  },
+}
+MU.storage = {
+  getItem(key) {
+    return window.localStorage.getItem(key)
+  },
+  has(key) {
+    return !isNull(this.getItem(key))
+  },
+  setItem(key, value) {
+    window.localStorage.setItem(key, value)
+  },
+  remove(key) {
+    window.localStorage.removeItem(key)
+  },
+  /**
+   * Set value
+   * @param {string} key - Key to set the value of
+   * @param {object} v - Value of key
+   * @returns {Promise} Saves key to either GM managed storage or webpages localstorage
+   * @link https://violentmonkey.github.io/api/gm/#gm_setvalue
+   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+   */
+  setValue(key, v) {
+    return new Promise((resolve) => {
+      v = isStr(v) ? v : JSON.stringify(v ?? {})
+      if (Supports.gm) {
+        let GMType
+        if (isFN(GM.setValue)) {
+          GMType = GM.setValue(key, v)
+        } else {
+          GMType = GM_setValue(key, v)
+        }
+        resolve(GMType)
+      } else {
+        resolve(this.setItem(`MUJS-${key}`, v))
       }
     })
   },
-}
-MU.storage = class {
-  static getItem(key) {
-    return window.localStorage.getItem(key)
-  }
-
-  static has(key) {
-    return !isNull(this.getItem(key))
-  }
-
-  static setItem(key, value) {
-    return window.localStorage.setItem(key, value)
-  }
-
-  static remove(key) {
-    return window.localStorage.removeItem(key)
-  }
+  /**
+   * Get Value
+   * @link https://violentmonkey.github.io/api/gm/#gm_getvalue
+   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+   */
+  async getValue(key, def = {}) {
+    try {
+      if (Supports.gm) {
+        let GMType
+        if (isFN(GM.getValue)) {
+          GMType = await GM.getValue(key, JSON.stringify(def))
+        } else {
+          GMType = GM_getValue(key, JSON.stringify(def))
+        }
+        return JSON.parse(GMType)
+      }
+      return this.has(`MUJS-${key}`)
+        ? JSON.parse(this.getItem(`MUJS-${key}`))
+        : def
+    } catch (ex) {
+      err(ex)
+    }
+  },
 }
 const Container = class {
   constructor() {
     this.remove = this.remove.bind(this)
     this.onFrameLoad = this.onFrameLoad.bind(this)
-    this.supported = isFunction(
-      document.createElement('main-userjs').attachShadow,
-    )
+    this.supported = isFN(document.createElement('main-userjs').attachShadow)
     this.ready = false
     if (this.supported) {
       this.frame = make('main-userjs', '', {
@@ -879,32 +1033,23 @@ const Container = class {
     ael(window.self, 'beforeunload', this.remove)
     // info('Container:', this)
   }
+  /**
+   * @param {Function} callback
+   */
+  async inject(callback) {
+    while (this.ready === false) {
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    }
 
-  inject() {
-    try {
-      if (this.ready === false) {
-        this.waitFor(this.ready === false).then(this.inject)
-      }
-      if (!document.body) {
-        query('body').then(this.inject)
-        return
-      }
-      document.body.appendChild(this.frame)
-    } catch (ex) {
-      err(ex)
+    document.documentElement.appendChild(this.frame)
+
+    if (isFN(callback)) {
+      callback.call({}, this.root)
     }
   }
 
   remove() {
     this.frame.remove()
-  }
-
-  async onReady(callback) {
-    await this.waitFor(this.ready === false)
-
-    if (isFunction(callback)) {
-      callback(this.root)
-    }
   }
 
   onFrameLoad(iFrame) {
@@ -913,13 +1058,6 @@ const Container = class {
 
     this.root.classList.add('mujs-iframe')
     iFrame.target.contentDocument.body.classList.add('mujs-iframe')
-  }
-
-  async waitFor(obj) {
-    while (obj) {
-      await new Promise((resolve) => requestAnimationFrame(resolve))
-    }
-    return true
   }
 }
 const container = new Container()
@@ -947,6 +1085,13 @@ const sleazyRedirect = () => {
 const main = (injCon) => {
   try {
     //#region Static Elements
+    const mujsRoot = make('mujs-root')
+
+    const usercss = make('style', '', { innerHTML: main_css })
+    usercss.dataset.insertedBy = 'userscript-plus'
+    usercss.dataset.role = 'primary-stylesheet'
+    mujsRoot.append(usercss)
+
     const table = make('table')
     const tabbody = make('tbody')
     const tabhead = make('thead')
@@ -971,13 +1116,6 @@ const main = (injCon) => {
       innerHTML: '0',
     })
     const rateContainer = make('mujs-column', 'rate-container')
-    const usercss = make('style', '', {
-      dataset: {
-        insertedBy: 'userscript-plus',
-        role: 'primary-stylesheet',
-      },
-      innerHTML: main_css,
-    })
     //#endregion
 
     const template = {
@@ -1061,7 +1199,7 @@ const main = (injCon) => {
 
       save() {
         this.unsaved = false
-        MU.setValue('Config', cfg)
+        MU.storage.setValue('Config', cfg)
         log('Saved:', cfg)
       }
 
@@ -1145,7 +1283,7 @@ const main = (injCon) => {
         innerHTML: ujs.name,
         onclick(e) {
           halt(e)
-          MU.openInTab(ujs.url)
+          MU.tab.open(ujs.url)
         },
       })
       const fver = make('mu-js', 'mujs-list', {
@@ -1199,7 +1337,7 @@ const main = (injCon) => {
         innerHTML: `${iconSVG.install} ${lang.install}`,
         onclick(e) {
           halt(e)
-          MU.openInTab(ujs.code_url)
+          MU.tab.open(ujs.code_url)
         },
       })
       for (const u of ujs.users) {
@@ -1207,7 +1345,7 @@ const main = (injCon) => {
           innerHTML: u.name,
           onclick(e) {
             halt(e)
-            MU.openInTab(u.url)
+            MU.tab.open(u.url)
           },
         })
         uframe.append(user)
@@ -1231,7 +1369,7 @@ const main = (injCon) => {
     }
     const makerow = (desc, type, nm, attrs = {}) => {
       const sec = make('mujs-section', '', {
-        style: !isGM && nm === 'cache' ? 'display: none;' : '',
+        style: !Supports.gm && nm === 'cache' ? 'display: none;' : '',
       })
       const lb = make('label')
       const divDesc = make('mu-js', '', {
@@ -1325,6 +1463,7 @@ const main = (injCon) => {
         }
         for (const engine of engines) {
           const forkFN = async (data) => {
+            if (!data) return
             const hideData = []
             const filterDeleted = data.filter((ujs) => !ujs.deleted)
             const filterLang = filterDeleted.filter((d) => {
@@ -1349,7 +1488,11 @@ const main = (injCon) => {
             if (!isBlank(hideData)) {
               const hds = []
               for (const h of hideData) {
-                const txt = await MU.fetchURL(h.code_url, 'GET', 'text')
+                const txt = await Network.fetchURL(
+                  h.code_url,
+                  'GET',
+                  'text',
+                ).catch(MUJS.showError)
                 const headers = txt.match(/\/\/\s@[\w][\s\S]+/g) || []
                 if (headers.length > 0) {
                   const regName = new RegExp(`// @name:${navLang}\\s+.+`, 'gi')
@@ -1542,7 +1685,7 @@ const main = (injCon) => {
             if (cfg.filterlang) {
               if (alang.length > 1) {
                 for (const a of alang) {
-                  MU.fetchURL(
+                  Network.fetchURL(
                     `${eURL}/${a}/scripts/by-site/${host}.json?page=1`,
                   )
                     .then(forkFN)
@@ -1550,14 +1693,14 @@ const main = (injCon) => {
                 }
                 continue
               }
-              MU.fetchURL(
+              Network.fetchURL(
                 `${eURL}/${navLang}/scripts/by-site/${host}.json?page=1`,
               )
                 .then(forkFN)
                 .catch(MUJS.showError)
               continue
             }
-            MU.fetchURL(`${eURL}/scripts/by-site/${host}.json`)
+            Network.fetchURL(`${eURL}/scripts/by-site/${host}.json`)
               .then(forkFN)
               .catch(MUJS.showError)
           } else if (engine.name.match(/(openuserjs|github)/gi)) {
@@ -1569,7 +1712,7 @@ const main = (injCon) => {
               continue
             }
             if (/github/gi.test(engine.name)) {
-              MU.fetchURL(
+              Network.fetchURL(
                 `${eURL}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
                 'GET',
                 'json',
@@ -1583,7 +1726,7 @@ const main = (injCon) => {
               )
                 .then(gitFN)
                 .then(() => {
-                  MU.fetchURL(
+                  Network.fetchURL(
                     'https://api.github.com/rate_limit',
                     'GET',
                     'json',
@@ -1600,7 +1743,7 @@ const main = (injCon) => {
                 })
                 .catch(MUJS.showError)
             } else {
-              MU.fetchURL(`${eURL}${host}`, 'GET', 'text')
+              Network.fetchURL(`${eURL}${host}`, 'GET', 'text')
                 .then(customFN)
                 .catch(MUJS.showError)
             }
@@ -1738,11 +1881,11 @@ const main = (injCon) => {
           MUJS.unsaved = true
           txta.value = JSON.stringify(cfg.blacklist, null, ' ')
           for (const i of cfg.engines) {
-            if (sh(`[id="${i.name}"]`)) {
-              sh(`[id="${i.name}"]`).checked = i.enabled
+            if (sh(`mu-js.mujs-inlab > [id="${i.name}"]`)) {
+              sh(`mu-js.mujs-inlab > [id="${i.name}"]`).checked = i.enabled
             }
           }
-          for (const i of shA('.mujs-inlab input[type="checkbox"]')) {
+          for (const i of shA('mu-js.mujs-inlab > input[type="checkbox"]')) {
             if (
               !i.name.match(/((greasy|sleazy)fork|openuserjs|gi(thub|st))/gi)
             ) {
@@ -1904,7 +2047,7 @@ const main = (injCon) => {
       innerHTML: iconSVG.gh,
       onclick(e) {
         halt(e)
-        MU.openInTab('https://github.com/magicoflolis/Userscript-Plus')
+        MU.tab.open('https://github.com/magicoflolis/Userscript-Plus')
       },
     })
     const btnissue = make('mujs-btn', 'issue hidden', {
@@ -1912,7 +2055,7 @@ const main = (injCon) => {
       innerHTML: iconSVG.issue,
       onclick(e) {
         e.preventDefault()
-        MU.openInTab(
+        MU.tab.open(
           'https://github.com/magicoflolis/Userscript-Plus/issues/new',
         )
       },
@@ -1922,7 +2065,7 @@ const main = (injCon) => {
       innerHTML: iconSVG.gf,
       onclick(e) {
         e.preventDefault()
-        MU.openInTab('https://greasyfork.org/scripts/421603')
+        MU.tab.open('https://greasyfork.org/scripts/421603')
       },
     })
     const btnnav = make('mujs-btn', 'nav', {
@@ -1988,8 +2131,7 @@ const main = (injCon) => {
     }
     main.append(header, tbody, cfgpage)
     mainframe.append(mainbtn)
-    const mujsRoot = make('mujs-root')
-    mujsRoot.append(usercss, mainframe, main)
+    mujsRoot.append(mainframe, main)
     injCon.append(mujsRoot)
     makecfg()
     buildlist()
@@ -1998,56 +2140,55 @@ const main = (injCon) => {
     err(ex)
   }
 }
-const onDomReady = () => {
+/**
+ * @param {Function} callback
+ * @returns {null|boolean}
+ */
+const loadDOM = (callback) => {
+  if (!isFN(callback)) {
+    return null
+  }
+  if (
+    document.readyState === 'interactive' ||
+    document.readyState === 'complete'
+  ) {
+    callback.call({}, document)
+  }
+  document.addEventListener(
+    'DOMContentLoaded',
+    (evt) => callback.call({}, evt.target),
+    {
+      once: true,
+    },
+  )
+  return true
+}
+const Setup = async () => {
   try {
-    container.inject()
-
-    // Remove legacy config storage
-    if (isGM) {
-      if (MU.storage.has('MUJSConfig')) {
-        MU.storage.remove('MUJSConfig')
-      }
-    }
-
-    const setConfig = (config = {}, lcfg = {}) => {
-      for (const [key, value] of Object.entries(config)) {
-        if (!hasOwn(lcfg, key)) {
-          lcfg[key] = config[key]
-        } else if (typeof value === 'object') {
-          setConfig(config[key], lcfg[key])
-        }
-      }
-      return lcfg
-    }
-    cfg = setConfig(defcfg, MU.getValue('Config'))
-    sleazyRedirect()
+    cfg = setObj(defcfg, await MU.storage.getValue('Config'))
     lang = langs[cfg.language] || langs[navLang] || langs.en
-
-    // Remove legacy engines
-    const engines = cfg.engines.filter((c) => c.name === 'gist')
-    for (const engine of engines) {
-      if (isNull(engine.token)) {
-        if (isGM) {
-          legacyMsg = lang.legacy
-        } else {
-          MU.setValue('Config', defcfg)
-          cfg = defcfg
-        }
+    info('Config:', cfg)
+    loadDOM((doc) => {
+      if (window.location === null) {
+        return
       }
-    }
-    log('Config:', cfg)
-
-    container.onReady(main)
+      if (doc === null) {
+        return
+      }
+      sleazyRedirect()
+      container.inject(main)
+    })
   } catch (ex) {
     err(ex)
   }
 }
-if (typeof userjs === 'object' && userjs.UserJS && window.self === window.top) {
-  const readyState = document.readyState
-  if (readyState === 'interactive' || readyState === 'complete') {
-    onDomReady()
-  } else {
-    document.addEventListener('DOMContentLoaded', onDomReady, { once: true })
-  }
+if (
+  typeof userjs === 'object' &&
+  userjs.UserJS &&
+  window &&
+  window.self === window.top
+) {
+  Setup()
 }
+
 })();

@@ -55,9 +55,7 @@ export default [
         'single',
         { avoidEscape: true, allowTemplateLiterals: false },
       ],
-      semi: ['error', 'never'],
       'space-before-blocks': ['error', 'always'],
-      // 'space-before-function-paren': ['error', 'always'],
     },
   },
 ]

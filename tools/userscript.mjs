@@ -90,6 +90,11 @@ const p = {
 // @connect      github.com
 // @connect      openuserjs.org
 // @match        https://*/*
+// @grant        GM.xmlHttpRequest
+// @grant        GM.openInTab
+// @grant        GM.getValue
+// @grant        GM.setValue
+// @grant        GM.info
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @grant        GM_getValue
