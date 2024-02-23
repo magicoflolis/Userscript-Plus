@@ -107,20 +107,6 @@ $ pnpm i
 $ pnpm run Dev:UserJS
 ```
 
-Then load the extension from 'dist/'.
-
-### Build
-
-To release a new version, we must build the assets and upload them to web stores.
-
-``` sh
-# Build for normal releases
-$ yarn build
-
-# Build for self-hosted release that has an update_url
-$ yarn build:selfHosted
-```
-
 ### Source Code
 
 * [https://github.com/magicoflolis/Userscript-Plus](https://github.com/magicoflolis/Userscript-Plus)
