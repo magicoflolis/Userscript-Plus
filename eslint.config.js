@@ -1,68 +1,80 @@
-'use strict'
-import js from '@eslint/js'
-import globals from 'globals'
-import eslintConfigPrettier from 'eslint-config-prettier'
+import js from '@eslint/js';
+import globals from 'globals';
+import eslintConfigPrettier from 'eslint-config-prettier';
+
+const repoGlobals = {
+  MU: 'writable',
+  boxCSS: 'readonly',
+  main_css: 'readonly',
+  custom_width: 'readonly',
+  jaeFetchUserJSFrame: 'readonly',
+  sleazyfork_redirect: 'readonly',
+  webext: 'readonly',
+  brws: 'readonly'
+};
+const parserOptions = {
+  allowImportExportEverywhere: false,
+  ecmaFeatures: {
+    globalReturn: true,
+    arrowFunctions: true,
+    modules: true
+  }
+};
+const rules = {
+  'keyword-spacing': ['error', { before: true }],
+  'no-var': 'error',
+  'prefer-const': ['error', { destructuring: 'all' }],
+  'prefer-promise-reject-errors': 'error',
+  'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
+  quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
+  'space-before-blocks': ['error', 'always']
+};
 
 export default [
   js.configs.recommended,
   eslintConfigPrettier,
   {
-    // files: ['**/*.js'],
-    ignores: [
-      'src/UserJS/header.js',
-      // 'src/**/header.js',
-      'src/languages.js',
-      'tools/*.js',
-      'dist/**/*.js',
-    ],
+    files: ['src/js/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        MU: 'writable',
-        boxCSS: 'readonly',
-        main_css: 'readonly',
-        custom_width: 'readonly',
-        jaeFetchUserJSFrame: 'readonly',
-        sleazyfork_redirect: 'readonly',
-        webext: 'readonly',
-        brws: 'readonly',
-        // ...globals.node,
-        // ...globals.nodeBuiltin,
+        ...repoGlobals,
         ...globals.browser,
-        ...globals.greasemonkey,
-        ...globals.webextensions,
+        ...globals.webextensions
       },
-      parserOptions: {
-        allowImportExportEverywhere: false,
-        ecmaFeatures: {
-          globalReturn: true,
-          arrowFunctions: true,
-          modules: true
-        }
-      },
+      parserOptions
     },
-    rules: {
-      'keyword-spacing': ['error', { before: true }],
-      'no-var': 'error',
-      'prefer-const': ['error', { destructuring: 'all' }],
-      'prefer-promise-reject-errors': 'error',
-      'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
-      quotes: [
-        'error',
-        'single',
-        { avoidEscape: true, allowTemplateLiterals: false },
-      ],
-      'space-before-blocks': ['error', 'always'],
-    },
-    // rules: {
-    //   'keyword-spacing': ['error', { before: true }],
-    //   'prefer-const': ['error', { destructuring: 'all' }],
-    //   'prefer-promise-reject-errors': 'error',
-    //   'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
-    //   'no-var': 'error',
-    //   quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
-    //   'space-before-blocks': ['error', 'always'],
-    // },
+    rules
   },
-]
+  {
+    // files: ['**/*.js'],
+    // ignores: ['src/UserJS/header.js', 'src/languages.js', 'dist/**/*.js'],
+    files: ['src/UserJS/main.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        languageList: 'readonly',
+        ...repoGlobals,
+        ...globals.browser,
+        ...globals.greasemonkey
+      },
+      parserOptions
+    },
+    rules
+  },
+  {
+    files: ['tools/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...repoGlobals,
+        ...globals.node
+      },
+      parserOptions
+    },
+    rules
+  }
+];

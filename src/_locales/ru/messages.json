@@ -1,0 +1,92 @@
+{
+  "extName": {
+    "message": "Magic Userscript+",
+    "description": "Must not exceed 45 characters"
+  },
+  "extDesc": {
+    "message": "The power of Greasy Fork on the go! Finds available UserJS for the current webpage.",
+    "description": "Must not exceed 132 characters"
+  },
+  "extShortDesc": {
+    "message": "Finds available UserJS for the current webpage.",
+    "description": "Must not exceed 112 characters"
+  },
+  "userjsName": {
+    "message": "Magic Userscript+: показать сайт всем UserJS"
+  },
+  "userjsDescription": {
+    "message": "Показать все UserJS текущего сайта — более простой способ установки UserJs для Tampermonkey."
+  },
+  "legacy": {
+    "message": "ПОЖАЛУЙСТА, СБРОСЬТЕ КОНФИГ!"
+  },
+  "createdby": {
+    "message": "Сделано"
+  },
+  "name": {
+    "message": "Имя"
+  },
+  "daily": {
+    "message": "Ежедневные установки"
+  },
+  "close": {
+    "message": "Больше не показывать"
+  },
+  "filterA": {
+    "message": "Фильтр"
+  },
+  "max": {
+    "message": "Максимизировать"
+  },
+  "min": {
+    "message": "Минимизировать"
+  },
+  "search": {
+    "message": "Поиск"
+  },
+  "searcher": {
+    "message": "Название | Описание | Автор..."
+  },
+  "install": {
+    "message": "Установите"
+  },
+  "issue": {
+    "message": "Новый выпуск"
+  },
+  "version": {
+    "message": "Версия"
+  },
+  "updated": {
+    "message": "Последнее обновление"
+  },
+  "total": {
+    "message": "Всего установок"
+  },
+  "rating": {
+    "message": "Рейтинги"
+  },
+  "good": {
+    "message": "Хорошо"
+  },
+  "ok": {
+    "message": "Хорошо"
+  },
+  "bad": {
+    "message": "Плохо"
+  },
+  "created": {
+    "message": "Создано"
+  },
+  "redirect": {
+    "message": "Greasy Fork для взрослых"
+  },
+  "filter": {
+    "message": "Отфильтровать другие языки"
+  },
+  "dtime": {
+    "message": "Тайм-аут отображения"
+  },
+  "save": {
+    "message": "Сохранить"
+  }
+}

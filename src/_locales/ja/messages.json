@@ -1,0 +1,92 @@
+{
+  "extName": {
+    "message": "Magic Userscript+",
+    "description": "Must not exceed 45 characters"
+  },
+  "extDesc": {
+    "message": "The power of Greasy Fork on the go! Finds available UserJS for the current webpage.",
+    "description": "Must not exceed 132 characters"
+  },
+  "extShortDesc": {
+    "message": "Finds available UserJS for the current webpage.",
+    "description": "Must not exceed 112 characters"
+  },
+  "userjsName": {
+    "message": "Magic Userscript+ : サイトをすべて表示 UserJS"
+  },
+  "userjsDescription": {
+    "message": "サイトのユーザー スクリプト (UserJS) を表示します。 Tampermonkey のカスタム スクリプトをインストールする簡単な方法。"
+  },
+  "legacy": {
+    "message": "設定をリセットしてください。"
+  },
+  "createdby": {
+    "message": "によって作成された"
+  },
+  "name": {
+    "message": "名前"
+  },
+  "daily": {
+    "message": "デイリーインストール"
+  },
+  "close": {
+    "message": "表示されなくなりました"
+  },
+  "filterA": {
+    "message": "フィルター"
+  },
+  "max": {
+    "message": "最大化"
+  },
+  "min": {
+    "message": "ミニマム"
+  },
+  "search": {
+    "message": "検索"
+  },
+  "searcher": {
+    "message": "タイトル｜説明｜著者..."
+  },
+  "install": {
+    "message": "インストール"
+  },
+  "issue": {
+    "message": "新刊のご案内"
+  },
+  "version": {
+    "message": "バージョン"
+  },
+  "updated": {
+    "message": "最終更新日"
+  },
+  "total": {
+    "message": "総インストール数"
+  },
+  "rating": {
+    "message": "レーティング"
+  },
+  "good": {
+    "message": "グッド"
+  },
+  "ok": {
+    "message": "良い"
+  },
+  "bad": {
+    "message": "悪い"
+  },
+  "created": {
+    "message": "作成"
+  },
+  "redirect": {
+    "message": "大人のGreasyfork"
+  },
+  "filter": {
+    "message": "他の言語をフィルタリングする"
+  },
+  "dtime": {
+    "message": "表示タイムアウト"
+  },
+  "save": {
+    "message": "拯救"
+  }
+}

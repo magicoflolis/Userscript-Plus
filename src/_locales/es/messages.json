@@ -12,81 +12,81 @@
     "description": "Must not exceed 112 characters"
   },
   "userjsName": {
-    "message": "Magic Userscript+ : Show Site All UserJS"
+    "message": "Magic Userscript+: Mostrar sitio todos los UserJS"
   },
   "userjsDescription": {
-    "message": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey."
+    "message": "Mostrar todos los UserJS del sitio actual, la forma más fácil de instalar UserJs para Tampermonkey."
   },
   "legacy": {
-    "message": "PLEASE RESET YOUR CONFIG!"
+    "message": "¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!"
   },
   "createdby": {
-    "message": "Created by"
+    "message": "Creado por"
   },
   "name": {
-    "message": "Name"
+    "message": "Nombre"
   },
   "daily": {
-    "message": "Daily Installs"
+    "message": "Instalaciones diarias"
   },
   "close": {
-    "message": "Close"
+    "message": "Ya no se muestra"
   },
   "filterA": {
-    "message": "Filter"
+    "message": "Filtro"
   },
   "max": {
-    "message": "Maximize"
+    "message": "Maximizar"
   },
   "min": {
-    "message": "Minimize"
+    "message": "Minimizar"
   },
   "search": {
-    "message": "Search"
+    "message": "Busque en"
   },
   "searcher": {
-    "message": "Title | Description | Author..."
+    "message": "Título | Descripción | Autor..."
   },
   "install": {
-    "message": "Install"
+    "message": "Instalar"
   },
   "issue": {
-    "message": "New Issue"
+    "message": "Nueva edición"
   },
   "version": {
-    "message": "Version"
+    "message": "Versión"
   },
   "updated": {
-    "message": "Last Updated"
+    "message": "Última actualización"
   },
   "total": {
-    "message": "Total Installs"
+    "message": "Total de instalaciones"
   },
   "rating": {
-    "message": "Ratings"
+    "message": "Clasificaciones"
   },
   "good": {
-    "message": "Good"
+    "message": "Bueno"
   },
   "ok": {
     "message": "Ok"
   },
   "bad": {
-    "message": "Bad"
+    "message": "Malo"
   },
   "created": {
-    "message": "Created"
+    "message": "Creado"
   },
   "redirect": {
-    "message": "Greasy Fork for adults"
+    "message": "Greasy Fork para adultos"
   },
   "filter": {
-    "message": "Filter out other languages"
+    "message": "Filtrar otros idiomas"
   },
   "dtime": {
-    "message": "Display Timeout"
+    "message": "Mostrar el tiempo de espera"
   },
   "save": {
-    "message": "Save"
+    "message": "Guardar"
   }
 }

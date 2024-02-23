@@ -3,11 +3,8 @@ $chGF: hsla(197, 100%, 50%, 0.568);
 $chGit: hsla(213, 13%, 16%, 0.568);
 $chOpen: hsla(12, 86%, 50%, 0.568);
 $txtAreaBG: hsl(0, 0%, 0%);
+
 mujs-root {
-  // --mujs-background-color: hsl(222, 14%, 33%);
-  // --mujs-even-row: hsl(222, 14%, 18%);
-  // --mujs-odd-row: hsl(222, 14%, 33%);
-  // --mujs-background-color: hsl(222, 14%, 10%);
   --mujs-even-row: hsl(222, 14%, 22%);
   --mujs-odd-row: hsl(222, 14%, 11%);
   --mujs-background-color: hsl(222, 14%, 33%);
@@ -55,8 +52,6 @@ mujs-root * {
 
   scrollbar-color: var(--mujs-txt-color, hsl(0, 0%, 100%)) hsl(224, 14%, 21%);
   scrollbar-width: thin;
-  // background: var(--mujs-background-color, hsl(222, 14%, 33%));
-  // color: var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
 
 @at-root mu-js {
@@ -76,20 +71,8 @@ body.webext-page,
   font-size: 14px;
 }
 
-// .mujs-homepage,
-mujs-btn,
-input {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-}
-
-mujs-section > label,
-.mujs-homepage,
-.mujs-euser,
+mujs-section>label,
+.mujs-homepag e,
 td.mujs-list,
 .install {
   font-size: 16px;
@@ -100,8 +83,7 @@ td.mujs-list,
   font-weight: 700;
 }
 
-mujs-section > label,
-.mujs-euser,
+mujs-section>label,
 td.mujs-list {
   font-weight: 500;
 }
@@ -133,7 +115,6 @@ mujs-row,
 
 mujs-column,
 mujs-row {
-  // gap: 10px;
   gap: 0.5em;
 }
 
@@ -141,9 +122,11 @@ mujs-column {
   @media screen and (max-width: 800px) {
     flex-flow: row wrap;
   }
+
   count-frame:nth-child(1) {
     background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
   }
+
   count-frame:nth-child(2) {
     background-color: var(--mujs-sf-color, hsl(12, 86%, 50%));
   }
@@ -151,7 +134,6 @@ mujs-column {
 
 mujs-row {
   flex-flow: column wrap;
-  // flex-direction: column;
 }
 
 mu-js {
@@ -164,7 +146,6 @@ mu-js {
 }
 
 .main {
-  // 500px
   @media screen and (max-height: 720px) {
     &:not(.webext-page) {
       height: 100% !important;
@@ -211,9 +192,32 @@ mu-js {
     flex-direction: column !important;
   }
 
+  mujs-btn,
+  input {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+
   input {
     background: var(--mujs-background-color, hsl(222, 14%, 33%));
     color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+  }
+
+  input:not([type='checkbox']) {
+    border: transparent;
+    outline: none !important;
+  }
+
+  th,
+  .mujs-cfg *:not(input[type='password'], input[type='text'], input[type='number']) {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
   }
 }
 
@@ -249,6 +253,10 @@ count-frame {
   min-width: 1em;
   background: var(--mujs-background-color, hsl(222, 14%, 33%));
   color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .mujs-header-prim {
@@ -284,11 +292,8 @@ count-frame {
     border-radius: 16px;
   }
 
-  mu-jsbtn svg {
-    fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
-    width: 14px;
-    height: 14px;
-    background: transparent;
+  mu-jsbtn {
+    color: var(--mujs-txt-color, hsl(0, 0%, 100%));
   }
 
   table,
@@ -298,7 +303,6 @@ count-frame {
   }
 
   table {
-    // max-width: 800px
     @media screen and (max-width: 1180px) {
       thead>tr {
         display: table-column;
@@ -379,11 +383,13 @@ count-frame {
 
     .frame {
       &:nth-child(even) {
-        background-color: var(--mujs-even-row, hsl(222, 14%, 18%))!important;
+        background-color: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
       }
+
       &:nth-child(odd) {
-        background-color: var(--mujs-odd-row, hsl(222, 14%, 33%))!important;
+        background-color: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
       }
+
       &.sf {
         mujs-a {
           color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
@@ -392,6 +398,7 @@ count-frame {
         mu-jsbtn {
           background-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
           border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+
           &:hover {
             background-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
             border-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
@@ -402,6 +409,7 @@ count-frame {
       &:not(.sf) {
         mujs-a {
           color: var(--mujs-gf-color, hsl(197, 100%, 50%));
+
           &:hover {
             color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
           }
@@ -411,6 +419,7 @@ count-frame {
           color: var(--mujs-txt-color, hsl(0, 0%, 100%));
           background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
           border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+
           &:hover {
             background-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
             border-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
@@ -418,9 +427,61 @@ count-frame {
         }
       }
 
-      > td:not(.mujs-name) {
+      &[data-good],
+      &[data-author] {
+
+        // background-color: hsl(218, 38%, 13%);
+        mujs-a {
+          color: hsl(81, 56%, 54%);
+
+          &:hover {
+            color: hsl(81, 56%, 43%);
+          }
+        }
+
+        .mujs-list {
+          color: hsl(0, 0%, 100%);
+        }
+
+        mu-jsbtn {
+          color: hsl(215, 47%, 24%);
+          background-color: hsl(81, 56%, 54%);
+          border-color: hsl(81, 56%, 54%);
+
+          &:hover {
+            background-color: hsl(81, 56%, 65%);
+            border-color: hsl(81, 56%, 65%);
+          }
+        }
+      }
+
+      svg {
+        fill: currentColor;
+        width: 14px;
+        height: 14px;
+        background: transparent;
+      }
+
+      >td:not(.mujs-name) {
         text-align: center;
         // justify-content: center;
+      }
+
+      >.mujs-name {
+        >mujs-a {
+          width: -webkit-fit-content;
+          width: -moz-fit-content;
+          width: fit-content;
+        }
+      }
+
+      >.mujs-uframe {
+        >mujs-a {
+          font-size: 16px;
+          font-weight: 500;
+          padding-left: .5rem;
+          padding-right: .5rem;
+        }
       }
     }
   }
@@ -429,8 +490,6 @@ count-frame {
 .mujs-cfg,
 .mujs-body {
   border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
-  // border-bottom-left-radius: 10px;
-  // border-bottom-right-radius: 10px;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
@@ -442,21 +501,6 @@ count-frame {
 }
 
 .mujs-cfg {
-
-  // @media screen and (max-height: 550px) {
-  //   &:not(.webext-page) {
-  //     padding: 0.5em;
-  //     gap: 0.5em;
-  //     flex-flow: column wrap;
-  //     width: fit-content;
-  //     width: -moz-fit-content;
-  //     width: -webkit-fit-content;
-  //     height: fit-content;
-  //     height: -moz-fit-content;
-  //     height: -webkit-fit-content;
-  //     margin: auto !important;
-  //   }
-  // }
   @media screen and (max-height: 720px) {
     &:not(.webext-page) {
       height: 100%;
@@ -477,12 +521,15 @@ count-frame {
   mujs-section {
     border-radius: 16px;
     padding: .5em;
+
     &:nth-child(even) {
       background-color: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
     }
+
     &:nth-child(odd) {
-      background-color: var(--mujs-odd-row, hsl(222, 14%, 33%))!important;
+      background-color: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
     }
+
     >label {
       display: flex;
       justify-content: space-between;
@@ -551,11 +598,11 @@ count-frame {
   }
 
   [id='blacklist'] {
-    // color: hsl(249, 75%, 53%);
-    // color: #ff0000;
     overflow-y: auto;
-    background: hsl(0, 0%, 0%);
-    color: hsl(115, 70%, 50%);
+    color: hsl(81, 56%, 54%);
+    background-color: var(--mujs-even-row, hsl(222, 14%, 18%));
+    border: 1px solid transparent;
+    border-radius: 10px;
     resize: vertical;
     outline: none;
     border-style: none;
@@ -570,17 +617,21 @@ count-frame {
   .mujs-sty-flex {
     mujs-btn {
       color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+
       &[data-command="reset"] {
         background-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
         border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+
         &:hover {
           background-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
           border-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
         }
       }
+
       &[data-command="save"] {
         background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
         border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+
         &:hover {
           background-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
           border-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
@@ -597,11 +648,6 @@ count-frame {
 
 mujs-a {
   display: inline-block;
-
-  &.mujs-euser {
-    padding-left: 0.5rem;
-    paddinng-right: 0.5rem;
-  }
 }
 
 .mujs-name {
@@ -626,6 +672,7 @@ mujs-btn {
   border-radius: 4px;
   line-height: 1;
   padding: 6px 15px;
+
   svg {
     fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
     width: 14px;
@@ -645,17 +692,6 @@ mu-jsbtn {
   text-align: center;
 }
 
-// input[type*='number'],
-// input[type*='text'] {
-//   border: transparent;
-//   outline: none !important;
-// }
-// input[type='checkbox']
-input:not([type='checkbox']) {
-  border: transparent;
-  outline: none !important;
-}
-
 mujs-a,
 mu-jsbtn,
 .mujs-pointer,
@@ -664,12 +700,4 @@ mu-jsbtn,
 .mainframe,
 mujs-btn {
   cursor: pointer !important;
-}
-
-th,
-.mujs-cfg *:not(input[type='password'], input[type='text'], input[type='number']) {
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
 }

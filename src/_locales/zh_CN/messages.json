@@ -12,81 +12,81 @@
     "description": "Must not exceed 112 characters"
   },
   "userjsName": {
-    "message": "Magic Userscript+ : Show Site All UserJS"
+    "message": "Magic Userscript+ ：显示站点所有 UserJS"
   },
   "userjsDescription": {
-    "message": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey."
+    "message": "显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。"
   },
   "legacy": {
-    "message": "PLEASE RESET YOUR CONFIG!"
+    "message": "请重置您的配置！"
   },
   "createdby": {
-    "message": "Created by"
+    "message": "由...制作"
   },
   "name": {
-    "message": "Name"
+    "message": "姓名"
   },
   "daily": {
-    "message": "Daily Installs"
+    "message": "日常安装"
   },
   "close": {
-    "message": "Close"
+    "message": "不再显示"
   },
   "filterA": {
-    "message": "Filter"
+    "message": "过滤器"
   },
   "max": {
-    "message": "Maximize"
+    "message": "最大化"
   },
   "min": {
-    "message": "Minimize"
+    "message": "最小化"
   },
   "search": {
-    "message": "Search"
+    "message": "搜索"
   },
   "searcher": {
-    "message": "Title | Description | Author..."
+    "message": "标题|描述|作者..."
   },
   "install": {
-    "message": "Install"
+    "message": "安装"
   },
   "issue": {
-    "message": "New Issue"
+    "message": "新问题"
   },
   "version": {
-    "message": "Version"
+    "message": "版本"
   },
   "updated": {
-    "message": "Last Updated"
+    "message": "最后更新"
   },
   "total": {
-    "message": "Total Installs"
+    "message": "总安装量"
   },
   "rating": {
-    "message": "Ratings"
+    "message": "评级"
   },
   "good": {
-    "message": "Good"
+    "message": "好的"
   },
   "ok": {
-    "message": "Ok"
+    "message": "好的"
   },
   "bad": {
-    "message": "Bad"
+    "message": "不好"
   },
   "created": {
-    "message": "Created"
+    "message": "创建"
   },
   "redirect": {
-    "message": "Greasy Fork for adults"
+    "message": "大人的Greasyfork"
   },
   "filter": {
-    "message": "Filter out other languages"
+    "message": "过滤掉其他语言"
   },
   "dtime": {
-    "message": "Display Timeout"
+    "message": "显示超时"
   },
   "save": {
-    "message": "Save"
+    "message": "拯救"
   }
 }

@@ -9,7 +9,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
   },
   "userJS": {
-    "version": "6.2.0",
+    "version": "6.2.1",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues/new",
     "homepage": "https://github.com/magicoflolis/Userscript-Plus",
@@ -38,6 +38,7 @@
     "@types/chrome": "0.0.260",
     "@types/firefox-webext-browser": "120.0.0",
     "@types/greasemonkey": "4.0.7",
+    "@types/tampermonkey": "^5.0.2",
     "@violentmonkey/types": "0.1.7",
     "browserslist": "^4.23.0",
     "concurrently": "^8.2.2",

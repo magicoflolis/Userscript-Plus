@@ -1,7 +1,8 @@
-/* eslint-disable */
+import { URL } from 'node:url';
 import { access, constants, readFile, writeFile } from 'node:fs/promises';
 import dotenv from 'dotenv';
 import watch from 'node-watch';
+import { loadLanguages } from './languageLoader.js';
 
 /** @type { dotenv.DotenvConfigOutput } */
 let result = {};
@@ -33,52 +34,31 @@ const buildPaths = {
     dir: './dist'
   }
 };
-const languages = [
-  {
-    'zh': {
-      name: 'Magic Userscript+ ：显示站点所有 UserJS',
-      description: '显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。',
-    }
-  },
-  {
-    'zh-CN': {
-      name: 'Magic Userscript+ ：显示站点所有 UserJS',
-      description: '显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。',
-    }
-  },
-  {
-    'zh-TW': {
-      name: 'Magic Userscript+ ：显示站点所有 UserJS',
-      description: '显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。',
-    }
-  },
-  {
-    'ja': {
-      name: 'Magic Userscript+ : サイトをすべて表示 UserJS',
-      description: 'サイトのユーザー スクリプト (UserJS) を表示します。 Tampermonkey のカスタム スクリプトをインストールする簡単な方法。',
-    }
-  },
-  {
-    'ru-RU': {
-      name: 'Magic Userscript+: показать сайт всем UserJS',
-      description: 'Показывает пользовательские скрипты (UserJS) для сайта. Простой способ установки собственных скриптов для Tampermonkey.',
-    }
-  },
-  {
-    'ru': {
-      name: 'Magic Userscript+: показать сайт всем UserJS',
-      description: 'Показывает пользовательские скрипты (UserJS) для сайта. Простой способ установки собственных скриптов для Tampermonkey.',
-    }
-  }
-];
 const userJS = {
-  /** `//@compatible {{Web Browser}}` */
+  /**
+   * `//@compatible {{Web Browser}}`
+   * @type { S[] }
+   */
   compatible: ['chrome', 'firefox', 'edge', 'opera', 'safari'],
-  /** `//@connect {{URL}}` */
+  /**
+   * `//@connect {{URL}}`
+   * @type { string[] }
+   */
   connect: ['greasyfork.org', 'sleazyfork.org', 'github.com', 'openuserjs.org'],
-  /** `//@exclude-match {{URL}}` */
+  /**
+   * `//@exclude {{URL}}`
+   * @type { string[] }
+   */
+  exclude: [],
+  /**
+   * `//@exclude-match {{URL}}`
+   * @type { string[] }
+   */
   'exclude-match': [],
-  /** `//@grant {{GM Permission}}` */
+  /**
+   * `//@grant {{GM Permission}}`
+   * @type { string[] }
+   */
   grant: [
     'GM.xmlHttpRequest',
     'GM.openInTab',
@@ -91,13 +71,30 @@ const userJS = {
     'GM_setValue',
     'GM_info'
   ],
-  /** `//@match {{URL}}` */
+  /**
+   * `//@include {{URL}}`
+   * @type { string[] }
+   */
+  include: [],
+  /**
+   * `//@match {{URL}}`
+   * @type { string[] }
+   */
   match: [ 'https://*/*' ],
-  /** `//@noframes` */
+  /**
+   * `//@noframes`
+   * @type { boolean }
+   */
   noframes: true,
-  /** `//@resource {{name}} {{URL}}` */
+  /**
+   * `//@resource {{name}} {{URL}}`
+   * @type { object }
+   */
   resource: {},
-  /** `//@run-at {{execute}}` */
+  /**
+   * `//@run-at {{execute}}`
+   * @type { string }
+   */
   'run-at': 'document-start',
 };
 const log = (...msg) => {
@@ -194,43 +191,85 @@ const initUserJS = async (env) => {
     };
     const js_env = env.JS_ENV === 'development';
     const outFile = js_env ? p.dev : p.pub;
-    const compileMetadata = () => {
-      const resp = [];
-      for (const [key, value] of Object.entries(userJS)) {
-        if (Array.isArray(value)) {
-          for (const v of value) {
-            resp.push(`// @${key}     ${v}`);
-          }
-        } else if (isObj(value)) {
-          for (const [k, v] of Object.entries(value)) {
-            resp.push(`// @${key}     ${k} ${v}`);
-          }
-        } else if (typeof value === 'boolean') {
-          if (value === true) {
-            resp.push(`// @${key}`);
-          }
-        } else {
-          resp.push(`// @${key}     ${value}`);
-        }
-      }
-      return resp.join('\n');
-    };
+    const lngList = await loadLanguages(new URL('../src/_locales', import.meta.url));
     const buildUserJS = async () => {
       try {
         const jsonData = await fileToJSON('./package.json', 'utf-8');
-        const compileLanguage = (type = 'name') => {
+        const compileMetadata = () => {
+          const metaData = [];
+          try {
+            for (const [key, value] of Object.entries(userJS)) {
+              if (Array.isArray(value)) {
+                for (const v of value) {
+                  metaData.push(`// @${key}     ${v}`);
+                }
+              } else if (isObj(value)) {
+                for (const [k, v] of Object.entries(value)) {
+                  metaData.push(`// @${key}     ${k} ${v}`);
+                }
+              } else if (typeof value === 'boolean') {
+                if (value === true) {
+                  metaData.push(`// @${key}`);
+                }
+              } else {
+                metaData.push(`// @${key}     ${value}`);
+              }
+            }
+          } catch (ex) {
+            err(ex)
+          }
+          return metaData.join('\n');
+        };
+        const transformLanguages = () => {
+          try {
+            const resp = {};
+            for (const obj of lngList) {
+              for (const [k, v] of Object.entries(obj)) {
+                if (k.includes('_')) {
+                  continue;
+                }
+                const o = {};
+                for (const [key, value] of Object.entries(v)) {
+                  if (key.startsWith('ext')) {
+                    continue;
+                  }
+                  if (key.startsWith('userjs')) {
+                    continue;
+                  }
+                  if (isEmpty(value.message)) {
+                    continue;
+                  }
+                  o[key] = value.message;
+                }
+                resp[k] = o;
+              }
+            }
+            return JSON.stringify(resp);
+          } catch (ex) {
+            err(ex)
+          }
+        }
+        const compileLanguage = (type = 'userjsName') => {
           try {
             const resp = [];
-            for (const obj of languages) {
+            for (const obj of lngList) {
               for (const [k, v] of Object.entries(obj)) {
-                if (type === 'name') {
-                  resp.push(`// @${type}:${k}      ${js_env ? '[Dev] ' : ''}${v[type]}`)
-                } else {
-                  resp.push(`// @${type}:${k}      ${v[type]}`)
+                if (v[type]) {
+                  if (isEmpty(v[type].message)) {
+                    continue;
+                  }
+                  if (k.startsWith('en')) {
+                    continue;
+                  }
+                  const t = type.toLowerCase().replace('userjs', '');
+                  if (type === 'userjsName') {
+                    resp.push(`// @${t}:${k.replace('_', '-')}      ${js_env ? '[Dev] ' : ''}${v[type].message}`);
+                  } else {
+                    resp.push(`// @${t}:${k.replace('_', '-')}      ${v[type].message}`);
+                  }
                 }
               }
             }
-            // return resp.join('\n')
             return resp;
           } catch (ex) {
             err(ex)
@@ -245,7 +284,7 @@ const initUserJS = async (env) => {
         const getData = (arr = []) => {
           try {
             if (!isObj(jsonData)) {
-              return `ERROR "jsonData" IS NOT A JSON OBJECT`;
+              return 'ERROR "jsonData" IS NOT A JSON OBJECT';
             }
             const resp = [];
             for (const str of arr) {
@@ -254,9 +293,9 @@ const initUserJS = async (env) => {
                 continue;
               }
               if (str === 'name') {
-                resp.push(`// @${str}         ${js_env ? '[Dev] ' : ''}${param}`, ...compileLanguage(str));
+                resp.push(`// @${str}         ${js_env ? '[Dev] ' : ''}${param}`, ...compileLanguage('userjsName'));
               } else if (str === 'description') {
-                resp.push(`// @${str}  ${param}`, ...compileLanguage(str));
+                resp.push(`// @${str}  ${param}`, ...compileLanguage('userjsDescription'));
               } else if (str === 'author') {
                 resp.push(`// @${str}       ${param}`);
               } else if (str === 'icon') {
@@ -275,14 +314,6 @@ const initUserJS = async (env) => {
               } else {
                 resp.push(param);
               }
-
-              // return 'userJS' in jsonData && jsonData.userJS[str] ? jsonData.userJS[str] : jsonData[str] ?? `ERROR "${str}" NOT FOUND`;
-              // if ('userJS' in jsonData) {
-              //   if (jsonData.userJS[str]) {
-              //     return jsonData.userJS[str]
-              //   }
-              // }
-              // return jsonData[str] ?? `ERROR "${str}" NOT FOUND`;
             }
             return resp.join('\n')
           } catch (ex) {
@@ -290,37 +321,11 @@ const initUserJS = async (env) => {
           }
         };
         const userJSHeader = `// ==UserScript==\n${getData(['name', 'description', 'author', 'icon', 'version', 'url', 'homepage', 'bugs', 'license'])}\n${compileMetadata()}\n// ==/UserScript==`;
-//         const userjsURL = js_env ? `${buildPaths.dev.url ?? 'https://localhost:8080'}/${buildPaths.name}.dev.user.js` : getData('url');
-//         const userJSHeader = `// ==UserScript==\n// @name         ${js_env ? '[Dev] ' : ''}${getData('name')}
-// // @name:zh      Magic Userscript+ : 显示当前网站所有可用的UserJS脚本 Jaeger
-// // @name:zh-CN   Magic Userscript+ : 显示当前网站所有可用的UserJS脚本 Jaeger
-// // @name:zh-TW   Magic Userscript+ : 顯示當前網站所有可用的UserJS腳本 Jaeger
-// // @name:ja      Magic Userscript+ : 現在のサイトの利用可能なすべてのUserJSスクリプトを表示するJaeger
-// // @name:ru-RU   Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
-// // @name:ru      Magic Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
-// // @description  ${getData('description')}
-// // @description:zh      显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
-// // @description:zh-CN   显示当前网站的所有可用UserJS(Tampermonkey)脚本,交流QQ群:104267383
-// // @description:zh-TW   顯示當前網站的所有可用UserJS(Tampermonkey)腳本,交流QQ群:104267383
-// // @description:ja      現在のサイトで利用可能なすべてのUserJS（Tampermonkey）スクリプトを表示します。
-// // @description:ru-RU   Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
-// // @description:ru      Показывает пользовательские скрипты (UserJS) для сайта. Легкий способ установить пользовательские скрипты для Tampermonkey.
-// // @author       ${getData('author')}
-// // @version      ${js_env ? +new Date() : getData('version')}
-// // @icon         ${getData('icon')}
-// // @downloadURL  ${userjsURL}
-// // @updateURL    ${userjsURL}
-// // @namespace    ${getData('homepage')}
-// // @homepageURL  ${getData('homepage')}
-// // @supportURL   ${getData('bugs')}
-// // @license      ${getData('license')}
-// ${compileMetadata()}
-// // ==/UserScript==`;
-
         const headerFile = await canAccess(sDir.head);
         const mainFile = await canAccess(sDir.body);
         const nanoCFG = {
           jshead: userJSHeader,
+          languageList: transformLanguages(),
           code: mainFile,
         };
         for (const [k, v] of Object.entries(sDir.extras)) {
@@ -353,6 +358,7 @@ const initUserJS = async (env) => {
       return;
     }
     await buildUserJS();
+
     process.exit(0);
     //#endregion
   } catch (ex) {

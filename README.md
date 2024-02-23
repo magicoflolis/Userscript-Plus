@@ -8,7 +8,7 @@
 
 *Fork of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript). Source code & authors information found [here](https://github.com/jae-jae/Userscript-Plus).*
 
-> The power of [Greasy Fork](https://greasyfork.org) on the go! Finds available UserJS for the current webpage **( may not work on every webpage )**
+> The power of [Greasy Fork](https://greasyfork.org) on the go! Finds available UserJS for the current webpage, **does not work on every webpage**
 
 ## About
 
@@ -18,9 +18,9 @@ Finds available UserJS for current webpage from various UserJS hosts (e.g, [Grea
 
 | Preview(s) |
 |:----------:|
-![Demo 1](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo3.gif)|
-![Demo 2](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo2.gif)|
-![Demo 3](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo1.png)|
+|![Demo 1](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo3.gif)|
+|![Demo 2](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo2.gif)|
+|![Demo 3](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo1.png)|
 
 ## Downloads
 
@@ -28,10 +28,9 @@ Finds available UserJS for current webpage from various UserJS hosts (e.g, [Grea
 
 | Version | Link | Alternative | Note |
 |:----------:|:----------:|:----------:|:----------:|
-Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | -
-Userscript Legacy | [Install (GitHub)](https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/archive/magic-userjs.user.js) | - | [Homepage](https://github.com/magicoflolis/Userscript-Plus/tree/master/archive)
-Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | - | Work in progress
-Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress
+| Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | - |
+| Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | - | Work in progress |
+| Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress |
 
 **(Optional) Mobile Bookmarklet:**
 

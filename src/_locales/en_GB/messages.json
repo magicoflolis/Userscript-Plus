@@ -11,12 +11,6 @@
     "message": "Finds available UserJS for the current webpage.",
     "description": "Must not exceed 112 characters"
   },
-  "userjsName": {
-    "message": "Magic Userscript+ : Show Site All UserJS"
-  },
-  "userjsDescription": {
-    "message": "Show current site all UserJS, the easier way to install UserJs for Tampermonkey."
-  },
   "legacy": {
     "message": "PLEASE RESET YOUR CONFIG!"
   },
