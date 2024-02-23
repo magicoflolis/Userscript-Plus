@@ -11,11 +11,11 @@
       "**/node_modules/**": true,
       "**/Notes/**": true
     },
-    "editor.formatOnSaveMode": "modifications",
-    "editor.codeActionsOnSave": {
-      "source.fixAll": false,
-      "source.fixAll.eslint": true
+		"editor.codeActionsOnSave": {
+      "source.fixAll": "never",
+      "source.fixAll.eslint": "explicit"
     },
+    "editor.formatOnSaveMode": "modifications",
     "explorer.excludeGitIgnore": true,
     "files.exclude": {
         "**/build/**": true,
@@ -24,24 +24,20 @@
         "**/Notes/**": true
     },
     "files.trimTrailingWhitespace": true,
-    "local-history.daysLimit": 2,
+    "local-history.daysLimit": 3,
     "local-history.maxDisplay": 10,
     "local-history.saveDelay": 0,
     "local-history.dateLocale": "en-US",
     "local-history.exclude": [
-      "**/build/**",
-      "**/dist/**",
-      "**/node_modules/**",
-      "**/Notes/**",
       "**/.history/**",
-      "**/.vscode**",
-      "**/typings/**",
-      "**/out/**",
+      "**/.vscode/**",
+      "**/node_modules/**",
+      "**/dist/**",
       "**/chrome_dist/**",
+      "**/build/**",
       "**/*.code-workspace",
       "**/src/sass/**",
     ],
     "local-history.path": "${workspaceFolder}/.vscode",
-    "local-history.enabled": 2,
 	}
 }

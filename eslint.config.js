@@ -1,23 +1,23 @@
 'use strict'
 import js from '@eslint/js'
 import globals from 'globals'
-import configPrettier from 'eslint-config-prettier'
+import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default [
   js.configs.recommended,
-  configPrettier,
+  eslintConfigPrettier,
   {
     // files: ['**/*.js'],
     ignores: [
-      'userscript/header.js',
       'src/UserJS/header.js',
-      'src/**/header.js',
+      // 'src/**/header.js',
       'src/languages.js',
-      'tools/userscript.js',
+      'tools/*.js',
       'dist/**/*.js',
     ],
     languageOptions: {
       ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: {
         MU: 'writable',
         boxCSS: 'readonly',
@@ -27,21 +27,19 @@ export default [
         sleazyfork_redirect: 'readonly',
         webext: 'readonly',
         brws: 'readonly',
-        ...globals.node,
-        ...globals.nodeBuiltin,
+        // ...globals.node,
+        // ...globals.nodeBuiltin,
         ...globals.browser,
         ...globals.greasemonkey,
         ...globals.webextensions,
       },
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
         allowImportExportEverywhere: false,
         ecmaFeatures: {
           globalReturn: true,
           arrowFunctions: true,
-          modules: true,
-        },
+          modules: true
+        }
       },
     },
     rules: {
@@ -57,5 +55,14 @@ export default [
       ],
       'space-before-blocks': ['error', 'always'],
     },
+    // rules: {
+    //   'keyword-spacing': ['error', { before: true }],
+    //   'prefer-const': ['error', { destructuring: 'all' }],
+    //   'prefer-promise-reject-errors': 'error',
+    //   'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
+    //   'no-var': 'error',
+    //   quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
+    //   'space-before-blocks': ['error', 'always'],
+    // },
   },
 ]

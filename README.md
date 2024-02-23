@@ -1,5 +1,11 @@
 # Magic Userscript+
 
+![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus)
+[![GitHub Release](https://img.shields.io/github/release/magicoflolis/Userscript-Plus)](https://github.com/magicoflolis/Userscript-Plus/releases/latest)
+[![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603)](https://greasyfork.org/scripts/421603)
+![jsDelivr hits (GitHub)](https://img.shields.io/jsdelivr/gh/hm/magicoflolis/Userscript-Plus)
+[![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
+
 *Fork of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript). Source code & authors information found [here](https://github.com/jae-jae/Userscript-Plus).*
 
 > The power of [Greasy Fork](https://greasyfork.org) on the go! Finds available UserJS for the current webpage **( may not work on every webpage )**
@@ -9,10 +15,6 @@
 > [Changelog (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases)
 
 Finds available UserJS for current webpage from various UserJS hosts (e.g, [Greasy Fork](https://greasyfork.org)), displays a found count bottom right of the webpage, automatically disappears after 10 seconds (can be configured).
-
-**Known bugs:**
-
-* May conflict with any UserJS that executes in an iframe.
 
 | Preview(s) |
 |:----------:|
@@ -85,6 +87,39 @@ No available UserJS for this webpage:
 * Locate the following **[UserJS] < message >** ( you can filter your Console by entering **UserJS** or **[** )
 * Feel free to screenshot any error messages to the [GitHub](https://github.com/magicoflolis/Userscript-Plus/issues) for addition help
 * If nothing appears, this means the script is not executing at all
+
+## Workflows
+
+### Development
+
+Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/).
+The version of Node.js should match `"node"` key in `package.json`.
+
+``` sh
+# Install dependencies
+$ pnpm i
+```
+
+#### Userscript Version
+
+``` sh
+# Watch and compile
+$ pnpm run Dev:UserJS
+```
+
+Then load the extension from 'dist/'.
+
+### Build
+
+To release a new version, we must build the assets and upload them to web stores.
+
+``` sh
+# Build for normal releases
+$ yarn build
+
+# Build for self-hosted release that has an update_url
+$ yarn build:selfHosted
+```
 
 ### Source Code
 
