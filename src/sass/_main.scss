@@ -1,16 +1,24 @@
-$appBGColor: #495060;
-$appTXTColor: #ffffff;
-$chDefault: rgb(255, 255, 255, 0.568);
-$chGF: rgba(0, 183, 255, 0.568);
-$chGit: rgb(36, 41, 47, 0.568);
-$chOpen: rgb(237, 63, 20, 0.568);
-$gfColor: #2d8cf0;
-$labColor: rgb(73, 80, 96);
-$mujsA: rgb(231, 85, 49);
-$mujsAColor: #00b7ff;
-$mainbColor: rgba(0, 0, 0, 0);
-$mujsBtn: rgb(237, 63, 20);
-$txtAreaBG: #000;
+$chDefault: hsla(0, 0%, 100%, 0.568);
+$chGF: hsla(197, 100%, 50%, 0.568);
+$chGit: hsla(213, 13%, 16%, 0.568);
+$chOpen: hsla(12, 86%, 50%, 0.568);
+$txtAreaBG: hsl(0, 0%, 0%);
+mujs-root {
+  // --mujs-background-color: hsl(222, 14%, 33%);
+  // --mujs-even-row: hsl(222, 14%, 18%);
+  // --mujs-odd-row: hsl(222, 14%, 33%);
+  // --mujs-background-color: hsl(222, 14%, 10%);
+  --mujs-even-row: hsl(222, 14%, 22%);
+  --mujs-odd-row: hsl(222, 14%, 11%);
+  --mujs-background-color: hsl(222, 14%, 33%);
+  --mujs-gf-color: hsl(204, 100%, 40%);
+  --mujs-sf-color: hsl(12, 86%, 50%);
+  --mujs-border-b-color: hsla(0, 0%, 0%, 0);
+  --mujs-gf-btn-color: hsl(211, 87%, 56%);
+  --mujs-sf-btn-color: hsl(12, 86%, 50%);
+  --mujs-sf-txt-color: hsl(12, 79%, 55%);
+  --mujs-txt-color: hsl(0, 0%, 100%);
+}
 
 mujs-root * {
   @supports not (scrollbar-width: thin) {
@@ -18,47 +26,103 @@ mujs-root * {
       width: 1.4vw;
       height: 3.3vh;
     }
+
     ::-webkit-scrollbar-track {
-      background-color: #2e323d;
-      border-radius: 10px;
+      background-color: hsl(224, 14%, 21%);
+      border-radius: 16px;
       margin-top: 3px;
       margin-bottom: 3px;
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      box-shadow: inset 0 0 6px hsla(0, 0%, 0%, 0.3);
     }
+
     ::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      background-color: $appTXTColor;
-      background-image: -webkit-linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.2) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0.2) 75%,
-        transparent 75%,
-        transparent
-      );
+      border-radius: 16px;
+      background-color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+      background-image: -webkit-linear-gradient(45deg,
+          hsla(0, 0%, 100%, 0.2) 25%,
+          transparent 25%,
+          transparent 50%,
+          hsla(0, 0%, 100%, 0.2) 50%,
+          hsla(0, 0%, 100%, 0.2) 75%,
+          transparent 75%,
+          transparent);
     }
+
     ::-webkit-scrollbar-thumb:hover {
-      background-color: $appTXTColor;
+      background-color: var(--mujs-txt-color, hsl(0, 0%, 100%));
     }
   }
-  scrollbar-color: $appTXTColor #2e323d;
+
+  scrollbar-color: var(--mujs-txt-color, hsl(0, 0%, 100%)) hsl(224, 14%, 21%);
   scrollbar-width: thin;
-  background: $appBGColor;
-  color: $appTXTColor;
+  // background: var(--mujs-background-color, hsl(222, 14%, 33%));
+  // color: var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
 
 @at-root mu-js {
   line-height: normal;
 }
+
 @at-root .mujs-cfg {
   line-height: 1.5;
+}
+
+mu-js {
+  color: var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
 
 body.webext-page,
 .main {
   font-size: 14px;
+}
+
+// .mujs-homepage,
+mujs-btn,
+input {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+mujs-section > label,
+.mujs-homepage,
+.mujs-euser,
+td.mujs-list,
+.install {
+  font-size: 16px;
+}
+
+.install,
+.mujs-homepage {
+  font-weight: 700;
+}
+
+mujs-section > label,
+.mujs-euser,
+td.mujs-list {
+  font-weight: 500;
+}
+
+.mujs-fltlist {
+  width: 170px;
+}
+
+.mujs-searcher {
+  width: 100px;
+}
+
+.mujs-sty-flex>mujs-btn {
+  margin: auto;
+}
+
+.mujs-invalid {
+  border-radius: 8px !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-color: hsl(0, 100%, 50%) !important;
 }
 
 mujs-column,
@@ -69,17 +133,25 @@ mujs-row,
 
 mujs-column,
 mujs-row {
-  gap: 10px;
+  // gap: 10px;
+  gap: 0.5em;
 }
 
 mujs-column {
   @media screen and (max-width: 800px) {
     flex-flow: row wrap;
   }
+  count-frame:nth-child(1) {
+    background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+  }
+  count-frame:nth-child(2) {
+    background-color: var(--mujs-sf-color, hsl(12, 86%, 50%));
+  }
 }
 
 mujs-row {
-  flex-direction: column;
+  flex-flow: column wrap;
+  // flex-direction: column;
 }
 
 mu-js {
@@ -92,43 +164,56 @@ mu-js {
 }
 
 .main {
-  @media screen and (max-height: 450px) {
+  // 500px
+  @media screen and (max-height: 720px) {
     &:not(.webext-page) {
       height: 100% !important;
       bottom: 0rem !important;
-      margin-left: 0rem !important;
-      margin-right: 0rem !important;
       right: 0rem !important;
+      margin: 0rem !important;
     }
   }
+
   width: 100%;
   width: -moz-available;
   width: -webkit-fill-available;
-  background: $appBGColor !important;
-  border: 1px solid $mainbColor;
-  border-radius: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--mujs-background-color, hsl(222, 14%, 33%)) !important;
+  border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
+  border-radius: 16px;
+  font-family: Arial,
+  Helvetica,
+  sans-serif;
+
   &.expanded {
     height: 100% !important;
     bottom: 0rem !important;
   }
+
   &:not(.webext-page) {
     position: fixed;
     height: 492px;
+
     &:not(.expanded) {
       margin-left: 1rem;
       margin-right: 1rem;
       right: 1rem;
       bottom: 1rem;
+
       &.auto-height {
         height: auto;
       }
     }
   }
+
   &:not(.hidden) {
     z-index: 99999999999999999 !important;
     display: flex !important;
     flex-direction: column !important;
+  }
+
+  input {
+    background: var(--mujs-background-color, hsl(222, 14%, 33%));
+    color: var(--mujs-txt-color, hsl(0, 0%, 100%));
   }
 }
 
@@ -137,10 +222,15 @@ mu-js {
   position: fixed;
   bottom: 1rem;
   right: 1rem;
+
   count-frame {
-    width: 2em;
-    height: 1em;
+    width: fit-content;
+    width: -moz-fit-content;
+    width: -webkit-fit-content;
+    height: auto;
+    padding: 14px 16px;
   }
+
   &:not(.hidden) {
     z-index: 99999999999999999 !important;
     display: block;
@@ -148,53 +238,201 @@ mu-js {
 }
 
 count-frame {
-  border-radius: 16px;
-  // padding: 0.25em;
-  padding: 5px;
-  border: 2px solid $mainbColor;
+  border-radius: 1000px;
+  margin: 0px 3px;
+  padding: 4px 6px; // 0.25em;
+  border: 2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
   font-size: 16px;
   font-weight: 400;
   display: inline-block;
   text-align: center;
   min-width: 1em;
+  background: var(--mujs-background-color, hsl(222, 14%, 33%));
+  color: var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
 
 .mujs-header-prim {
   order: 0;
   display: flex;
-  gap: 10px;
-  border-bottom: 1px solid $appTXTColor;
+  // gap: 10px;
+  border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-  padding: 10px;
+  // padding: 10px;
+  padding: .5em;
   font-size: 1em;
   place-content: space-between;
+  height: fit-content;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
 }
 
 .mujs-body {
   overflow-x: hidden;
   order: 1;
+  padding: 0px;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+
   .mujs-ratings {
     padding: 0 0.25em;
-    border: 1px solid $appTXTColor;
-    border-radius: 10px;
+    border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+    border-radius: 16px;
   }
+
   mu-jsbtn svg {
-    fill: $appTXTColor;
+    fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
     width: 14px;
     height: 14px;
     background: transparent;
+  }
+
+  table,
+  th,
+  td {
+    border-collapse: collapse;
+  }
+
+  table {
+    // max-width: 800px
+    @media screen and (max-width: 1180px) {
+      thead>tr {
+        display: table-column;
+      }
+
+      .frame:not(.webext-page) {
+        width: 100%;
+        // padding: .5em;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+        padding-top: .5em;
+        padding-bottom: .5em;
+
+        td {
+          // flex-grow: 1;
+          margin: auto;
+          border-bottom: 1px solid transparent;
+
+          >mujs-a,
+          >mu-js,
+          >mujs-column {
+            text-align: center;
+            justify-content: center;
+          }
+
+          &:not(.mujs-name, .install-btn) {
+            width: 25%;
+          }
+        }
+
+        .mujs-name {
+          width: 100%;
+        }
+
+        // .mujs-uframe,
+        // .mujs-list {
+        //   flex-grow: 2;
+        // }
+
+        // .install-btn {
+        //   justify-content: center;
+        //   display: flex;
+
+        //   mu-jsbtn {
+        //     width: -webkit-fit-content;
+        //     width: -moz-fit-content;
+        //     width: fit-content;
+        //   }
+        // }
+      }
+    }
+
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+
+    th,
+    td {
+      border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+    }
+
+    th {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      background: hsla(222, 14%, 33%, 0.75);
+
+      &.mujs-header-name {
+        @media screen and (max-width: 800px) {
+          width: auto !important;
+        }
+
+        width: 50%;
+      }
+    }
+
+    .frame {
+      &:nth-child(even) {
+        background-color: var(--mujs-even-row, hsl(222, 14%, 18%))!important;
+      }
+      &:nth-child(odd) {
+        background-color: var(--mujs-odd-row, hsl(222, 14%, 33%))!important;
+      }
+      &.sf {
+        mujs-a {
+          color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
+        }
+
+        mu-jsbtn {
+          background-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+          border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+          &:hover {
+            background-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
+            border-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
+          }
+        }
+      }
+
+      &:not(.sf) {
+        mujs-a {
+          color: var(--mujs-gf-color, hsl(197, 100%, 50%));
+          &:hover {
+            color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
+          }
+        }
+
+        mu-jsbtn {
+          color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+          background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+          border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+          &:hover {
+            background-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
+            border-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
+          }
+        }
+      }
+
+      > td:not(.mujs-name) {
+        text-align: center;
+        // justify-content: center;
+      }
+    }
   }
 }
 
 .mujs-cfg,
 .mujs-body {
-  border: 1px solid $mainbColor;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
+  // border-bottom-left-radius: 10px;
+  // border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 @media screen and (max-width: 1150px) {
@@ -204,65 +442,106 @@ count-frame {
 }
 
 .mujs-cfg {
-  @media screen and (max-height: 812px) {
+
+  // @media screen and (max-height: 550px) {
+  //   &:not(.webext-page) {
+  //     padding: 0.5em;
+  //     gap: 0.5em;
+  //     flex-flow: column wrap;
+  //     width: fit-content;
+  //     width: -moz-fit-content;
+  //     width: -webkit-fit-content;
+  //     height: fit-content;
+  //     height: -moz-fit-content;
+  //     height: -webkit-fit-content;
+  //     margin: auto !important;
+  //   }
+  // }
+  @media screen and (max-height: 720px) {
     &:not(.webext-page) {
-      flex-wrap: wrap;
-      flex-direction: row !important;
+      height: 100%;
+      height: -moz-available;
+      height: -webkit-fill-available;
+      width: 100%;
+      width: -moz-available;
+      width: -webkit-fill-available;
+      overflow-x: auto;
+      padding: .5em;
     }
   }
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
+
   height: fit-content;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+
   mujs-section {
-    // padding: 0.5em;
-    > label {
+    border-radius: 16px;
+    padding: .5em;
+    &:nth-child(even) {
+      background-color: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+    }
+    &:nth-child(odd) {
+      background-color: var(--mujs-odd-row, hsl(222, 14%, 33%))!important;
+    }
+    >label {
       display: flex;
       justify-content: space-between;
+
       input:not([type='checkbox']) {
+        font-size: 14px;
         position: relative;
         border-radius: 4px;
-        border: 1px solid $appTXTColor;
+        border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
       }
     }
   }
+
   .mujs-inlab {
     position: relative;
     width: 38px;
+
     input[type*='checkbox'] {
       display: none;
-      &:checked + label {
+
+      &:checked+label {
         margin-left: 0;
         background-color: $chDefault;
+
         &:before {
           right: 0px;
         }
       }
-      &[id='greasyfork']:checked + label,
-      &[id='sleazyfork']:checked + label {
+
+      &[id='greasyfork']:checked+label,
+      &[id='sleazyfork']:checked+label {
         background-color: $chGF;
       }
-      &[id='openuserjs']:checked + label {
+
+      &[id='openuserjs']:checked+label {
         background-color: $chOpen;
       }
-      &[id='github']:checked + label {
+
+      &[id='github']:checked+label {
         background-color: $chGit;
       }
     }
+
     label {
       padding: 0;
       display: block;
       overflow: hidden;
       height: 16px;
       border-radius: 20px;
-      border: 1px solid $appTXTColor;
-      background-color: $labColor;
+      border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+      background-color: var(--mujs-background-color, hsl(222, 14%, 33%));
+
       &:before {
         content: '';
         display: block;
         width: 20px;
         height: 20px;
         margin: -2px;
-        background: $appTXTColor;
+        background: var(--mujs-txt-color, hsl(0, 0%, 100%));
         position: absolute;
         top: 0;
         right: 20px;
@@ -270,107 +549,66 @@ count-frame {
       }
     }
   }
+
   [id='blacklist'] {
+    // color: hsl(249, 75%, 53%);
+    // color: #ff0000;
     overflow-y: auto;
-    background: $txtAreaBG;
-    color: $appTXTColor;
+    background: hsl(0, 0%, 0%);
+    color: hsl(115, 70%, 50%);
     resize: vertical;
     outline: none;
     border-style: none;
     font-family: monospace;
+    font-size: 14px;
+
     &:focus {
       outline: none;
     }
   }
+
+  .mujs-sty-flex {
+    mujs-btn {
+      color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+      &[data-command="reset"] {
+        background-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+        border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+        &:hover {
+          background-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
+          border-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
+        }
+      }
+      &[data-command="save"] {
+        background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+        border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+        &:hover {
+          background-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
+          border-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
+        }
+      }
+    }
+  }
+
   &:not(.webext-page) {
     order: 2;
     margin: 0px 25rem 1rem 25rem;
   }
 }
 
-table {
-  width: 100%;
-  width: -moz-available;
-  width: -webkit-fill-available;
-
-  thead > tr {
-    @media screen and (max-width: 800px) {
-      display: grid;
-      grid-auto-flow: column;
-    }
-    @media screen and (max-width: 500px) {
-      display: none !important;
-    }
-  }
-
-  th,
-  td {
-    border-bottom: 1px solid $appTXTColor;
-  }
-  td {
-    &.mujs-uframe,
-    &.mujs-list,
-    &.install-btn {
-      text-align: center;
-    }
-  }
-  th {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    &.mujs-header-name {
-      @media screen and (max-width: 800px) {
-        width: auto !important;
-      }
-      width: 50%;
-    }
-  }
-}
-
 mujs-a {
   display: inline-block;
+
   &.mujs-euser {
     padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-}
-
-.frame {
-  @media screen and (max-width: 800px) {
-    &:not(.webext-page) {
-      display: grid;
-      mu-jsbtn {
-        margin-left: 25%;
-        margin-right: 25%;
-      }
-    }
-  }
-  &.sf {
-    mujs-a {
-      color: $mujsA !important;
-    }
-    mu-jsbtn {
-      background-color: $mujsBtn !important;
-      border-color: $mujsBtn !important;
-    }
-  }
-  &:not(.sf) {
-    mujs-a {
-      color: $mujsAColor;
-    }
-    mu-jsbtn {
-      color: $appTXTColor;
-      background-color: $gfColor;
-      border-color: $gfColor;
-    }
+    paddinng-right: 0.5rem;
   }
 }
 
 .mujs-name {
-  display: grid;
-  > *:not(.mujs-homepage) {
-    margin-top: 3px;
-  }
+  display: flex;
+  flex-flow: column wrap;
+  gap: .5em;
+
   span {
     font-size: 0.8em !important;
   }
@@ -378,17 +616,18 @@ mujs-a {
 
 mujs-btn {
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   font-variant: normal;
   text-transform: none;
   text-rendering: auto;
-  border: 1px solid $appTXTColor;
+  text-align: center;
+  border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
   font-size: 16px;
   border-radius: 4px;
   line-height: 1;
   padding: 6px 15px;
   svg {
-    fill: $appTXTColor;
+    fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
     width: 14px;
     height: 14px;
   }
@@ -403,6 +642,7 @@ mu-jsbtn {
   font-variant: normal;
   line-height: normal;
   display: block;
+  text-align: center;
 }
 
 // input[type*='number'],
@@ -432,34 +672,4 @@ th,
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
-}
-
-mujs-btn,
-input,
-.mujs-homepage {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-}
-
-.mujs-fltlist {
-  width: 170px;
-}
-
-.mujs-searcher {
-  width: 100px;
-}
-
-.mujs-sty-flex > mujs-btn {
-  margin: auto;
-}
-
-.mujs-invalid {
-  border-radius: 8px !important;
-  border-width: 2px !important;
-  border-style: solid !important;
-  border-color: red !important;
 }

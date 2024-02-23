@@ -103,8 +103,11 @@ $ pnpm i
 #### Userscript Version
 
 ``` sh
-# Watch and compile
-$ pnpm run Dev:UserJS
+# Watch and compile to local HTTP server
+$ pnpm run dev:UserJS
+
+# Compile UserJS
+$ pnpm run pub:UserJS
 ```
 
 ### Source Code
