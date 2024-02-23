@@ -1209,11 +1209,7 @@ const primaryFN = (injCon) => {
     if (!injectedCore) {
       throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
     }
-
-    // mujsRoot.style.setProperty('--mujs-background-color', '#007ACC');
-    // mujsRoot.style.setProperty('--mujs-txt-color', '');
-
-    const table = make('table'); // make('mujs-table')
+    const table = make('table');
     const tabbody = make('tbody');
     const tabhead = make('thead');
     const mouseTimeout = new Timeout();
