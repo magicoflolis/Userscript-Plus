@@ -88,5 +88,8 @@
   },
   "save": {
     "message": "Guardar"
+  },
+  "reset": {
+    "message": "Reiniciar"
   }
 }

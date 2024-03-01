@@ -23,7 +23,7 @@ const goodUserJS = [
   6456,
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/Manga_OnlineViewer.user.js',
   'https://github.com/jesus2099/konami-command/raw/master/INSTALL-USER-SCRIPT.user.js',
-  'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js',
+  'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js'
 ];
 
 const isMobile = /Mobile|Tablet/.test(navigator.userAgent);
@@ -190,6 +190,12 @@ const normalizeTarget = (target, root = document, toQuery = true) => {
   return Array.from(target);
 };
 class dom {
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } attr
+   * @param { * } [value=undefined]
+   */
   static attr(target, attr, value = undefined) {
     for (const elem of normalizeTarget(target)) {
       if (value === undefined) {
@@ -202,7 +208,24 @@ class dom {
       }
     }
   }
-
+  /**
+   * @template { HTMLElementTagNameMap } K
+   * @param { K } a
+   * @returns { HTMLElementTagNameMap[K] }
+   */
+  static create(a) {
+    if (typeof a === 'string') {
+      return document.createElement(a);
+    }
+    throw new Error('"a" must be a typeof "String"');
+  }
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } prop
+   * @param { * } [value=undefined]
+   * @returns { keyof T | void }
+   */
   static prop(target, prop, value = undefined) {
     for (const elem of normalizeTarget(target)) {
       if (value === undefined) {
@@ -211,7 +234,11 @@ class dom {
       elem[prop] = value;
     }
   }
-
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } text
+   */
   static text(target, text) {
     const targets = normalizeTarget(target);
     if (text === undefined) {
@@ -305,8 +332,8 @@ class Task {
 }
 const alang = [];
 const defcfg = {
-  injection: 'interactive',
   cache: true,
+  codePreview: false,
   autoexpand: false,
   filterlang: false,
   sleazyredirect: false,
@@ -363,7 +390,11 @@ const defcfg = {
       url: 'https://api.github.com/search/code?q=',
       token: ''
     }
-  ]
+  ],
+  recommend: {
+    author: true,
+    others: true,
+  }
 };
 /**
  * Add Event Listener
@@ -559,10 +590,10 @@ const iconSVG = {
   issue:
     '<svg viewBox="0 0 24 24"><path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/></svg>',
   nav: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M2 5.5C2 4.94772 2.44772 4.5 3 4.5H21C21.5523 4.5 22 4.94772 22 5.5V6.5C22 7.05228 21.5523 7.5 21 7.5H3C2.44772 7.5 2 7.05228 2 6.5V5.5Z" fill="#ffffff"></path> <path d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5H21C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="#ffffff"></path> <path d="M3 16.5C2.44772 16.5 2 16.9477 2 17.5V18.5C2 19.0523 2.44772 19.5 3 19.5H21C21.5523 19.5 22 19.0523 22 18.5V17.5C22 16.9477 21.5523 16.5 21 16.5H3Z" fill="#ffffff"></path> </g></svg>',
-  plus: '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M13.5 3C13.5 2.44772 13.0523 2 12.5 2H11.5C10.9477 2 10.5 2.44772 10.5 3V10.5H3C2.44772 10.5 2 10.9477 2 11.5V12.5C2 13.0523 2.44772 13.5 3 13.5H10.5V21C10.5 21.5523 10.9477 22 11.5 22H12.5C13.0523 22 13.5 21.5523 13.5 21V13.5H21C21.5523 13.5 22 13.0523 22 12.5V11.5C22 10.9477 21.5523 10.5 21 10.5H13.5V3Z" fill="#ffffff"/> </g></svg>',
-  verified: '<svg fill="currentColor" stroke="currentColor" viewBox="0 0 56 56"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g></svg>',
+  verified:
+    '<svg fill="currentColor" stroke="currentColor" viewBox="0 0 56 56"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g></svg>',
   search:
-    '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.5C4.75329 0.5 0.5 4.75329 0.5 10C0.5 15.2467 4.75329 19.5 10 19.5C12.082 19.5 14.0076 18.8302 15.5731 17.6944L20.2929 22.4142C20.6834 22.8047 21.3166 22.8047 21.7071 22.4142L22.4142 21.7071C22.8047 21.3166 22.8047 20.6834 22.4142 20.2929L17.6944 15.5731C18.8302 14.0076 19.5 12.082 19.5 10C19.5 4.75329 15.2467 0.5 10 0.5ZM3.5 10C3.5 6.41015 6.41015 3.5 10 3.5C13.5899 3.5 16.5 6.41015 16.5 10C16.5 13.5899 13.5899 16.5 10 16.5C6.41015 16.5 3.5 13.5899 3.5 10Z" fill="#ffffff"/> </g></svg>'
+    '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.5C4.75329 0.5 0.5 4.75329 0.5 10C0.5 15.2467 4.75329 19.5 10 19.5C12.082 19.5 14.0076 18.8302 15.5731 17.6944L20.2929 22.4142C20.6834 22.8047 21.3166 22.8047 21.7071 22.4142L22.4142 21.7071C22.8047 21.3166 22.8047 20.6834 22.4142 20.2929L17.6944 15.5731C18.8302 14.0076 19.5 12.082 19.5 10C19.5 4.75329 15.2467 0.5 10 0.5ZM3.5 10C3.5 6.41015 6.41015 3.5 10 3.5C13.5899 3.5 16.5 6.41015 16.5 10C16.5 13.5899 13.5899 16.5 10 16.5C6.41015 16.5 3.5 13.5899 3.5 10Z" fill="currentColor"/> </g></svg>'
 };
 const Timeout = class {
   constructor() {
@@ -891,7 +922,6 @@ const Container = class {
   constructor() {
     this.remove = this.remove.bind(this);
     this.onFrameLoad = this.onFrameLoad.bind(this);
-
     this.ready = false;
     this.supported = isFN(document.createElement('main-userjs').attachShadow);
     if (this.supported) {
@@ -901,6 +931,9 @@ const Container = class {
           role: 'primary-container'
         }
       });
+      /**
+       * @type { ShadowRoot }
+       */
       this.root = this.frame.attachShadow({ mode: 'open' });
       this.ready = true;
     } else {
@@ -921,6 +954,7 @@ const Container = class {
   }
   /**
    * @param { Function } callback
+   * @param { document } doc
    */
   async inject(callback, doc) {
     if (!doc) {
@@ -942,11 +976,16 @@ const Container = class {
   }
 
   onFrameLoad(iFrame) {
-    this.root = iFrame.target.contentDocument.documentElement;
+    /**
+     * @type { HTMLIFrameElement }
+     */
+    const target = iFrame.target;
+    this.root = target.contentDocument.documentElement;
     this.ready = true;
 
-    this.root.classList.add('mujs-iframe');
-    iFrame.target.contentDocument.body.classList.add('mujs-iframe');
+    dom.cl.add([this.root, target.contentDocument.body], 'mujs-iframe');
+    // this.root.classList.add('mujs-iframe');
+    // target.contentDocument.body.classList.add('mujs-iframe');
   }
 };
 const container = new Container();
@@ -976,6 +1015,19 @@ const primaryFN = (injCon) => {
     if (!injectedCore) {
       throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
     }
+
+    if (navigator.languages.length > 0) {
+      for (const nlang of navigator.languages) {
+        const lg = nlang.split('-')[0];
+        if (alang.indexOf(lg) === -1) {
+          alang.push(lg);
+        }
+      }
+    }
+    if (!alang.includes(Language.navLang)) {
+      alang.push(Language.navLang);
+    }
+
     const table = make('table');
     const tabbody = make('tbody');
     const tabhead = make('thead');
@@ -1012,10 +1064,24 @@ const primaryFN = (injCon) => {
               dom.cl.add([btngreasy, btnhome, btnissue], 'hidden');
             }
           } else if (cmd === 'list-description') {
-            if (dom.cl.has(target.nextElementSibling, 'hidden')) {
-              dom.cl.remove(target.nextElementSibling, 'hidden');
+            const arr = [];
+            const ignoreTags = new Set(['TD', 'MUJS-A', 'MU-JS']);
+            for (const node of target.parentElement.childNodes) {
+              if (ignoreTags.has(node.tagName)) {
+                continue;
+              }
+              arr.push(node);
+            }
+            if (target.nextElementSibling) {
+              arr.push(target.nextElementSibling);
+              if (target.nextElementSibling.nextElementSibling) {
+                arr.push(target.nextElementSibling.nextElementSibling);
+              }
+            }
+            if (dom.cl.has(arr, 'hidden')) {
+              dom.cl.remove(arr, 'hidden');
             } else {
-              dom.cl.add(target.nextElementSibling, 'hidden');
+              dom.cl.add(arr, 'hidden');
             }
           } else if (cmd === 'close') {
             container.remove();
@@ -1042,7 +1108,8 @@ const primaryFN = (injCon) => {
             if (!isNull(legacyMsg)) {
               legacyMsg = null;
               MUJS.rebuild = true;
-              rateContainer.innerHTML = '';
+              dom.prop(rateContainer, 'innerHTML', '');
+              // rateContainer.innerHTML = '';
             }
             if (!dom.prop(target, 'disabled')) {
               MUJS.save();
@@ -1063,9 +1130,12 @@ const primaryFN = (injCon) => {
               JSON.stringify(cfg.blacklist, null, ' ')
             );
             for (const i of cfg.engines) {
-              if (sh(`mu-js.mujs-inlab > [id="${i.name}"]`)) {
-                sh(`mu-js.mujs-inlab > [id="${i.name}"]`).checked = i.enabled;
+              if (sh(`mu-js.mujs-inlab > [data-name="${i.name}"]`)) {
+                sh(`mu-js.mujs-inlab > [data-name="${i.name}"]`).checked = i.enabled;
               }
+              // if (sh(`mu-js.mujs-inlab > [id="${i.name}"]`)) {
+              //   sh(`mu-js.mujs-inlab > [id="${i.name}"]`).checked = i.enabled;
+              // }
             }
             for (const i of shA('mu-js.mujs-inlab > input[type="checkbox"]')) {
               if (!i.name.match(/((greasy|sleazy)fork|openuserjs|gi(thub|st))/gi)) {
@@ -1122,6 +1192,7 @@ const primaryFN = (injCon) => {
     //#endregion
 
     const template = {
+      id: 0,
       bad_ratings: 0,
       good_ratings: 0,
       ok_ratings: 0,
@@ -1146,6 +1217,7 @@ const primaryFN = (injCon) => {
         this.showError = this.showError.bind(this);
         this.cleanup = this.cleanup.bind(this);
         this.cache = new Map();
+        this.userjsCache = new Map();
         // Unsure if `window.location` would be better
         this.host = location.hostname.split('.').splice(-2).join('.');
         this.site = window.top.document.location.href;
@@ -1153,7 +1225,7 @@ const primaryFN = (injCon) => {
         this.isBlacklisted = false;
         this.switchRows = true;
         this.rebuild = false;
-        this.siteujs = [];
+        // this.siteujs = [];
         this.forkCount = 0;
         this.customCount = 0;
 
@@ -1194,9 +1266,9 @@ const primaryFN = (injCon) => {
       }
 
       updateCounters() {
-        sfcounter.innerHTML = this.customCount;
-        gfcounter.innerHTML = this.forkCount;
-        mainbtn.innerHTML = this.customCount + this.forkCount;
+        dom.prop(sfcounter, 'innerHTML', this.customCount);
+        dom.prop(gfcounter, 'innerHTML', this.forkCount);
+        dom.prop(mainbtn, 'innerHTML', this.customCount + this.forkCount);
       }
 
       save() {
@@ -1214,12 +1286,10 @@ const primaryFN = (injCon) => {
       }
 
       refresh() {
-        this.siteujs.length = 0;
         this.forkCount = 0;
         this.customCount = 0;
         this.updateCounters();
-        tabbody.innerHTML = '';
-        rateContainer.innerHTML = '';
+        dom.prop([tabbody, rateContainer], 'innerHTML', '');
         if (sh('.error')) {
           sh('.error').remove();
         }
@@ -1268,14 +1338,37 @@ const primaryFN = (injCon) => {
       MUJS.switchRows = !MUJS.switchRows;
       tabbody.append(...rows);
     };
+    const reqCode = async (obj = {}) => {
+      if (obj.code_data) {
+        return obj.code_data
+      };
+      const txt = await Network.req(obj.code_url, 'GET', 'text').catch(MUJS.showError);
+      if (typeof txt !== 'string') {
+        return;
+      }
+      if (isNull(txt.match(/\/\/\s@[\w][\s\S]+/g))) {
+        return;
+      };
+      Object.assign(obj, {
+        code_data: txt
+      });
+      return txt;
+    };
     const createjs = (ujs, issleazy) => {
+      for (const key in template) {
+        if (hasOwn(ujs, key)) continue;
+        ujs[key] = template[key];
+      }
       // Lets not add this UserJS to the list
       if (ujs.id === 421603) {
         return;
       }
-      for (const key in template) {
-        if (hasOwn(ujs, key)) continue;
-        ujs[key] = template[key];
+      // if (MUJS.userjsCache.has(ujs.id)) {
+      //   return;
+      // }
+      // MUJS.userjsCache.set(ujs.id, ujs);
+      if (!MUJS.userjsCache.has(ujs.id)) {
+        MUJS.userjsCache.set(ujs.id, ujs);
       }
       const eframe = make('td', 'install-btn');
       const uframe = make('td', 'mujs-uframe');
@@ -1294,6 +1387,7 @@ const primaryFN = (injCon) => {
           webpage: ujs.url
         }
       });
+      const fmore = make('mujs-column', 'mujs-list hidden');
       const fver = make('mu-js', 'mujs-list', {
         innerHTML: `${lang.version}: ${ujs.version}`
       });
@@ -1302,7 +1396,11 @@ const primaryFN = (injCon) => {
           new Date(ujs.created_at)
         )}`
       });
-      const fmore = make('mujs-column', 'mujs-list hidden');
+      const flicense = make('mu-js', 'mujs-list', {
+        title: ujs.license ?? 'Not licensed',
+        innerHTML: `License: ${ujs.license ?? 'N/A'}`,
+        style: 'text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: fit-content; max-width: 20em;'
+      });
       const ftotal = make('mu-js', 'mujs-list', {
         innerHTML: `${lang.total}: ${ujs.total_installs}`
       });
@@ -1342,10 +1440,32 @@ const primaryFN = (injCon) => {
           webpage: ujs.code_url
         }
       });
+      const fBtns = make('mujs-column', 'mujs-list hidden');
+      const dwnCode = make('mu-jsbtn', '', {
+        innerHTML: `${iconSVG.install} Save File`,
+        async onclick(evt) {
+          evt.preventDefault();
+          try {
+            const txt = await reqCode(ujs);
+            if (typeof txt !== 'string') {
+              return;
+            }
+            const makeUserJS = new Blob([txt], { type: 'text/plain' });
+            const dlBtn = make('a', 'mujs_Downloader');
+            dlBtn.href = URL.createObjectURL(makeUserJS);
+            dlBtn.download = 'test.user.js';
+            dlBtn.click();
+            URL.revokeObjectURL(dlBtn.href);
+            dlBtn.remove();
+          } catch (ex) {
+            err(ex);
+          }
+        }
+      });
       const tr = make('tr', 'frame');
       if (issleazy) {
         dom.cl.add(tr, 'sf');
-        if (goodUserJS.includes(ujs.url)) {
+        if (cfg.recommend.others && goodUserJS.includes(ujs.url)) {
           tr.dataset.good = 'upsell';
         }
       }
@@ -1358,104 +1478,85 @@ const primaryFN = (injCon) => {
             webpage: u.url
           }
         });
-        if (u.id === authorID) {
+        if (cfg.recommend.author && u.id === authorID) {
           tr.dataset.author = 'upsell';
-          user.innerHTML = `${u.name} ${iconSVG.verified}`;
+          dom.prop(user, 'innerHTML', `${u.name} ${iconSVG.verified}`);
         }
         uframe.append(user);
       }
-      if (goodUserJS.includes(ujs.id)) {
+      if (cfg.recommend.others && goodUserJS.includes(ujs.id)) {
         tr.dataset.good = 'upsell';
       }
       eframe.append(fdwn);
-      fmore.append(ftotal, fratings, fgood, fok, fbad, fver, fcreated);
-      fname.append(ftitle, fdesc, fmore);
+      fmore.append(ftotal, fratings, fgood, fok, fbad, fver, fcreated, flicense);
+      fBtns.append(dwnCode);
+      fname.append(ftitle, fdesc, fmore, fBtns);
+
+      if (ujs.code_data) {
+        const codeArea = make('textarea', 'code-area hidden', {
+          dataset: {
+            name: 'code'
+          },
+          rows: '10',
+          autocomplete: false,
+          spellcheck: false,
+          wrap: 'soft',
+          value: ujs.code_data
+        });
+        fname.append(codeArea);
+      } else {
+        const loadCode = make('mu-jsbtn', '', {
+          innerHTML: `${iconSVG.search} Preview`,
+          async onclick(evt) {
+            evt.preventDefault();
+            try {
+              if (qs('textarea', fname)) {
+                return;
+              }
+              const txt = await reqCode(ujs);
+              if (typeof txt !== 'string') {
+                return;
+              }
+              const codeArea = make('textarea', 'code-area', {
+                dataset: {
+                  name: 'code'
+                },
+                rows: '10',
+                autocomplete: false,
+                spellcheck: false,
+                wrap: 'soft',
+                value: txt
+              });
+              fname.append(codeArea);
+            } catch (ex) {
+              err(ex)
+            }
+          }
+        });
+        fBtns.append(loadCode);
+      }
+
       for (const e of [fname, uframe, fdaily, fupdated, eframe]) {
         tr.append(e);
       }
       tabbody.append(tr);
     };
-    if (navigator.languages.length > 0) {
-      for (const nlang of navigator.languages) {
-        const lg = nlang.split('-')[0];
-        if (alang.indexOf(lg) === -1) {
-          alang.push(lg);
-        }
-      }
-    }
-    const makerow = (desc, type, nm, attrs = {}) => {
-      const sec = make('mujs-section', '', {
-        style: !Supports.gm && nm === 'cache' ? 'display: none;' : ''
-      });
-      const lb = make('label');
-      const divDesc = make('mu-js', '', {
-        innerHTML: desc
-      });
-      lb.append(divDesc);
-      sec.append(lb);
-      cfgpage.append(sec);
-      if (isNull(type)) {
-        return sec;
-      }
-      const inp = make(
-        'input',
-        '',
-        setObj(
-          {
-            type,
-            id: nm,
-            name: nm
-          },
-          attrs
-        )
-      );
-      if (type === 'checkbox') {
-        const inlab = make('mu-js', 'mujs-inlab');
-        const la = make('label', '', {
-          click() {
-            inp.dispatchEvent(new MouseEvent('click'));
-          }
-        });
-        inlab.append(inp, la);
-        lb.append(inlab);
-        if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
-          for (const i of cfg.engines) {
-            if (i.name !== nm) continue;
-            inp.checked = i.enabled;
-            ael(inp, 'change', (e) => {
-              MUJS.unsaved = true;
-              i.enabled = e.target.checked;
-            });
-          }
-        } else {
-          inp.checked = cfg[nm];
-          ael(inp, 'change', (e) => {
-            MUJS.unsaved = true;
-            if (/filterlang/i.test(nm)) {
-              MUJS.rebuild = true;
-            }
-            cfg[nm] = e.target.checked;
-          });
-        }
-      } else {
-        lb.append(inp);
-      }
-      return inp;
-    };
     //#region Build List
-    const buildlist = async (host) => {
+    const buildlist = async (host = undefined) => {
       try {
         if (isEmpty(host)) {
           host = MUJS.host;
         }
         MUJS.refresh();
-        if (MUJS.checkBlacklist()) return;
-        const template = {};
+        if (MUJS.checkBlacklist()) {
+          return;
+        }
+        const engineTemplate = {};
         for (const engine of cfg.engines) {
-          template[engine.name] = [];
+          engineTemplate[engine.name] = [];
         }
         if (!MUJS.cache.has(host)) {
-          MUJS.cache.set(host, template);
+          MUJS.cache.set(host, engineTemplate);
         }
         const engines = cfg.engines.filter((e) => e.enabled);
         const cache = MUJS.cache.get(host);
@@ -1482,64 +1583,62 @@ const primaryFN = (injCon) => {
         }
         for (const engine of engines) {
           const forkFN = async (data) => {
-            if (!data) return;
+            if (!data) {
+              return;
+            }
             const hideData = [];
             const filterLang = data.filter((d) => {
               if (d.deleted) {
                 return false;
               }
-              if (!cfg.filterlang) {
-                return true;
+              if (cfg.filterlang) {
+                const dlocal = d.locale.split('-')[0] ?? d.locale;
+                if (alang.includes(dlocal)) {
+                  return true;
+                };
+                hideData.push(d);
+                return false;
               }
-              const dlocal = d.locale.split('-')[0] ?? d.locale;
-              if (alang.length > 1) {
-                for (const a of alang) {
-                  if (dlocal.includes(a)) {
-                    return true;
-                  }
-                }
-              } else if (dlocal.includes(Language.navLang)) {
-                return true;
-              }
-              hideData.push(d);
-              return false;
+              return true;
             });
             let finalList = filterLang;
 
-            if (hideData.length > 0) {
-              const hds = [];
-              for (const h of hideData) {
-                const txt = await Network.req(h.code_url, 'GET', 'text').catch(MUJS.showError);
-                const headers = txt.match(/\/\/\s@[\w][\s\S]+/g) || [];
-                if (headers.length > 0) {
-                  const regName = new RegExp(`// @name:${Language.navLang}\\s+.+`, 'gi');
-                  const findName = (regName.exec(headers[0]) ?? []).join('');
-                  if (isEmpty(findName)) {
-                    continue;
-                  }
-                  const cReg = new RegExp(`// @name:${Language.navLang}\\s+`, 'gi');
-                  const cutName = findName.replace(cReg, '');
-                  Object.assign(h, {
-                    name: cutName
-                  });
-                  const regDesc = new RegExp(`// @description:${Language.navLang}\\s+.+`, 'gi');
-                  const findDesc = (regDesc.exec(headers[0]) ?? []).join('');
-                  if (isEmpty(findDesc)) {
-                    continue;
-                  }
-                  Object.assign(h, {
-                    description: findDesc.replace(
-                      new RegExp(`// @description:${Language.navLang}\\s+`, 'gi'),
-                      ''
-                    )
-                  });
-                  hds.push(h);
-                }
+            const hds = [];
+            for (const h of hideData) {
+              const txt = await reqCode(h);
+              if (typeof txt !== 'string') {
+                continue;
               }
-              finalList = [...new Set([...hds, ...filterLang])];
+              const headers = txt.match(/\/\/\s@[\w][\s\S]+/g); // txt.match(/\/\/\s?==UserScript==([\s\S]*?)\/\/\s?==\/UserScript==/gm);
+              if (isNull(headers)) {
+                continue;
+              };
+              for (const lng of alang) {
+                const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
+                const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
+                if (!isNull(findName)) {
+                  Object.assign(h, {
+                    name: findName[1],
+                    translated: true
+                  });
+                }
+                if (!isNull(findDesc)) {
+                  Object.assign(h, {
+                    description: findDesc[1],
+                    translated: true
+                  });
+                };
+              }
+              if (h.translated) {
+                hds.push(h);
+              };
             }
+            finalList = [...new Set([...hds, ...filterLang])];
+
             for (const ujs of finalList) {
-              MUJS.siteujs.push(ujs);
+              if (cfg.codePreview && !ujs.code_data) {
+                await reqCode(ujs);
+              };
               createjs(ujs, false);
             }
             cache[engine.name].push(...finalList);
@@ -1551,10 +1650,9 @@ const primaryFN = (injCon) => {
               // dbg('.col-sm-8 .tr-link', qsA('.col-sm-8 .tr-link', selected));
               for (const i of qsA('.col-sm-8 .tr-link', selected)) {
                 await query('.script-version', i);
-                const fixurl = dom.prop(qs('.tr-link-a', i), 'href').replace(
-                  new RegExp(document.location.origin, 'gi'),
-                  'https://openuserjs.org'
-                );
+                const fixurl = dom
+                  .prop(qs('.tr-link-a', i), 'href')
+                  .replace(new RegExp(document.location.origin, 'gi'), 'https://openuserjs.org');
                 const layout = {
                   name: dom.text(qs('.tr-link-a', i)),
                   description: dom.text(qs('p', i)),
@@ -1652,15 +1750,16 @@ const primaryFN = (injCon) => {
                 createjs(layout, true);
                 customRecords.push(layout);
               }
-              MUJS.addCustomCnt(data.items.length);
               cache[engine.name].push(...customRecords);
+              MUJS.addCustomCnt(data.items.length);
             } catch (ex) {
               MUJS.showError(ex);
             }
           };
           const eURL = engine.url;
           const cEngine = cache[`${engine.name}`];
-          if (engine.name.match(/fork/gi)) {
+          // engine.name.match(/fork/gi)
+          if (engine.name.includes('fork')) {
             if (!isEmpty(cEngine)) {
               for (const ujs of cEngine) {
                 createjs(ujs, false);
@@ -1669,20 +1768,6 @@ const primaryFN = (injCon) => {
               continue;
             }
 
-            if (cfg.filterlang) {
-              if (alang.length > 1) {
-                for (const a of alang) {
-                  Network.req(`${eURL}/${a}/scripts/by-site/${host}.json?page=1`)
-                    .then(forkFN)
-                    .catch(MUJS.showError);
-                }
-                continue;
-              }
-              Network.req(`${eURL}/${Language.navLang}/scripts/by-site/${host}.json?page=1`)
-                .then(forkFN)
-                .catch(MUJS.showError);
-              continue;
-            }
             Network.req(`${eURL}/scripts/by-site/${host}.json`).then(forkFN).catch(MUJS.showError);
           } else if (engine.name.match(/(openuserjs|github)/gi)) {
             if (!isEmpty(cEngine)) {
@@ -1722,9 +1807,8 @@ const primaryFN = (injCon) => {
               Network.req(`${eURL}${host}`, 'GET', 'document').then(customFN).catch(MUJS.showError);
             }
           }
-
-          // log(MUJS.siteujs);
         }
+        dbg('listData', MUJS.userjsCache, tabbody.children);
         // sortRowBy(2);
       } catch (ex) {
         MUJS.showError(ex);
@@ -1733,6 +1817,67 @@ const primaryFN = (injCon) => {
     //#endregion
     //#region Make Config
     const makecfg = () => {
+      const makerow = (desc = 'Placeholder', type = null, nm = 'Placeholder', attrs = {}) => {
+        const sec = make('mujs-section', 'mujs-cfg-section', {
+          style: !Supports.gm && nm === 'cache' ? 'display: none;' : ''
+        });
+        const lb = make('label');
+        const divDesc = make('mu-js', 'mujs-cfg-desc', {
+          innerHTML: desc
+        });
+        lb.append(divDesc);
+        sec.append(lb);
+        cfgpage.append(sec);
+        if (isNull(type)) {
+          return lb;
+        }
+        const inp = make(
+          'input',
+          'mujs-cfg-input',
+          {
+            type,
+            dataset: {
+              name: nm
+            },
+            ...attrs
+          }
+        );
+        if (type === 'checkbox') {
+          const inlab = make('mu-js', 'mujs-inlab');
+          const la = make('label', '', {
+            click() {
+              inp.dispatchEvent(new MouseEvent('click'));
+            }
+          });
+          inlab.append(inp, la);
+          lb.append(inlab);
+          if (nm.includes('-')) {
+            return inp;
+          }
+          if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
+            for (const i of cfg.engines) {
+              if (i.name !== nm) continue;
+              inp.checked = i.enabled;
+              ael(inp, 'change', (evt) => {
+                MUJS.unsaved = true;
+                i.enabled = evt.target.checked;
+              });
+            }
+          } else {
+            inp.checked = cfg[nm];
+            ael(inp, 'change', (evt) => {
+              MUJS.unsaved = true;
+              if (/filterlang/i.test(nm)) {
+                MUJS.rebuild = true;
+              }
+              cfg[nm] = evt.target.checked;
+            });
+          }
+        } else {
+          lb.append(inp);
+        }
+        return inp;
+      };
       makerow('Sync with GM', 'checkbox', 'cache');
       makerow('Auto Fullscreen', 'checkbox', 'autoexpand', {
         onchange(e) {
@@ -1747,20 +1892,29 @@ const primaryFN = (injCon) => {
       });
       makerow(lang.redirect, 'checkbox', 'sleazyredirect');
       makerow(lang.filter, 'checkbox', 'filterlang');
+      makerow('Preview code', 'checkbox', 'codePreview');
+      for (const inp of [makerow('Recommend author', 'checkbox', 'recommend-author'), makerow('Recommend scripts', 'checkbox', 'recommend-others')]) {
+        const nm = inp.dataset.name === 'recommend-author' ? 'author' : 'others';
+        inp.checked = cfg.recommend[nm];
+        ael(inp, 'change', (evt) => {
+          MUJS.unsaved = true;
+          cfg.recommend[nm] = evt.target.checked;
+        });
+      }
       makerow('Greasy Fork', 'checkbox', 'greasyfork');
       makerow('Sleazy Fork', 'checkbox', 'sleazyfork');
       makerow('Open UserJS', 'checkbox', 'openuserjs');
       makerow('GitHub API', 'checkbox', 'github');
       const ghAPI = cfg.engines.find((c) => c.name === 'github');
-      makerow('GitHub API (Token)', 'password', 'github', {
+      makerow('GitHub API (Token)', 'text', 'github', {
         defaultValue: '',
         value: ghAPI.token ?? '',
         placeholder: 'Paste Access Token',
-        onchange(e) {
+        onchange(evt) {
           MUJS.unsaved = true;
           MUJS.rebuild = true;
           if (isNull(legacyMsg)) {
-            ghAPI.token = e.target.value;
+            ghAPI.token = evt.target.value;
           }
         }
       });
@@ -1769,18 +1923,18 @@ const primaryFN = (injCon) => {
         value: cfg.time,
         min: 0,
         step: 500,
-        onbeforeinput(e) {
-          if (e.target.validity.badInput) {
-            dom.cl.add(e.target, 'mujs-invalid');
+        onbeforeinput(evt) {
+          if (evt.target.validity.badInput) {
+            dom.cl.add(evt.target, 'mujs-invalid');
             dom.prop(savebtn, 'disabled', true);
           } else {
-            dom.cl.remove(e.target, 'mujs-invalid');
+            dom.cl.remove(evt.target, 'mujs-invalid');
             dom.prop(savebtn, 'disabled', false);
           }
         },
-        oninput(e) {
+        oninput(evt) {
           MUJS.unsaved = true;
-          const t = e.target;
+          const t = evt.target;
           if (t.validity.badInput || (t.validity.rangeUnderflow && t.value !== '-1')) {
             dom.cl.add(t, 'mujs-invalid');
             dom.prop(savebtn, 'disabled', true);
@@ -1791,45 +1945,47 @@ const primaryFN = (injCon) => {
           }
         }
       });
+
       const cbtn = make('mu-js', 'mujs-sty-flex');
       const savebtn = make('mujs-btn', 'save', {
-        disabled: false,
-        innerHTML: lang.save,
         dataset: {
           command: 'save'
+        },
+        disabled: false,
+        innerHTML: lang.save
+      });
+      const resetbtn = make('mujs-btn', 'reset', {
+        innerHTML: lang.reset,
+        dataset: {
+          command: 'reset'
         }
       });
       const txta = make('textarea', 'tarea', {
-        name: 'blacklist',
-        id: 'blacklist',
+        dataset: {
+          name: 'blacklist'
+        },
         rows: '10',
         autocomplete: false,
         spellcheck: false,
         wrap: 'soft',
         value: JSON.stringify(cfg.blacklist, null, ' '),
-        oninput(e) {
+        oninput(evt) {
           let isvalid = true;
           try {
-            cfg.blacklist = JSON.parse(e.target.value);
+            cfg.blacklist = JSON.parse(evt.target.value);
             isvalid = true;
           } catch (ex) {
             err(ex);
             isvalid = false;
           } finally {
             if (isvalid) {
-              dom.cl.remove(e.target, 'mujs-invalid');
+              dom.cl.remove(evt.target, 'mujs-invalid');
               dom.prop(savebtn, 'disabled', false);
             } else {
-              dom.cl.add(e.target, 'mujs-invalid');
+              dom.cl.add(evt.target, 'mujs-invalid');
               dom.prop(savebtn, 'disabled', true);
             }
           }
-        }
-      });
-      const resetbtn = make('mujs-btn', 'reset', {
-        innerHTML: 'Reset',
-        dataset: {
-          command: 'reset'
         }
       });
       cbtn.append(resetbtn, savebtn);
@@ -1845,6 +2001,7 @@ const primaryFN = (injCon) => {
       tabhead.append(tr);
       table.append(tabhead, tabbody);
     };
+
     const btnHide = make('mujs-btn', 'hide-list', {
       title: lang.min,
       innerHTML: iconSVG.hide,
@@ -1889,24 +2046,26 @@ const primaryFN = (injCon) => {
       spellcheck: false,
       type: 'text',
       placeholder: lang.searcher,
-      oninput(e) {
-        e.preventDefault();
-        if (isEmpty(e.target.value)) {
-          for (const ujs of shA('tr.frame')) {
-            ujs.classList.remove('hidden');
-          }
+      oninput(evt) {
+        evt.preventDefault();
+        if (isEmpty(evt.target.value)) {
+          dom.cl.remove(shA('tr.frame'), 'hidden');
+          // for (const ujs of shA('tr.frame')) {
+          //   ujs.classList.remove('hidden');
+          // }
           return;
         }
-        const reg = new RegExp(e.target.value, 'gi');
+        const reg = new RegExp(evt.target.value, 'gi');
         for (const ujs of shA('tr.frame')) {
           const m = ujs.children[0];
           const n = ujs.children[1];
           const final = m.textContent.match(reg) || n.textContent.match(reg) || [];
-          if (final.length === 0) {
-            ujs.classList.add('hidden');
-          } else {
-            ujs.classList.remove('hidden');
-          }
+          final.length === 0 ? dom.cl.add(ujs, 'hidden') : dom.cl.remove(ujs, 'hidden');
+          // if (final.length === 0) {
+          //   ujs.classList.add('hidden');
+          // } else {
+          //   ujs.classList.remove('hidden');
+          // }
         }
       }
     });
@@ -1915,16 +2074,6 @@ const primaryFN = (injCon) => {
       innerHTML: iconSVG.filter,
       dataset: {
         command: 'show-filter'
-      }
-    });
-    const siteSearcher = make('input', 'mujs-searcher', {
-      autocomplete: 'off',
-      spellcheck: false,
-      type: 'text',
-      placeholder: MUJS.host,
-      onchange(e) {
-        e.preventDefault();
-        buildlist(e.target.value);
       }
     });
     const siteSearchbtn = make('mujs-btn', 'search', {
@@ -1983,10 +2132,21 @@ const primaryFN = (injCon) => {
         command: 'navigation'
       }
     });
+    const siteSearcher = make('input', 'mujs-searcher', {
+      autocomplete: 'off',
+      spellcheck: false,
+      type: 'text',
+      placeholder: MUJS.host,
+      onchange(evt) {
+        evt.preventDefault();
+        dbg('mujs-searcher', evt.target.value);
+        buildlist(evt.target.value);
+      }
+    });
     countframe.append(gfcounter, sfcounter);
     fsearch.append(filterList);
-    ssearch.append(siteSearcher);
     btnHandles.append(btnHide, btnfullscreen, closebtn);
+    ssearch.append(siteSearcher);
     btnframe.append(
       fsearch,
       filterBtn,
@@ -2032,6 +2192,7 @@ const primaryFN = (injCon) => {
     mainframe.append(mainbtn);
     mujsRoot.append(mainframe, main);
     injCon.append(mujsRoot);
+
     makecfg();
     buildlist().then(timeoutFrame);
   } catch (ex) {
@@ -2060,14 +2221,20 @@ const Setup = async () => {
     lang = Language.cache;
     info('Config:', cfg);
     loadDOM((doc) => {
-      if (window.location === null) {
-        return;
+      try {
+        if (window.location === null) {
+          err('"window.location" is null, reload the webpage or use a different one');
+          return;
+        }
+        if (doc === null) {
+          err('"doc" is null, reload the webpage or use a different one');
+          return;
+        }
+        sleazyRedirect();
+        container.inject(primaryFN, doc);
+      } catch (ex) {
+        err(ex);
       }
-      if (doc === null) {
-        return;
-      }
-      sleazyRedirect();
-      container.inject(primaryFN, doc);
     });
   } catch (ex) {
     err(ex);

@@ -9,7 +9,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
   },
   "userJS": {
-    "version": "6.2.1",
+    "version": "6.3.0",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues/new",
     "homepage": "https://github.com/magicoflolis/Userscript-Plus",
@@ -33,10 +33,10 @@
     "web-run:firefox-android": "web-ext run --config=./tools/web-ext.js -t firefox-android --firefox-apk org.mozilla.firefox"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.9",
+    "@swc/cli": "^0.3.10",
     "@swc/core": "^1.4.2",
-    "@types/chrome": "0.0.260",
-    "@types/firefox-webext-browser": "120.0.0",
+    "@types/chrome": "0.0.262",
+    "@types/firefox-webext-browser": "120.0.1",
     "@types/greasemonkey": "4.0.7",
     "@types/tampermonkey": "^5.0.2",
     "@violentmonkey/types": "0.1.7",
@@ -46,11 +46,11 @@
     "crx3": "^1.1.3",
     "css-loader": "^6.10.0",
     "dotenv": "^16.4.5",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^14.0.0",
     "http-server": "^14.1.1",
-    "mini-css-extract-plugin": "^2.8.0",
+    "mini-css-extract-plugin": "^2.8.1",
     "node-watch": "^0.7.4",
     "path-browserify": "^1.0.1",
     "prettier": "^3.2.5",

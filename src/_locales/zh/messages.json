@@ -88,5 +88,8 @@
   },
   "save": {
     "message": "拯救"
+  },
+  "reset": {
+    "message": "重置"
   }
 }

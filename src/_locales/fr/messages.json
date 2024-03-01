@@ -88,5 +88,8 @@
   },
   "save": {
     "message": "Sauvez"
+  },
+  "reset": {
+    "message": "Réinitialiser"
   }
 }

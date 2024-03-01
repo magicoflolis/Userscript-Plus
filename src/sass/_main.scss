@@ -1,9 +1,3 @@
-$chDefault: hsla(0, 0%, 100%, 0.568);
-$chGF: hsla(197, 100%, 50%, 0.568);
-$chGit: hsla(213, 13%, 16%, 0.568);
-$chOpen: hsla(12, 86%, 50%, 0.568);
-$txtAreaBG: hsl(0, 0%, 0%);
-
 mujs-root {
   --mujs-even-row: hsl(222, 14%, 22%);
   --mujs-odd-row: hsl(222, 14%, 11%);
@@ -15,6 +9,11 @@ mujs-root {
   --mujs-sf-btn-color: hsl(12, 86%, 50%);
   --mujs-sf-txt-color: hsl(12, 79%, 55%);
   --mujs-txt-color: hsl(0, 0%, 100%);
+  --mujs-chck-color: hsla(0, 0%, 100%, 0.568);
+  --mujs-chck-gf: hsla(197, 100%, 50%, 0.568);
+  --mujs-chck-git: hsla(213, 13%, 16%, 0.568);
+  --mujs-chck-open: hsla(12, 86%, 50%, 0.568);
+  --mujs-placeholder: hsl(81, 56%, 54%);
 }
 
 mujs-root * {
@@ -212,6 +211,22 @@ mu-js {
     outline: none !important;
   }
 
+  textarea {
+    overflow-y: auto;
+    color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+    background-color: var(--mujs-even-row, hsl(222, 14%, 18%));
+    border: 1px solid transparent;
+    border-radius: 10px;
+    resize: vertical;
+    outline: none;
+    font-family: monospace;
+    font-size: 14px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
   th,
   .mujs-cfg *:not(input[type='password'], input[type='text'], input[type='number']) {
     -webkit-user-select: none !important;
@@ -289,7 +304,7 @@ count-frame {
   .mujs-ratings {
     padding: 0 0.25em;
     border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-    border-radius: 16px;
+    border-radius: 1000px;
   }
 
   mu-jsbtn {
@@ -432,7 +447,7 @@ count-frame {
 
         // background-color: hsl(218, 38%, 13%);
         mujs-a {
-          color: hsl(81, 56%, 54%);
+          color: var(--mujs-placeholder, hsl(81, 56%, 54%));
 
           &:hover {
             color: hsl(81, 56%, 43%);
@@ -445,8 +460,8 @@ count-frame {
 
         mu-jsbtn {
           color: hsl(215, 47%, 24%);
-          background-color: hsl(81, 56%, 54%);
-          border-color: hsl(81, 56%, 54%);
+          background-color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+          border-color: var(--mujs-placeholder, hsl(81, 56%, 54%));
 
           &:hover {
             background-color: hsl(81, 56%, 65%);
@@ -472,6 +487,25 @@ count-frame {
           width: -webkit-fit-content;
           width: -moz-fit-content;
           width: fit-content;
+        }
+        mu-jsbtn,
+        mu-js {
+          height: -webkit-fit-content;
+          height: -moz-fit-content;
+          height: fit-content;
+        }
+        >mu-jsbtn {
+          margin: auto;
+        }
+        >mujs-column {
+          >mu-jsbtn {
+            padding: 0px 7px;
+          }
+        }
+        >textarea {
+          background-color: inherit;
+          border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+          border-radius: 14px;
         }
       }
 
@@ -540,6 +574,26 @@ count-frame {
         border-radius: 4px;
         border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
       }
+
+      input[type='text']::-webkit-input-placeholder {
+        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      }
+
+      input[type='text']::-moz-placeholder {
+        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      }
+
+      input[type='text']:-ms-input-placeholder {
+        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      }
+
+      input[type='text']::-ms-input-placeholder {
+        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      }
+
+      input[type='text']::placeholder {
+        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      }
     }
   }
 
@@ -547,29 +601,29 @@ count-frame {
     position: relative;
     width: 38px;
 
-    input[type*='checkbox'] {
+    input[type='checkbox'] {
       display: none;
 
       &:checked+label {
         margin-left: 0;
-        background-color: $chDefault;
+        background-color: var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568));
 
         &:before {
           right: 0px;
         }
       }
 
-      &[id='greasyfork']:checked+label,
-      &[id='sleazyfork']:checked+label {
-        background-color: $chGF;
+      &[data-name='greasyfork']:checked+label,
+      &[data-name='sleazyfork']:checked+label {
+        background-color: var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568));
       }
 
-      &[id='openuserjs']:checked+label {
-        background-color: $chOpen;
+      &[data-name='openuserjs']:checked+label {
+        background-color: var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568));
       }
 
-      &[id='github']:checked+label {
-        background-color: $chGit;
+      &[data-name='github']:checked+label {
+        background-color: var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568));
       }
     }
 
@@ -597,21 +651,10 @@ count-frame {
     }
   }
 
-  [id='blacklist'] {
-    overflow-y: auto;
-    color: hsl(81, 56%, 54%);
+  [data-name='blacklist'] {
     background-color: var(--mujs-even-row, hsl(222, 14%, 18%));
     border: 1px solid transparent;
     border-radius: 10px;
-    resize: vertical;
-    outline: none;
-    border-style: none;
-    font-family: monospace;
-    font-size: 14px;
-
-    &:focus {
-      outline: none;
-    }
   }
 
   .mujs-sty-flex {

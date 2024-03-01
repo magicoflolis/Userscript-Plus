@@ -82,5 +82,8 @@
   },
   "save": {
     "message": "Save"
+  },
+  "reset": {
+    "message": "Reset"
   }
 }

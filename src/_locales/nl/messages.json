@@ -88,5 +88,8 @@
   },
   "save": {
     "message": "Opslaan"
+  },
+  "reset": {
+    "message": "Opnieuw instellen"
   }
 }

@@ -19,7 +19,7 @@
 // @description:zh-TW      显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。
 // @author       Magic <magicoflolis@tuta.io>
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gYRBAceMUIR3QAAEg9JREFUeNrtXWlwVNW2/k4n3RkbM5FRMEHUBOIAekGMJV4lYVDBAeQ+IYTJODAVjwBXfRZFQRn04vthiQgGEOMDiylY4lB6g1CG8VFJLF4SSYiBRBDTSZM06aQzdH/vB+ccex5Id9IBV9WuJDvnnL3P+s7+9tprr723gBsUkkoAEAShG96VQABqAOHiz+EARog/7wAwGECkmMLEe/QAropJA+AigPMAKsWfbQCuianH7B2iAOgFQehEP4kA/xClqOQHANwL4B4AdwEYCiCkl8/uAFAPoAbAOQBnAZQDqALQhVtcEgAsB3AcwG/il0ofpzaxrONi2Qm3ksIFAFEAxgHYDqDVE+VJEhISwoKCAra0tFCj0TA/P9/uddb363Q6/vTTT/Lfw4YNo0KhaBXrMk6sm3CzKj8JwKsAvlGpVO2zZ8/mkSNHePnyZRoMBrsKcwTAnj17aC2LFi1yCYB1/vnz57ljxw7p73YA34h1TLqZFB8MIDcwMLBi6NChHUuXLuXFixdpT9wF4MyZMxw5ciQHDRrEjz/+mCR5+vRpjwGw/jszM5NRUVEdACoA5Ip1H7ASC+A5AP/rLf6WZMyYMXJeQkICSfLatWu9BqCjo4Pfffed+T0lAB4xs7YGjEwRrQ2jNztQSVQqlUeKdfc6B/e1ANgEIG0gKD4QwGYA3QCoUCgoCAIFQWBqaip//fVXOhN3AfBUsQCoUqluFACK73MBwGwACn+mnN0ATEqlki+//DIrKyu5detWJiUlySCcPXuWJpPJpwA0NjaSJBMTE+W8sWPH9gYAKRkA/Et8V7+SvwE4JFFOQkICT58+TZLs7u7mgQMHOGTIEK9RkKv8Y8eOkSQ3b95MtVrNESNG8MyZM94AgOJI+pD4zn5h108BUG1eyYiICBYVFckv1N3dzeLiYkZGRvYJAPPmzbNpXXv37vUYABeAVIvv3m/jhgAATwO4bK+Co0aNYnl5uYUSiouLOWTIEAqC4FMAADA/P58ajYatra389NNPGRoa6pHCIyMjSZLV1dXO6nRZ1EFAXytfBWCp6NxyWMFRo0bx2LFjMudLdHT77bf72t3Q67R48WLq9Xred999rq5tFscMqr788v9TdGS5fJHU1FSZk83pKCIiwq8BKC0t5bx589y9XiuCENAXnP+s6GFkUFAQU1JSmJiYSEGhcNoSvE1HfpiaRTryaZ8wBcAfUqFz5sxhXV0dy8vL+cL06QwIDHQKQklJiQ0decM68qN0WdSRz0zNGvMCd+3aJX/Rly5d4vQZM5y2hIFKRx6mal+YqLEAvrYubMqUKfKghyTr6+s5ITPzLzq6Pk7w2mBNIY7+bPw6QUFBzM3NpUajsQBhuht0ZM86uonoqEfUmVfcFh8BMDkqLCgoiNnZ2ezo6PiLjmzdFrO90el2C4LAQCdfNABmZ2dbtISGhgZmZWU5BWH06NG9piN3/Ui+8Mq6ce0FAKm94f2zkmNt/fr1fOSRR+isJdiloxkzvGIdeTIK9iMAukVX9g3NJ7wCwDRlyhTq9XoajUbW19czKyuLntLRDC/QkeTKHoBU1CJO6ng8jfgbAM6cOZPd3d0WCp00aRIDAgLcpiNvWEeSK3uA9gclnk5v5ko3h4eHc8eOHezq6iJJmkwmVlRUcNKkSQ4LVNmho4aGBs7oBR0JgsBHH32UZ8+etaAAazpQKpVctWoVy8rKqNfrqdfrWVZWxry8PIt+zN0IC3cpyN7zGhsbOWfOHOmaXE+iF/4PAJ944gkCYGxsLAsLC9nT0yODcOnSpRuiI1fW0YQJE6jT6ezSkfXMmrUyVCoVjxw54nDGrbi4WAbB3QgLTwGw9zzR+VjhTrSFIIZltFsXGhcXx0OHDtFoNHpER7PdpCOFQsG0tDRWVVU5VJ4968hcGatWrSJJarVazp07lzExMYyJieG8efPY0tJCkszLy/MowsJTAOw9b+/evVLYy6uufEVRYmyMxcOllhAfH8/CwkKP6Mgd60ihUDAjI4NlZWUOv153rCOpD8nJybGpx/z580mSpaWlHkVYeAqAvefpdDop7xtRxw5lnL2vv7a21oaOpJYg0dHEiROd9gnO6CgtLY1lZWUWrcsRCIcOHWJISIhdZbS3t5Mko6OjbeoQExNDktTr9R5FWHgKgIvntYs6dijbHRVYVVXVazqyZx39x0svOaQdR/Lee+/J5fz++++9AuBGbHxnALhx7XZHyk9wFKtp7+FxcXEe05E960i63xOpra3lPffcQwD88MMPbSgoOzvbpuy5c+fapaB+AKAVDgKCl3s68vOWdeSptLa28sUXXyQALliwwKYTbm5uZnZ2NqOjoxkdHc2cnBxqtVq7nXBfAyC23OXWylfieri22wVKzdxTOpKsnfr6+hsGwGAw8PXXXycA5uTkWJihR48edXjf4cOHqVQq+xWAjIwMirpWmgNwvzTy9aQFDBs2zCM6csfacUfa29u5cOFCGwAkEFatWsXy8nK2t7dTr9ezvLycK1eulJXfnwAUFhZS1PX95gDkoJeLI9yhI3etHVei0WiYmZk5kF3VbaLO5XjOjd54sCM6mjx5MtPT0z22dhzJiRMnGBUVNdDnCzaKukckgK+89WB7dFRdXc2amhqvKF+j0Tgdcwyg9JWoewwB8Is3H25NR94UjUbDkenpNwMAv+D6IkSMsDf69QUdeUsqKio4avRop069AZDaRd1jqq8KsaYjb4nRaGRJSQlHjR490FvBVAD4py8L8RUdGY1GVlRUMG3EiIEMwD8BoMDXBf1FRw5TAQD84KsCli1bxgcffNAv6Kg/Ju/dSD8A15fte/3hw4cPp8FgsBgNx8bGcufOnS7pyNESpt7QUV8DoFKpuGbNGtbW1tJgMLC2tpZr1qyxGI2LusdFX1Tg888/p1artYknui0iglu2bGFTU5MNJXV1dbG6upqLFi3iwYMHPe43/ImO9u3bZ7eO4uyYlC4CgM7bhcfHx7Ozs1Pye9j1iGZlZXHjxo388ssvWVxczN27d/ONN97g/fffT4VCwZiYGBYUFLCzs3PAWUcTJ04kSba0tDArK0t+X2la1MyNosPkyZNNNTU1LqMHgoOD+cEHH/DKlSvs7u52WoElS5aQJBcsWCB7Tjs6OlhTU8OgoCCLZhoZGcnBgwdTrVbbeE8lEDxpCY7oqC8p6LPPPiNJrl692iJ/9erVJMmdO3dKeUbMmjXLdOnSJZfRA+aL3Fy9yMGDB0mSDz30kE0o++LFi22uDw4OZmJiouziLioqkjvvmJgY7t+/v9d0tHXrVpcfjifi7DmSzyvdasSenp5OkqysrPwTgJSUlLaoqCiX0QMNDQ2cPHkyw8LCXH4BtbW1JMnBgwfLeY8//rgcNWB9/ebNm1lWVsbhw4cTAPfs2cO0tDQ5AsIbdBQfH8+tW7f2CQBSWE1oaKhFvrRQsLW19U8Ksu6EHUUPPPvss243wba2NrsT1OfOnSNJpqamWgRjkWRJSYnTZ3qDjtRqdZ9QkFRH6xAaQRDk4ALzTrjcnclrT8LGJQDM+R4A8/LySJLr1q2T86TYmfnz58uTNitWrGBpaSnb2tpYVVXldTrydfKgBZTbDMTcjR5wh4JiY2NtvmLJJpbCHnU6HXU6nUxt77//vo0Cq6qq5LAYX1pH/dAH/GDjinA3esCdTtg8SElKX3zxBUkyIyODr7zyCkmyoKBA/n9TU5Mc2RAZGUmFQsHIyEiL2CRvWke+AMADK6gACQkJa8LDwz2OHnDHDM3NzaW9KDtpH4fS0lKS5Lhx4+T/Nzc3kySnTZtGlUrFlJQU2QIzj03yZzqaNGmSPA7IzMykSqViZmambOA8+eSTfzrjZsyYkfv22297HD3gaiBmMBi4e/duu/+vrq6Ww1LMmqM8graWAwcO2K2HPw/WzOtsLvv377d0Ry9ZsuTvU6dO7fQ0esCdwUhLS4u178Mifse8pUkpMjKShYWFbGpqolar5bZt2xgWFmZTD1/TkTd8QWvXrmVdXR07OztZV1fHtWvXmluG8oTMUG9PSQLgnXfeyY6ODs6cOdPnVsdAsY4cTUl6dVLePK1bt44nTpzokxcagL4jeVLea2Ep/Z38lY5chaV4JTDLn0AYAHRkEZjlMjRxoLYEP6Yjm9BElbPg3L/oyOvpuL0NnpbfTAD4OR0t92iBxl905NXkcIGGwyVK/bDE/2amo+0uF+l9//339iaQvQ6AK0B6uRTIH+nI5SK9KIVC8e3JkyfZ1NRk404eyAD4CR3ZLlMlKVgv1H7qqac6X3rpJZ9TUF8D0M90ZH+htslksl65nRQeHl7l6AXDwsK4fft2trS08PLly1y6dKmFE02r1VKj0XD9+vVeB8BTMb8nKCiIQ4cO9RodBQYGcsWKFdRoNDQYDKypqeG7777LQYMGyfVNTk5mUVERV65c6fZWBTabdVi//P79+20q9swzz/DkyZM2+bNnz/YbAPbt2+f1mbX4+Hh5mawkZ8+epVqtZlRUFOvr6/nzzz9Ls31ub9YhbVdTYk8ZpaWlvPfee6lWq+XCr169ajff/LyW3ii0NxQkSV1dHR977DGGhITI89veoqPAwEA+/PDDPHXqFEkyPz+fGzZsYEdHB5977rkb2q4G4iZDLdYvMnbsWIuJF2f5V65c8RsAnn76acsQydtu87p1lJycTJI8d+4cKysr+fXXXzMoKOiGNmyCuM3WJnHbLZd7IdjLNxqN/d4JSyIpXEpqtdordCRNvD/wwAPyNjqdnZ1sa2vj+PHje1xuWWanEzaXNHHjOTli2dMX91cAIiIiWFtby/Hjx/eKjo4fP87Q0FAGBATwzTffJEn29PTwrbfekjbtc370iZUZak9mAzA0NDT4BQBSRLXCamDkKN8RBU2bNo0k+dVXX/V6sGY9rSpuSeDetpUuWgAgbtz62muvGf0BAGmjj6ysLIvIM0f51p1wWFgYx48fzwsXLpAkN2zYYHeO2RM6KikpYXBwMAHwhRde4F133eXVjVulLSwPbdq0qd8BsLclmLN8Z+ZzfX29fKpHb+KOKisrZctKnAP36tbFkvwtKirqfH8DkJCQwL1791os8HCWL0loaCg/+eQTNjc389q1aywqKmJycrLDPZE8oaOjR4/KYYiCIPhk825JpsDBkSX+mnrjgXWHjoxGo/lBD13w4fb1kq/oaVw/rOCmB0BaXLJp0ya7iwtNJhO3bdsm8b8JwH+hDw71CRCH1dpbAQAADAsLY15eHqurq9nY2MimpibW1tYyPz9fMm9NAApxA+fI3ChaKgBzAeS72gWwv+W67gFB6P2HmZiYiLvvvhtKpRIXLlxAXV0denp6COB/ALwmRjv0mTg9xuoWSUYAa9GHJyjZa0E2B7ndIukygH/ATw6Alo4y7LkFFO9XRxlaD9b+hesnR9ysyvfbwzzN3RazRSdU901kJQ2I42zNJVV0w7YMRAACAgI4c+ZMPv/880xKStIFBAR8hAFyoLP1fMIj1jNr/g5AXFwc33nnHaakpEgzWQPySHPr6c1ccVK63R8BMJlM8hLZMWPGGAIDAyvFOgfjJpIkAK8mJSX9OyMjw6BUKrlx40ZqNBrqdDoeOHCAd9xxh4VyZs2axR9//JFXr151GHkgiauTMKQIhWvXrlGj0fCjjz5iSEgIy8rKpMiOdqVS+a0YOpKEm1QEceQ8DsD2sLAw3YIFC1hSUkKtVsuamhrZPWxvsZ515AHcPAlDilAwGo1sa2tjY2Mjd+3axbS0NAYGBraK4YLjxLoJuIUkAcByQRCOp6WlXVm4cKFh6tSpnDhxIquqqlhVVcXp06czOjqawcHBNpEHcHFyxalTp+Rls/v27eOKFSsYExOjFwThN1wPEV8OJ4Gyt5IocX3BQk5QUNB/x8bGfpeenv6rWq226TOSkpJ44cIFedOPzs5OajQai4OXBw0axGXLlnHChAkE0J6cnHw+Ojr6W1xfFpQjlqXyF0pwKUajMUAQBMV1n5Zg4ehSKBRd4u8q0enVZcchppKudXXdli1bAvfs2aP+448/wvV6fbhOp7uzq6srzWg03knyDpIxJCMBRHR1dYWpVCoA0Hd1dV0FcBWABsDF8PDwOpVKVaXVan8ZOXJkZ1xcXNvhw4ebxZGsRZlSfUwmk0oQBLS3t3eLwVTuOPvsvo+z9zSX/wfl+jWwZp8+ogAAAABJRU5ErkJggg==
-// @version      6.2.1
+// @version      6.3.0
 // @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
 // @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
 // @namespace    https://github.com/magicoflolis/Userscript-Plus
@@ -57,12 +57,12 @@
  * Link to uncompiled Cascading Style Sheet
  * @link https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass
  */
-const main_css = `mujs-root{--mujs-even-row: hsl(222, 14%, 22%);--mujs-odd-row: hsl(222, 14%, 11%);--mujs-background-color: hsl(222, 14%, 33%);--mujs-gf-color: hsl(204, 100%, 40%);--mujs-sf-color: hsl(12, 86%, 50%);--mujs-border-b-color: hsla(0, 0%, 0%, 0);--mujs-gf-btn-color: hsl(211, 87%, 56%);--mujs-sf-btn-color: hsl(12, 86%, 50%);--mujs-sf-txt-color: hsl(12, 79%, 55%);--mujs-txt-color: hsl(0, 0%, 100%)}mujs-root *{scrollbar-color:var(--mujs-txt-color, hsl(0, 0%, 100%)) #2e323d;scrollbar-width:thin}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:16px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:16px;background-color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-image:-webkit-linear-gradient(45deg, hsla(0, 0%, 100%, 0.2) 25%, transparent 25%, transparent 50%, hsla(0, 0%, 100%, 0.2) 50%, hsla(0, 0%, 100%, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background-color:var(--mujs-txt-color, hsl(0, 0%, 100%))}}mu-js{line-height:normal}.mujs-cfg{line-height:1.5}mu-js{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}body.webext-page,.main{font-size:14px}mujs-section>label,.mujs-homepag e,td.mujs-list,.install{font-size:16px}.install,.mujs-homepage{font-weight:700}mujs-section>label,td.mujs-list{font-weight:500}.mujs-fltlist{width:170px}.mujs-searcher{width:100px}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:.5em}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-column count-frame:nth-child(1){background-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-column count-frame:nth-child(2){background-color:var(--mujs-sf-color, hsl(12, 86%, 50%))}mujs-row{flex-flow:column wrap}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}.main{width:100%;width:-moz-available;width:-webkit-fill-available;background:var(--mujs-background-color, hsl(222, 14%, 33%)) !important;border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-radius:16px;font-family:Arial,Helvetica,sans-serif}@media screen and (max-height: 720px){.main:not(.webext-page){height:100% !important;bottom:0rem !important;right:0rem !important;margin:0rem !important}}.main.expanded{height:100% !important;bottom:0rem !important}.main:not(.webext-page){position:fixed;height:492px}.main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}.main:not(.webext-page):not(.expanded).auto-height{height:auto}.main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}.main mujs-btn,.main input{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}.main input{background:var(--mujs-background-color, hsl(222, 14%, 33%));color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.main input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}.main th,.main .mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:1rem;right:1rem}.mainframe count-frame{width:fit-content;width:-moz-fit-content;width:-webkit-fit-content;height:auto;padding:14px 16px}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:1000px;margin:0px 3px;padding:4px 6px;border:2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em;background:var(--mujs-background-color, hsl(222, 14%, 33%));color:var(--mujs-txt-color, hsl(0, 0%, 100%));-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.mujs-header-prim{order:0;display:flex;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-top-left-radius:10px;border-top-right-radius:10px;padding:.5em;font-size:1em;place-content:space-between;height:fit-content;height:-moz-fit-content;height:-webkit-fit-content;width:100%;width:-moz-available;width:-webkit-fill-available}.mujs-body{overflow-x:hidden;order:1;padding:0px;width:100%;width:-moz-available;width:-webkit-fill-available}.mujs-body .mujs-ratings{padding:0 .25em;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:16px}.mujs-body mu-jsbtn{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-body table,.mujs-body th,.mujs-body td{border-collapse:collapse}.mujs-body table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 1180px){.mujs-body table thead>tr{display:table-column}.mujs-body table .frame:not(.webext-page){width:100%;display:flex;flex-flow:row wrap;align-items:center;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-top:.5em;padding-bottom:.5em}.mujs-body table .frame:not(.webext-page) td{margin:auto;border-bottom:1px solid rgba(0,0,0,0)}.mujs-body table .frame:not(.webext-page) td>mujs-a,.mujs-body table .frame:not(.webext-page) td>mu-js,.mujs-body table .frame:not(.webext-page) td>mujs-column{text-align:center;justify-content:center}.mujs-body table .frame:not(.webext-page) td:not(.mujs-name,.install-btn){width:25%}.mujs-body table .frame:not(.webext-page) .mujs-name{width:100%}}.mujs-body table th,.mujs-body table td{border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-body table th{position:-webkit-sticky;position:sticky;top:0;background:rgba(72,79,96,.75)}.mujs-body table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){.mujs-body table th.mujs-header-name{width:auto !important}}.mujs-body table .frame:nth-child(even){background-color:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-body table .frame:nth-child(odd){background-color:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-body table .frame.sf mujs-a{color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-body table .frame.sf mu-jsbtn{background-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-body table .frame.sf mu-jsbtn:hover{background-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-body table .frame:not(.sf) mujs-a{color:var(--mujs-gf-color, hsl(197, 100%, 50%))}.mujs-body table .frame:not(.sf) mujs-a:hover{color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-body table .frame:not(.sf) mu-jsbtn{color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-color:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-body table .frame:not(.sf) mu-jsbtn:hover{background-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-body table .frame[data-good] mujs-a,.mujs-body table .frame[data-author] mujs-a{color:#9dcb48}.mujs-body table .frame[data-good] mujs-a:hover,.mujs-body table .frame[data-author] mujs-a:hover{color:#80ab30}.mujs-body table .frame[data-good] .mujs-list,.mujs-body table .frame[data-author] .mujs-list{color:#fff}.mujs-body table .frame[data-good] mu-jsbtn,.mujs-body table .frame[data-author] mu-jsbtn{color:#20385a;background-color:#9dcb48;border-color:#9dcb48}.mujs-body table .frame[data-good] mu-jsbtn:hover,.mujs-body table .frame[data-author] mu-jsbtn:hover{background-color:#b5d874;border-color:#b5d874}.mujs-body table .frame svg{fill:currentColor;width:14px;height:14px;background:rgba(0,0,0,0)}.mujs-body table .frame>td:not(.mujs-name){text-align:center}.mujs-body table .frame>.mujs-name>mujs-a{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}.mujs-body table .frame>.mujs-uframe>mujs-a{font-size:16px;font-weight:500;padding-left:.5rem;padding-right:.5rem}.mujs-cfg,.mujs-body{border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-bottom-left-radius:16px;border-bottom-right-radius:16px}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}@media screen and (max-height: 720px){.mujs-cfg:not(.webext-page){height:100%;height:-moz-available;height:-webkit-fill-available;width:100%;width:-moz-available;width:-webkit-fill-available;overflow-x:auto;padding:.5em}}.mujs-cfg mujs-section{border-radius:16px;padding:.5em}.mujs-cfg mujs-section:nth-child(even){background-color:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-cfg mujs-section:nth-child(odd){background-color:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){font-size:14px;position:relative;border-radius:4px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type*=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type*=checkbox]:checked+label{margin-left:0;background-color:rgba(255,255,255,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type*=checkbox][id=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type*=checkbox][id=sleazyfork]:checked+label{background-color:rgba(0,183,255,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox][id=openuserjs]:checked+label{background-color:rgba(237,62,18,.568)}.mujs-cfg .mujs-inlab input[type*=checkbox][id=github]:checked+label{background-color:rgba(35,40,46,.568)}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));background-color:var(--mujs-background-color, hsl(222, 14%, 33%))}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:var(--mujs-txt-color, hsl(0, 0%, 100%));position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg [id=blacklist]{overflow-y:auto;color:#9dcb48;background-color:var(--mujs-even-row, hsl(222, 14%, 18%));border:1px solid rgba(0,0,0,0);border-radius:10px;resize:vertical;outline:none;border-style:none;font-family:monospace;font-size:14px}.mujs-cfg [id=blacklist]:focus{outline:none}.mujs-cfg .mujs-sty-flex mujs-btn{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]{background-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]:hover{background-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]{background-color:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]:hover{background-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-cfg:not(.webext-page){order:2;margin:0px 25rem 1rem 25rem}mujs-a{display:inline-block}.mujs-name{display:flex;flex-flow:column wrap;gap:.5em}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:500;font-variant:normal;text-transform:none;text-rendering:auto;text-align:center;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:var(--mujs-txt-color, hsl(0, 0%, 100%));width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block;text-align:center}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}`;
+const main_css = `mujs-root{--mujs-even-row: hsl(222, 14%, 22%);--mujs-odd-row: hsl(222, 14%, 11%);--mujs-background-color: hsl(222, 14%, 33%);--mujs-gf-color: hsl(204, 100%, 40%);--mujs-sf-color: hsl(12, 86%, 50%);--mujs-border-b-color: hsla(0, 0%, 0%, 0);--mujs-gf-btn-color: hsl(211, 87%, 56%);--mujs-sf-btn-color: hsl(12, 86%, 50%);--mujs-sf-txt-color: hsl(12, 79%, 55%);--mujs-txt-color: hsl(0, 0%, 100%);--mujs-chck-color: hsla(0, 0%, 100%, 0.568);--mujs-chck-gf: hsla(197, 100%, 50%, 0.568);--mujs-chck-git: hsla(213, 13%, 16%, 0.568);--mujs-chck-open: hsla(12, 86%, 50%, 0.568);--mujs-placeholder: hsl(81, 56%, 54%)}mujs-root *{scrollbar-color:var(--mujs-txt-color, hsl(0, 0%, 100%)) #2e323d;scrollbar-width:thin}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:16px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:16px;background-color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-image:-webkit-linear-gradient(45deg, hsla(0, 0%, 100%, 0.2) 25%, transparent 25%, transparent 50%, hsla(0, 0%, 100%, 0.2) 50%, hsla(0, 0%, 100%, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background-color:var(--mujs-txt-color, hsl(0, 0%, 100%))}}mu-js{line-height:normal}.mujs-cfg{line-height:1.5}mu-js{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}body.webext-page,.main{font-size:14px}mujs-section>label,.mujs-homepag e,td.mujs-list,.install{font-size:16px}.install,.mujs-homepage{font-weight:700}mujs-section>label,td.mujs-list{font-weight:500}.mujs-fltlist{width:170px}.mujs-searcher{width:100px}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:.5em}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-column count-frame:nth-child(1){background-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-column count-frame:nth-child(2){background-color:var(--mujs-sf-color, hsl(12, 86%, 50%))}mujs-row{flex-flow:column wrap}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}.main{width:100%;width:-moz-available;width:-webkit-fill-available;background:var(--mujs-background-color, hsl(222, 14%, 33%)) !important;border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-radius:16px;font-family:Arial,Helvetica,sans-serif}@media screen and (max-height: 720px){.main:not(.webext-page){height:100% !important;bottom:0rem !important;right:0rem !important;margin:0rem !important}}.main.expanded{height:100% !important;bottom:0rem !important}.main:not(.webext-page){position:fixed;height:492px}.main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}.main:not(.webext-page):not(.expanded).auto-height{height:auto}.main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}.main mujs-btn,.main input{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}.main input{background:var(--mujs-background-color, hsl(222, 14%, 33%));color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.main input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}.main textarea{overflow-y:auto;color:var(--mujs-placeholder, hsl(81, 56%, 54%));background-color:var(--mujs-even-row, hsl(222, 14%, 18%));border:1px solid rgba(0,0,0,0);border-radius:10px;resize:vertical;outline:none;font-family:monospace;font-size:14px}.main textarea:focus{outline:none}.main th,.main .mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:1rem;right:1rem}.mainframe count-frame{width:fit-content;width:-moz-fit-content;width:-webkit-fit-content;height:auto;padding:14px 16px}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:1000px;margin:0px 3px;padding:4px 6px;border:2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em;background:var(--mujs-background-color, hsl(222, 14%, 33%));color:var(--mujs-txt-color, hsl(0, 0%, 100%));-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.mujs-header-prim{order:0;display:flex;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-top-left-radius:10px;border-top-right-radius:10px;padding:.5em;font-size:1em;place-content:space-between;height:fit-content;height:-moz-fit-content;height:-webkit-fit-content;width:100%;width:-moz-available;width:-webkit-fill-available}.mujs-body{overflow-x:hidden;order:1;padding:0px;width:100%;width:-moz-available;width:-webkit-fill-available}.mujs-body .mujs-ratings{padding:0 .25em;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:1000px}.mujs-body mu-jsbtn{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-body table,.mujs-body th,.mujs-body td{border-collapse:collapse}.mujs-body table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 1180px){.mujs-body table thead>tr{display:table-column}.mujs-body table .frame:not(.webext-page){width:100%;display:flex;flex-flow:row wrap;align-items:center;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-top:.5em;padding-bottom:.5em}.mujs-body table .frame:not(.webext-page) td{margin:auto;border-bottom:1px solid rgba(0,0,0,0)}.mujs-body table .frame:not(.webext-page) td>mujs-a,.mujs-body table .frame:not(.webext-page) td>mu-js,.mujs-body table .frame:not(.webext-page) td>mujs-column{text-align:center;justify-content:center}.mujs-body table .frame:not(.webext-page) td:not(.mujs-name,.install-btn){width:25%}.mujs-body table .frame:not(.webext-page) .mujs-name{width:100%}}.mujs-body table th,.mujs-body table td{border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-body table th{position:-webkit-sticky;position:sticky;top:0;background:rgba(72,79,96,.75)}.mujs-body table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){.mujs-body table th.mujs-header-name{width:auto !important}}.mujs-body table .frame:nth-child(even){background-color:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-body table .frame:nth-child(odd){background-color:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-body table .frame.sf mujs-a{color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-body table .frame.sf mu-jsbtn{background-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-body table .frame.sf mu-jsbtn:hover{background-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-body table .frame:not(.sf) mujs-a{color:var(--mujs-gf-color, hsl(197, 100%, 50%))}.mujs-body table .frame:not(.sf) mujs-a:hover{color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-body table .frame:not(.sf) mu-jsbtn{color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-color:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-body table .frame:not(.sf) mu-jsbtn:hover{background-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-body table .frame[data-good] mujs-a,.mujs-body table .frame[data-author] mujs-a{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-body table .frame[data-good] mujs-a:hover,.mujs-body table .frame[data-author] mujs-a:hover{color:#80ab30}.mujs-body table .frame[data-good] .mujs-list,.mujs-body table .frame[data-author] .mujs-list{color:#fff}.mujs-body table .frame[data-good] mu-jsbtn,.mujs-body table .frame[data-author] mu-jsbtn{color:#20385a;background-color:var(--mujs-placeholder, hsl(81, 56%, 54%));border-color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-body table .frame[data-good] mu-jsbtn:hover,.mujs-body table .frame[data-author] mu-jsbtn:hover{background-color:#b5d874;border-color:#b5d874}.mujs-body table .frame svg{fill:currentColor;width:14px;height:14px;background:rgba(0,0,0,0)}.mujs-body table .frame>td:not(.mujs-name){text-align:center}.mujs-body table .frame>.mujs-name>mujs-a{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}.mujs-body table .frame>.mujs-name mu-jsbtn,.mujs-body table .frame>.mujs-name mu-js{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}.mujs-body table .frame>.mujs-name>mu-jsbtn{margin:auto}.mujs-body table .frame>.mujs-name>mujs-column>mu-jsbtn{padding:0px 7px}.mujs-body table .frame>.mujs-name>textarea{background-color:inherit;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:14px}.mujs-body table .frame>.mujs-uframe>mujs-a{font-size:16px;font-weight:500;padding-left:.5rem;padding-right:.5rem}.mujs-cfg,.mujs-body{border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-bottom-left-radius:16px;border-bottom-right-radius:16px}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}@media screen and (max-height: 720px){.mujs-cfg:not(.webext-page){height:100%;height:-moz-available;height:-webkit-fill-available;width:100%;width:-moz-available;width:-webkit-fill-available;overflow-x:auto;padding:.5em}}.mujs-cfg mujs-section{border-radius:16px;padding:.5em}.mujs-cfg mujs-section:nth-child(even){background-color:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-cfg mujs-section:nth-child(odd){background-color:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){font-size:14px;position:relative;border-radius:4px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg mujs-section>label input[type=text]::-webkit-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-moz-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]:-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label{margin-left:0;background-color:var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type=checkbox][data-name=sleazyfork]:checked+label{background-color:var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=openuserjs]:checked+label{background-color:var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=github]:checked+label{background-color:var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568))}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));background-color:var(--mujs-background-color, hsl(222, 14%, 33%))}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:var(--mujs-txt-color, hsl(0, 0%, 100%));position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg [data-name=blacklist]{background-color:var(--mujs-even-row, hsl(222, 14%, 18%));border:1px solid rgba(0,0,0,0);border-radius:10px}.mujs-cfg .mujs-sty-flex mujs-btn{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]{background-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]:hover{background-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]{background-color:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]:hover{background-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-cfg:not(.webext-page){order:2;margin:0px 25rem 1rem 25rem}mujs-a{display:inline-block}.mujs-name{display:flex;flex-flow:column wrap;gap:.5em}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:500;font-variant:normal;text-transform:none;text-rendering:auto;text-align:center;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:var(--mujs-txt-color, hsl(0, 0%, 100%));width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block;text-align:center}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}`;
 /**
  * Link to uncompressed languages
  * @link https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales
  */
-const languageList = {"en":{"legacy":"PLEASE RESET YOUR CONFIG!","createdby":"Created by","name":"Name","daily":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","searcher":"Title | Description | Author...","install":"Install","issue":"New Issue","version":"Version","updated":"Last Updated","total":"Total Installs","rating":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save"},"es":{"legacy":"¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!","createdby":"Creado por","name":"Nombre","daily":"Instalaciones diarias","close":"Ya no se muestra","filterA":"Filtro","max":"Maximizar","min":"Minimizar","search":"Busque en","searcher":"Título | Descripción | Autor...","install":"Instalar","issue":"Nueva edición","version":"Versión","updated":"Última actualización","total":"Total de instalaciones","rating":"Clasificaciones","good":"Bueno","ok":"Ok","bad":"Malo","created":"Creado","redirect":"Greasy Fork para adultos","filter":"Filtrar otros idiomas","dtime":"Mostrar el tiempo de espera","save":"Guardar"},"fr":{"legacy":"VEUILLEZ RÉINITIALISER VOTRE CONFIG !","createdby":"Créé par","name":"Nom","daily":"Installations quotidiennes","close":"Ne plus montrer","filterA":"Filtre","max":"Maximiser","min":"Minimiser","search":"Recherche","searcher":"Titre | Description | Auteur...","install":"Installer","issue":"Nouveau numéro","version":"Version","updated":"Dernière mise à jour","total":"Total des installations","rating":"Notations","good":"Bon","ok":"Ok","bad":"Mauvais","created":"Créé","redirect":"Greasy Fork pour les adultes","filter":"Filtrer les autres langues","dtime":"Délai d'affichage","save":"Sauvez"},"ja":{"legacy":"設定をリセットしてください。","createdby":"によって作成された","name":"名前","daily":"デイリーインストール","close":"表示されなくなりました","filterA":"フィルター","max":"最大化","min":"ミニマム","search":"検索","searcher":"タイトル｜説明｜著者...","install":"インストール","issue":"新刊のご案内","version":"バージョン","updated":"最終更新日","total":"総インストール数","rating":"レーティング","good":"グッド","ok":"良い","bad":"悪い","created":"作成","redirect":"大人のGreasyfork","filter":"他の言語をフィルタリングする","dtime":"表示タイムアウト","save":"拯救"},"nl":{"legacy":"RESET UW CONFIG!","createdby":"Gemaakt door","name":"Naam","daily":"Dagelijkse Installaties","close":"Sluit","filterA":"Filter","max":"Maximaliseer","min":"Minimaliseer","search":"Zoek","searcher":"Titel | Beschrijving | Auteur...","install":"Installeer","issue":"Nieuw Issue","version":"Versie","updated":"Laatste Update","total":"Totale Installaties","rating":"Beoordeling","good":"Goed","ok":"Ok","bad":"Slecht","created":"Aangemaakt","redirect":"Greasy Fork voor volwassenen","filter":"Filter andere talen","dtime":"Weergave timeout","save":"Opslaan"},"ru":{"legacy":"ПОЖАЛУЙСТА, СБРОСЬТЕ КОНФИГ!","createdby":"Сделано","name":"Имя","daily":"Ежедневные установки","close":"Больше не показывать","filterA":"Фильтр","max":"Максимизировать","min":"Минимизировать","search":"Поиск","searcher":"Название | Описание | Автор...","install":"Установите","issue":"Новый выпуск","version":"Версия","updated":"Последнее обновление","total":"Всего установок","rating":"Рейтинги","good":"Хорошо","ok":"Хорошо","bad":"Плохо","created":"Создано","redirect":"Greasy Fork для взрослых","filter":"Отфильтровать другие языки","dtime":"Тайм-аут отображения","save":"Сохранить"},"zh":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","searcher":"标题|描述|作者...","install":"安装","issue":"新问题","version":"版本","updated":"最后更新","total":"总安装量","rating":"评级","good":"好的","ok":"好的","bad":"不好","created":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救"}};
+const languageList = {"en":{"legacy":"PLEASE RESET YOUR CONFIG!","createdby":"Created by","name":"Name","daily":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","searcher":"Title | Description | Author...","install":"Install","issue":"New Issue","version":"Version","updated":"Last Updated","total":"Total Installs","rating":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset"},"es":{"legacy":"¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!","createdby":"Creado por","name":"Nombre","daily":"Instalaciones diarias","close":"Ya no se muestra","filterA":"Filtro","max":"Maximizar","min":"Minimizar","search":"Busque en","searcher":"Título | Descripción | Autor...","install":"Instalar","issue":"Nueva edición","version":"Versión","updated":"Última actualización","total":"Total de instalaciones","rating":"Clasificaciones","good":"Bueno","ok":"Ok","bad":"Malo","created":"Creado","redirect":"Greasy Fork para adultos","filter":"Filtrar otros idiomas","dtime":"Mostrar el tiempo de espera","save":"Guardar","reset":"Reiniciar"},"fr":{"legacy":"VEUILLEZ RÉINITIALISER VOTRE CONFIG !","createdby":"Créé par","name":"Nom","daily":"Installations quotidiennes","close":"Ne plus montrer","filterA":"Filtre","max":"Maximiser","min":"Minimiser","search":"Recherche","searcher":"Titre | Description | Auteur...","install":"Installer","issue":"Nouveau numéro","version":"Version","updated":"Dernière mise à jour","total":"Total des installations","rating":"Notations","good":"Bon","ok":"Ok","bad":"Mauvais","created":"Créé","redirect":"Greasy Fork pour les adultes","filter":"Filtrer les autres langues","dtime":"Délai d'affichage","save":"Sauvez","reset":"Réinitialiser"},"ja":{"legacy":"設定をリセットしてください。","createdby":"によって作成された","name":"名前","daily":"デイリーインストール","close":"表示されなくなりました","filterA":"フィルター","max":"最大化","min":"ミニマム","search":"検索","searcher":"タイトル｜説明｜著者...","install":"インストール","issue":"新刊のご案内","version":"バージョン","updated":"最終更新日","total":"総インストール数","rating":"レーティング","good":"グッド","ok":"良い","bad":"悪い","created":"作成","redirect":"大人のGreasyfork","filter":"他の言語をフィルタリングする","dtime":"表示タイムアウト","save":"拯救","reset":"リセット"},"nl":{"legacy":"RESET UW CONFIG!","createdby":"Gemaakt door","name":"Naam","daily":"Dagelijkse Installaties","close":"Sluit","filterA":"Filter","max":"Maximaliseer","min":"Minimaliseer","search":"Zoek","searcher":"Titel | Beschrijving | Auteur...","install":"Installeer","issue":"Nieuw Issue","version":"Versie","updated":"Laatste Update","total":"Totale Installaties","rating":"Beoordeling","good":"Goed","ok":"Ok","bad":"Slecht","created":"Aangemaakt","redirect":"Greasy Fork voor volwassenen","filter":"Filter andere talen","dtime":"Weergave timeout","save":"Opslaan","reset":"Opnieuw instellen"},"ru":{"legacy":"ПОЖАЛУЙСТА, СБРОСЬТЕ КОНФИГ!","createdby":"Сделано","name":"Имя","daily":"Ежедневные установки","close":"Больше не показывать","filterA":"Фильтр","max":"Максимизировать","min":"Минимизировать","search":"Поиск","searcher":"Название | Описание | Автор...","install":"Установите","issue":"Новый выпуск","version":"Версия","updated":"Последнее обновление","total":"Всего установок","rating":"Рейтинги","good":"Хорошо","ok":"Хорошо","bad":"Плохо","created":"Создано","redirect":"Greasy Fork для взрослых","filter":"Отфильтровать другие языки","dtime":"Тайм-аут отображения","save":"Сохранить","reset":"Перезагрузить"},"zh":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","searcher":"标题|描述|作者...","install":"安装","issue":"新问题","version":"版本","updated":"最后更新","total":"总安装量","rating":"评级","good":"好的","ok":"好的","bad":"不好","created":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置"}};
 let userjs = (self.userjs = {});
 let cfg = {};
 let lang = {};
@@ -88,7 +88,7 @@ const goodUserJS = [
   6456,
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/Manga_OnlineViewer.user.js',
   'https://github.com/jesus2099/konami-command/raw/master/INSTALL-USER-SCRIPT.user.js',
-  'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js',
+  'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js'
 ];
 
 const isMobile = /Mobile|Tablet/.test(navigator.userAgent);
@@ -255,6 +255,12 @@ const normalizeTarget = (target, root = document, toQuery = true) => {
   return Array.from(target);
 };
 class dom {
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } attr
+   * @param { * } [value=undefined]
+   */
   static attr(target, attr, value = undefined) {
     for (const elem of normalizeTarget(target)) {
       if (value === undefined) {
@@ -267,7 +273,24 @@ class dom {
       }
     }
   }
-
+  /**
+   * @template { HTMLElementTagNameMap } K
+   * @param { K } a
+   * @returns { HTMLElementTagNameMap[K] }
+   */
+  static create(a) {
+    if (typeof a === 'string') {
+      return document.createElement(a);
+    }
+    throw new Error('"a" must be a typeof "String"');
+  }
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } prop
+   * @param { * } [value=undefined]
+   * @returns { keyof T | void }
+   */
   static prop(target, prop, value = undefined) {
     for (const elem of normalizeTarget(target)) {
       if (value === undefined) {
@@ -276,7 +299,11 @@ class dom {
       elem[prop] = value;
     }
   }
-
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } text
+   */
   static text(target, text) {
     const targets = normalizeTarget(target);
     if (text === undefined) {
@@ -370,8 +397,8 @@ class Task {
 }
 const alang = [];
 const defcfg = {
-  injection: 'interactive',
   cache: true,
+  codePreview: false,
   autoexpand: false,
   filterlang: false,
   sleazyredirect: false,
@@ -428,7 +455,11 @@ const defcfg = {
       url: 'https://api.github.com/search/code?q=',
       token: ''
     }
-  ]
+  ],
+  recommend: {
+    author: true,
+    others: true,
+  }
 };
 /**
  * Add Event Listener
@@ -624,10 +655,10 @@ const iconSVG = {
   issue:
     '<svg viewBox="0 0 24 24"><path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/></svg>',
   nav: '<svg viewBox="0 0 24 24"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g><path d="M2 5.5C2 4.94772 2.44772 4.5 3 4.5H21C21.5523 4.5 22 4.94772 22 5.5V6.5C22 7.05228 21.5523 7.5 21 7.5H3C2.44772 7.5 2 7.05228 2 6.5V5.5Z" fill="#ffffff"></path> <path d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5H21C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="#ffffff"></path> <path d="M3 16.5C2.44772 16.5 2 16.9477 2 17.5V18.5C2 19.0523 2.44772 19.5 3 19.5H21C21.5523 19.5 22 19.0523 22 18.5V17.5C22 16.9477 21.5523 16.5 21 16.5H3Z" fill="#ffffff"></path> </g></svg>',
-  plus: '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M13.5 3C13.5 2.44772 13.0523 2 12.5 2H11.5C10.9477 2 10.5 2.44772 10.5 3V10.5H3C2.44772 10.5 2 10.9477 2 11.5V12.5C2 13.0523 2.44772 13.5 3 13.5H10.5V21C10.5 21.5523 10.9477 22 11.5 22H12.5C13.0523 22 13.5 21.5523 13.5 21V13.5H21C21.5523 13.5 22 13.0523 22 12.5V11.5C22 10.9477 21.5523 10.5 21 10.5H13.5V3Z" fill="#ffffff"/> </g></svg>',
-  verified: '<svg fill="currentColor" stroke="currentColor" viewBox="0 0 56 56"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g></svg>',
+  verified:
+    '<svg fill="currentColor" stroke="currentColor" viewBox="0 0 56 56"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g></svg>',
   search:
-    '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.5C4.75329 0.5 0.5 4.75329 0.5 10C0.5 15.2467 4.75329 19.5 10 19.5C12.082 19.5 14.0076 18.8302 15.5731 17.6944L20.2929 22.4142C20.6834 22.8047 21.3166 22.8047 21.7071 22.4142L22.4142 21.7071C22.8047 21.3166 22.8047 20.6834 22.4142 20.2929L17.6944 15.5731C18.8302 14.0076 19.5 12.082 19.5 10C19.5 4.75329 15.2467 0.5 10 0.5ZM3.5 10C3.5 6.41015 6.41015 3.5 10 3.5C13.5899 3.5 16.5 6.41015 16.5 10C16.5 13.5899 13.5899 16.5 10 16.5C6.41015 16.5 3.5 13.5899 3.5 10Z" fill="#ffffff"/> </g></svg>'
+    '<svg viewBox="0 0 24 24"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.5C4.75329 0.5 0.5 4.75329 0.5 10C0.5 15.2467 4.75329 19.5 10 19.5C12.082 19.5 14.0076 18.8302 15.5731 17.6944L20.2929 22.4142C20.6834 22.8047 21.3166 22.8047 21.7071 22.4142L22.4142 21.7071C22.8047 21.3166 22.8047 20.6834 22.4142 20.2929L17.6944 15.5731C18.8302 14.0076 19.5 12.082 19.5 10C19.5 4.75329 15.2467 0.5 10 0.5ZM3.5 10C3.5 6.41015 6.41015 3.5 10 3.5C13.5899 3.5 16.5 6.41015 16.5 10C16.5 13.5899 13.5899 16.5 10 16.5C6.41015 16.5 3.5 13.5899 3.5 10Z" fill="currentColor"/> </g></svg>'
 };
 const Timeout = class {
   constructor() {
@@ -956,7 +987,6 @@ const Container = class {
   constructor() {
     this.remove = this.remove.bind(this);
     this.onFrameLoad = this.onFrameLoad.bind(this);
-
     this.ready = false;
     this.supported = isFN(document.createElement('main-userjs').attachShadow);
     if (this.supported) {
@@ -966,6 +996,9 @@ const Container = class {
           role: 'primary-container'
         }
       });
+      /**
+       * @type { ShadowRoot }
+       */
       this.root = this.frame.attachShadow({ mode: 'open' });
       this.ready = true;
     } else {
@@ -986,6 +1019,7 @@ const Container = class {
   }
   /**
    * @param { Function } callback
+   * @param { document } doc
    */
   async inject(callback, doc) {
     if (!doc) {
@@ -1007,11 +1041,16 @@ const Container = class {
   }
 
   onFrameLoad(iFrame) {
-    this.root = iFrame.target.contentDocument.documentElement;
+    /**
+     * @type { HTMLIFrameElement }
+     */
+    const target = iFrame.target;
+    this.root = target.contentDocument.documentElement;
     this.ready = true;
 
-    this.root.classList.add('mujs-iframe');
-    iFrame.target.contentDocument.body.classList.add('mujs-iframe');
+    dom.cl.add([this.root, target.contentDocument.body], 'mujs-iframe');
+    // this.root.classList.add('mujs-iframe');
+    // target.contentDocument.body.classList.add('mujs-iframe');
   }
 };
 const container = new Container();
@@ -1041,6 +1080,19 @@ const primaryFN = (injCon) => {
     if (!injectedCore) {
       throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
     }
+
+    if (navigator.languages.length > 0) {
+      for (const nlang of navigator.languages) {
+        const lg = nlang.split('-')[0];
+        if (alang.indexOf(lg) === -1) {
+          alang.push(lg);
+        }
+      }
+    }
+    if (!alang.includes(Language.navLang)) {
+      alang.push(Language.navLang);
+    }
+
     const table = make('table');
     const tabbody = make('tbody');
     const tabhead = make('thead');
@@ -1077,10 +1129,24 @@ const primaryFN = (injCon) => {
               dom.cl.add([btngreasy, btnhome, btnissue], 'hidden');
             }
           } else if (cmd === 'list-description') {
-            if (dom.cl.has(target.nextElementSibling, 'hidden')) {
-              dom.cl.remove(target.nextElementSibling, 'hidden');
+            const arr = [];
+            const ignoreTags = new Set(['TD', 'MUJS-A', 'MU-JS']);
+            for (const node of target.parentElement.childNodes) {
+              if (ignoreTags.has(node.tagName)) {
+                continue;
+              }
+              arr.push(node);
+            }
+            if (target.nextElementSibling) {
+              arr.push(target.nextElementSibling);
+              if (target.nextElementSibling.nextElementSibling) {
+                arr.push(target.nextElementSibling.nextElementSibling);
+              }
+            }
+            if (dom.cl.has(arr, 'hidden')) {
+              dom.cl.remove(arr, 'hidden');
             } else {
-              dom.cl.add(target.nextElementSibling, 'hidden');
+              dom.cl.add(arr, 'hidden');
             }
           } else if (cmd === 'close') {
             container.remove();
@@ -1107,7 +1173,8 @@ const primaryFN = (injCon) => {
             if (!isNull(legacyMsg)) {
               legacyMsg = null;
               MUJS.rebuild = true;
-              rateContainer.innerHTML = '';
+              dom.prop(rateContainer, 'innerHTML', '');
+              // rateContainer.innerHTML = '';
             }
             if (!dom.prop(target, 'disabled')) {
               MUJS.save();
@@ -1128,9 +1195,12 @@ const primaryFN = (injCon) => {
               JSON.stringify(cfg.blacklist, null, ' ')
             );
             for (const i of cfg.engines) {
-              if (sh(`mu-js.mujs-inlab > [id="${i.name}"]`)) {
-                sh(`mu-js.mujs-inlab > [id="${i.name}"]`).checked = i.enabled;
+              if (sh(`mu-js.mujs-inlab > [data-name="${i.name}"]`)) {
+                sh(`mu-js.mujs-inlab > [data-name="${i.name}"]`).checked = i.enabled;
               }
+              // if (sh(`mu-js.mujs-inlab > [id="${i.name}"]`)) {
+              //   sh(`mu-js.mujs-inlab > [id="${i.name}"]`).checked = i.enabled;
+              // }
             }
             for (const i of shA('mu-js.mujs-inlab > input[type="checkbox"]')) {
               if (!i.name.match(/((greasy|sleazy)fork|openuserjs|gi(thub|st))/gi)) {
@@ -1187,6 +1257,7 @@ const primaryFN = (injCon) => {
     //#endregion
 
     const template = {
+      id: 0,
       bad_ratings: 0,
       good_ratings: 0,
       ok_ratings: 0,
@@ -1211,6 +1282,7 @@ const primaryFN = (injCon) => {
         this.showError = this.showError.bind(this);
         this.cleanup = this.cleanup.bind(this);
         this.cache = new Map();
+        this.userjsCache = new Map();
         // Unsure if `window.location` would be better
         this.host = location.hostname.split('.').splice(-2).join('.');
         this.site = window.top.document.location.href;
@@ -1218,7 +1290,7 @@ const primaryFN = (injCon) => {
         this.isBlacklisted = false;
         this.switchRows = true;
         this.rebuild = false;
-        this.siteujs = [];
+        // this.siteujs = [];
         this.forkCount = 0;
         this.customCount = 0;
 
@@ -1259,9 +1331,9 @@ const primaryFN = (injCon) => {
       }
 
       updateCounters() {
-        sfcounter.innerHTML = this.customCount;
-        gfcounter.innerHTML = this.forkCount;
-        mainbtn.innerHTML = this.customCount + this.forkCount;
+        dom.prop(sfcounter, 'innerHTML', this.customCount);
+        dom.prop(gfcounter, 'innerHTML', this.forkCount);
+        dom.prop(mainbtn, 'innerHTML', this.customCount + this.forkCount);
       }
 
       save() {
@@ -1279,12 +1351,10 @@ const primaryFN = (injCon) => {
       }
 
       refresh() {
-        this.siteujs.length = 0;
         this.forkCount = 0;
         this.customCount = 0;
         this.updateCounters();
-        tabbody.innerHTML = '';
-        rateContainer.innerHTML = '';
+        dom.prop([tabbody, rateContainer], 'innerHTML', '');
         if (sh('.error')) {
           sh('.error').remove();
         }
@@ -1333,14 +1403,37 @@ const primaryFN = (injCon) => {
       MUJS.switchRows = !MUJS.switchRows;
       tabbody.append(...rows);
     };
+    const reqCode = async (obj = {}) => {
+      if (obj.code_data) {
+        return obj.code_data
+      };
+      const txt = await Network.req(obj.code_url, 'GET', 'text').catch(MUJS.showError);
+      if (typeof txt !== 'string') {
+        return;
+      }
+      if (isNull(txt.match(/\/\/\s@[\w][\s\S]+/g))) {
+        return;
+      };
+      Object.assign(obj, {
+        code_data: txt
+      });
+      return txt;
+    };
     const createjs = (ujs, issleazy) => {
+      for (const key in template) {
+        if (hasOwn(ujs, key)) continue;
+        ujs[key] = template[key];
+      }
       // Lets not add this UserJS to the list
       if (ujs.id === 421603) {
         return;
       }
-      for (const key in template) {
-        if (hasOwn(ujs, key)) continue;
-        ujs[key] = template[key];
+      // if (MUJS.userjsCache.has(ujs.id)) {
+      //   return;
+      // }
+      // MUJS.userjsCache.set(ujs.id, ujs);
+      if (!MUJS.userjsCache.has(ujs.id)) {
+        MUJS.userjsCache.set(ujs.id, ujs);
       }
       const eframe = make('td', 'install-btn');
       const uframe = make('td', 'mujs-uframe');
@@ -1359,6 +1452,7 @@ const primaryFN = (injCon) => {
           webpage: ujs.url
         }
       });
+      const fmore = make('mujs-column', 'mujs-list hidden');
       const fver = make('mu-js', 'mujs-list', {
         innerHTML: `${lang.version}: ${ujs.version}`
       });
@@ -1367,7 +1461,11 @@ const primaryFN = (injCon) => {
           new Date(ujs.created_at)
         )}`
       });
-      const fmore = make('mujs-column', 'mujs-list hidden');
+      const flicense = make('mu-js', 'mujs-list', {
+        title: ujs.license ?? 'Not licensed',
+        innerHTML: `License: ${ujs.license ?? 'N/A'}`,
+        style: 'text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: fit-content; max-width: 20em;'
+      });
       const ftotal = make('mu-js', 'mujs-list', {
         innerHTML: `${lang.total}: ${ujs.total_installs}`
       });
@@ -1407,10 +1505,32 @@ const primaryFN = (injCon) => {
           webpage: ujs.code_url
         }
       });
+      const fBtns = make('mujs-column', 'mujs-list hidden');
+      const dwnCode = make('mu-jsbtn', '', {
+        innerHTML: `${iconSVG.install} Save File`,
+        async onclick(evt) {
+          evt.preventDefault();
+          try {
+            const txt = await reqCode(ujs);
+            if (typeof txt !== 'string') {
+              return;
+            }
+            const makeUserJS = new Blob([txt], { type: 'text/plain' });
+            const dlBtn = make('a', 'mujs_Downloader');
+            dlBtn.href = URL.createObjectURL(makeUserJS);
+            dlBtn.download = 'test.user.js';
+            dlBtn.click();
+            URL.revokeObjectURL(dlBtn.href);
+            dlBtn.remove();
+          } catch (ex) {
+            err(ex);
+          }
+        }
+      });
       const tr = make('tr', 'frame');
       if (issleazy) {
         dom.cl.add(tr, 'sf');
-        if (goodUserJS.includes(ujs.url)) {
+        if (cfg.recommend.others && goodUserJS.includes(ujs.url)) {
           tr.dataset.good = 'upsell';
         }
       }
@@ -1423,104 +1543,85 @@ const primaryFN = (injCon) => {
             webpage: u.url
           }
         });
-        if (u.id === authorID) {
+        if (cfg.recommend.author && u.id === authorID) {
           tr.dataset.author = 'upsell';
-          user.innerHTML = `${u.name} ${iconSVG.verified}`;
+          dom.prop(user, 'innerHTML', `${u.name} ${iconSVG.verified}`);
         }
         uframe.append(user);
       }
-      if (goodUserJS.includes(ujs.id)) {
+      if (cfg.recommend.others && goodUserJS.includes(ujs.id)) {
         tr.dataset.good = 'upsell';
       }
       eframe.append(fdwn);
-      fmore.append(ftotal, fratings, fgood, fok, fbad, fver, fcreated);
-      fname.append(ftitle, fdesc, fmore);
+      fmore.append(ftotal, fratings, fgood, fok, fbad, fver, fcreated, flicense);
+      fBtns.append(dwnCode);
+      fname.append(ftitle, fdesc, fmore, fBtns);
+
+      if (ujs.code_data) {
+        const codeArea = make('textarea', 'code-area hidden', {
+          dataset: {
+            name: 'code'
+          },
+          rows: '10',
+          autocomplete: false,
+          spellcheck: false,
+          wrap: 'soft',
+          value: ujs.code_data
+        });
+        fname.append(codeArea);
+      } else {
+        const loadCode = make('mu-jsbtn', '', {
+          innerHTML: `${iconSVG.search} Preview`,
+          async onclick(evt) {
+            evt.preventDefault();
+            try {
+              if (qs('textarea', fname)) {
+                return;
+              }
+              const txt = await reqCode(ujs);
+              if (typeof txt !== 'string') {
+                return;
+              }
+              const codeArea = make('textarea', 'code-area', {
+                dataset: {
+                  name: 'code'
+                },
+                rows: '10',
+                autocomplete: false,
+                spellcheck: false,
+                wrap: 'soft',
+                value: txt
+              });
+              fname.append(codeArea);
+            } catch (ex) {
+              err(ex)
+            }
+          }
+        });
+        fBtns.append(loadCode);
+      }
+
       for (const e of [fname, uframe, fdaily, fupdated, eframe]) {
         tr.append(e);
       }
       tabbody.append(tr);
     };
-    if (navigator.languages.length > 0) {
-      for (const nlang of navigator.languages) {
-        const lg = nlang.split('-')[0];
-        if (alang.indexOf(lg) === -1) {
-          alang.push(lg);
-        }
-      }
-    }
-    const makerow = (desc, type, nm, attrs = {}) => {
-      const sec = make('mujs-section', '', {
-        style: !Supports.gm && nm === 'cache' ? 'display: none;' : ''
-      });
-      const lb = make('label');
-      const divDesc = make('mu-js', '', {
-        innerHTML: desc
-      });
-      lb.append(divDesc);
-      sec.append(lb);
-      cfgpage.append(sec);
-      if (isNull(type)) {
-        return sec;
-      }
-      const inp = make(
-        'input',
-        '',
-        setObj(
-          {
-            type,
-            id: nm,
-            name: nm
-          },
-          attrs
-        )
-      );
-      if (type === 'checkbox') {
-        const inlab = make('mu-js', 'mujs-inlab');
-        const la = make('label', '', {
-          click() {
-            inp.dispatchEvent(new MouseEvent('click'));
-          }
-        });
-        inlab.append(inp, la);
-        lb.append(inlab);
-        if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
-          for (const i of cfg.engines) {
-            if (i.name !== nm) continue;
-            inp.checked = i.enabled;
-            ael(inp, 'change', (e) => {
-              MUJS.unsaved = true;
-              i.enabled = e.target.checked;
-            });
-          }
-        } else {
-          inp.checked = cfg[nm];
-          ael(inp, 'change', (e) => {
-            MUJS.unsaved = true;
-            if (/filterlang/i.test(nm)) {
-              MUJS.rebuild = true;
-            }
-            cfg[nm] = e.target.checked;
-          });
-        }
-      } else {
-        lb.append(inp);
-      }
-      return inp;
-    };
     //#region Build List
-    const buildlist = async (host) => {
+    const buildlist = async (host = undefined) => {
       try {
         if (isEmpty(host)) {
           host = MUJS.host;
         }
         MUJS.refresh();
-        if (MUJS.checkBlacklist()) return;
-        const template = {};
+        if (MUJS.checkBlacklist()) {
+          return;
+        }
+        const engineTemplate = {};
         for (const engine of cfg.engines) {
-          template[engine.name] = [];
+          engineTemplate[engine.name] = [];
         }
         if (!MUJS.cache.has(host)) {
-          MUJS.cache.set(host, template);
+          MUJS.cache.set(host, engineTemplate);
         }
         const engines = cfg.engines.filter((e) => e.enabled);
         const cache = MUJS.cache.get(host);
@@ -1547,64 +1648,62 @@ const primaryFN = (injCon) => {
         }
         for (const engine of engines) {
           const forkFN = async (data) => {
-            if (!data) return;
+            if (!data) {
+              return;
+            }
             const hideData = [];
             const filterLang = data.filter((d) => {
               if (d.deleted) {
                 return false;
               }
-              if (!cfg.filterlang) {
-                return true;
+              if (cfg.filterlang) {
+                const dlocal = d.locale.split('-')[0] ?? d.locale;
+                if (alang.includes(dlocal)) {
+                  return true;
+                };
+                hideData.push(d);
+                return false;
               }
-              const dlocal = d.locale.split('-')[0] ?? d.locale;
-              if (alang.length > 1) {
-                for (const a of alang) {
-                  if (dlocal.includes(a)) {
-                    return true;
-                  }
-                }
-              } else if (dlocal.includes(Language.navLang)) {
-                return true;
-              }
-              hideData.push(d);
-              return false;
+              return true;
             });
             let finalList = filterLang;
 
-            if (hideData.length > 0) {
-              const hds = [];
-              for (const h of hideData) {
-                const txt = await Network.req(h.code_url, 'GET', 'text').catch(MUJS.showError);
-                const headers = txt.match(/\/\/\s@[\w][\s\S]+/g) || [];
-                if (headers.length > 0) {
-                  const regName = new RegExp(`// @name:${Language.navLang}\\s+.+`, 'gi');
-                  const findName = (regName.exec(headers[0]) ?? []).join('');
-                  if (isEmpty(findName)) {
-                    continue;
-                  }
-                  const cReg = new RegExp(`// @name:${Language.navLang}\\s+`, 'gi');
-                  const cutName = findName.replace(cReg, '');
-                  Object.assign(h, {
-                    name: cutName
-                  });
-                  const regDesc = new RegExp(`// @description:${Language.navLang}\\s+.+`, 'gi');
-                  const findDesc = (regDesc.exec(headers[0]) ?? []).join('');
-                  if (isEmpty(findDesc)) {
-                    continue;
-                  }
-                  Object.assign(h, {
-                    description: findDesc.replace(
-                      new RegExp(`// @description:${Language.navLang}\\s+`, 'gi'),
-                      ''
-                    )
-                  });
-                  hds.push(h);
-                }
+            const hds = [];
+            for (const h of hideData) {
+              const txt = await reqCode(h);
+              if (typeof txt !== 'string') {
+                continue;
               }
-              finalList = [...new Set([...hds, ...filterLang])];
+              const headers = txt.match(/\/\/\s@[\w][\s\S]+/g); // txt.match(/\/\/\s?==UserScript==([\s\S]*?)\/\/\s?==\/UserScript==/gm);
+              if (isNull(headers)) {
+                continue;
+              };
+              for (const lng of alang) {
+                const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
+                const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
+                if (!isNull(findName)) {
+                  Object.assign(h, {
+                    name: findName[1],
+                    translated: true
+                  });
+                }
+                if (!isNull(findDesc)) {
+                  Object.assign(h, {
+                    description: findDesc[1],
+                    translated: true
+                  });
+                };
+              }
+              if (h.translated) {
+                hds.push(h);
+              };
             }
+            finalList = [...new Set([...hds, ...filterLang])];
+
             for (const ujs of finalList) {
-              MUJS.siteujs.push(ujs);
+              if (cfg.codePreview && !ujs.code_data) {
+                await reqCode(ujs);
+              };
               createjs(ujs, false);
             }
             cache[engine.name].push(...finalList);
@@ -1616,10 +1715,9 @@ const primaryFN = (injCon) => {
               // dbg('.col-sm-8 .tr-link', qsA('.col-sm-8 .tr-link', selected));
               for (const i of qsA('.col-sm-8 .tr-link', selected)) {
                 await query('.script-version', i);
-                const fixurl = dom.prop(qs('.tr-link-a', i), 'href').replace(
-                  new RegExp(document.location.origin, 'gi'),
-                  'https://openuserjs.org'
-                );
+                const fixurl = dom
+                  .prop(qs('.tr-link-a', i), 'href')
+                  .replace(new RegExp(document.location.origin, 'gi'), 'https://openuserjs.org');
                 const layout = {
                   name: dom.text(qs('.tr-link-a', i)),
                   description: dom.text(qs('p', i)),
@@ -1717,15 +1815,16 @@ const primaryFN = (injCon) => {
                 createjs(layout, true);
                 customRecords.push(layout);
               }
-              MUJS.addCustomCnt(data.items.length);
               cache[engine.name].push(...customRecords);
+              MUJS.addCustomCnt(data.items.length);
             } catch (ex) {
               MUJS.showError(ex);
             }
           };
           const eURL = engine.url;
           const cEngine = cache[`${engine.name}`];
-          if (engine.name.match(/fork/gi)) {
+          // engine.name.match(/fork/gi)
+          if (engine.name.includes('fork')) {
             if (!isEmpty(cEngine)) {
               for (const ujs of cEngine) {
                 createjs(ujs, false);
@@ -1734,20 +1833,6 @@ const primaryFN = (injCon) => {
               continue;
             }
 
-            if (cfg.filterlang) {
-              if (alang.length > 1) {
-                for (const a of alang) {
-                  Network.req(`${eURL}/${a}/scripts/by-site/${host}.json?page=1`)
-                    .then(forkFN)
-                    .catch(MUJS.showError);
-                }
-                continue;
-              }
-              Network.req(`${eURL}/${Language.navLang}/scripts/by-site/${host}.json?page=1`)
-                .then(forkFN)
-                .catch(MUJS.showError);
-              continue;
-            }
             Network.req(`${eURL}/scripts/by-site/${host}.json`).then(forkFN).catch(MUJS.showError);
           } else if (engine.name.match(/(openuserjs|github)/gi)) {
             if (!isEmpty(cEngine)) {
@@ -1787,9 +1872,8 @@ const primaryFN = (injCon) => {
               Network.req(`${eURL}${host}`, 'GET', 'document').then(customFN).catch(MUJS.showError);
             }
           }
-
-          // log(MUJS.siteujs);
         }
+        dbg('listData', MUJS.userjsCache, tabbody.children);
         // sortRowBy(2);
       } catch (ex) {
         MUJS.showError(ex);
@@ -1798,6 +1882,67 @@ const primaryFN = (injCon) => {
     //#endregion
     //#region Make Config
     const makecfg = () => {
+      const makerow = (desc = 'Placeholder', type = null, nm = 'Placeholder', attrs = {}) => {
+        const sec = make('mujs-section', 'mujs-cfg-section', {
+          style: !Supports.gm && nm === 'cache' ? 'display: none;' : ''
+        });
+        const lb = make('label');
+        const divDesc = make('mu-js', 'mujs-cfg-desc', {
+          innerHTML: desc
+        });
+        lb.append(divDesc);
+        sec.append(lb);
+        cfgpage.append(sec);
+        if (isNull(type)) {
+          return lb;
+        }
+        const inp = make(
+          'input',
+          'mujs-cfg-input',
+          {
+            type,
+            dataset: {
+              name: nm
+            },
+            ...attrs
+          }
+        );
+        if (type === 'checkbox') {
+          const inlab = make('mu-js', 'mujs-inlab');
+          const la = make('label', '', {
+            click() {
+              inp.dispatchEvent(new MouseEvent('click'));
+            }
+          });
+          inlab.append(inp, la);
+          lb.append(inlab);
+          if (nm.includes('-')) {
+            return inp;
+          }
+          if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
+            for (const i of cfg.engines) {
+              if (i.name !== nm) continue;
+              inp.checked = i.enabled;
+              ael(inp, 'change', (evt) => {
+                MUJS.unsaved = true;
+                i.enabled = evt.target.checked;
+              });
+            }
+          } else {
+            inp.checked = cfg[nm];
+            ael(inp, 'change', (evt) => {
+              MUJS.unsaved = true;
+              if (/filterlang/i.test(nm)) {
+                MUJS.rebuild = true;
+              }
+              cfg[nm] = evt.target.checked;
+            });
+          }
+        } else {
+          lb.append(inp);
+        }
+        return inp;
+      };
       makerow('Sync with GM', 'checkbox', 'cache');
       makerow('Auto Fullscreen', 'checkbox', 'autoexpand', {
         onchange(e) {
@@ -1812,20 +1957,29 @@ const primaryFN = (injCon) => {
       });
       makerow(lang.redirect, 'checkbox', 'sleazyredirect');
       makerow(lang.filter, 'checkbox', 'filterlang');
+      makerow('Preview code', 'checkbox', 'codePreview');
+      for (const inp of [makerow('Recommend author', 'checkbox', 'recommend-author'), makerow('Recommend scripts', 'checkbox', 'recommend-others')]) {
+        const nm = inp.dataset.name === 'recommend-author' ? 'author' : 'others';
+        inp.checked = cfg.recommend[nm];
+        ael(inp, 'change', (evt) => {
+          MUJS.unsaved = true;
+          cfg.recommend[nm] = evt.target.checked;
+        });
+      }
       makerow('Greasy Fork', 'checkbox', 'greasyfork');
       makerow('Sleazy Fork', 'checkbox', 'sleazyfork');
       makerow('Open UserJS', 'checkbox', 'openuserjs');
       makerow('GitHub API', 'checkbox', 'github');
       const ghAPI = cfg.engines.find((c) => c.name === 'github');
-      makerow('GitHub API (Token)', 'password', 'github', {
+      makerow('GitHub API (Token)', 'text', 'github', {
         defaultValue: '',
         value: ghAPI.token ?? '',
         placeholder: 'Paste Access Token',
-        onchange(e) {
+        onchange(evt) {
           MUJS.unsaved = true;
           MUJS.rebuild = true;
           if (isNull(legacyMsg)) {
-            ghAPI.token = e.target.value;
+            ghAPI.token = evt.target.value;
           }
         }
       });
@@ -1834,18 +1988,18 @@ const primaryFN = (injCon) => {
         value: cfg.time,
         min: 0,
         step: 500,
-        onbeforeinput(e) {
-          if (e.target.validity.badInput) {
-            dom.cl.add(e.target, 'mujs-invalid');
+        onbeforeinput(evt) {
+          if (evt.target.validity.badInput) {
+            dom.cl.add(evt.target, 'mujs-invalid');
             dom.prop(savebtn, 'disabled', true);
           } else {
-            dom.cl.remove(e.target, 'mujs-invalid');
+            dom.cl.remove(evt.target, 'mujs-invalid');
             dom.prop(savebtn, 'disabled', false);
           }
         },
-        oninput(e) {
+        oninput(evt) {
           MUJS.unsaved = true;
-          const t = e.target;
+          const t = evt.target;
           if (t.validity.badInput || (t.validity.rangeUnderflow && t.value !== '-1')) {
             dom.cl.add(t, 'mujs-invalid');
             dom.prop(savebtn, 'disabled', true);
@@ -1856,45 +2010,47 @@ const primaryFN = (injCon) => {
           }
         }
       });
+
       const cbtn = make('mu-js', 'mujs-sty-flex');
       const savebtn = make('mujs-btn', 'save', {
-        disabled: false,
-        innerHTML: lang.save,
         dataset: {
           command: 'save'
+        },
+        disabled: false,
+        innerHTML: lang.save
+      });
+      const resetbtn = make('mujs-btn', 'reset', {
+        innerHTML: lang.reset,
+        dataset: {
+          command: 'reset'
         }
       });
       const txta = make('textarea', 'tarea', {
-        name: 'blacklist',
-        id: 'blacklist',
+        dataset: {
+          name: 'blacklist'
+        },
         rows: '10',
         autocomplete: false,
         spellcheck: false,
         wrap: 'soft',
         value: JSON.stringify(cfg.blacklist, null, ' '),
-        oninput(e) {
+        oninput(evt) {
           let isvalid = true;
           try {
-            cfg.blacklist = JSON.parse(e.target.value);
+            cfg.blacklist = JSON.parse(evt.target.value);
             isvalid = true;
           } catch (ex) {
             err(ex);
             isvalid = false;
           } finally {
             if (isvalid) {
-              dom.cl.remove(e.target, 'mujs-invalid');
+              dom.cl.remove(evt.target, 'mujs-invalid');
               dom.prop(savebtn, 'disabled', false);
             } else {
-              dom.cl.add(e.target, 'mujs-invalid');
+              dom.cl.add(evt.target, 'mujs-invalid');
               dom.prop(savebtn, 'disabled', true);
             }
           }
-        }
-      });
-      const resetbtn = make('mujs-btn', 'reset', {
-        innerHTML: 'Reset',
-        dataset: {
-          command: 'reset'
         }
       });
       cbtn.append(resetbtn, savebtn);
@@ -1910,6 +2066,7 @@ const primaryFN = (injCon) => {
       tabhead.append(tr);
       table.append(tabhead, tabbody);
     };
+
     const btnHide = make('mujs-btn', 'hide-list', {
       title: lang.min,
       innerHTML: iconSVG.hide,
@@ -1954,24 +2111,26 @@ const primaryFN = (injCon) => {
       spellcheck: false,
       type: 'text',
       placeholder: lang.searcher,
-      oninput(e) {
-        e.preventDefault();
-        if (isEmpty(e.target.value)) {
-          for (const ujs of shA('tr.frame')) {
-            ujs.classList.remove('hidden');
-          }
+      oninput(evt) {
+        evt.preventDefault();
+        if (isEmpty(evt.target.value)) {
+          dom.cl.remove(shA('tr.frame'), 'hidden');
+          // for (const ujs of shA('tr.frame')) {
+          //   ujs.classList.remove('hidden');
+          // }
           return;
         }
-        const reg = new RegExp(e.target.value, 'gi');
+        const reg = new RegExp(evt.target.value, 'gi');
         for (const ujs of shA('tr.frame')) {
           const m = ujs.children[0];
           const n = ujs.children[1];
           const final = m.textContent.match(reg) || n.textContent.match(reg) || [];
-          if (final.length === 0) {
-            ujs.classList.add('hidden');
-          } else {
-            ujs.classList.remove('hidden');
-          }
+          final.length === 0 ? dom.cl.add(ujs, 'hidden') : dom.cl.remove(ujs, 'hidden');
+          // if (final.length === 0) {
+          //   ujs.classList.add('hidden');
+          // } else {
+          //   ujs.classList.remove('hidden');
+          // }
         }
       }
     });
@@ -1980,16 +2139,6 @@ const primaryFN = (injCon) => {
       innerHTML: iconSVG.filter,
       dataset: {
         command: 'show-filter'
-      }
-    });
-    const siteSearcher = make('input', 'mujs-searcher', {
-      autocomplete: 'off',
-      spellcheck: false,
-      type: 'text',
-      placeholder: MUJS.host,
-      onchange(e) {
-        e.preventDefault();
-        buildlist(e.target.value);
       }
     });
     const siteSearchbtn = make('mujs-btn', 'search', {
@@ -2048,10 +2197,21 @@ const primaryFN = (injCon) => {
         command: 'navigation'
       }
     });
+    const siteSearcher = make('input', 'mujs-searcher', {
+      autocomplete: 'off',
+      spellcheck: false,
+      type: 'text',
+      placeholder: MUJS.host,
+      onchange(evt) {
+        evt.preventDefault();
+        dbg('mujs-searcher', evt.target.value);
+        buildlist(evt.target.value);
+      }
+    });
     countframe.append(gfcounter, sfcounter);
     fsearch.append(filterList);
-    ssearch.append(siteSearcher);
     btnHandles.append(btnHide, btnfullscreen, closebtn);
+    ssearch.append(siteSearcher);
     btnframe.append(
       fsearch,
       filterBtn,
@@ -2097,6 +2257,7 @@ const primaryFN = (injCon) => {
     mainframe.append(mainbtn);
     mujsRoot.append(mainframe, main);
     injCon.append(mujsRoot);
+
     makecfg();
     buildlist().then(timeoutFrame);
   } catch (ex) {
@@ -2125,14 +2286,20 @@ const Setup = async () => {
     lang = Language.cache;
     info('Config:', cfg);
     loadDOM((doc) => {
-      if (window.location === null) {
-        return;
+      try {
+        if (window.location === null) {
+          err('"window.location" is null, reload the webpage or use a different one');
+          return;
+        }
+        if (doc === null) {
+          err('"doc" is null, reload the webpage or use a different one');
+          return;
+        }
+        sleazyRedirect();
+        container.inject(primaryFN, doc);
+      } catch (ex) {
+        err(ex);
       }
-      if (doc === null) {
-        return;
-      }
-      sleazyRedirect();
-      container.inject(primaryFN, doc);
     });
   } catch (ex) {
     err(ex);
