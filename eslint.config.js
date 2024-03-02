@@ -4,6 +4,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 const repoGlobals = {
   MU: 'writable',
+  userjs: 'writable',
   boxCSS: 'readonly',
   main_css: 'readonly',
   custom_width: 'readonly',

@@ -1,174 +1,352 @@
 'use strict';
-if (typeof MU === 'undefined') {
-  // eslint-disable-next-line no-unused-vars
-  let MU = (self.MU = {});
-}
 
-if (typeof MU === 'object' && MU.isNull instanceof Function === false) {
-  let win = self ?? window,
-    doc = win.document;
+/**
+ * @typedef { object } userjs
+ */
 
-  Object.assign(MU, {
-    Timeout: class Timeout {
-      constructor() {
-        this.ids = [];
-      }
-      set = (delay, reason) =>
-        new Promise((resolve, reject) => {
-          const id = setTimeout(() => {
-            Object.is(reason, undefined) ? resolve() : reject(reason);
-            this.clear(id);
-          }, delay);
-          this.ids.push(id);
-        });
-      wrap = (promise, delay, reason) =>
-        Promise.race([promise, this.set(delay, reason)]);
-      clear = (...ids) => {
-        this.ids = this.ids.filter((id) => {
-          if (ids.includes(id)) {
-            clearTimeout(id);
-            return false;
-          }
-          return true;
-        });
-      };
-    },
-    error: class MUError extends Error {
-      /**
-       * @param {string} fnName - (Optional) Function name
-       * @param {...string} params - Extra error parameters
-       */
-      constructor(fnName = 'muError', ...params) {
-        super(...params);
-        if (Error.captureStackTrace) {
-          Error.captureStackTrace(this, MUError);
-        } else {
-          this.stack = new Error().stack;
+// if (typeof userjs === 'undefined') {
+//   let userjs = (self.userjs = {});
+// }
+
+if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
+  const win = self ?? window;
+  const doc = win.document;
+  const isMobile = /Mobile|Tablet/.test(navigator.userAgent);
+  /**
+   * Object is typeof `Element`
+   * @template O
+   * @param { O } obj
+   * @returns { boolean }
+   */
+  const isElem = (obj) => {
+    /** @type { string } */
+    const s = Object.prototype.toString.call(obj);
+    return s.includes('Element');
+  };
+  /**
+   * Object is typeof `Function`
+   * @template O
+   * @param { O } obj
+   * @returns { boolean }
+   */
+  const isFN = (obj) => {
+    /** @type { string } */
+    const s = Object.prototype.toString.call(obj);
+    return s.includes('Function');
+  };
+  /**
+   * Object is typeof `object` / JSON Object
+   * @template O
+   * @param { O } obj
+   * @returns { boolean }
+   */
+  const isObj = (obj) => {
+    /** @type { string } */
+    const s = Object.prototype.toString.call(obj);
+    return s.includes('Object');
+  };
+  /**
+   * Object is `null` or `undefined`
+   * @template O
+   * @param { O } obj
+   * @returns { boolean }
+   */
+  const isNull = (obj) => {
+    return Object.is(obj, null) || Object.is(obj, undefined);
+  };
+  /**
+   * Object is Blank
+   * @template O
+   * @param { O } obj
+   * @returns { boolean }
+   */
+  const isBlank = (obj) => {
+    return (
+      (typeof obj === 'string' && Object.is(obj.trim(), '')) ||
+      ((obj instanceof Set || obj instanceof Map) && Object.is(obj.size, 0)) ||
+      (Array.isArray(obj) && Object.is(obj.length, 0)) ||
+      (isObj(obj) && Object.is(Object.keys(obj).length, 0))
+    );
+  };
+  /**
+   * Object is Empty
+   * @template O
+   * @param { O } obj
+   * @returns { boolean }
+   */
+  const isEmpty = (obj) => {
+    return isNull(obj) || isBlank(obj);
+  };
+  /**
+   * @template T
+   * @param { T } target
+   * @param { Element } root
+   * @param { boolean } toQuery
+   * @returns { T[] }
+   */
+  const normalizeTarget = (target, root = document, toQuery = true) => {
+    if (isNull(target)) {
+      return [];
+    }
+    if (Array.isArray(target)) {
+      return target;
+    }
+    if (typeof target === 'string') {
+      return toQuery ? Array.from(root.querySelectorAll(target)) : [target];
+    }
+    if (isElem(target)) {
+      return [target];
+    }
+    return Array.from(target);
+  };
+  /**
+   * Add Event Listener
+   * @template { HTMLElement } E
+   * @template { keyof HTMLElementEventMap } K
+   * @param { E } el
+   * @param { K } event
+   * @param { (this: E, ev: HTMLElementEventMap[K]) => any } callback
+   * @param { boolean | AddEventListenerOptions } options
+   */
+  const ael = (el, event, callback, options = {}) => {
+    try {
+      for (const elem of normalizeTarget(el)) {
+        if (!elem) {
+          continue;
         }
-        this.fn = `[${fnName}]`;
-        this.name = this.constructor.name;
-      }
-    },
-    /**
-     * Object is Null
-     * @param {Object} obj - Object
-     * @returns {boolean} Returns if statement true or false
-     */
-    isNull(obj) {
-      return Object.is(obj, null) || Object.is(obj, undefined);
-    },
-    /**
-     * Object is Blank
-     * @param {(Object|Object[]|string)} obj - Array, Set, Object or String
-     * @returns {boolean} Returns if statement true or false
-     */
-    isBlank(obj) {
-      return typeof obj === 'string' && Object.is(obj.trim(),'') ||
-      obj instanceof Set && Object.is(obj.size,0) ||
-      Array.isArray(obj) && Object.is(obj.length,0) ||
-      obj instanceof Object && typeof obj.entries !== 'function' && Object.is(Object.keys(obj).length,0);
-    },
-    /**
-     * Object is Empty
-     * @param {(Object|Object[]|string)} obj - Array, object or string
-     * @returns {boolean} Returns if statement true or false
-     */
-    isEmpty(obj) {
-      return this.isNull(obj) || this.isBlank(obj);
-    },
-    ael(elm, event, callback) {
-      elm = elm ?? doc;
-      let isMobile = /Mobi/.test(navigator.userAgent);
-      if (isMobile && event === 'click') {
-        if (event === 'click') {
-          event = 'mouseup';
-          elm.addEventListener('touchstart', callback);
-          elm.addEventListener('touchend', callback);
+        if (isMobile && event === 'click') {
+          elem.addEventListener('touchstart', callback);
+          return;
         }
+        if (event === 'fclick') {
+          event = 'click';
+        }
+        elem.addEventListener(event, callback, options);
       }
-      if (event === 'fclick') {
-        event = 'click';
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
+  /**
+   * Form Attributes of Element
+   * @template { keyof HTMLElementTagNameMap } K
+   * @param { K } elem
+   * @param { keyof HTMLElement } attr
+   */
+  const formAttrs = (elem, attr = {}) => {
+    for (const key in attr) {
+      if (typeof attr[key] === 'object') {
+        formAttrs(elem[key], attr[key]);
+      } else if (isFN(attr[key])) {
+        if (key === 'container') {
+          key();
+          continue;
+        }
+        if (/^on/.test(key)) {
+          elem[key] = attr[key];
+          continue;
+        }
+        ael(elem, key, attr[key]);
+      } else if (key === 'class') {
+        elem.className = attr[key];
+      } else {
+        elem[key] = attr[key];
       }
-      return elm.addEventListener(event, callback);
-    },
-    /** Can make various elements */
-    make(element, cname, attrs = {}) {
-      let el = doc.createElement(element);
-      if (!this.isEmpty(cname)) {
+    }
+  };
+  /**
+   * Make Element
+   * @template { keyof HTMLElementTagNameMap } K
+   * @param { K } tagName
+   * @param { string } cname
+   * @param { keyof HTMLElement } attrs
+   * @returns { HTMLElementTagNameMap[K] }
+   */
+  const make = (tagName, cname, attrs = {}) => {
+    let el = null;
+    try {
+      el = document.createElement(tagName);
+      if (typeof cname === 'string' && !isEmpty(cname)) {
         el.className = cname;
       }
-      if (attrs) {
-        for (let key in attrs) {
-          if (key === 'onclick') {
-            this.ael(el, 'click', attrs[key]);
-          } else {
-            el[key] = attrs[key];
-          }
-        }
+      if (!isEmpty(attrs)) {
+        formAttrs(el, attrs);
       }
-      return el;
-    },
+    } catch (ex) {
+      console.error(ex);
+    }
+    return el;
+  };
+  /**
+   * setTimeout w/ Promise
+   * @param { number } timeout - Timeout in milliseconds (ms)
+   * @returns { Promise<void> } Promise object
+   */
+  const delay = (timeout = 5000) => new Promise((resolve) => setTimeout(resolve, timeout));
+  /**
+   * @template { string } S
+   * @param { S } str
+   * @param { boolean } lowerCase
+   * @returns { S }
+   */
+  const bscStr = (str = '', lowerCase = true) => {
+    const txt = str[lowerCase ? 'toLowerCase' : 'toUpperCase']();
+    return txt.replaceAll(/\W/g, '');
+  };
+  /**
+   * Fetch a URL with fetch API as fallback
+   *
+   * When GM is supported, makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy
+   * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
+   * @param { RequestInfo | URL } url - The URL to fetch
+   * @param { Request['method'] } method - Fetch method
+   * @param { 'buffer' | 'json' | 'text' | 'blob' | 'document' } responseType - Response type
+   * @param { RequestInit } data - Fetch parameters
+   * @returns { Promise<Response> } Fetch results
+   */
+  const req = async (url, method = 'GET', responseType = 'json', data = {}) => {
+    try {
+      if (isEmpty(url)) {
+        throw new Error('"url" parameter is empty');
+      }
+      method = bscStr(method, false);
+      responseType = bscStr(responseType);
+      const params = {
+        method,
+        ...data
+      };
+      return await new Promise((resolve, reject) => {
+        /**
+         * @param { Response } response
+         * @returns { Response | Document }
+         */
+        const fetchResp = (response_1) => {
+          if (!response_1.ok) reject(response_1);
+          const check = (str_2 = 'text') => {
+            return isFN(response_1[str_2]) ? response_1[str_2]() : response_1;
+          };
+          if (responseType.match(/buffer/i)) {
+            resolve(check('arrayBuffer'));
+          } else if (responseType.match(/json/i)) {
+            resolve(check('json'));
+          } else if (responseType.match(/text/i)) {
+            resolve(check('text'));
+          } else if (responseType.match(/blob/i)) {
+            resolve(check('blob'));
+          } else if (responseType.match(/formdata/i)) {
+            resolve(check('formData'));
+          } else if (responseType.match(/clone/i)) {
+            resolve(check('clone'));
+          } else if (responseType.match(/document/i) && isFN(response_1.text)) {
+            const domParser = new DOMParser();
+            const respTxt = response_1.text();
+            if (respTxt instanceof Promise) {
+              respTxt.then((txt) => {
+                const doc = domParser.parseFromString(txt, 'text/html');
+                resolve(doc);
+              });
+            } else {
+              const doc = domParser.parseFromString(respTxt, 'text/html');
+              resolve(doc);
+            }
+          } else {
+            resolve(response_1);
+          }
+        };
+        fetch(url, params).then(fetchResp).catch(reject);
+      });
+    } catch (ex) {
+      return console.error(ex);
+    }
+  };
+
+  class Timeout {
+    constructor() {
+      this.ids = [];
+    }
+
+    set(delay, reason) {
+      return new Promise((resolve, reject) => {
+        const id = setTimeout(() => {
+          isNull(reason) ? resolve() : reject(reason);
+          this.clear(id);
+        }, delay);
+        this.ids.push(id);
+      });
+    }
+
+    clear(...ids) {
+      this.ids = this.ids.filter((id) => {
+        if (ids.includes(id)) {
+          clearTimeout(id);
+          return false;
+        }
+        return true;
+      });
+    }
+  }
+  class MUError extends Error {
+    /**
+     * @param {string} fnName - (Optional) Function name
+     * @param {...string} params - Extra error parameters
+     */
+    constructor(fnName = 'muError', ...params) {
+      super(...params);
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, MUError);
+      } else {
+        this.stack = new Error().stack;
+      }
+      this.fn = `[${fnName}]`;
+      this.name = this.constructor.name;
+    }
+  }
+
+  userjs.error = MUError;
+  userjs.isMobile = isMobile;
+  userjs.Timeout = Timeout;
+  userjs.isElem = isElem;
+  userjs.isFN = isFN;
+  userjs.isObj = isObj;
+  userjs.isNull = isNull;
+  userjs.isBlank = isBlank;
+  userjs.isEmpty = isEmpty;
+  userjs.ael = ael;
+  userjs.formAttrs = formAttrs;
+  userjs.make = make;
+  userjs.delay = delay;
+  userjs.req = req;
+
+  Object.assign(userjs, {
     makeImage(imgSrc = '', attrs = {}, cname) {
-      let img = new Image();
+      const img = new Image();
       img.alt = '';
       img.referrerPolicy = 'no-referrer';
       img.src = imgSrc;
-      if (!this.isEmpty(cname)) {
+      if (!isEmpty(cname)) {
         img.className = cname;
       }
-      if (!this.isEmpty(attrs)) {
-        for (let key in attrs) {
+      if (!isEmpty(attrs)) {
+        for (const key in attrs) {
           img[key] = attrs[key];
         }
       }
       return img;
     },
-    delay(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    },
-    async fetchURL(url, method = 'GET', responseType = 'json', params = {}) {
-      return await new Promise((resolve, reject) => {
-        fetch(url, {
-          method: method,
-          ...params,
-        })
-          .then((response) => {
-            if (!response.ok) reject(response);
-            if (responseType.includes('json')) {
-              resolve(response.json());
-            } else if (responseType.includes('text')) {
-              resolve(response.text());
-            } else if (responseType.includes('blob')) {
-              resolve(response.blob());
-            }
-            resolve(response);
-          })
-          .catch((r) => {
-            return console.error(
-              '[%cUserJS%c] %cERROR',
-              'color: rgb(29, 155, 240);',
-              '',
-              'color: rgb(249, 24, 128);',
-              r
-            );
-          });
-      });
-    },
     halt(e) {
       e.preventDefault();
       e.stopPropagation();
     },
-    html: doc.documentElement,
     injScript(text, remove = true) {
-      let inj = this.make('script', 'mu-injected', {
+      const inj = make('script', 'mu-injected', {
         type: 'text/javascript',
-        innerHTML: text,
+        innerHTML: text
       });
       (doc.head || doc.documentElement || doc).appendChild(inj);
       if (!remove) {
         return inj;
       }
-      this.delay(1000).then(() => inj.remove());
+      delay(1000).then(() => inj.remove());
     },
     /**
      * @param {Node} element
@@ -176,46 +354,18 @@ if (typeof MU === 'object' && MU.isNull instanceof Function === false) {
      * @param {MutationObserverInit} options
      */
     observe(element, callback, options = { subtree: true, childList: true }) {
-      let observer = new MutationObserver(callback);
+      const observer = new MutationObserver(callback);
       callback([], observer);
       observer.observe(element, options);
       return observer;
     },
     /**
-    * @param {string} url - URL of webpage to open
-    * @param {object} params - GM parameters
-    */
-    openInTab(url,params = {}) {
-      params = Object.is(params,{}) ? '_blank' : params;
+     * @param {string} url - URL of webpage to open
+     * @param {object} params - GM parameters
+     */
+    openInTab(url, params = {}) {
+      params = Object.is(params, {}) ? '_blank' : params;
       return win.open(url, params);
-    },
-    // page: {
-    //   webpage: null,
-    //   findPage: function () {
-    //     let list = {};
-    //     if (doc.location.origin.includes('pornhub')) {
-    //       this.webpage = list.ph;
-    //     } else if (doc.location.origin.includes('redtube')) {
-    //       this.webpage = list.rt;
-    //     } else if (doc.location.origin.includes('tube8')) {
-    //       this.webpage = list.t8;
-    //     } else if (doc.location.origin.includes('thumbzilla')) {
-    //       this.webpage = list.tz;
-    //     } else if (doc.location.origin.includes('youporn')) {
-    //       this.webpage = list.yp;
-    //     } else if (doc.location.origin.includes('onlyfans')) {
-    //       this.webpage = list.ofs;
-    //     }
-    //     if (this.webpage === null) {
-    //       return null;
-    //     }
-    //     return this.webpage;
-    //   },
-    //   getPage: function () {
-    //     return this.webpage !== null ? this.webpage : this.findPage();
-    //   },
-    // },
+    }
   });
 }
-
-// clearModalCookie();

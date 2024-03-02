@@ -1,6 +1,6 @@
 'use strict';
 
-MU.hermes = {
+userjs.hermes = {
   port: null,
   msgIdGenerator: 1,
   pending: new Map(),
@@ -42,7 +42,9 @@ MU.hermes = {
     }
   },
   createPort: function () {
-    if ( this.shuttingDown ) { return null; }
+    if (this.shuttingDown) {
+      return null;
+    }
     if (this.messageListenerBound === null) {
       this.messageListenerBound = this.messageListener.bind(this);
       // this.disconnectListenerBound = this.disconnectListener.bind(this);
@@ -75,5 +77,5 @@ MU.hermes = {
     });
     port.postMessage({ channel, msgId, msg });
     return promise;
-  },
+  }
 };
