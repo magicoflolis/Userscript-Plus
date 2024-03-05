@@ -91,5 +91,11 @@
   },
   "reset": {
     "message": "リセット"
+  },
+  "codePreview": {
+    "message": "Preview Code"
+  },
+  "saveFile": {
+    "message": "Save File"
   }
 }

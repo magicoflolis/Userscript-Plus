@@ -85,5 +85,11 @@
   },
   "reset": {
     "message": "Reset"
+  },
+  "codePreview": {
+    "message": "Preview Code"
+  },
+  "saveFile": {
+    "message": "Save File"
   }
 }

@@ -91,5 +91,11 @@
   },
   "reset": {
     "message": "Reiniciar"
+  },
+  "codePreview": {
+    "message": "Preview Code"
+  },
+  "saveFile": {
+    "message": "Save File"
   }
 }

@@ -1,6 +1,8 @@
 mujs-root {
   --mujs-even-row: hsl(222, 14%, 22%);
   --mujs-odd-row: hsl(222, 14%, 11%);
+  --mujs-even-err: hsl(0, 100%, 22%);
+  --mujs-odd-err: hsl(0, 100%, 11%);
   --mujs-background-color: hsl(222, 14%, 33%);
   --mujs-gf-color: hsl(204, 100%, 40%);
   --mujs-sf-color: hsl(12, 86%, 50%);
@@ -14,6 +16,10 @@ mujs-root {
   --mujs-chck-git: hsla(213, 13%, 16%, 0.568);
   --mujs-chck-open: hsla(12, 86%, 50%, 0.568);
   --mujs-placeholder: hsl(81, 56%, 54%);
+  --mujs-position-top: unset;
+  --mujs-position-bottom: 1em;
+  --mujs-position-left: unset;
+  --mujs-position-right: 1em;
 }
 
 mujs-root * {
@@ -45,7 +51,7 @@ mujs-root * {
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background-color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+      background: var(--mujs-txt-color, hsl(0, 0%, 100%));
     }
   }
 
@@ -123,11 +129,11 @@ mujs-column {
   }
 
   count-frame:nth-child(1) {
-    background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+    background: var(--mujs-gf-color, hsl(204, 100%, 40%));
   }
 
   count-frame:nth-child(2) {
-    background-color: var(--mujs-sf-color, hsl(12, 86%, 50%));
+    background: var(--mujs-sf-color, hsl(12, 86%, 50%));
   }
 }
 
@@ -158,7 +164,8 @@ mu-js {
   width: -moz-available;
   width: -webkit-fill-available;
   background: var(--mujs-background-color, hsl(222, 14%, 33%)) !important;
-  border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
+  // border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
+  border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
   border-radius: 16px;
   font-family: Arial,
   Helvetica,
@@ -178,10 +185,6 @@ mu-js {
       margin-right: 1rem;
       right: 1rem;
       bottom: 1rem;
-
-      &.auto-height {
-        height: auto;
-      }
     }
   }
 
@@ -202,7 +205,8 @@ mu-js {
   }
 
   input {
-    background: var(--mujs-background-color, hsl(222, 14%, 33%));
+    // background: var(--mujs-background-color, hsl(222, 14%, 33%));
+    background: hsla(0, 0%, 0%, 0);
     color: var(--mujs-txt-color, hsl(0, 0%, 100%));
   }
 
@@ -212,10 +216,13 @@ mu-js {
   }
 
   textarea {
+    background: inherit;
+    border-radius: 14px;
     overflow-y: auto;
     color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-    background-color: var(--mujs-even-row, hsl(222, 14%, 18%));
-    border: 1px solid transparent;
+    // background: var(--mujs-even-row, hsl(222, 14%, 18%));
+    // border: 1px solid transparent;
+    border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
     border-radius: 10px;
     resize: vertical;
     outline: none;
@@ -234,13 +241,32 @@ mu-js {
     -ms-user-select: none !important;
     user-select: none !important;
   }
+  .mujs-footer {
+    order: 2;
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    overflow-x: hidden;
+    text-align: center;
+    > * {
+      &:nth-child(even) {
+        background: var(--mujs-even-err, hsl(0, 100%, 22%)) !important;
+      }
+
+      &:nth-child(odd) {
+        background: var(--mujs-odd-err, hsl(0, 100%, 11%)) !important;
+      }
+    }
+  }
 }
 
 .mainframe {
   background: transparent;
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: var(--mujs-position-bottom, 1rem);
+  right: var(--mujs-position-right, 1rem);
+  top: var(--mujs-position-top, unset);
+  left: var(--mujs-position-left, unset);
 
   count-frame {
     width: fit-content;
@@ -259,7 +285,7 @@ mu-js {
 count-frame {
   border-radius: 1000px;
   margin: 0px 3px;
-  padding: 4px 6px; // 0.25em;
+  padding: 4px 6px;
   border: 2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
   font-size: 16px;
   font-weight: 400;
@@ -277,11 +303,9 @@ count-frame {
 .mujs-header-prim {
   order: 0;
   display: flex;
-  // gap: 10px;
   border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  // padding: 10px;
   padding: .5em;
   font-size: 1em;
   place-content: space-between;
@@ -294,12 +318,17 @@ count-frame {
 }
 
 .mujs-body {
-  overflow-x: hidden;
   order: 1;
+  overflow-x: hidden;
   padding: 0px;
   width: 100%;
   width: -moz-available;
   width: -webkit-fill-available;
+  height: 100%;
+
+  border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 
   .mujs-ratings {
     padding: 0 0.25em;
@@ -309,6 +338,10 @@ count-frame {
 
   mu-jsbtn {
     color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
   }
 
   table,
@@ -325,7 +358,6 @@ count-frame {
 
       .frame:not(.webext-page) {
         width: 100%;
-        // padding: .5em;
         display: flex;
         flex-flow: row wrap;
         align-items: center;
@@ -334,7 +366,6 @@ count-frame {
         padding-bottom: .5em;
 
         td {
-          // flex-grow: 1;
           margin: auto;
           border-bottom: 1px solid transparent;
 
@@ -353,22 +384,6 @@ count-frame {
         .mujs-name {
           width: 100%;
         }
-
-        // .mujs-uframe,
-        // .mujs-list {
-        //   flex-grow: 2;
-        // }
-
-        // .install-btn {
-        //   justify-content: center;
-        //   display: flex;
-
-        //   mu-jsbtn {
-        //     width: -webkit-fit-content;
-        //     width: -moz-fit-content;
-        //     width: fit-content;
-        //   }
-        // }
       }
     }
 
@@ -398,30 +413,31 @@ count-frame {
 
     .frame {
       &:nth-child(even) {
-        background-color: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+        background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
       }
 
       &:nth-child(odd) {
-        background-color: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+        background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
       }
 
-      &.sf {
+      &:not([data-engine="sleazyfork"], [data-engine="greasyfork"]) {
         mujs-a {
           color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
         }
 
         mu-jsbtn {
-          background-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+          background: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
           border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
 
           &:hover {
-            background-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
+            background: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
             border-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
           }
         }
       }
 
-      &:not(.sf) {
+      &[data-engine="sleazyfork"],
+      &[data-engine="greasyfork"] {
         mujs-a {
           color: var(--mujs-gf-color, hsl(197, 100%, 50%));
 
@@ -432,11 +448,11 @@ count-frame {
 
         mu-jsbtn {
           color: var(--mujs-txt-color, hsl(0, 0%, 100%));
-          background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+          background: var(--mujs-gf-color, hsl(204, 100%, 40%));
           border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
 
           &:hover {
-            background-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
+            background: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
             border-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
           }
         }
@@ -444,8 +460,6 @@ count-frame {
 
       &[data-good],
       &[data-author] {
-
-        // background-color: hsl(218, 38%, 13%);
         mujs-a {
           color: var(--mujs-placeholder, hsl(81, 56%, 54%));
 
@@ -460,11 +474,11 @@ count-frame {
 
         mu-jsbtn {
           color: hsl(215, 47%, 24%);
-          background-color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+          background: var(--mujs-placeholder, hsl(81, 56%, 54%));
           border-color: var(--mujs-placeholder, hsl(81, 56%, 54%));
 
           &:hover {
-            background-color: hsl(81, 56%, 65%);
+            background: hsl(81, 56%, 65%);
             border-color: hsl(81, 56%, 65%);
           }
         }
@@ -479,7 +493,6 @@ count-frame {
 
       >td:not(.mujs-name) {
         text-align: center;
-        // justify-content: center;
       }
 
       >.mujs-name {
@@ -502,11 +515,6 @@ count-frame {
             padding: 0px 7px;
           }
         }
-        >textarea {
-          background-color: inherit;
-          border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-          border-radius: 14px;
-        }
       }
 
       >.mujs-uframe {
@@ -519,13 +527,6 @@ count-frame {
       }
     }
   }
-}
-
-.mujs-cfg,
-.mujs-body {
-  border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
 }
 
 @media screen and (max-width: 1150px) {
@@ -557,11 +558,11 @@ count-frame {
     padding: .5em;
 
     &:nth-child(even) {
-      background-color: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+      background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
     }
 
     &:nth-child(odd) {
-      background-color: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+      background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
     }
 
     >label {
@@ -606,7 +607,7 @@ count-frame {
 
       &:checked+label {
         margin-left: 0;
-        background-color: var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568));
+        background: var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568));
 
         &:before {
           right: 0px;
@@ -615,15 +616,15 @@ count-frame {
 
       &[data-name='greasyfork']:checked+label,
       &[data-name='sleazyfork']:checked+label {
-        background-color: var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568));
+        background: var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568));
       }
 
       &[data-name='openuserjs']:checked+label {
-        background-color: var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568));
+        background: var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568));
       }
 
       &[data-name='github']:checked+label {
-        background-color: var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568));
+        background: var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568));
       }
     }
 
@@ -634,7 +635,6 @@ count-frame {
       height: 16px;
       border-radius: 20px;
       border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-      background-color: var(--mujs-background-color, hsl(222, 14%, 33%));
 
       &:before {
         content: '';
@@ -651,32 +651,26 @@ count-frame {
     }
   }
 
-  [data-name='blacklist'] {
-    background-color: var(--mujs-even-row, hsl(222, 14%, 18%));
-    border: 1px solid transparent;
-    border-radius: 10px;
-  }
-
   .mujs-sty-flex {
     mujs-btn {
       color: var(--mujs-txt-color, hsl(0, 0%, 100%));
 
       &[data-command="reset"] {
-        background-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
+        background: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
         border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
 
         &:hover {
-          background-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
+          background: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
           border-color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
         }
       }
 
       &[data-command="save"] {
-        background-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
+        background: var(--mujs-gf-color, hsl(204, 100%, 40%));
         border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
 
         &:hover {
-          background-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
+          background: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
           border-color: var(--mujs-gf-btn-color, hsl(211, 87%, 56%));
         }
       }
@@ -684,7 +678,6 @@ count-frame {
   }
 
   &:not(.webext-page) {
-    order: 2;
     margin: 0px 25rem 1rem 25rem;
   }
 }
