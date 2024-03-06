@@ -1,60 +1,80 @@
 # Magic Userscript+
 
+> [!IMPORTANT]
+> If the current webpage is set to block resources through CSP
+>
+> It will cause the userscript not work for that webpage!
+>
+> [https://developer.mozilla.org/docs/Web/HTTP/CSP](https://developer.mozilla.org/docs/Web/HTTP/CSP)
+
 ![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus)
 [![GitHub Release](https://img.shields.io/github/release/magicoflolis/Userscript-Plus)](https://github.com/magicoflolis/Userscript-Plus/releases/latest)
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603)](https://greasyfork.org/scripts/421603)
 ![jsDelivr hits (GitHub)](https://img.shields.io/jsdelivr/gh/hm/magicoflolis/Userscript-Plus)
 [![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
 
-*Fork of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript). Source code & authors information found [here](https://github.com/jae-jae/Userscript-Plus).*
+*Fork of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript) - authors & source code found [here](https://github.com/jae-jae/Userscript-Plus)*
 
-> The power of [Greasy Fork](https://greasyfork.org) on the go! Finds available UserJS for the current webpage, **does not work on every webpage**
-
-## About
-
-> [Changelog (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases)
-
-Finds available UserJS for current webpage from various UserJS hosts (e.g, [Greasy Fork](https://greasyfork.org)), displays a found count bottom right of the webpage, automatically disappears after 10 seconds (can be configured).
-
-| Preview(s) |
-|:----------:|
-|![Demo 1](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo4.gif)|
-|![Demo 2](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo3.gif)|
-|![Demo 3](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo2.gif)|
-|![Demo 4](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo1.png)|
-
-## Downloads
-
-***
+Finds available UserJS for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
 
 | Version | Link | Alternative | Note |
 |:----------:|:----------:|:----------:|:----------:|
-| Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | - |
-| Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | - | Work in progress |
+| Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | *N/A* |
+| Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | *N/A* | Work in progress |
 | Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress |
 
-**(Optional) Mobile Bookmarklet:**
+**(Optional) Bookmarklet:**
+
+> Save this URL as a bookmark, clicking it will cause the userscript version to inject itself into the current webpage.
 
 ```JS
 javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/magic-userjs.user.js'].map(s=>document.body.appendChild(document.createElement('script')).src=s)})();
 ```
 
-***
+---
+
+| Previews |
+|:----------:|
+|![Demo 1](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo4.gif)|
+
+---
 
 ## Features
 
-> Tested and compatible with TamperMonkey and ViolentMonkey.
+> [Changelog (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases)
 
-* Multilingual support.
-* User can search + load results for UserJS on an entirely different webpage!
-* Config can be synced with current user script manager.
-* Automatically finds language through ``navigator.language``, all dates will match your current language.
-* List displays the following information for each UserJS: name, description, creation date, author(s), version, daily installs, total installs, user ratings.
-* List can be filtered through search.
-* List is sorted by Daily Installs, highest to lowest.
-* Designed for desktop and mobile devices.
-* Available search engines: [Greasy Fork](https://greasyfork.org), [Sleazy Fork](https://sleazyfork.org), [Open UserJS](https://openuserjs.org), [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript=="), [Gist (GitHub)](https://gist.github.com/search?l=JavaScript&o=desc&q="==UserScript==")
-* Built-in [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840).
+* Designed for mobile and desktop devices
+* Support multiple languages - date formats will match your current language
+* Ability to customize theme
+* Ability to import / export config and theme
+* Ability to search for userscripts
+* Ability to filter userscripts which do not match your current language
+* Ability to query userscripts from any hostname
+* Ability to sort userscripts, default sorting "Daily Installs"
+* Available search engines [Greasy Fork](https://greasyfork.org), [Sleazy Fork](https://sleazyfork.org), [Open UserJS](https://openuserjs.org), [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript==") ( requires a [Personal Access Token](https://github.com/settings/tokens), the token does not require any permissions )
+* Built-in userscript [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840)
+* Preview any userscript code before install
+* Save any userscript to local file
+* Highlights which userscripts are created by the [author](https://greasyfork.org/users/166061)
+* Highlights recommended userscripts from the [author](https://greasyfork.org/users/166061)
+
+**Userscript Features:**
+
+> Tested and compatible with [TamperMonkey](https://www.tampermonkey.net/) and [ViolentMonkey](https://violentmonkey.github.io/)
+
+* Ability to maximize, minimize, or exit the userscript list
+* Ability to change the position of floating counter
+* Sync config with Userscript Manager or choose to have site based configs
+
+**Bookmarklet Features:**
+
+* Ability to maximize, minimize, or exit the userscript list
+* Ability to change the position of floating counter
+* Ability to choose to have site based configs
+
+**Webextension Features:**
+
+* *N/A*
 
 ## FAQ / Troubleshooting
 
@@ -64,16 +84,16 @@ Nothing appears bottom right:
 * Default timeout is 10000ms before the count disappears
 * If issue persists, see [Viewing UserJS Logs](#viewing-userjs-logs)
 
-Error occured while injecting Container:
+Error occurred while injecting Container:
 
 * Try again on another webpage [[Test Page](https://google.com)]
 * This error is caused by the current webpage not supporting [attachShadow](https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow)
 
-Error occured while loading UserJS for this webpage:
+Error occurred while loading UserJS for this webpage:
 
 * Reload the webpage or try again on a different webpage [[Test Page](https://google.com)]
 * This error *may* be caused by
-  * An error occured in an enabled search engine while fetching content
+  * An error occurred in an enabled search engine while fetching content
   * Script is unable to fetch content on current or all webpages
 
 No available UserJS for this webpage:
@@ -88,9 +108,9 @@ No available UserJS for this webpage:
 * Feel free to screenshot any error messages to the [GitHub](https://github.com/magicoflolis/Userscript-Plus/issues) for addition help
 * If nothing appears, this means the script is not executing at all
 
-## Workflows
+## Development
 
-### Development
+> Code editor used - [VSCodium](https://vscodium.com)
 
 Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/).
 The version of Node.js should match `"node"` key in `package.json`.
@@ -100,7 +120,11 @@ The version of Node.js should match `"node"` key in `package.json`.
 $ pnpm i
 ```
 
-#### Userscript Version
+### Userscript Version
+
+> Desktop version - developed using [ViolentMonkey](https://violentmonkey.github.io/), see [How to edit scripts with your favorite editor?](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/)
+>
+> Mobile version - developed using [FireFox Developer Edition](https://www.mozilla.org/firefox/developer/) "Responsive Design Mode" on desktop + [cromite](https://github.com/uazo/cromite) app on Android
 
 ``` sh
 # Watch and compile to local HTTP server
@@ -108,6 +132,24 @@ $ pnpm run dev:UserJS
 
 # Compile UserJS
 $ pnpm run pub:UserJS
+```
+
+### Webextension Version
+
+``` sh
+# Compile webextension (dev version) for "Chromium" to "./tests/chrome"
+$ pnpm run dev:Cr
+# Compile webextension (dev version) for "Firefox" to "./tests/chrome"
+$ pnpm run dev:FF
+# Compile webextension (public version) for "Chromium" to "./tests/chrome"
+$ pnpm run webpack:Cr
+# Compile webextension (public version) for "Firefox" to "./tests/chrome"
+$ pnpm run webpack:FF
+
+# [ Testing ]
+# Browsers can be launched via "Run and Debug" in VSCode.
+# Edit runtimeExecutable in ".vscode/launch.json" to your Chrome executable.
+# Recommended to create an additional profile "about:profiles" for Firefox.
 ```
 
 ### Source Code
