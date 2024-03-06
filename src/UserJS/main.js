@@ -2518,8 +2518,7 @@ const primaryFN = (injCon, doc) => {
     mujsRoot.append(mainframe, main);
 
     makecfg();
-    buildlist();
-    // buildlist().then(timeoutFrame);
+    buildlist().then(timeoutFrame);
 
     if (cfg.injection) {
       info('Migrating old config...');
