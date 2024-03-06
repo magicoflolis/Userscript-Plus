@@ -291,6 +291,8 @@ mu-js {
     border-radius: 16px;
     > * {
       min-height: 50px;
+    }
+    .error {
       &:nth-child(even) {
         background: var(--mujs-even-err, hsl(0, 100%, 22%)) !important;
       }

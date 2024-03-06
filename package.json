@@ -9,7 +9,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
   },
   "userJS": {
-    "version": "6.5.0",
+    "version": "6.5.1",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues/new",
     "homepage": "https://github.com/magicoflolis/Userscript-Plus",
@@ -69,7 +69,7 @@
   },
   "type": "module",
   "scripts": {
-    "dev:UserJS": "concurrently \"pnpm run dev:Webserver\" \"pnpm run dev:Sass\" \"node ./tools/userscript.js\"",
+    "dev:UserJS": "concurrently \"pnpm run dev:Webserver\" \"sass --no-source-map -s compressed -w ./src/sass:./build/css\" \"node ./tools/userscript.js\"",
     "dev:FF": "concurrently \"pnpm run dev:Sass\" \"pnpm run webpack:FF\"",
     "dev:Cr": "concurrently \"pnpm run dev:Sass\" \"pnpm run webpack:Cr\"",
     "dev:Sass": "sass --embed-sources -s compressed -w ./src/sass:./build/css",

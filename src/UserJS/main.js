@@ -1,13 +1,3 @@
-let userjs = (self.userjs = {});
-/** Skip text/plain documents */
-if (
-  (document instanceof Document ||
-    (document instanceof XMLDocument && document.createElement('div') instanceof HTMLDivElement)) &&
-  /^image\/|^text\/plain/.test(document.contentType || '') === false &&
-  (self.userjs instanceof Object === false || userjs.UserJS !== true)
-) {
-  userjs = self.userjs = { UserJS: true };
-}
 let cfg = {};
 let lang = {};
 let legacyMsg = null;
@@ -37,18 +27,19 @@ const isMobile = /Mobile|Tablet/.test(navigator.userAgent);
 const Supports = {
   gm: typeof GM !== 'undefined'
 };
-//#region Console
-// const dbg = (...msg) => {
-//   const dt = new Date();
-//   console.debug(
-//     '[%cUserJS%c] %cDBG',
-//     'color: rgb(29, 155, 240);',
-//     '',
-//     'color: rgb(255, 212, 0);',
-//     `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
-//     ...msg
-//   );
-// };
+// #region Console
+// eslint-disable-next-line no-unused-vars
+const dbg = (...msg) => {
+  const dt = new Date();
+  console.debug(
+    '[%cUserJS%c] %cDBG',
+    'color: rgb(29, 155, 240);',
+    '',
+    'color: rgb(255, 212, 0);',
+    `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
+    ...msg
+  );
+};
 const err = (...msg) => {
   console.error(
     '[%cUserJS%c] %cERROR',
@@ -86,7 +77,7 @@ const log = (...msg) => {
     ...msg
   );
 };
-//#endregion
+// #endregion
 const MU = {};
 const hasOwn = Object.hasOwn || Object.prototype.hasOwnProperty.call;
 /**
@@ -360,6 +351,27 @@ class Timeout {
     });
   }
 }
+class Memorize {
+  constructor() {
+    this.cache = new Map();
+  }
+  /**
+   * @template { string } S
+   * @param { ...S } maps
+   * @returns { S | S[] }
+   */
+  create(...maps) {
+    const resp = [];
+    for (const key of maps) {
+      if (this.cache.has(key)) {
+        return this.cache.get(key);
+      }
+      this.cache.set(key, new Map());
+      resp.push(this.cache.get(key));
+    }
+    return resp.length >= 2 ? resp : resp[0];
+  }
+}
 const alang = [];
 const defcfg = {
   cache: true,
@@ -576,51 +588,96 @@ const make = (tagName, cname, attrs = {}) => {
   }
   return el;
 };
-/**
- * Inject CSS (Cascading Style Sheet Document) into `document.head`
- * @param { string } css - CSS to inject
- * @param { string } name - (optional) Name of stylesheet `mph-`
- * @param { * } root - (optional) Custom `document.head` path
- * @return { HTMLStyleElement | null } Style element
- */
-const loadCSS = (css, name = 'CSS', root = document) => {
-  /** @type {Element} */
-  let el;
-  try {
-    if (typeof css !== 'string') {
-      throw new Error('[loadCSS] "css" must be a typeof "String"');
-    }
-    if (typeof name !== 'string') {
-      throw new Error('[loadCSS] "name" must be a typeof "String"');
-    }
-    el = root || document.head;
-    if (isBlank(css)) {
-      throw new Error(`[loadCSS] "${name}" contains empty CSS string`);
-    }
-    for (const s of normalizeTarget(el.querySelectorAll('style[data-role]'))) {
-      if (Object.is(s.dataset.role, name)) {
-        return s;
-      }
-    }
-    const sty = make('style', `mujs-${name}`, {
-      textContent: css,
-      dataset: {
-        insertedBy: 'userscript-plus',
-        role: name
-      }
-    });
-    // sty.appendChild(document.createTextNode(css));
-    if (!isEmpty(el.shadowRoot)) {
-      el.shadowRoot.appendChild(sty);
+const Container = class {
+  constructor() {
+    this.remove = this.remove.bind(this);
+    this.onFrameLoad = this.onFrameLoad.bind(this);
+    this.ready = false;
+    this.supported = isFN(document.createElement('main-userjs').attachShadow);
+    if (this.supported) {
+      this.frame = make('main-userjs', '', {
+        dataset: {
+          insertedBy: 'userscript-plus',
+          role: 'primary-container'
+        }
+      });
+      /**
+       * @type { ShadowRoot }
+       */
+      this.root = this.frame.attachShadow({ mode: 'open', clonable: false, delegatesfocus: false });
+      this.ready = true;
     } else {
-      el.appendChild(sty);
+      this.frame = make('iframe', 'mujs-iframe', {
+        dataset: {
+          insertedBy: 'userscript-plus',
+          role: 'primary-iframe'
+        },
+        loading: 'lazy',
+        src: 'about:blank',
+        style:
+          'position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
+        onload: this.onFrameLoad
+      });
     }
-    return sty;
-  } catch (ex) {
-    err(ex);
+    ael(window.self ?? window, 'beforeunload', this.remove);
   }
-  return null;
+  /**
+   * @param { Function } callback
+   * @param { document } doc
+   */
+  async inject(callback, doc) {
+    if (!doc) {
+      return;
+    }
+    while (this.ready === false) {
+      await Task.requestAFrame();
+    }
+
+    doc.documentElement.appendChild(this.frame);
+
+    if (isFN(callback)) {
+      callback.call({}, this.root, doc);
+    }
+  }
+
+  remove() {
+    this.frame.remove();
+  }
+
+  onFrameLoad(iFrame) {
+    /**
+     * @type { HTMLIFrameElement }
+     */
+    const target = iFrame.target;
+    this.root = target.contentDocument.documentElement;
+    this.ready = true;
+
+    dom.cl.add([this.root, target.contentDocument.body], 'mujs-iframe');
+  }
 };
+const container = new Container();
+const listener = (evt) => {
+  if (evt.isTrusted !== true) {
+    return;
+  }
+  if (evt.disposition !== 'enforce') {
+    return;
+  }
+  if (evt.target.tagName !== 'MAIN-USERJS') {
+    return;
+  }
+  container.remove();
+  err('Failed to inject due to CSP violation', {
+    url: evt.blockedURL || evt.blockedURI,
+    policy: evt.originalPolicy,
+    directive: evt.effectiveDirective || evt.violatedDirective
+  });
+  document.removeEventListener('securitypolicyviolation', listener);
+};
+if (document !== null) {
+  document.addEventListener('securitypolicyviolation', listener);
+}
+
 const iconSVG = {
   cfg: {
     viewBox: '0 0 24 24',
@@ -911,7 +968,6 @@ MU.info = Supports.gm
         version: 'Bookmarklet'
       }
     };
-
 MU.tab = {
   /**
    * Open a new window
@@ -997,77 +1053,7 @@ MU.storage = {
     }
   }
 };
-const getHost = (str = '') => {
-  return str.split('.').splice(-2).join('.');
-};
-const Container = class {
-  constructor() {
-    this.remove = this.remove.bind(this);
-    this.onFrameLoad = this.onFrameLoad.bind(this);
-    this.ready = false;
-    this.supported = isFN(document.createElement('main-userjs').attachShadow);
-    if (this.supported) {
-      this.frame = make('main-userjs', '', {
-        dataset: {
-          insertedBy: 'userscript-plus',
-          role: 'primary-container'
-        }
-      });
-      /**
-       * @type { ShadowRoot }
-       */
-      this.root = this.frame.attachShadow({ mode: 'open', clonable: false, delegatesfocus: false });
-      this.ready = true;
-    } else {
-      this.frame = make('iframe', 'mujs-iframe', {
-        dataset: {
-          insertedBy: 'userscript-plus',
-          role: 'primary-iframe'
-        },
-        loading: 'lazy',
-        src: 'about:blank',
-        style:
-          'position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
-        onload: this.onFrameLoad
-      });
-    }
-    ael(window.self ?? window, 'beforeunload', this.remove);
-  }
-  /**
-   * @param { Function } callback
-   * @param { document } doc
-   */
-  async inject(callback, doc) {
-    if (!doc) {
-      return;
-    }
-    while (this.ready === false) {
-      await Task.requestAFrame();
-    }
 
-    doc.documentElement.appendChild(this.frame);
-
-    if (isFN(callback)) {
-      callback.call({}, this.root);
-    }
-  }
-
-  remove() {
-    this.frame.remove();
-  }
-
-  onFrameLoad(iFrame) {
-    /**
-     * @type { HTMLIFrameElement }
-     */
-    const target = iFrame.target;
-    this.root = target.contentDocument.documentElement;
-    this.ready = true;
-
-    dom.cl.add([this.root, target.contentDocument.body], 'mujs-iframe');
-  }
-};
-const container = new Container();
 const sleazyRedirect = () => {
   if (!/greasyfork\.org/.test(window.location.hostname) && cfg.sleazyredirect) {
     return;
@@ -1087,20 +1073,60 @@ const sleazyRedirect = () => {
     : false;
 };
 // #region Primary Function
-const primaryFN = (injCon) => {
+/**
+ * @param { ShadowRoot | HTMLIFrameElement } injCon
+ * @param { Document } doc
+ */
+const primaryFN = (injCon, doc) => {
   try {
     const mujsRoot = make('mujs-root');
+    /**
+     * Inject CSS (Cascading Style Sheet Document) into `document.head`
+     * @param { string } css - CSS to inject
+     * @param { string } name - (optional) Name of stylesheet `mph-`
+     * @param { * } root - (optional) Custom `document.head` path
+     * @return { HTMLStyleElement | null } Style element
+     */
+    const loadCSS = (css, name = 'CSS', root = document) => {
+      /** @type {Element} */
+      let el;
+      try {
+        if (typeof css !== 'string') {
+          throw new Error('[loadCSS] "css" must be a typeof "String"');
+        }
+        if (typeof name !== 'string') {
+          throw new Error('[loadCSS] "name" must be a typeof "String"');
+        }
+        el = root || doc;
+        if (isBlank(css)) {
+          throw new Error(`[loadCSS] "${name}" contains empty CSS string`);
+        }
+        if (el.querySelector(`style[data-role="${name}"]`)) {
+          return el.querySelector(`style[data-role="${name}"]`);
+        }
+        const sty = make('style', `mujs-${name}`, {
+          textContent: css,
+          dataset: {
+            insertedBy: 'userscript-plus',
+            role: name
+          }
+        });
+        if (!isEmpty(el.shadowRoot)) {
+          el.shadowRoot.appendChild(sty);
+        } else {
+          el.appendChild(sty);
+        }
+        return sty;
+      } catch (ex) {
+        err(ex);
+      }
+      return null;
+    };
     const injectedCore = loadCSS(main_css, 'primary-stylesheet', mujsRoot);
     if (!injectedCore) {
       throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
     }
-
-    if (qs('mujs-root', injCon)) {
-      return;
-    }
-
     injCon.append(mujsRoot);
-
     if (navigator.languages.length > 0) {
       for (const nlang of navigator.languages) {
         const lg = nlang.split('-')[0];
@@ -1113,10 +1139,14 @@ const primaryFN = (injCon) => {
       alang.push(Language.navLang);
     }
 
-    const sh = (elem) => injCon.querySelector(elem);
-    const shA = (elem) => injCon.querySelectorAll(elem);
+    const memory = new Memorize();
+    const memorized = memory.cache;
+    memory.create('cfg', 'container', 'userjs');
 
-    const cfgMap = new Map();
+    const getHost = (str = '') => {
+      return str.split('.').splice(-2).join('.');
+    };
+    const cfgMap = memorized.get('cfg');
     const rebuildCfg = () => {
       for (const i of cfg.engines) {
         if (cfgMap.has(i.name)) {
@@ -1173,7 +1203,7 @@ const primaryFN = (injCon) => {
         if (sibling.dataset.command !== 'new-tab') {
           activeTab(sibling);
         }
-      };
+      }
       tab.remove();
     };
     const newTab = (host = undefined) => {
@@ -1241,7 +1271,8 @@ const primaryFN = (injCon) => {
         await mouseTimeout.set(2500);
         target.style.opacity = '0.15';
       },
-      onclick(evt) {
+      // #region Event handler
+      async onclick(evt) {
         try {
           /** @type { Element } */
           const target = evt.target.closest('[data-command]');
@@ -1298,9 +1329,7 @@ const primaryFN = (injCon) => {
             dom.cl.remove(mainframe, 'hidden');
             timeoutFrame();
           } else if (cmd === 'save') {
-            if (sh('.saveerror')) {
-              sh('.saveerror').remove();
-            }
+            // MUJS.refresh();
             if (!isNull(legacyMsg)) {
               legacyMsg = null;
               MUJS.rebuild = true;
@@ -1322,11 +1351,8 @@ const primaryFN = (injCon) => {
             MUJS.rebuild = true;
             rebuildCfg();
           } else if (cmd === 'settings') {
-            if (MUJS.unsaved && !sh('.saveerror')) {
-              const txt = make('mujs-row', 'saveerror', {
-                innerHTML: 'Unsaved changes'
-              });
-              countframe.insertAdjacentHTML('afterend', txt.outerHTML.toString());
+            if (MUJS.unsaved) {
+              MUJS.showError('Unsaved changes');
             }
             if (dom.cl.has(cfgpage, 'hidden')) {
               dom.cl.remove(cfgpage, 'hidden');
@@ -1348,13 +1374,101 @@ const primaryFN = (injCon) => {
             dom.cl.add(cfgpage, 'hidden');
             dom.cl.remove(table, 'hidden');
             activeTab(target);
-          } else if (cmd === 'close-tab') {
+          } else if (cmd === 'close-tab' && target.parentElement) {
             closeTab(target.parentElement);
+          } else if (cmd === 'download-userjs') {
+            if (!MUJS.userjsCache.has(+dataset.userjs)) {
+              return;
+            }
+            const txt = await reqCode(MUJS.userjsCache.get(+dataset.userjs));
+            if (typeof txt !== 'string') {
+              return;
+            }
+            const makeUserJS = new Blob([txt], { type: 'text/plain' });
+            const dlBtn = make('a', 'mujs_Downloader');
+            dlBtn.href = URL.createObjectURL(makeUserJS);
+            dlBtn.download = 'test.user.js';
+            dlBtn.click();
+            URL.revokeObjectURL(dlBtn.href);
+            dlBtn.remove();
+          } else if (cmd === 'load-userjs') {
+            if (!MUJS.userjsCache.has(+dataset.userjs)) {
+              return;
+            }
+            const codeArea = qs('textarea', target.parentElement.parentElement);
+            if (!isEmpty(codeArea.value)) {
+              dom.cl.toggle(codeArea, 'hidden');
+              return;
+            }
+            const txt = await reqCode(MUJS.userjsCache.get(+dataset.userjs));
+            if (typeof txt !== 'string') {
+              return;
+            }
+            codeArea.value = txt;
+            dom.cl.remove(codeArea, 'hidden');
+          } else if (/export-/.test(cmd)) {
+            const str = JSON.stringify(cmd === 'export-cfg' ? cfg : cfg.theme, null, ' ');
+            const bytes = new TextEncoder().encode(str);
+            const blob = new Blob([bytes], { type: 'application/json;charset=utf-8' });
+            const dlBtn = make('a', 'mujs-exporter', {
+              href: URL.createObjectURL(blob),
+              download: `Magic_Userscript_${cmd === 'export-cfg' ? 'config' : 'theme'}.json`
+            });
+            dlBtn.click();
+            URL.revokeObjectURL(dlBtn.href);
+          } else if (/import-/.test(cmd)) {
+            if (qs('input', target.parentElement)) {
+              qs('input', target.parentElement).click();
+              return;
+            }
+            const inpJSON = make('input', 'hidden', {
+              type: 'file',
+              accept: '.json',
+              onchange: (evt) => {
+                try {
+                  [...evt.target.files].forEach((file) => {
+                    const reader = new FileReader();
+                    reader.readAsText(file);
+                    reader.onload = () => {
+                      const result = JSON.parse(reader.result);
+                      if (result.blacklist) {
+                        log(`Imported config: { ${file.name} }`, result);
+                        cfg = result;
+                        MUJS.unsaved = true;
+                        MUJS.rebuild = true;
+                        rebuildCfg();
+                        MUJS.save();
+                        sleazyRedirect();
+                        MUJS.cache.clear();
+                        buildlist();
+                        MUJS.unsaved = false;
+                        MUJS.rebuild = false;
+                      } else {
+                        log(`Imported theme: { ${file.name} }`, result);
+                        cfg.theme = result;
+                        renderTheme(cfg.theme);
+                      }
+                      inpJSON.remove();
+                    };
+                    reader.onerror = () => {
+                      MUJS.showError(reader.error);
+                      inpJSON.remove();
+                    };
+                  });
+                } catch (ex) {
+                  MUJS.showError(ex);
+                  inpJSON.remove();
+                }
+              }
+            });
+            target.parentElement.append(inpJSON);
+            inpJSON.click();
           }
         } catch (ex) {
           err(ex);
         }
       }
+      // #endregion
     });
     const tbody = make('mu-js', 'mujs-body');
     const header = make('mu-js', 'mujs-header-prim');
@@ -1392,9 +1506,8 @@ const primaryFN = (injCon) => {
           this.webpage = window.location;
         }
         this.host = getHost(this.webpage.hostname);
-        // this.host = location.hostname.split('.').splice(-2).join('.');
-        this.cache = new Map();
-        this.userjsCache = new Map();
+        this.cache = memorized.get('container');
+        this.userjsCache = memorized.get('userjs');
         this.unsaved = false;
         this.isBlacklisted = false;
         this.rebuild = false;
@@ -1631,23 +1744,9 @@ const primaryFN = (injCon) => {
       const fBtns = make('mujs-column', 'mujs-list hidden');
       const dwnCode = make('mu-jsbtn', '', {
         innerHTML: `${iconSVG.load('install')} ${lang.saveFile}`,
-        async onclick(evt) {
-          evt.preventDefault();
-          try {
-            const txt = await reqCode(ujs);
-            if (typeof txt !== 'string') {
-              return;
-            }
-            const makeUserJS = new Blob([txt], { type: 'text/plain' });
-            const dlBtn = make('a', 'mujs_Downloader');
-            dlBtn.href = URL.createObjectURL(makeUserJS);
-            dlBtn.download = 'test.user.js';
-            dlBtn.click();
-            URL.revokeObjectURL(dlBtn.href);
-            dlBtn.remove();
-          } catch (ex) {
-            err(ex);
-          }
+        dataset: {
+          command: 'download-userjs',
+          userjs: ujs.id
         }
       });
       const tr = make('tr', 'frame');
@@ -1662,22 +1761,9 @@ const primaryFN = (injCon) => {
       });
       const loadCode = make('mu-jsbtn', '', {
         innerHTML: `${iconSVG.load('search')} ${lang.codePreview}`,
-        async onclick(evt) {
-          evt.preventDefault();
-          try {
-            if (!isEmpty(codeArea.value)) {
-              dom.cl.toggle(codeArea, 'hidden');
-              return;
-            }
-            const txt = await reqCode(ujs);
-            if (typeof txt !== 'string') {
-              return;
-            }
-            codeArea.value = txt;
-            dom.cl.remove(codeArea, 'hidden');
-          } catch (ex) {
-            err(ex);
-          }
+        dataset: {
+          command: 'load-userjs',
+          userjs: ujs.id
         }
       });
       if (engine) {
@@ -1741,18 +1827,6 @@ const primaryFN = (injCon) => {
         const engines = cfg.engines.filter((e) => e.enabled);
         const cache = MUJS.cache.get(host);
         const customRecords = [];
-        const rateFN = (data) => {
-          try {
-            for (const [key, value] of Object.entries(data.resources.code_search)) {
-              const txt = make('mujs-row', 'rate-info', {
-                innerHTML: `${key.toUpperCase()}: ${value}`
-              });
-              rateContainer.append(txt);
-            }
-          } catch (ex) {
-            MUJS.showError(ex);
-          }
-        };
         const isSupported = (name) => {
           for (const [k, v] of Object.entries(unsupported)) {
             if (k !== name) {
@@ -1804,7 +1878,7 @@ const primaryFN = (injCon) => {
               if (typeof txt !== 'string') {
                 continue;
               }
-              const headers = txt.match(/\/\/\s@[\w][\s\S]+/g); // txt.match(/\/\/\s?==UserScript==([\s\S]*?)\/\/\s?==\/UserScript==/gm);
+              const headers = txt.match(/\/\/\s@[\w][\s\S]+/g);
               if (isNull(headers)) {
                 continue;
               }
@@ -1996,14 +2070,23 @@ const primaryFN = (injCon) => {
                       'X-GitHub-Api-Version': '2022-11-28'
                     }
                   })
-                    .then(rateFN)
+                    .then((data) => {
+                      for (const [key, value] of Object.entries(data.resources.code_search)) {
+                        const txt = make('mujs-row', 'rate-info', {
+                          innerHTML: `${key.toUpperCase()}: ${value}`
+                        });
+                        rateContainer.append(txt);
+                      }
+                    })
                     .catch(MUJS.showError);
                 })
                 .catch(MUJS.showError);
             } else {
-              Network.req(`${eURL}${host}`, 'GET', 'document').then(customFN).catch((error) => {
-                MUJS.showError(`Engine: "${engine.name}"`, error);
-              });
+              Network.req(`${eURL}${host}`, 'GET', 'document')
+                .then(customFN)
+                .catch((error) => {
+                  MUJS.showError(`Engine: "${engine.name}"`, error);
+                });
             }
           }
         }
@@ -2017,107 +2100,29 @@ const primaryFN = (injCon) => {
       const exBtn = make('mu-js', 'mujs-sty-flex');
       const exportCFG = make('mujs-btn', 'mujs-export', {
         innerHTML: 'Export Config',
-        onclick() {
-          try {
-            const str = JSON.stringify(cfg, null, ' ');
-            const bytes = new TextEncoder().encode(str);
-            const blob = new Blob([bytes], { type: 'application/json;charset=utf-8' });
-            const dlBtn = make('a', 'mujs-exporter', {
-              href: URL.createObjectURL(blob),
-              download: 'Magic_Userscript_config.json'
-            });
-            dlBtn.click();
-            URL.revokeObjectURL(dlBtn.href);
-          } catch (ex) {
-            MUJS.showError(ex);
-          }
-        }
-      });
-      const cfgJSON = make('input', 'hidden', {
-        type: 'file',
-        accept: '.json',
-        onchange: (evt) => {
-          try {
-            [...evt.target.files].forEach((file) => {
-              const reader = new FileReader();
-              reader.readAsText(file);
-              reader.onload = () => {
-                const result = JSON.parse(reader.result);
-                log(`Imported config: { ${file.name} }`, result);
-                cfg = result;
-                MUJS.unsaved = true;
-                MUJS.rebuild = true;
-                rebuildCfg();
-                MUJS.save();
-                sleazyRedirect();
-                MUJS.cache.clear();
-                buildlist();
-                MUJS.unsaved = false;
-                MUJS.rebuild = false;
-              };
-              reader.onerror = () => {
-                MUJS.showError(reader.error);
-              };
-            });
-          } catch (ex) {
-            MUJS.showError(ex);
-          }
+        dataset: {
+          command: 'export-cfg'
         }
       });
       const importCFG = make('mujs-btn', 'mujs-import', {
         innerHTML: 'Import Config',
-        onclick() {
-          cfgJSON.click();
+        dataset: {
+          command: 'import-cfg'
         }
       });
       const exportTheme = make('mujs-btn', 'mujs-export', {
         innerHTML: 'Export Theme',
-        onclick() {
-          try {
-            const str = JSON.stringify(cfg.theme, null, ' ');
-            const bytes = new TextEncoder().encode(str);
-            const blob = new Blob([bytes], { type: 'application/json;charset=utf-8' });
-            const dlBtn = make('a', 'mujs-exporter', {
-              href: URL.createObjectURL(blob),
-              download: 'Magic_Userscript_theme.json'
-            });
-            dlBtn.click();
-            URL.revokeObjectURL(dlBtn.href);
-          } catch (ex) {
-            MUJS.showError(ex);
-          }
-        }
-      });
-      const themeJSON = make('input', 'hidden', {
-        type: 'file',
-        accept: '.json',
-        onchange: (evt) => {
-          try {
-            [...evt.target.files].forEach((file) => {
-              const reader = new FileReader();
-              reader.readAsText(file);
-              reader.onload = () => {
-                const result = JSON.parse(reader.result);
-                log(`Imported theme: { ${file.name} }`, result);
-                cfg.theme = result;
-                renderTheme(cfg.theme);
-              };
-              reader.onerror = () => {
-                MUJS.showError(reader.error);
-              };
-            });
-          } catch (ex) {
-            MUJS.showError(ex);
-          }
+        dataset: {
+          command: 'export-theme'
         }
       });
       const importTheme = make('mujs-btn', 'mujs-import', {
         innerHTML: 'Import Theme',
-        onclick() {
-          themeJSON.click();
+        dataset: {
+          command: 'import-theme'
         }
       });
-      exBtn.append(importCFG, exportCFG, cfgJSON, exportTheme, themeJSON, importTheme);
+      exBtn.append(importCFG, importTheme, exportCFG, exportTheme);
       cfgpage.append(exBtn);
 
       const makerow = (desc = 'Placeholder', type = null, nm = 'Placeholder', attrs = {}) => {
@@ -2388,11 +2393,11 @@ const primaryFN = (injCon) => {
       oninput(evt) {
         evt.preventDefault();
         if (isEmpty(evt.target.value)) {
-          dom.cl.remove(shA('tr.frame'), 'hidden');
+          dom.cl.remove(qsA('tr', tabbody), 'hidden');
           return;
         }
         const reg = new RegExp(evt.target.value, 'gi');
-        for (const ujs of shA('tr.frame')) {
+        for (const ujs of qsA('tr', tabbody)) {
           const m = ujs.children[0];
           const n = ujs.children[1];
           const final = m.textContent.match(reg) || n.textContent.match(reg) || [];
@@ -2461,16 +2466,7 @@ const primaryFN = (injCon) => {
     countframe.append(gfcounter, sfcounter);
     fsearch.append(filterList);
     btnHandles.append(btnHide, btnfullscreen, closebtn);
-    btnframe.append(
-      fsearch,
-      filterBtn,
-      btncfg,
-      btnissue,
-      btnhome,
-      btngreasy,
-      btnnav,
-      btnHandles
-    );
+    btnframe.append(fsearch, filterBtn, btncfg, btnissue, btnhome, btngreasy, btnnav, btnHandles);
     header.append(countframe, rateContainer, btnframe);
     ntHead.append(ntAdd);
     tbody.append(table, cfgpage);
@@ -2495,7 +2491,6 @@ const primaryFN = (injCon) => {
     ]);
 
     const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
-
     const comparer = (idx, asc) => (a, b) =>
       ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
@@ -2523,7 +2518,8 @@ const primaryFN = (injCon) => {
     mujsRoot.append(mainframe, main);
 
     makecfg();
-    buildlist().then(timeoutFrame);
+    buildlist();
+    // buildlist().then(timeoutFrame);
 
     if (cfg.injection) {
       info('Migrating old config...');
@@ -2538,11 +2534,10 @@ const primaryFN = (injCon) => {
 // #endregion
 /**
  * @param { Function } callback
- * @returns { null | true }
  */
 const loadDOM = (callback) => {
   if (!isFN(callback)) {
-    return null;
+    return;
   }
   if (document.readyState === 'interactive' || document.readyState === 'complete') {
     callback.call({}, document);
@@ -2550,7 +2545,6 @@ const loadDOM = (callback) => {
   document.addEventListener('DOMContentLoaded', (evt) => callback.call({}, evt.target), {
     once: true
   });
-  return true;
 };
 const Setup = async () => {
   try {
@@ -2558,25 +2552,19 @@ const Setup = async () => {
     lang = Language.cache;
     info('Config:', cfg);
     loadDOM((doc) => {
-      try {
-        if (window.location === null) {
-          err('"window.location" is null, reload the webpage or use a different one');
-          return;
-        }
-        if (doc === null) {
-          err('"doc" is null, reload the webpage or use a different one');
-          return;
-        }
-        sleazyRedirect();
-        container.inject(primaryFN, doc);
-      } catch (ex) {
-        err(ex);
+      if (window.location === null) {
+        err('"window.location" is null, reload the webpage or use a different one');
+        return;
       }
+      if (doc === null) {
+        err('"doc" is null, reload the webpage or use a different one');
+        return;
+      }
+      sleazyRedirect();
+      container.inject(primaryFN, doc);
     });
   } catch (ex) {
     err(ex);
   }
 };
-if (typeof userjs === 'object' && userjs.UserJS && window && window.self === window.top) {
-  Setup();
-}
+Setup();
