@@ -20,6 +20,8 @@ mujs-root {
   --mujs-position-bottom: 1em;
   --mujs-position-left: unset;
   --mujs-position-right: 1em;
+
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 mujs-root * {
@@ -63,9 +65,9 @@ mujs-root * {
   line-height: normal;
 }
 
-@at-root .mujs-cfg {
-  line-height: 1.5;
-}
+// @at-root .mujs-cfg {
+//   line-height: 1.5;
+// }
 
 mu-js {
   color: var(--mujs-txt-color, hsl(0, 0%, 100%));
@@ -93,14 +95,6 @@ td.mujs-list {
   font-weight: 500;
 }
 
-.mujs-fltlist {
-  width: 170px;
-}
-
-.mujs-searcher {
-  width: 100px;
-}
-
 .mujs-sty-flex>mujs-btn {
   margin: auto;
 }
@@ -112,6 +106,7 @@ td.mujs-list {
   border-color: hsl(0, 100%, 50%) !important;
 }
 
+mujs-tabs,
 mujs-column,
 mujs-row,
 .mujs-sty-flex {
@@ -164,12 +159,8 @@ mu-js {
   width: -moz-available;
   width: -webkit-fill-available;
   background: var(--mujs-background-color, hsl(222, 14%, 33%)) !important;
-  // border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
   border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
   border-radius: 16px;
-  font-family: Arial,
-  Helvetica,
-  sans-serif;
 
   &.expanded {
     height: 100% !important;
@@ -194,6 +185,56 @@ mu-js {
     flex-direction: column !important;
   }
 
+  mujs-tabs {
+    gap: 0.5em;
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    text-align: center;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    mujs-tab {
+      padding: 0.25em;
+      min-width: 150px;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+      height: -webkit-fit-content;
+      height: -moz-fit-content;
+      height: fit-content;
+      display: flex;
+      place-content: space-between;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      &.active {
+        background: var(--mujs-even-row, hsl(222, 14%, 18%));
+      }
+      &:not(.active) {
+        &:hover {
+          background: var(--mujs-even-row, hsl(222, 14%, 18%));
+        }
+      }
+      mujs-host {
+        float: left
+      }
+      mu-js {
+        float: right
+      }
+    }
+    mujs-addtab {
+      order: 999999999999;
+      font-size: 20px;
+      padding: 0px 0.25em;
+      &:hover {
+        background: var(--mujs-even-row, hsl(222, 14%, 18%));
+      }
+    }
+  }
+
+  mujs-tab,
   mujs-btn,
   input {
     width: -webkit-fit-content;
@@ -217,7 +258,6 @@ mu-js {
 
   textarea {
     background: inherit;
-    border-radius: 14px;
     overflow-y: auto;
     color: var(--mujs-placeholder, hsl(81, 56%, 54%));
     // background: var(--mujs-even-row, hsl(222, 14%, 18%));
@@ -248,7 +288,9 @@ mu-js {
     width: -webkit-fill-available;
     overflow-x: hidden;
     text-align: center;
+    border-radius: 16px;
     > * {
+      min-height: 50px;
       &:nth-child(even) {
         background: var(--mujs-even-err, hsl(0, 100%, 22%)) !important;
       }
@@ -678,7 +720,7 @@ count-frame {
   }
 
   &:not(.webext-page) {
-    margin: 0px 25rem 1rem 25rem;
+    margin: 1rem 25rem;
   }
 }
 

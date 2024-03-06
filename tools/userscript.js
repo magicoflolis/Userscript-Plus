@@ -117,10 +117,6 @@ const initUserJS = async () => {
         return isEmpty(v) ? '' : v;
       });
     };
-
-
-    /** Build Paths */
-    const outFile = `${build.paths[dp].dir}/${build.paths[dp].fileName}.user.js`;
     const buildUserJS = async () => {
       try {
         const transformLanguages = () => {
@@ -182,9 +178,6 @@ const initUserJS = async () => {
           const metaData = [];
           try {
             for (const [key, value] of Object.entries(userJS.metadata)) {
-              // if (/build|name|version|url|icon|bugs|homepage/.test(key)) {
-              //   continue;
-              // }
               if (Array.isArray(value)) {
                 for (const v of value) {
                   metaData.push(`// @${key}     ${v}`);
@@ -226,18 +219,14 @@ const initUserJS = async () => {
               }
               if (str === 'name') {
                 resp.push(`// @${str}         ${js_env ? '[Dev] ' : ''}${param}`, ...compileLanguage('userjsName'));
-                // resp.push(`// @${str}         ${js_env ? '[Dev] ' : ''}${param}`);
               } else if (str === 'description') {
                 resp.push(`// @${str}  ${param}`, ...compileLanguage('userjsDescription'));
-                // resp.push(`// @${str}  ${param}`);
               } else if (str === 'author') {
                 resp.push(`// @${str}       ${param}`);
               } else if (str === 'icon') {
                 resp.push(`// @${str}         ${param}`);
               } else if (str === 'url') {
                 resp.push(`// @downloadURL  ${param}`, `// @updateURL    ${param}`);
-                // const userjsURL = js_env ? `${buildPaths.dev.url ?? 'https://localhost:8080'}/${buildPaths.name}.dev.user.js` : param;
-                // resp.push(`// @downloadURL  ${userjsURL}`, `// @updateURL    ${userjsURL}`);
               } else if (str === 'version') {
                 resp.push(`// @${str}      ${js_env ? +new Date() : param}`);
               } else if (str === 'homepage') {
@@ -259,7 +248,7 @@ const initUserJS = async () => {
         const headerFile = await canAccess(build.source.head);
         const mainFile = await canAccess(build.source.body);
         const nanoCFG = {
-          jshead: userJSHeader,
+          metadata: userJSHeader,
           languageList: transformLanguages(),
           code: mainFile,
         };
@@ -268,14 +257,23 @@ const initUserJS = async () => {
           if (typeof extraFile === 'string') {
             nanoCFG[k] = extraFile;
           }
-        }
-        const wfConfig = nano(headerFile, nanoCFG);
-
-        await writeFile(outFile, wfConfig);
-        log('Build:', {
+        };
+        const outFile = `${build.paths[dp].dir}/${build.paths[dp].fileName}.user.js`;
+        await writeFile(outFile, nano(headerFile, nanoCFG));
+        log('UserJS Build:', {
           path: outFile,
           time: new Intl.DateTimeFormat('default', dateOptions).format(new Date())
         });
+        if (!js_env) {
+          const metaFile = await canAccess(build.source.metadata);
+          const outMeta = `${build.paths[dp].dir}/${build.paths[dp].fileName}.meta.user.js`;
+          await writeFile(outMeta, nano(metaFile, { metadata: userJSHeader }));
+          log('UserJS Metadata:', {
+            path: outMeta,
+            time: new Intl.DateTimeFormat('default', dateOptions).format(new Date())
+          });
+        }
+
       } catch (ex) {
         err(ex);
       }

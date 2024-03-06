@@ -1,4 +1,4 @@
-{{jshead}}
+{{metadata}}
 'use strict';
 (() => {
 /**

@@ -9,7 +9,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues/new"
   },
   "userJS": {
-    "version": "6.4.0",
+    "version": "6.5.0",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues/new",
     "homepage": "https://github.com/magicoflolis/Userscript-Plus",
@@ -17,6 +17,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js",
     "build": {
       "source": {
+        "metadata": "./src/UserJS/metadata.js",
         "head": "./src/UserJS/header.js",
         "body": "./src/UserJS/main.js",
         "extras": {
