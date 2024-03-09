@@ -17,9 +17,9 @@
 
 Finds available UserJS for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
 
-| Version | Link | Alternative | Note |
+| Version | Install | Alternative | Notes |
 |:----------:|:----------:|:----------:|:----------:|
-| Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [Install (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js) | *N/A* |
+| Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | *N/A* |
 | Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | *N/A* | Work in progress |
 | Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress |
 
