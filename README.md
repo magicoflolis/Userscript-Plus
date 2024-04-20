@@ -7,25 +7,37 @@
 >
 > [https://developer.mozilla.org/docs/Web/HTTP/CSP](https://developer.mozilla.org/docs/Web/HTTP/CSP)
 
-![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus)
-[![GitHub Release](https://img.shields.io/github/release/magicoflolis/Userscript-Plus)](https://github.com/magicoflolis/Userscript-Plus/releases/latest)
-[![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603)](https://greasyfork.org/scripts/421603)
-![jsDelivr hits (GitHub)](https://img.shields.io/jsdelivr/gh/hm/magicoflolis/Userscript-Plus)
-[![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
+![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus?style=flat-square)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)
+[![GitHub Release](https://img.shields.io/github/release/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/releases/latest)
+[![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
+[![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
 
-*Fork of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript) - authors & source code found [here](https://github.com/jae-jae/Userscript-Plus)*
+*A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript) - authors & source code found [here](https://github.com/jae-jae/Userscript-Plus)*
 
-Finds available UserJS for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
+Finds available Userscripts for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
+
+[Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
+
+[List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
+
+## **Download**
+
+**Userscript:**
+
+[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Magic-PH/blob/master/dist/UserJS/magicph.user.js?raw=1)
+[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Magic-PH/blob/master/dist/UserJS/magicph.user.js?raw=1)
+
+**Web Extension:**
 
 | Version | Install | Alternative | Notes |
 |:----------:|:----------:|:----------:|:----------:|
-| Userscript | [Greasy Fork](https://greasyfork.org/scripts/421603) | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | *N/A* |
 | Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | *N/A* | Work in progress |
 | Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress |
 
-**(Optional) Bookmarklet:**
+**(Not Recommended) Bookmarklet:**
 
-> Save this URL as a bookmark, clicking it will cause the userscript version to inject itself into the current webpage.
+Save this URL as a bookmark, clicking it will cause the userscript version to inject itself into the current webpage.
 
 ```JS
 javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/magic-userjs.user.js'].map(s=>document.body.appendChild(document.createElement('script')).src=s)})();
@@ -33,15 +45,14 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 ---
 
-| Previews |
+| Demos |
 |:----------:|
-|![Demo 1](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/demo4.gif)|
+|![Installing Userscript](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/install-userscript.gif)|
+|![Using Tabs](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/using-tabs)|
 
 ---
 
 ## Features
-
-> [Changelog (GitHub)](https://github.com/magicoflolis/Userscript-Plus/releases)
 
 * Designed for mobile and desktop devices
 * Support multiple languages - date formats will match your current language
@@ -60,7 +71,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 **Userscript Features:**
 
-> Tested and compatible with [TamperMonkey](https://www.tampermonkey.net/) and [ViolentMonkey](https://violentmonkey.github.io/)
+> Tested and compatible with [TamperMonkey](https://www.tampermonkey.net/) or [ViolentMonkey](https://violentmonkey.github.io/)
 
 * Ability to maximize, minimize, or exit the userscript list
 * Ability to change the position of floating counter
@@ -78,25 +89,31 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 ## FAQ / Troubleshooting
 
-Nothing appears bottom right:
+**How do I open the menu?:**
 
-* Try again on another webpage [[Test Page](https://google.com)]
+* Click or touch the bottom right of a webpage
+
+**Nothing appears bottom right:**
+
+> [List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
+
+* Try again on another webpage [[Test Page](https://youtube.com)]
 * Default timeout is 10000ms before the count disappears
-* If issue persists, see [Viewing UserJS Logs](#viewing-userjs-logs)
+* If issue persists, see [Viewing UserJS Logs](#viewing-userjs-logs) or submit a [New Issue](https://github.com/magicoflolis/Magic-PH/issues/new/choose)
 
-Error occurred while injecting Container:
+**Error occurred while injecting Container:**
 
-* Try again on another webpage [[Test Page](https://google.com)]
+* Try again on another webpage [[Test Page](https://youtube.com)]
 * This error is caused by the current webpage not supporting [attachShadow](https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow)
 
-Error occurred while loading UserJS for this webpage:
+**Error occurred while loading UserJS for this webpage:**
 
-* Reload the webpage or try again on a different webpage [[Test Page](https://google.com)]
+* Reload the webpage or try again on a different webpage [[Test Page](https://youtube.com)]
 * This error *may* be caused by
   * An error occurred in an enabled search engine while fetching content
   * Script is unable to fetch content on current or all webpages
 
-No available UserJS for this webpage:
+**No available UserJS for this webpage:**
 
 * This error *can* be caused when no UserJS could be found in enabled search engines
 * If there are known UserJS to exist in enabled search engines, enable `Filter out other languages`
@@ -105,15 +122,14 @@ No available UserJS for this webpage:
 
 * Open your web browsers Inspect Element and navigate to it's Console
 * Locate the following **[UserJS] < message >** ( you can filter your Console by entering **UserJS** or **[** )
-* Feel free to screenshot any error messages to the [GitHub](https://github.com/magicoflolis/Userscript-Plus/issues) for addition help
-* If nothing appears, this means the script is not executing at all
+* **If nothing appears, this means the script is not executing at all!**
+* For any additional help, submit a [New Issue](https://github.com/magicoflolis/Magic-PH/issues/new/choose)
 
-## Development
+## Build
 
-> Code editor used - [VSCodium](https://vscodium.com)
+> Developed in [VSCodium](https://vscodium.com)
 
-Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/).
-The version of Node.js should match `"node"` key in `package.json`.
+Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/). The version of Node.js should match `"node"` key in `package.json`.
 
 ``` sh
 # Install dependencies
@@ -151,6 +167,10 @@ $ pnpm run webpack:FF
 # Edit runtimeExecutable in ".vscode/launch.json" to your Chrome executable.
 # Recommended to create an additional profile "about:profiles" for Firefox.
 ```
+
+### Roadmap
+
+* Finish webextension version
 
 ### Source Code
 
