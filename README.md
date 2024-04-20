@@ -47,8 +47,8 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 | Demos |
 |:----------:|
-|![Installing Userscript](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/install-userscript.gif)|
 |![Using Tabs](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/using-tabs.gif)|
+|![Installing Userscript](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/install-userscript.gif)|
 
 ---
 
