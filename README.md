@@ -25,8 +25,8 @@ Finds available Userscripts for the current webpage, the power of [Greasy Fork](
 
 **Userscript:**
 
-[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Magic-PH/blob/master/dist/UserJS/magicph.user.js?raw=1)
-[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Magic-PH/blob/master/dist/UserJS/magicph.user.js?raw=1)
+[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/UserJS/magic-userjs.user.js?raw=1)
+[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/UserJS/magic-userjs.user.js?raw=1)
 
 **Web Extension:**
 
