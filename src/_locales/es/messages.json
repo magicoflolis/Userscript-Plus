@@ -11,11 +11,11 @@
     "message": "Finds available UserJS for the current webpage.",
     "description": "Must not exceed 112 characters"
   },
-  "userjsName": {
+  "userjs_name": {
     "message": "Magic Userscript+: Mostrar sitio todos los UserJS"
   },
-  "userjsDescription": {
-    "message": "Mostrar todos los UserJS del sitio actual, la forma más fácil de instalar UserJs para Tampermonkey."
+  "userjs_description": {
+    "message": "Busca los usercripts disponibles para la página web actual."
   },
   "legacy": {
     "message": "¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!"
@@ -26,7 +26,7 @@
   "name": {
     "message": "Nombre"
   },
-  "daily": {
+  "daily_installs": {
     "message": "Instalaciones diarias"
   },
   "close": {
@@ -44,8 +44,8 @@
   "search": {
     "message": "Busque en"
   },
-  "searcher": {
-    "message": "Título | Descripción | Autor..."
+  "search_placeholder": {
+    "message": "Buscar userscripts"
   },
   "install": {
     "message": "Instalar"
@@ -53,16 +53,16 @@
   "issue": {
     "message": "Nueva edición"
   },
-  "version": {
+  "version_number": {
     "message": "Versión"
   },
   "updated": {
     "message": "Última actualización"
   },
-  "total": {
+  "total_installs": {
     "message": "Total de instalaciones"
   },
-  "rating": {
+  "ratings": {
     "message": "Clasificaciones"
   },
   "good": {
@@ -74,7 +74,7 @@
   "bad": {
     "message": "Malo"
   },
-  "created": {
+  "created_date": {
     "message": "Creado"
   },
   "redirect": {
@@ -92,10 +92,43 @@
   "reset": {
     "message": "Reiniciar"
   },
-  "codePreview": {
-    "message": "Preview Code"
+  "preview_code": {
+    "message": "Vista previa del código"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "Guardar archivo"
+  },
+  "newTab": {
+    "message": "Guardar archivo"
+  },
+  "applies_to": {
+    "message": "Se aplica a"
+  },
+  "license": {
+    "message": "Licencia"
+  },
+  "no_license": {
+    "message": "Desconocida"
+  },
+  "antifeatures": {
+    "message": "Características indeseables"
+  },
+  "userjs_fullscreen": {
+    "message": "Pantalla completa automática"
+  },
+  "listing_none": {
+    "message": "(Ninguno)"
+  },
+  "export_config": {
+    "message": "Exportar configuración"
+  },
+  "export_theme": {
+    "message": "Exportar tema"
+  },
+  "import_config": {
+    "message": "Importar configuración"
+  },
+  "import_theme": {
+    "message": "Importar tema"
   }
 }

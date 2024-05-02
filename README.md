@@ -7,13 +7,13 @@
 >
 > [https://developer.mozilla.org/docs/Web/HTTP/CSP](https://developer.mozilla.org/docs/Web/HTTP/CSP)
 
-![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus?style=flat-square)
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)
+[![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/blob/master/LICENSE)
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/issues)
 [![GitHub Release](https://img.shields.io/github/release/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/releases/latest)
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
 [![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
 
-*A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript) - authors & source code found [here](https://github.com/jae-jae/Userscript-Plus)*
+*A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript)*
 
 Finds available Userscripts for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
 

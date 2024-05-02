@@ -2,16 +2,26 @@ import js from '@eslint/js';
 import globals from 'globals';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
-const repoGlobals = {
-  MU: 'writable',
-  userjs: 'writable',
-  boxCSS: 'readonly',
+const userJSGlobals = {
+  code: 'readonly',
+  metadata: 'readonly',
   main_css: 'readonly',
-  custom_width: 'readonly',
-  jaeFetchUserJSFrame: 'readonly',
+  languageList: 'readonly',
+  translations: 'readonly',
+  userjs: 'writable',
+  ...globals.es2021,
+  ...globals.browser,
+  ...globals.greasemonkey
+};
+const webextGlobals = {
+  MU: 'writable',
   sleazyfork_redirect: 'readonly',
   webext: 'readonly',
-  brws: 'readonly'
+  brws: 'readonly',
+  userjs: 'writable',
+  ...globals.es2021,
+  ...globals.browser,
+  ...globals.webextensions
 };
 const parserOptions = {
   allowImportExportEverywhere: false,
@@ -39,31 +49,34 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: {
-        ...repoGlobals,
-        ...globals.browser,
-        ...globals.webextensions
-      },
+      globals: webextGlobals,
       parserOptions
     },
     rules
   },
   {
-    // files: ['**/*.js'],
-    // ignores: ['src/UserJS/header.js', 'src/languages.js', 'dist/**/*.js'],
     files: ['src/UserJS/main.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: {
-        languageList: 'readonly',
-        ...repoGlobals,
-        ...globals.browser,
-        ...globals.greasemonkey
-      },
+      globals: userJSGlobals,
       parserOptions
     },
     rules
+  },
+  {
+    files: ['src/UserJS/header.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: userJSGlobals,
+      parserOptions
+    },
+    rules: {
+      ...rules,
+      quotes: 'off',
+      'no-unused-vars': 'off'
+    }
   },
   {
     files: ['tools/*.js'],
@@ -71,7 +84,7 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        ...repoGlobals,
+        ...globals.es2021,
         ...globals.node
       },
       parserOptions

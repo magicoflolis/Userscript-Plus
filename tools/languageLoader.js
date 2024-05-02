@@ -10,10 +10,6 @@ import { URL, fileURLToPath } from 'node:url';
  * @returns {Promise<T[]>}
  */
 export async function loadLanguages(dir, recursive = true) {
-  // Create an empty array to store the structures
-  /** @type {T[]} */
-  const structures = [];
-
   // Get the stats of the directory
   const statDir = await stat(dir);
 
@@ -25,14 +21,14 @@ export async function loadLanguages(dir, recursive = true) {
   // Get all the files in the directory
   const files = await readdir(dir);
 
+  // Create an empty array to store the structures
+  /** @type {T[]} */
+  const structures = [];
+
   // Loop through all the files in the directory
   for (const file of files) {
-    // if (toUserJS && file.match(/\w+_\w+/)) {
-    //   continue;
-    // }
     // Get the stats of the file
     const statFile = await stat(new URL(`${dir}/${file}`));
-    // const statFile = await stat(new URL(`${dir}/${file}`));
 
     // If the file is a directory and recursive is true, recursively load the structures in the directory
     if (statFile.isDirectory() && recursive) {
@@ -41,7 +37,7 @@ export async function loadLanguages(dir, recursive = true) {
     }
 
     if (!file.endsWith('.json')) {
-    	continue;
+      continue;
     }
 
     const filePath = fileURLToPath(`${dir}/${file}`);

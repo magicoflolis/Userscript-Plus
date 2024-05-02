@@ -1,6 +1,6 @@
 # Currently known issues by Web Browser
 
-> Last updated: 4/20/2024
+> Last updated: 5/2/2024
 
 [Submit a New Issue](https://github.com/magicoflolis/Magic-PH/issues/new/choose)
 
@@ -14,21 +14,9 @@
 
 ## Google Chrome
 
-**TamperMonkey:**
-
-- N/A
-
-**ViolentMonkey:**
-
 - N/A
 
 ## Cromite
-
-**TamperMonkey:**
-
-- N/A
-
-**ViolentMonkey:**
 
 - N/A
 
@@ -41,21 +29,9 @@
 
 ## Microsoft Edge
 
-**TamperMonkey:**
-
-- N/A
-
-**ViolentMonkey:**
-
 - N/A
 
 ## Mozilla Firefox
-
-**TamperMonkey:**
-
-- N/A
-
-**ViolentMonkey:**
 
 - N/A
 
@@ -65,11 +41,3 @@
 
 - Cannot load on search engine sites (common example: [google.com](https://www.google.com))
   - As stated using ViolentMonkey: _Violentmonkey cannot run userscripts in this page (common examples: browser UI, an extension, blocked via policies, a search engine site in Opera)_
-
-**TamperMonkey:**
-
-- N/A
-
-**ViolentMonkey:**
-
-- N/A

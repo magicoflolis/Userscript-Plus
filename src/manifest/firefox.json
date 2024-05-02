@@ -3,14 +3,17 @@
   "default_locale": "en",
   "name": "__MSG_extName__",
   "description": "__MSG_extShortDesc__",
-  "short_name": "uScriptPlus",
+  "short_name": "userJSPlus",
   "background": {
     "page": "background.html"
   },
   "browser_action": {
+    "browser_style": false,
+    "default_area": "navbar",
     "default_icon": {
-			"32": "img/icon_32.png",
-      "128": "img/icon_128.png"
+			"16": "img/icon_16.png",
+      "32": "img/icon_32.png",
+      "64": "img/icon_64.png"
     },
     "default_popup": "popup.html",
     "default_title": "UserJS - Popup"
@@ -35,10 +38,11 @@
   },
   "content_security_policy": "script-src 'self'; object-src 'self'",
   "icons": {
-    "16": "img/icon_16.png",
-    "32": "img/icon_32.png",
-    "96": "img/icon_96.png",
-    "128": "img/icon_128.png"
+    "16": "img/userjs.svg",
+    "32": "img/userjs.svg",
+    "48": "img/userjs.svg",
+    "64": "img/userjs.svg",
+    "96": "img/userjs.svg"
   },
   "commands": {}
 }

@@ -42,17 +42,8 @@ const fileToJSON = async (filePath, encoding = 'utf-8') => {
 };
 export default async (env, args) => {
   const brws = env.brws;
-  const webExtDir = `tests/${brws}`;
+  const webExtDir = `build/${brws}`;
   const webExtSrc = 'src';
-  const compileSass = async () => {
-    const rootPath = file('tests/compiled');
-    const dir = await fs.promises.opendir(rootPath);
-    for await (const dirent of dir) {
-      if (!dirent.isFile()) continue;
-      const result = await canAccess(path.join(rootPath, dirent.name));
-      await fs.promises.writeFile(path.join(file(webExtDir), 'css', dirent.name), result, 'utf8');
-    }
-  };
   const plugins = [
     new CopyPlugin({
       patterns: [
@@ -170,12 +161,9 @@ export default async (env, args) => {
     },
     watch: true,
     watchOptions: {
-      // poll: 1000,
-      // aggregateTimeout: 500,
       ignored: /(node_modules|bower_components)/
     }
   };
-  await compileSass();
   switch (args.mode) {
     case 'development':
       return merge(commonConfig, developmentConfig);

@@ -11,11 +11,11 @@
     "message": "Finds available UserJS for the current webpage.",
     "description": "Must not exceed 112 characters"
   },
-  "userjsName": {
+  "userjs_name": {
     "message": "Magic Userscript+ ：显示站点所有 UserJS"
   },
-  "userjsDescription": {
-    "message": "显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。"
+  "userjs_description": {
+    "message": "为当前网页查找可用的用户脚本。"
   },
   "legacy": {
     "message": "请重置您的配置！"
@@ -26,7 +26,7 @@
   "name": {
     "message": "姓名"
   },
-  "daily": {
+  "daily_installs": {
     "message": "日常安装"
   },
   "close": {
@@ -44,8 +44,8 @@
   "search": {
     "message": "搜索"
   },
-  "searcher": {
-    "message": "标题|描述|作者..."
+  "search_placeholder": {
+    "message": "搜索用户脚本"
   },
   "install": {
     "message": "安装"
@@ -53,16 +53,16 @@
   "issue": {
     "message": "新问题"
   },
-  "version": {
+  "version_number": {
     "message": "版本"
   },
   "updated": {
     "message": "最后更新"
   },
-  "total": {
+  "total_installs": {
     "message": "总安装量"
   },
-  "rating": {
+  "ratings": {
     "message": "评级"
   },
   "good": {
@@ -74,7 +74,7 @@
   "bad": {
     "message": "不好"
   },
-  "created": {
+  "created_date": {
     "message": "创建"
   },
   "redirect": {
@@ -92,10 +92,43 @@
   "reset": {
     "message": "重置"
   },
-  "codePreview": {
-    "message": "Preview Code"
+  "preview_code": {
+    "message": "预览代码"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "保存存档"
+  },
+  "newTab": {
+    "message": "新标签"
+  },
+  "applies_to": {
+    "message": "适用于"
+  },
+  "license": {
+    "message": "许可证"
+  },
+  "no_license": {
+    "message": "暂无"
+  },
+  "antifeatures": {
+    "message": "可能不受欢迎的功能"
+  },
+  "userjs_fullscreen": {
+    "message": "自动全屏"
+  },
+  "listing_none": {
+    "message": "(无)"
+  },
+  "export_config": {
+    "message": "导出配置"
+  },
+  "export_theme": {
+    "message": "导出主题"
+  },
+  "import_config": {
+    "message": "导入配置"
+  },
+  "import_theme": {
+    "message": "导入主题"
   }
 }

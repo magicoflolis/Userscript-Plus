@@ -4,9 +4,12 @@ const Config = {
   configLocalListeners: [],
   configSyncListeners: [],
   syncDefaults: {
+    cache: true,
     codePreview: false,
+    autoexpand: false,
     filterlang: false,
     sleazyredirect: false,
+    time: 10000,
     blacklist: [
       {
         enabled: true,
@@ -44,7 +47,7 @@ const Config = {
         url: 'https://greasyfork.org'
       },
       {
-        enabled: true,
+        enabled: false,
         name: 'sleazyfork',
         url: 'https://sleazyfork.org'
       },
@@ -60,6 +63,29 @@ const Config = {
         token: ''
       }
     ],
+    theme: {
+      'even-row': '',
+      'odd-row': '',
+      'even-err': '',
+      'odd-err': '',
+      'background-color': '',
+      'gf-color': '',
+      'sf-color': '',
+      'border-b-color': '',
+      'gf-btn-color': '',
+      'sf-btn-color': '',
+      'sf-txt-color': '',
+      'txt-color': '',
+      'chck-color': '',
+      'chck-gf': '',
+      'chck-git': '',
+      'chck-open': '',
+      placeholder: '',
+      'position-top': '',
+      'position-bottom': '',
+      'position-left': '',
+      'position-right': ''
+    },
     recommend: {
       author: true,
       others: true

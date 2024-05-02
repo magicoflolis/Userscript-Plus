@@ -11,11 +11,11 @@
     "message": "Finds available UserJS for the current webpage.",
     "description": "Must not exceed 112 characters"
   },
-  "userjsName": {
+  "userjs_name": {
     "message": "Magic Userscript+: Site alle UserJS tonen"
   },
-  "userjsDescription": {
-    "message": "Toon de huidige site alle UserJS, de eenvoudigere manier om UserJs voor Tampermonkey te installeren."
+  "userjs_description": {
+    "message": "Zoekt beschikbare gebruikerscripts voor de huidige webpagina."
   },
   "legacy": {
     "message": "RESET UW CONFIG!"
@@ -26,7 +26,7 @@
   "name": {
     "message": "Naam"
   },
-  "daily": {
+  "daily_installs": {
     "message": "Dagelijkse Installaties"
   },
   "close": {
@@ -44,8 +44,8 @@
   "search": {
     "message": "Zoek"
   },
-  "searcher": {
-    "message": "Titel | Beschrijving | Auteur..."
+  "search_placeholder": {
+    "message": "Zoeken naar gebruikersscripts"
   },
   "install": {
     "message": "Installeer"
@@ -53,16 +53,16 @@
   "issue": {
     "message": "Nieuw Issue"
   },
-  "version": {
+  "version_number": {
     "message": "Versie"
   },
   "updated": {
     "message": "Laatste Update"
   },
-  "total": {
+  "total_installs": {
     "message": "Totale Installaties"
   },
-  "rating": {
+  "ratings": {
     "message": "Beoordeling"
   },
   "good": {
@@ -74,7 +74,7 @@
   "bad": {
     "message": "Slecht"
   },
-  "created": {
+  "created_date": {
     "message": "Aangemaakt"
   },
   "redirect": {
@@ -92,10 +92,43 @@
   "reset": {
     "message": "Opnieuw instellen"
   },
-  "codePreview": {
-    "message": "Preview Code"
+  "preview_code": {
+    "message": "Voorbeeldcode"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "Bestand opslaan"
+  },
+  "newTab": {
+    "message": "Nieuw tabblad"
+  },
+  "applies_to": {
+    "message": "Geldt voor"
+  },
+  "license": {
+    "message": "Licentie"
+  },
+  "no_license": {
+    "message": "N.v.t."
+  },
+  "antifeatures": {
+    "message": "Functies voor eigen gewin"
+  },
+  "userjs_fullscreen": {
+    "message": "Automatisch volledig scherm"
+  },
+  "listing_none": {
+    "message": "(Geen)"
+  },
+  "export_config": {
+    "message": "Configuratie exporteren"
+  },
+  "export_theme": {
+    "message": "Thema exporteren"
+  },
+  "import_config": {
+    "message": "Configuratie importeren"
+  },
+  "import_theme": {
+    "message": "Thema importeren"
   }
 }

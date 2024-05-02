@@ -4,12 +4,18 @@
     "description": "Must not exceed 45 characters"
   },
   "extDesc": {
-    "message": "The power of Greasy Fork on the go! Finds available UserJS for the current webpage.",
+    "message": "Finds available UserJS for the current webpage, the power of Greasy Fork on the go!",
     "description": "Must not exceed 132 characters"
   },
   "extShortDesc": {
-    "message": "Finds available UserJS for the current webpage.",
+    "message": "The power of Greasy Fork on the go!",
     "description": "Must not exceed 112 characters"
+  },
+  "userjs_name": {
+    "message": "Magic Userscript+ : Show Site All UserJS"
+  },
+  "userjs_description": {
+    "message": "Finds available userscripts for the current webpage."
   },
   "legacy": {
     "message": "PLEASE RESET YOUR CONFIG!"
@@ -20,7 +26,7 @@
   "name": {
     "message": "Name"
   },
-  "daily": {
+  "daily_installs": {
     "message": "Daily Installs"
   },
   "close": {
@@ -38,8 +44,8 @@
   "search": {
     "message": "Search"
   },
-  "searcher": {
-    "message": "Title | Description | Author..."
+  "search_placeholder": {
+    "message": "Search scripts"
   },
   "install": {
     "message": "Install"
@@ -47,16 +53,16 @@
   "issue": {
     "message": "New Issue"
   },
-  "version": {
+  "version_number": {
     "message": "Version"
   },
   "updated": {
     "message": "Last Updated"
   },
-  "total": {
+  "total_installs": {
     "message": "Total Installs"
   },
-  "rating": {
+  "ratings": {
     "message": "Ratings"
   },
   "good": {
@@ -68,7 +74,7 @@
   "bad": {
     "message": "Bad"
   },
-  "created": {
+  "created_date": {
     "message": "Created"
   },
   "redirect": {
@@ -86,10 +92,43 @@
   "reset": {
     "message": "Reset"
   },
-  "codePreview": {
+  "preview_code": {
     "message": "Preview Code"
   },
   "saveFile": {
     "message": "Save File"
+  },
+  "newTab": {
+    "message": "New Tab"
+  },
+  "applies_to": {
+    "message": "Applies to"
+  },
+  "license": {
+    "message": "License"
+  },
+  "no_license": {
+    "message": "N/A"
+  },
+  "antifeatures": {
+    "message": "Antifeatures"
+  },
+  "userjs_fullscreen": {
+    "message": "Automatic Fullscreen"
+  },
+  "listing_none": {
+    "message": "(None)"
+  },
+  "export_config": {
+    "message": "Export Config"
+  },
+  "export_theme": {
+    "message": "Export Theme"
+  },
+  "import_config": {
+    "message": "Import Config"
+  },
+  "import_theme": {
+    "message": "Import Theme"
   }
 }

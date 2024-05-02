@@ -11,11 +11,11 @@
     "message": "Finds available UserJS for the current webpage.",
     "description": "Must not exceed 112 characters"
   },
-  "userjsName": {
+  "userjs_name": {
     "message": "Magic Userscript+: показать сайт всем UserJS"
   },
-  "userjsDescription": {
-    "message": "Показать все UserJS текущего сайта — более простой способ установки UserJs для Tampermonkey."
+  "userjs_description": {
+    "message": "Находит доступные юзерскрипты для текущей веб-страницы."
   },
   "legacy": {
     "message": "ПОЖАЛУЙСТА, СБРОСЬТЕ КОНФИГ!"
@@ -26,7 +26,7 @@
   "name": {
     "message": "Имя"
   },
-  "daily": {
+  "daily_installs": {
     "message": "Ежедневные установки"
   },
   "close": {
@@ -44,8 +44,8 @@
   "search": {
     "message": "Поиск"
   },
-  "searcher": {
-    "message": "Название | Описание | Автор..."
+  "search_placeholder": {
+    "message": "Поиск юзерскриптов"
   },
   "install": {
     "message": "Установите"
@@ -53,16 +53,16 @@
   "issue": {
     "message": "Новый выпуск"
   },
-  "version": {
+  "version_number": {
     "message": "Версия"
   },
   "updated": {
     "message": "Последнее обновление"
   },
-  "total": {
+  "total_installs": {
     "message": "Всего установок"
   },
-  "rating": {
+  "ratings": {
     "message": "Рейтинги"
   },
   "good": {
@@ -74,7 +74,7 @@
   "bad": {
     "message": "Плохо"
   },
-  "created": {
+  "created_date": {
     "message": "Создано"
   },
   "redirect": {
@@ -92,10 +92,43 @@
   "reset": {
     "message": "Перезагрузить"
   },
-  "codePreview": {
-    "message": "Preview Code"
+  "preview_code": {
+    "message": "Предварительный просмотр кода"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "Сохранить файл"
+  },
+  "newTab": {
+    "message": "Новая вкладка"
+  },
+  "applies_to": {
+    "message": "Применяется к"
+  },
+  "license": {
+    "message": "Лицензия"
+  },
+  "no_license": {
+    "message": "Недоступно"
+  },
+  "antifeatures": {
+    "message": "Нежелательная функциональность"
+  },
+  "userjs_fullscreen": {
+    "message": "Автоматический полноэкранный режим"
+  },
+  "listing_none": {
+    "message": "(нет)"
+  },
+  "export_config": {
+    "message": "Экспорт конфигурации"
+  },
+  "export_theme": {
+    "message": "Экспорт темы"
+  },
+  "import_config": {
+    "message": "Импорт конфигурации"
+  },
+  "import_theme": {
+    "message": "Импортировать тему"
   }
 }

@@ -1,5 +1,7 @@
 // ==UserScript==
+// @version      6.6.0
 // @name         Magic Userscript+ : Show Site All UserJS
+// @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:es      Magic Userscript+: Mostrar sitio todos los UserJS
 // @name:fr      Magic Userscript+ : Afficher le site Tous les UserJS
 // @name:ja      Magic Userscript+ : サイトをすべて表示 UserJS
@@ -8,23 +10,22 @@
 // @name:zh      Magic Userscript+ ：显示站点所有 UserJS
 // @name:zh-CN      Magic Userscript+ ：显示站点所有 UserJS
 // @name:zh-TW      Magic Userscript+ ：显示站点所有 UserJS
-// @description  Show current site all UserJS, the easier way to install UserJs for Tampermonkey.
-// @description:es      Mostrar todos los UserJS del sitio actual, la forma más fácil de instalar UserJs para Tampermonkey.
-// @description:fr      Afficher le site actuel avec tous les UserJS, le moyen le plus simple d'installer UserJs pour Tampermonkey.
-// @description:ja      サイトのユーザー スクリプト (UserJS) を表示します。 Tampermonkey のカスタム スクリプトをインストールする簡単な方法。
-// @description:nl      Toon de huidige site alle UserJS, de eenvoudigere manier om UserJs voor Tampermonkey te installeren.
-// @description:ru      Показать все UserJS текущего сайта — более простой способ установки UserJs для Tampermonkey.
-// @description:zh      显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。
-// @description:zh-CN      显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。
-// @description:zh-TW      显示站点的用户脚本 (UserJS)。 为 Tampermonkey 安装自定义脚本的简单方法。
-// @author       Magic <magicoflolis@tuta.io>
-// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gYRBAceMUIR3QAAEg9JREFUeNrtXWlwVNW2/k4n3RkbM5FRMEHUBOIAekGMJV4lYVDBAeQ+IYTJODAVjwBXfRZFQRn04vthiQgGEOMDiylY4lB6g1CG8VFJLF4SSYiBRBDTSZM06aQzdH/vB+ccex5Id9IBV9WuJDvnnL3P+s7+9tprr723gBsUkkoAEAShG96VQABqAOHiz+EARog/7wAwGECkmMLEe/QAropJA+AigPMAKsWfbQCuianH7B2iAOgFQehEP4kA/xClqOQHANwL4B4AdwEYCiCkl8/uAFAPoAbAOQBnAZQDqALQhVtcEgAsB3AcwG/il0ofpzaxrONi2Qm3ksIFAFEAxgHYDqDVE+VJEhISwoKCAra0tFCj0TA/P9/uddb363Q6/vTTT/Lfw4YNo0KhaBXrMk6sm3CzKj8JwKsAvlGpVO2zZ8/mkSNHePnyZRoMBrsKcwTAnj17aC2LFi1yCYB1/vnz57ljxw7p73YA34h1TLqZFB8MIDcwMLBi6NChHUuXLuXFixdpT9wF4MyZMxw5ciQHDRrEjz/+mCR5+vRpjwGw/jszM5NRUVEdACoA5Ip1H7ASC+A5AP/rLf6WZMyYMXJeQkICSfLatWu9BqCjo4Pfffed+T0lAB4xs7YGjEwRrQ2jNztQSVQqlUeKdfc6B/e1ANgEIG0gKD4QwGYA3QCoUCgoCAIFQWBqaip//fVXOhN3AfBUsQCoUqluFACK73MBwGwACn+mnN0ATEqlki+//DIrKyu5detWJiUlySCcPXuWJpPJpwA0NjaSJBMTE+W8sWPH9gYAKRkA/Et8V7+SvwE4JFFOQkICT58+TZLs7u7mgQMHOGTIEK9RkKv8Y8eOkSQ3b95MtVrNESNG8MyZM94AgOJI+pD4zn5h108BUG1eyYiICBYVFckv1N3dzeLiYkZGRvYJAPPmzbNpXXv37vUYABeAVIvv3m/jhgAATwO4bK+Co0aNYnl5uYUSiouLOWTIEAqC4FMAADA/P58ajYatra389NNPGRoa6pHCIyMjSZLV1dXO6nRZ1EFAXytfBWCp6NxyWMFRo0bx2LFjMudLdHT77bf72t3Q67R48WLq9Xred999rq5tFscMqr788v9TdGS5fJHU1FSZk83pKCIiwq8BKC0t5bx589y9XiuCENAXnP+s6GFkUFAQU1JSmJiYSEGhcNoSvE1HfpiaRTryaZ8wBcAfUqFz5sxhXV0dy8vL+cL06QwIDHQKQklJiQ0decM68qN0WdSRz0zNGvMCd+3aJX/Rly5d4vQZM5y2hIFKRx6mal+YqLEAvrYubMqUKfKghyTr6+s5ITPzLzq6Pk7w2mBNIY7+bPw6QUFBzM3NpUajsQBhuht0ZM86uonoqEfUmVfcFh8BMDkqLCgoiNnZ2ezo6PiLjmzdFrO90el2C4LAQCdfNABmZ2dbtISGhgZmZWU5BWH06NG9piN3/Ui+8Mq6ce0FAKm94f2zkmNt/fr1fOSRR+isJdiloxkzvGIdeTIK9iMAukVX9g3NJ7wCwDRlyhTq9XoajUbW19czKyuLntLRDC/QkeTKHoBU1CJO6ng8jfgbAM6cOZPd3d0WCp00aRIDAgLcpiNvWEeSK3uA9gclnk5v5ko3h4eHc8eOHezq6iJJmkwmVlRUcNKkSQ4LVNmho4aGBs7oBR0JgsBHH32UZ8+etaAAazpQKpVctWoVy8rKqNfrqdfrWVZWxry8PIt+zN0IC3cpyN7zGhsbOWfOHOmaXE+iF/4PAJ944gkCYGxsLAsLC9nT0yODcOnSpRuiI1fW0YQJE6jT6ezSkfXMmrUyVCoVjxw54nDGrbi4WAbB3QgLTwGw9zzR+VjhTrSFIIZltFsXGhcXx0OHDtFoNHpER7PdpCOFQsG0tDRWVVU5VJ4968hcGatWrSJJarVazp07lzExMYyJieG8efPY0tJCkszLy/MowsJTAOw9b+/evVLYy6uufEVRYmyMxcOllhAfH8/CwkKP6Mgd60ihUDAjI4NlZWUOv153rCOpD8nJybGpx/z580mSpaWlHkVYeAqAvefpdDop7xtRxw5lnL2vv7a21oaOpJYg0dHEiROd9gnO6CgtLY1lZWUWrcsRCIcOHWJISIhdZbS3t5Mko6OjbeoQExNDktTr9R5FWHgKgIvntYs6dijbHRVYVVXVazqyZx39x0svOaQdR/Lee+/J5fz++++9AuBGbHxnALhx7XZHyk9wFKtp7+FxcXEe05E960i63xOpra3lPffcQwD88MMPbSgoOzvbpuy5c+fapaB+AKAVDgKCl3s68vOWdeSptLa28sUXXyQALliwwKYTbm5uZnZ2NqOjoxkdHc2cnBxqtVq7nXBfAyC23OXWylfieri22wVKzdxTOpKsnfr6+hsGwGAw8PXXXycA5uTkWJihR48edXjf4cOHqVQq+xWAjIwMirpWmgNwvzTy9aQFDBs2zCM6csfacUfa29u5cOFCGwAkEFatWsXy8nK2t7dTr9ezvLycK1eulJXfnwAUFhZS1PX95gDkoJeLI9yhI3etHVei0WiYmZk5kF3VbaLO5XjOjd54sCM6mjx5MtPT0z22dhzJiRMnGBUVNdDnCzaKukckgK+89WB7dFRdXc2amhqvKF+j0Tgdcwyg9JWoewwB8Is3H25NR94UjUbDkenpNwMAv+D6IkSMsDf69QUdeUsqKio4avRop069AZDaRd1jqq8KsaYjb4nRaGRJSQlHjR490FvBVAD4py8L8RUdGY1GVlRUMG3EiIEMwD8BoMDXBf1FRw5TAQD84KsCli1bxgcffNAv6Kg/Ju/dSD8A15fte/3hw4cPp8FgsBgNx8bGcufOnS7pyNESpt7QUV8DoFKpuGbNGtbW1tJgMLC2tpZr1qyxGI2LusdFX1Tg888/p1artYknui0iglu2bGFTU5MNJXV1dbG6upqLFi3iwYMHPe43/ImO9u3bZ7eO4uyYlC4CgM7bhcfHx7Ozs1Pye9j1iGZlZXHjxo388ssvWVxczN27d/ONN97g/fffT4VCwZiYGBYUFLCzs3PAWUcTJ04kSba0tDArK0t+X2la1MyNosPkyZNNNTU1LqMHgoOD+cEHH/DKlSvs7u52WoElS5aQJBcsWCB7Tjs6OlhTU8OgoCCLZhoZGcnBgwdTrVbbeE8lEDxpCY7oqC8p6LPPPiNJrl692iJ/9erVJMmdO3dKeUbMmjXLdOnSJZfRA+aL3Fy9yMGDB0mSDz30kE0o++LFi22uDw4OZmJiouziLioqkjvvmJgY7t+/v9d0tHXrVpcfjifi7DmSzyvdasSenp5OkqysrPwTgJSUlLaoqCiX0QMNDQ2cPHkyw8LCXH4BtbW1JMnBgwfLeY8//rgcNWB9/ebNm1lWVsbhw4cTAPfs2cO0tDQ5AsIbdBQfH8+tW7f2CQBSWE1oaKhFvrRQsLW19U8Ksu6EHUUPPPvss243wba2NrsT1OfOnSNJpqamWgRjkWRJSYnTZ3qDjtRqdZ9QkFRH6xAaQRDk4ALzTrjcnclrT8LGJQDM+R4A8/LySJLr1q2T86TYmfnz58uTNitWrGBpaSnb2tpYVVXldTrydfKgBZTbDMTcjR5wh4JiY2NtvmLJJpbCHnU6HXU6nUxt77//vo0Cq6qq5LAYX1pH/dAH/GDjinA3esCdTtg8SElKX3zxBUkyIyODr7zyCkmyoKBA/n9TU5Mc2RAZGUmFQsHIyEiL2CRvWke+AMADK6gACQkJa8LDwz2OHnDHDM3NzaW9KDtpH4fS0lKS5Lhx4+T/Nzc3kySnTZtGlUrFlJQU2QIzj03yZzqaNGmSPA7IzMykSqViZmambOA8+eSTfzrjZsyYkfv22297HD3gaiBmMBi4e/duu/+vrq6Ww1LMmqM8graWAwcO2K2HPw/WzOtsLvv377d0Ry9ZsuTvU6dO7fQ0esCdwUhLS4u178Mifse8pUkpMjKShYWFbGpqolar5bZt2xgWFmZTD1/TkTd8QWvXrmVdXR07OztZV1fHtWvXmluG8oTMUG9PSQLgnXfeyY6ODs6cOdPnVsdAsY4cTUl6dVLePK1bt44nTpzokxcagL4jeVLea2Ep/Z38lY5chaV4JTDLn0AYAHRkEZjlMjRxoLYEP6Yjm9BElbPg3L/oyOvpuL0NnpbfTAD4OR0t92iBxl905NXkcIGGwyVK/bDE/2amo+0uF+l9//339iaQvQ6AK0B6uRTIH+nI5SK9KIVC8e3JkyfZ1NRk404eyAD4CR3ZLlMlKVgv1H7qqac6X3rpJZ9TUF8D0M90ZH+htslksl65nRQeHl7l6AXDwsK4fft2trS08PLly1y6dKmFE02r1VKj0XD9+vVeB8BTMb8nKCiIQ4cO9RodBQYGcsWKFdRoNDQYDKypqeG7777LQYMGyfVNTk5mUVERV65c6fZWBTabdVi//P79+20q9swzz/DkyZM2+bNnz/YbAPbt2+f1mbX4+Hh5mawkZ8+epVqtZlRUFOvr6/nzzz9Ls31ub9YhbVdTYk8ZpaWlvPfee6lWq+XCr169ajff/LyW3ii0NxQkSV1dHR977DGGhITI89veoqPAwEA+/PDDPHXqFEkyPz+fGzZsYEdHB5977rkb2q4G4iZDLdYvMnbsWIuJF2f5V65c8RsAnn76acsQydtu87p1lJycTJI8d+4cKysr+fXXXzMoKOiGNmyCuM3WJnHbLZd7IdjLNxqN/d4JSyIpXEpqtdordCRNvD/wwAPyNjqdnZ1sa2vj+PHje1xuWWanEzaXNHHjOTli2dMX91cAIiIiWFtby/Hjx/eKjo4fP87Q0FAGBATwzTffJEn29PTwrbfekjbtc370iZUZak9mAzA0NDT4BQBSRLXCamDkKN8RBU2bNo0k+dVXX/V6sGY9rSpuSeDetpUuWgAgbtz62muvGf0BAGmjj6ysLIvIM0f51p1wWFgYx48fzwsXLpAkN2zYYHeO2RM6KikpYXBwMAHwhRde4F133eXVjVulLSwPbdq0qd8BsLclmLN8Z+ZzfX29fKpHb+KOKisrZctKnAP36tbFkvwtKirqfH8DkJCQwL1791os8HCWL0loaCg/+eQTNjc389q1aywqKmJycrLDPZE8oaOjR4/KYYiCIPhk825JpsDBkSX+mnrjgXWHjoxGo/lBD13w4fb1kq/oaVw/rOCmB0BaXLJp0ya7iwtNJhO3bdsm8b8JwH+hDw71CRCH1dpbAQAADAsLY15eHqurq9nY2MimpibW1tYyPz9fMm9NAApxA+fI3ChaKgBzAeS72gWwv+W67gFB6P2HmZiYiLvvvhtKpRIXLlxAXV0denp6COB/ALwmRjv0mTg9xuoWSUYAa9GHJyjZa0E2B7ndIukygH/ATw6Alo4y7LkFFO9XRxlaD9b+hesnR9ysyvfbwzzN3RazRSdU901kJQ2I42zNJVV0w7YMRAACAgI4c+ZMPv/880xKStIFBAR8hAFyoLP1fMIj1jNr/g5AXFwc33nnHaakpEgzWQPySHPr6c1ccVK63R8BMJlM8hLZMWPGGAIDAyvFOgfjJpIkAK8mJSX9OyMjw6BUKrlx40ZqNBrqdDoeOHCAd9xxh4VyZs2axR9//JFXr151GHkgiauTMKQIhWvXrlGj0fCjjz5iSEgIy8rKpMiOdqVS+a0YOpKEm1QEceQ8DsD2sLAw3YIFC1hSUkKtVsuamhrZPWxvsZ515AHcPAlDilAwGo1sa2tjY2Mjd+3axbS0NAYGBraK4YLjxLoJuIUkAcByQRCOp6WlXVm4cKFh6tSpnDhxIquqqlhVVcXp06czOjqawcHBNpEHcHFyxalTp+Rls/v27eOKFSsYExOjFwThN1wPEV8OJ4Gyt5IocX3BQk5QUNB/x8bGfpeenv6rWq226TOSkpJ44cIFedOPzs5OajQai4OXBw0axGXLlnHChAkE0J6cnHw+Ojr6W1xfFpQjlqXyF0pwKUajMUAQBMV1n5Zg4ehSKBRd4u8q0enVZcchppKudXXdli1bAvfs2aP+448/wvV6fbhOp7uzq6srzWg03knyDpIxJCMBRHR1dYWpVCoA0Hd1dV0FcBWABsDF8PDwOpVKVaXVan8ZOXJkZ1xcXNvhw4ebxZGsRZlSfUwmk0oQBLS3t3eLwVTuOPvsvo+z9zSX/wfl+jWwZp8+ogAAAABJRU5ErkJggg==
-// @version      6.5.1
-// @downloadURL  https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
-// @updateURL    https://github.com/magicoflolis/Userscript-Plus/releases/latest/download/magic-userjs.user.js
+// @description  Finds available userscripts for the current webpage.
+// @description:ar      يبحث عن نصوص المستخدمين المتاحة لصفحة الويب الحالية.
+// @description:es      Busca los usercripts disponibles para la página web actual.
+// @description:fr      Recherche les userscripts disponibles pour la page web en cours.
+// @description:ja      現在のウェブページで利用可能なユーザスクリプトを検索します。
+// @description:nl      Zoekt beschikbare gebruikerscripts voor de huidige webpagina.
+// @description:ru      Находит доступные юзерскрипты для текущей веб-страницы.
+// @description:zh      为当前网页查找可用的用户脚本。
+// @description:zh-CN      为当前网页查找可用的用户脚本。
+// @description:zh-TW      为当前网页查找可用的用户脚本。
+// @supportURL   https://github.com/magicoflolis/Magic-PH/issues/new/choose
 // @namespace    https://github.com/magicoflolis/Userscript-Plus
 // @homepageURL  https://github.com/magicoflolis/Userscript-Plus
-// @supportURL   https://github.com/magicoflolis/Userscript-Plus/issues/new
+// @icon         data:image/png;base64,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
+// @downloadURL  https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjs.user.js
+// @updateURL    https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjs.meta.js
 // @license      MIT
 // @compatible     chrome
 // @compatible     firefox
@@ -35,24 +36,46 @@
 // @connect     sleazyfork.org
 // @connect     github.com
 // @connect     openuserjs.org
-// @grant     GM.xmlHttpRequest
-// @grant     GM.openInTab
-// @grant     GM.getValue
-// @grant     GM.setValue
-// @grant     GM.info
-// @grant     GM_xmlhttpRequest
-// @grant     GM_openInTab
-// @grant     GM_getValue
-// @grant     GM_setValue
+// @grant     GM_addElement
 // @grant     GM_info
+// @grant     GM_getValue
+// @grant     GM_openInTab
+// @grant     GM_setValue
+// @grant     GM_xmlhttpRequest
+// @grant     GM.addElement
+// @grant     GM.info
+// @grant     GM.getValue
+// @grant     GM.openInTab
+// @grant     GM.setValue
+// @grant     GM.xmlHttpRequest
 // @match     https://*/*
 // @noframes
 // @run-at     document-start
 // ==/UserScript==
-'use strict';
 (() => {
-let userjs = (self.userjs = {});
-/** Skip text/plain documents */
+'use strict';
+/******************************************************************************/
+/**
+ * Uncompressed locales + compiler
+ *
+ * [_locales](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales)
+ *
+ * [languageLoader.js](https://github.com/magicoflolis/Userscript-Plus/blob/master/tools/languageLoader.js)
+ */
+const translations = {"ar":{"legacy":"يرجى إعادة ضبط التكوين الخاص بك!","createdby":"انشأ من قبل","name":"اسم","daily_installs":"التثبيت اليومي","close":"يغلق","filterA":"منقي","max":"تحقيق أقصى قدر","min":"تصغير","search":"يبحث","search_placeholder":"بحث في البرامج النصية","install":"تثبيت","issue":"إصدار جديد","version_number":"الإصدار","updated":"آخر تحديث","total_installs":"إجمالي التثبيت","ratings":"التقييمات","good":"جيد","ok":"جيد","bad":"سيء","created_date":"تم إنشاؤه","redirect":"شوكة دهنية للكبار","filter":"تصفية اللغات الأخرى","dtime":"عرض المهلة","save":"حفظ","reset":"إعادة تعيين","preview_code":"كود المعاينة","saveFile":"احفظ الملف","newTab":"علامة تبويب جديدة","applies_to":"ينطبق على","license":"الترخيص","no_license":"لا يوجد","antifeatures":"إعلانات","userjs_fullscreen":"ملء الشاشة الكاملة التلقائي","listing_none":"(لا يوجد)","export_config":"تهيئة التصدير","export_theme":"تصدير السمة","import_config":"استيراد تهيئة الاستيراد","import_theme":"استيراد النسق"},"en":{"legacy":"PLEASE RESET YOUR CONFIG!","createdby":"Created by","name":"Name","daily_installs":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","search_placeholder":"Search for userscripts","install":"Install","issue":"New Issue","version_number":"Version","updated":"Last Updated","total_installs":"Total Installs","ratings":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created_date":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset","preview_code":"Preview Code","saveFile":"Save File","newTab":"New Tab","applies_to":"Applies to","license":"License","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Automatic Fullscreen","listing_none":"(None)","export_config":"Export Config","export_theme":"Export Theme","import_config":"Import Config","import_theme":"Import Theme"},"en_GB":{"legacy":"PLEASE RESET YOUR CONFIG!","createdby":"Created by","name":"Name","daily_installs":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","search_placeholder":"Search scripts","install":"Install","issue":"New Issue","version_number":"Version","updated":"Last Updated","total_installs":"Total Installs","ratings":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created_date":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset","preview_code":"Preview Code","saveFile":"Save File","newTab":"New Tab","applies_to":"Applies to","license":"License","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Automatic Fullscreen","listing_none":"(None)","export_config":"Export Config","export_theme":"Export Theme","import_config":"Import Config","import_theme":"Import Theme"},"es":{"legacy":"¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!","createdby":"Creado por","name":"Nombre","daily_installs":"Instalaciones diarias","close":"Ya no se muestra","filterA":"Filtro","max":"Maximizar","min":"Minimizar","search":"Busque en","search_placeholder":"Buscar userscripts","install":"Instalar","issue":"Nueva edición","version_number":"Versión","updated":"Última actualización","total_installs":"Total de instalaciones","ratings":"Clasificaciones","good":"Bueno","ok":"Ok","bad":"Malo","created_date":"Creado","redirect":"Greasy Fork para adultos","filter":"Filtrar otros idiomas","dtime":"Mostrar el tiempo de espera","save":"Guardar","reset":"Reiniciar","preview_code":"Vista previa del código","saveFile":"Guardar archivo","newTab":"Guardar archivo","applies_to":"Se aplica a","license":"Licencia","no_license":"Desconocida","antifeatures":"Características indeseables","userjs_fullscreen":"Pantalla completa automática","listing_none":"(Ninguno)","export_config":"Exportar configuración","export_theme":"Exportar tema","import_config":"Importar configuración","import_theme":"Importar tema"},"fr":{"legacy":"VEUILLEZ RÉINITIALISER VOTRE CONFIG !","createdby":"Créé par","name":"Nom","daily_installs":"Installations quotidiennes","close":"Ne plus montrer","filterA":"Filtre","max":"Maximiser","min":"Minimiser","search":"Recherche","search_placeholder":"Rechercher des userscripts","install":"Installer","issue":"Nouveau numéro","version_number":"Version","updated":"Dernière mise à jour","total_installs":"Total des installations","ratings":"Notations","good":"Bon","ok":"Ok","bad":"Mauvais","created_date":"Créé","redirect":"Greasy Fork pour les adultes","filter":"Filtrer les autres langues","dtime":"Délai d'affichage","save":"Sauvez","reset":"Réinitialiser","preview_code":"Prévisualiser le code","saveFile":"Enregistrer le fichier","newTab":"Nouvel onglet","applies_to":"S'applique à","license":"Licence","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Plein écran automatique","listing_none":"(Aucun)","export_config":"Export Config","export_theme":"Exporter le thème","import_config":"Importer la configuration","import_theme":"Importer le thème"},"ja":{"legacy":"設定をリセットしてください。","createdby":"によって作成された","name":"名前","daily_installs":"デイリーインストール","close":"表示されなくなりました","filterA":"フィルター","max":"最大化","min":"ミニマム","search":"検索","search_placeholder":"ユーザースクリプトの検索","install":"インストール","issue":"新刊のご案内","version_number":"バージョン","updated":"最終更新日","total_installs":"総インストール数","ratings":"レーティング","good":"グッド","ok":"良い","bad":"悪い","created_date":"作成","redirect":"大人のGreasyfork","filter":"他の言語をフィルタリングする","dtime":"表示タイムアウト","save":"拯救","reset":"リセット","preview_code":"コードのプレビュー","saveFile":"ファイルを保存","newTab":"新しいタブ","applies_to":"適用対象","license":"ライセンス","no_license":"不明","antifeatures":"アンチ機能","userjs_fullscreen":"自動フルスクリーン","listing_none":"(なし)","export_config":"エクスポート設定","export_theme":"テーマのエクスポート","import_config":"設定のインポート","import_theme":"テーマのインポート"},"nl":{"legacy":"RESET UW CONFIG!","createdby":"Gemaakt door","name":"Naam","daily_installs":"Dagelijkse Installaties","close":"Sluit","filterA":"Filter","max":"Maximaliseer","min":"Minimaliseer","search":"Zoek","search_placeholder":"Zoeken naar gebruikersscripts","install":"Installeer","issue":"Nieuw Issue","version_number":"Versie","updated":"Laatste Update","total_installs":"Totale Installaties","ratings":"Beoordeling","good":"Goed","ok":"Ok","bad":"Slecht","created_date":"Aangemaakt","redirect":"Greasy Fork voor volwassenen","filter":"Filter andere talen","dtime":"Weergave timeout","save":"Opslaan","reset":"Opnieuw instellen","preview_code":"Voorbeeldcode","saveFile":"Bestand opslaan","newTab":"Nieuw tabblad","applies_to":"Geldt voor","license":"Licentie","no_license":"N.v.t.","antifeatures":"Functies voor eigen gewin","userjs_fullscreen":"Automatisch volledig scherm","listing_none":"(Geen)","export_config":"Configuratie exporteren","export_theme":"Thema exporteren","import_config":"Configuratie importeren","import_theme":"Thema importeren"},"ru":{"legacy":"ПОЖАЛУЙСТА, СБРОСЬТЕ КОНФИГ!","createdby":"Сделано","name":"Имя","daily_installs":"Ежедневные установки","close":"Больше не показывать","filterA":"Фильтр","max":"Максимизировать","min":"Минимизировать","search":"Поиск","search_placeholder":"Поиск юзерскриптов","install":"Установите","issue":"Новый выпуск","version_number":"Версия","updated":"Последнее обновление","total_installs":"Всего установок","ratings":"Рейтинги","good":"Хорошо","ok":"Хорошо","bad":"Плохо","created_date":"Создано","redirect":"Greasy Fork для взрослых","filter":"Отфильтровать другие языки","dtime":"Тайм-аут отображения","save":"Сохранить","reset":"Перезагрузить","preview_code":"Предварительный просмотр кода","saveFile":"Сохранить файл","newTab":"Новая вкладка","applies_to":"Применяется к","license":"Лицензия","no_license":"Недоступно","antifeatures":"Нежелательная функциональность","userjs_fullscreen":"Автоматический полноэкранный режим","listing_none":"(нет)","export_config":"Экспорт конфигурации","export_theme":"Экспорт темы","import_config":"Импорт конфигурации","import_theme":"Импортировать тему"},"zh":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题"},"zh_CN":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题"},"zh_TW":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题"}};
+/**
+ * To compile this CSS `pnpm run build:Sass`
+ *
+ * [Uncompiled Cascading Style Sheet](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass)
+ */
+const main_css = `mujs-root{--mujs-even-row: hsl(222, 14%, 22%);--mujs-odd-row: hsl(222, 14%, 11%);--mujs-even-err: hsl(0, 100%, 22%);--mujs-odd-err: hsl(0, 100%, 11%);--mujs-background-color: hsl(222, 14%, 33%);--mujs-gf-color: hsl(204, 100%, 40%);--mujs-sf-color: hsl(12, 86%, 50%);--mujs-border-b-color: hsla(0, 0%, 0%, 0);--mujs-gf-btn-color: hsl(211, 87%, 56%);--mujs-sf-btn-color: hsl(12, 86%, 50%);--mujs-sf-txt-color: hsl(12, 79%, 55%);--mujs-txt-color: hsl(0, 0%, 100%);--mujs-chck-color: hsla(0, 0%, 100%, 0.568);--mujs-chck-gf: hsla(197, 100%, 50%, 0.568);--mujs-chck-git: hsla(213, 13%, 16%, 0.568);--mujs-chck-open: hsla(12, 86%, 50%, 0.568);--mujs-placeholder: hsl(81, 56%, 54%);--mujs-position-top: unset;--mujs-position-bottom: 1em;--mujs-position-left: unset;--mujs-position-right: 1em;--mujs-font-family: Arial, Helvetica, sans-serif;font-family:var(--mujs-font-family, Arial, Helvetica, sans-serif);text-rendering:optimizeLegibility;word-break:normal;font-size:14px;color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-root *{scrollbar-color:var(--mujs-txt-color, hsl(0, 0%, 100%)) #2e323d;scrollbar-width:thin}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:16px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:16px;background-color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-image:-webkit-linear-gradient(45deg, hsla(0, 0%, 100%, 0.2) 25%, transparent 25%, transparent 50%, hsla(0, 0%, 100%, 0.2) 50%, hsla(0, 0%, 100%, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background:var(--mujs-txt-color, hsl(0, 0%, 100%))}}mu-js{line-height:normal}mujs-section>label,.mujs-homepag e,td.mujs-list,.install{font-size:16px}.install,.mujs-homepage{font-weight:700}mujs-section>label,td.mujs-list{font-weight:500}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}mujs-tabs,mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:.5em}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-column count-frame[data-counter=greasyfork]{background:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-column count-frame[data-counter=sleazyfork]{background:var(--mujs-sf-color, hsl(12, 86%, 50%))}mujs-column count-frame[data-counter=github]{background:#23282e}mujs-column count-frame[data-counter=openuserjs]{background:rgba(237,62,18,.568)}mujs-row{flex-flow:column wrap}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}mujs-main{width:100%;width:-moz-available;width:-webkit-fill-available;background:var(--mujs-background-color, hsl(222, 14%, 33%)) !important;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:16px}@media screen and (max-height: 720px){mujs-main:not(.webext-page){height:100% !important;bottom:0rem !important;right:0rem !important;margin:0rem !important}}mujs-main.expanded{height:100% !important;bottom:0rem !important}mujs-main:not(.webext-page){position:fixed;height:492px}mujs-main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}mujs-main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}mujs-main>*{width:100%;width:-moz-available;width:-webkit-fill-available}mujs-main mujs-toolbar{order:0;padding:.5em;display:flex;place-content:space-between}mujs-main mujs-toolbar mujs-tabs{overflow:hidden;order:0}mujs-main mujs-toolbar mujs-column{flex-flow:row nowrap;order:999999999999}mujs-main mujs-toolbar>*{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-main mujs-tabs{gap:.5em;text-align:center;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;flex-flow:row wrap}mujs-main mujs-tabs mujs-tab{padding:.25em;min-width:150px;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;display:flex;place-content:space-between;border:1px solid rgba(0,0,0,0);border-radius:4px;background:rgba(0,0,0,0)}mujs-main mujs-tabs mujs-tab.active{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tabs mujs-tab:not(.active):hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tabs mujs-tab mujs-host{float:left;overflow:auto;overflow-wrap:break-word;text-overflow:ellipsis;white-space:nowrap}mujs-main mujs-tabs mujs-tab mu-js{float:right}mujs-main mujs-tabs mujs-addtab{order:999999999999;font-size:20px;padding:0px .25em}mujs-main mujs-tabs mujs-addtab:hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tab,mujs-main mujs-btn,mujs-main input{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}mujs-main input{background:rgba(0,0,0,0);color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-main input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}mujs-main textarea{background:inherit;overflow-y:auto;color:var(--mujs-placeholder, hsl(81, 56%, 54%));border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:10px;resize:vertical;outline:none;font-family:monospace;font-size:14px}mujs-main textarea:focus{outline:none}mujs-main th,mujs-main .mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}mujs-main .mujs-footer{order:3;overflow-x:hidden;text-align:center;border-radius:16px}mujs-main .mujs-footer>*{min-height:50px}mujs-main .mujs-footer .error:nth-child(even){background:var(--mujs-even-err, hsl(0, 100%, 22%)) !important}mujs-main .mujs-footer .error:nth-child(odd){background:var(--mujs-odd-err, hsl(0, 100%, 11%)) !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:var(--mujs-position-bottom, 1rem);right:var(--mujs-position-right, 1rem);top:var(--mujs-position-top, unset);left:var(--mujs-position-left, unset)}.mainframe count-frame{width:fit-content;width:-moz-fit-content;width:-webkit-fit-content;height:auto;padding:14px 16px}.mainframe.error{opacity:1 !important}.mainframe.error count-frame{background:var(--mujs-even-err, hsl(0, 100%, 22%)) !important}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:1000px;margin:0px 3px;padding:4px 6px;border:2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em;background:var(--mujs-background-color, hsl(222, 14%, 33%));-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}mujs-header{order:1;display:flex;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-left:.5em;padding-right:.5em;padding-bottom:.5em;font-size:1em;place-content:space-between;height:fit-content;height:-moz-fit-content;height:-webkit-fit-content;gap:1em}mujs-header>*:not(mujs-url){height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}mujs-header mujs-url{order:0;flex-grow:1}mujs-header mujs-url>input{width:100%;height:100%;background:var(--mujs-even-row, hsl(222, 14%, 18%));border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:4px}mujs-header .rate-container{order:1}mujs-header .mujs-sty-flex{order:2}mujs-header .btn-frame{order:999999999999}mujs-body{order:2;overflow-x:hidden;padding:0px;height:100%;border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-bottom-left-radius:16px;border-bottom-right-radius:16px}mujs-body .mujs-ratings{padding:0 .25em;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:1000px;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-body mu-jsbtn{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}mujs-body table,mujs-body th,mujs-body td{border-collapse:collapse}mujs-body table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 1180px){mujs-body table thead>tr{display:table-column}mujs-body table .frame:not(.webext-page){width:100%;display:flex;flex-flow:row wrap;align-items:center;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-top:.5em;padding-bottom:.5em}mujs-body table .frame:not(.webext-page) td{margin:auto;border-bottom:1px solid rgba(0,0,0,0)}mujs-body table .frame:not(.webext-page) td>mujs-a,mujs-body table .frame:not(.webext-page) td>mu-js,mujs-body table .frame:not(.webext-page) td>mujs-column{text-align:center;justify-content:center}mujs-body table .frame:not(.webext-page) td:not(.mujs-name,.install-btn){width:25%}mujs-body table .frame:not(.webext-page) .mujs-name{width:100%}}mujs-body table th,mujs-body table td{border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table th{position:-webkit-sticky;position:sticky;top:0;background:rgba(72,79,96,.75)}mujs-body table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){mujs-body table th.mujs-header-name{width:auto !important}}mujs-body table .frame:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}mujs-body table .frame:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mujs-a{color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}mujs-body table .frame[data-engine=sleazyfork] mujs-a,mujs-body table .frame[data-engine=greasyfork] mujs-a{color:var(--mujs-gf-color, hsl(197, 100%, 50%))}mujs-body table .frame[data-engine=sleazyfork] mujs-a:hover,mujs-body table .frame[data-engine=greasyfork] mujs-a:hover{color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn,mujs-body table .frame[data-engine=greasyfork] mu-jsbtn{background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn:hover,mujs-body table .frame[data-engine=greasyfork] mu-jsbtn:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}mujs-body table .frame[data-good] mujs-a,mujs-body table .frame[data-author] mujs-a{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}mujs-body table .frame[data-good] mujs-a:hover,mujs-body table .frame[data-author] mujs-a:hover{color:#80ab30}mujs-body table .frame[data-good] .mujs-list,mujs-body table .frame[data-author] .mujs-list{color:#fff}mujs-body table .frame[data-good] mu-jsbtn,mujs-body table .frame[data-author] mu-jsbtn{color:#20385a;background:var(--mujs-placeholder, hsl(81, 56%, 54%));border-color:var(--mujs-placeholder, hsl(81, 56%, 54%))}mujs-body table .frame[data-good] mu-jsbtn:hover,mujs-body table .frame[data-author] mu-jsbtn:hover{background:#b5d874;border-color:#b5d874}mujs-body table .frame .mujs-ratings[data-el=good]{border-color:#393;background-color:rgba(51,153,51,.102);color:#3f3}mujs-body table .frame .mujs-ratings[data-el=ok]{border-color:#990;background-color:rgba(153,153,0,.102);color:#ff0}mujs-body table .frame .mujs-ratings[data-el=bad]{border-color:#900;background-color:rgba(153,51,51,.102);color:red}mujs-body table .frame svg{fill:currentColor;width:14px;height:14px;background:rgba(0,0,0,0)}mujs-body table .frame>td:not(.mujs-name){text-align:center}mujs-body table .frame>.mujs-name>mujs-a{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-body table .frame>.mujs-name mu-jsbtn,mujs-body table .frame>.mujs-name mu-js{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}mujs-body table .frame>.mujs-name>mu-jsbtn{margin:auto}mujs-body table .frame>.mujs-name>mujs-column>mu-jsbtn{padding:0px 7px}mujs-body table .frame>.mujs-uframe>mujs-a{font-size:16px;font-weight:500;padding-left:.5rem;padding-right:.5rem}mujs-body table .frame [data-el=more-info]>mujs-row{gap:.25em}mujs-body table .frame [data-el=matches]{gap:.25em;max-width:40em}mujs-body table .frame [data-el=matches] .mujs-grants{display:inline-flex;flex-flow:row wrap;overflow:auto;overflow-wrap:break-word;text-overflow:ellipsis;white-space:nowrap;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;max-height:5em;gap:.2em}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a{display:inline}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a:not([data-command]){cursor:default !important;color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a::after{content:", ";color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a:last-child::after{content:""}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}@media screen and (max-height: 720px){.mujs-cfg:not(.webext-page){height:100%;height:-moz-available;height:-webkit-fill-available;width:100%;width:-moz-available;width:-webkit-fill-available;overflow-x:auto;padding:.5em}}.mujs-cfg mujs-section{border-radius:16px;padding:.5em}.mujs-cfg mujs-section:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-cfg mujs-section:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){font-size:14px;position:relative;border-radius:4px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg mujs-section>label input[type=text]::-webkit-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-moz-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]:-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label{margin-left:0;background:var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type=checkbox][data-name=sleazyfork]:checked+label{background:var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=openuserjs]:checked+label{background:var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=github]:checked+label{background:var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568))}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:var(--mujs-txt-color, hsl(0, 0%, 100%));position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]{background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-cfg:not(.webext-page){margin:1rem 25rem}mujs-a{display:inline-block}.mujs-name{display:flex;flex-flow:column wrap;gap:.5em}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:500;font-variant:normal;text-transform:none;text-rendering:auto;text-align:center;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:var(--mujs-txt-color, hsl(0, 0%, 100%));width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block;text-align:center}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}
+`;
+let userjs = self.userjs;
+/**
+ * Skip text/plain documents, based on uBlock Origin `vapi.js` file
+ *
+ * [Source Code](https://github.com/gorhill/uBlock/blob/master/platform/common/vapi.js)
+ */
 if (
   (document instanceof Document ||
     (document instanceof XMLDocument && document.createElement('div') instanceof HTMLDivElement)) &&
@@ -61,25 +84,87 @@ if (
 ) {
   userjs = self.userjs = { UserJS: true };
 }
-if (!(typeof userjs === 'object' && userjs.UserJS && window && window.self === window.top)) {
+if (!(typeof userjs === 'object' && userjs.UserJS)) {
   return;
 }
-/**
- * To compile this CSS `pnpm run build:Sass`
- * @desc Link to uncompiled Cascading Style Sheet
- * @link https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass
- */
-const main_css = `mujs-root{--mujs-even-row: hsl(222, 14%, 22%);--mujs-odd-row: hsl(222, 14%, 11%);--mujs-even-err: hsl(0, 100%, 22%);--mujs-odd-err: hsl(0, 100%, 11%);--mujs-background-color: hsl(222, 14%, 33%);--mujs-gf-color: hsl(204, 100%, 40%);--mujs-sf-color: hsl(12, 86%, 50%);--mujs-border-b-color: hsla(0, 0%, 0%, 0);--mujs-gf-btn-color: hsl(211, 87%, 56%);--mujs-sf-btn-color: hsl(12, 86%, 50%);--mujs-sf-txt-color: hsl(12, 79%, 55%);--mujs-txt-color: hsl(0, 0%, 100%);--mujs-chck-color: hsla(0, 0%, 100%, 0.568);--mujs-chck-gf: hsla(197, 100%, 50%, 0.568);--mujs-chck-git: hsla(213, 13%, 16%, 0.568);--mujs-chck-open: hsla(12, 86%, 50%, 0.568);--mujs-placeholder: hsl(81, 56%, 54%);--mujs-position-top: unset;--mujs-position-bottom: 1em;--mujs-position-left: unset;--mujs-position-right: 1em;font-family:Arial,Helvetica,sans-serif}mujs-root *{scrollbar-color:var(--mujs-txt-color, hsl(0, 0%, 100%)) #2e323d;scrollbar-width:thin}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:16px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:16px;background-color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-image:-webkit-linear-gradient(45deg, hsla(0, 0%, 100%, 0.2) 25%, transparent 25%, transparent 50%, hsla(0, 0%, 100%, 0.2) 50%, hsla(0, 0%, 100%, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background:var(--mujs-txt-color, hsl(0, 0%, 100%))}}mu-js{line-height:normal}mu-js{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}body.webext-page,.main{font-size:14px}mujs-section>label,.mujs-homepag e,td.mujs-list,.install{font-size:16px}.install,.mujs-homepage{font-weight:700}mujs-section>label,td.mujs-list{font-weight:500}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}mujs-tabs,mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:.5em}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-column count-frame:nth-child(1){background:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-column count-frame:nth-child(2){background:var(--mujs-sf-color, hsl(12, 86%, 50%))}mujs-row{flex-flow:column wrap}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}.main{width:100%;width:-moz-available;width:-webkit-fill-available;background:var(--mujs-background-color, hsl(222, 14%, 33%)) !important;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:16px}@media screen and (max-height: 720px){.main:not(.webext-page){height:100% !important;bottom:0rem !important;right:0rem !important;margin:0rem !important}}.main.expanded{height:100% !important;bottom:0rem !important}.main:not(.webext-page){position:fixed;height:492px}.main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}.main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}.main mujs-tabs{gap:.5em;width:100%;width:-moz-available;width:-webkit-fill-available;text-align:center;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.main mujs-tabs mujs-tab{padding:.25em;min-width:150px;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;display:flex;place-content:space-between;border:1px solid rgba(0,0,0,0);border-radius:4px;background:rgba(0,0,0,0)}.main mujs-tabs mujs-tab.active{background:var(--mujs-even-row, hsl(222, 14%, 18%))}.main mujs-tabs mujs-tab:not(.active):hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}.main mujs-tabs mujs-tab mujs-host{float:left}.main mujs-tabs mujs-tab mu-js{float:right}.main mujs-tabs mujs-addtab{order:999999999999;font-size:20px;padding:0px .25em}.main mujs-tabs mujs-addtab:hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}.main mujs-tab,.main mujs-btn,.main input{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}.main input{background:rgba(0,0,0,0);color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.main input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}.main textarea{background:inherit;overflow-y:auto;color:var(--mujs-placeholder, hsl(81, 56%, 54%));border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:10px;resize:vertical;outline:none;font-family:monospace;font-size:14px}.main textarea:focus{outline:none}.main th,.main .mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}.main .mujs-footer{order:2;width:100%;width:-moz-available;width:-webkit-fill-available;overflow-x:hidden;text-align:center;border-radius:16px}.main .mujs-footer>*{min-height:50px}.main .mujs-footer .error:nth-child(even){background:var(--mujs-even-err, hsl(0, 100%, 22%)) !important}.main .mujs-footer .error:nth-child(odd){background:var(--mujs-odd-err, hsl(0, 100%, 11%)) !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:var(--mujs-position-bottom, 1rem);right:var(--mujs-position-right, 1rem);top:var(--mujs-position-top, unset);left:var(--mujs-position-left, unset)}.mainframe count-frame{width:fit-content;width:-moz-fit-content;width:-webkit-fit-content;height:auto;padding:14px 16px}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:1000px;margin:0px 3px;padding:4px 6px;border:2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em;background:var(--mujs-background-color, hsl(222, 14%, 33%));color:var(--mujs-txt-color, hsl(0, 0%, 100%));-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.mujs-header-prim{order:0;display:flex;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-top-left-radius:10px;border-top-right-radius:10px;padding:.5em;font-size:1em;place-content:space-between;height:fit-content;height:-moz-fit-content;height:-webkit-fit-content;width:100%;width:-moz-available;width:-webkit-fill-available}.mujs-body{order:1;overflow-x:hidden;padding:0px;width:100%;width:-moz-available;width:-webkit-fill-available;height:100%;border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-bottom-left-radius:16px;border-bottom-right-radius:16px}.mujs-body .mujs-ratings{padding:0 .25em;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:1000px}.mujs-body mu-jsbtn{color:var(--mujs-txt-color, hsl(0, 0%, 100%));-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.mujs-body table,.mujs-body th,.mujs-body td{border-collapse:collapse}.mujs-body table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 1180px){.mujs-body table thead>tr{display:table-column}.mujs-body table .frame:not(.webext-page){width:100%;display:flex;flex-flow:row wrap;align-items:center;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-top:.5em;padding-bottom:.5em}.mujs-body table .frame:not(.webext-page) td{margin:auto;border-bottom:1px solid rgba(0,0,0,0)}.mujs-body table .frame:not(.webext-page) td>mujs-a,.mujs-body table .frame:not(.webext-page) td>mu-js,.mujs-body table .frame:not(.webext-page) td>mujs-column{text-align:center;justify-content:center}.mujs-body table .frame:not(.webext-page) td:not(.mujs-name,.install-btn){width:25%}.mujs-body table .frame:not(.webext-page) .mujs-name{width:100%}}.mujs-body table th,.mujs-body table td{border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-body table th{position:-webkit-sticky;position:sticky;top:0;background:rgba(72,79,96,.75)}.mujs-body table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){.mujs-body table th.mujs-header-name{width:auto !important}}.mujs-body table .frame:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-body table .frame:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mujs-a{color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-body table .frame[data-engine=sleazyfork] mujs-a,.mujs-body table .frame[data-engine=greasyfork] mujs-a{color:var(--mujs-gf-color, hsl(197, 100%, 50%))}.mujs-body table .frame[data-engine=sleazyfork] mujs-a:hover,.mujs-body table .frame[data-engine=greasyfork] mujs-a:hover{color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn,.mujs-body table .frame[data-engine=greasyfork] mu-jsbtn{color:var(--mujs-txt-color, hsl(0, 0%, 100%));background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn:hover,.mujs-body table .frame[data-engine=greasyfork] mu-jsbtn:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-body table .frame[data-good] mujs-a,.mujs-body table .frame[data-author] mujs-a{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-body table .frame[data-good] mujs-a:hover,.mujs-body table .frame[data-author] mujs-a:hover{color:#80ab30}.mujs-body table .frame[data-good] .mujs-list,.mujs-body table .frame[data-author] .mujs-list{color:#fff}.mujs-body table .frame[data-good] mu-jsbtn,.mujs-body table .frame[data-author] mu-jsbtn{color:#20385a;background:var(--mujs-placeholder, hsl(81, 56%, 54%));border-color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-body table .frame[data-good] mu-jsbtn:hover,.mujs-body table .frame[data-author] mu-jsbtn:hover{background:#b5d874;border-color:#b5d874}.mujs-body table .frame svg{fill:currentColor;width:14px;height:14px;background:rgba(0,0,0,0)}.mujs-body table .frame>td:not(.mujs-name){text-align:center}.mujs-body table .frame>.mujs-name>mujs-a{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}.mujs-body table .frame>.mujs-name mu-jsbtn,.mujs-body table .frame>.mujs-name mu-js{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}.mujs-body table .frame>.mujs-name>mu-jsbtn{margin:auto}.mujs-body table .frame>.mujs-name>mujs-column>mu-jsbtn{padding:0px 7px}.mujs-body table .frame>.mujs-uframe>mujs-a{font-size:16px;font-weight:500;padding-left:.5rem;padding-right:.5rem}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}@media screen and (max-height: 720px){.mujs-cfg:not(.webext-page){height:100%;height:-moz-available;height:-webkit-fill-available;width:100%;width:-moz-available;width:-webkit-fill-available;overflow-x:auto;padding:.5em}}.mujs-cfg mujs-section{border-radius:16px;padding:.5em}.mujs-cfg mujs-section:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-cfg mujs-section:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){font-size:14px;position:relative;border-radius:4px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg mujs-section>label input[type=text]::-webkit-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-moz-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]:-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label{margin-left:0;background:var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type=checkbox][data-name=sleazyfork]:checked+label{background:var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=openuserjs]:checked+label{background:var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=github]:checked+label{background:var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568))}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:var(--mujs-txt-color, hsl(0, 0%, 100%));position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg .mujs-sty-flex mujs-btn{color:var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]{background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-cfg:not(.webext-page){margin:1rem 25rem}mujs-a{display:inline-block}.mujs-name{display:flex;flex-flow:column wrap;gap:.5em}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:500;font-variant:normal;text-transform:none;text-rendering:auto;text-align:center;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:var(--mujs-txt-color, hsl(0, 0%, 100%));width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block;text-align:center}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}
-`;
-/**
- * Link to uncompressed locales + compiler
- * @link https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales
- * @link https://github.com/magicoflolis/Userscript-Plus/blob/master/tools/languageLoader.js
- */
-const languageList = {"en":{"legacy":"PLEASE RESET YOUR CONFIG!","createdby":"Created by","name":"Name","daily":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","searcher":"Title | Description | Author...","install":"Install","issue":"New Issue","version":"Version","updated":"Last Updated","total":"Total Installs","rating":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset","codePreview":"Preview Code","saveFile":"Save File"},"es":{"legacy":"¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!","createdby":"Creado por","name":"Nombre","daily":"Instalaciones diarias","close":"Ya no se muestra","filterA":"Filtro","max":"Maximizar","min":"Minimizar","search":"Busque en","searcher":"Título | Descripción | Autor...","install":"Instalar","issue":"Nueva edición","version":"Versión","updated":"Última actualización","total":"Total de instalaciones","rating":"Clasificaciones","good":"Bueno","ok":"Ok","bad":"Malo","created":"Creado","redirect":"Greasy Fork para adultos","filter":"Filtrar otros idiomas","dtime":"Mostrar el tiempo de espera","save":"Guardar","reset":"Reiniciar","codePreview":"Preview Code","saveFile":"Save File"},"fr":{"legacy":"VEUILLEZ RÉINITIALISER VOTRE CONFIG !","createdby":"Créé par","name":"Nom","daily":"Installations quotidiennes","close":"Ne plus montrer","filterA":"Filtre","max":"Maximiser","min":"Minimiser","search":"Recherche","searcher":"Titre | Description | Auteur...","install":"Installer","issue":"Nouveau numéro","version":"Version","updated":"Dernière mise à jour","total":"Total des installations","rating":"Notations","good":"Bon","ok":"Ok","bad":"Mauvais","created":"Créé","redirect":"Greasy Fork pour les adultes","filter":"Filtrer les autres langues","dtime":"Délai d'affichage","save":"Sauvez","reset":"Réinitialiser","codePreview":"Preview Code","saveFile":"Save File"},"ja":{"legacy":"設定をリセットしてください。","createdby":"によって作成された","name":"名前","daily":"デイリーインストール","close":"表示されなくなりました","filterA":"フィルター","max":"最大化","min":"ミニマム","search":"検索","searcher":"タイトル｜説明｜著者...","install":"インストール","issue":"新刊のご案内","version":"バージョン","updated":"最終更新日","total":"総インストール数","rating":"レーティング","good":"グッド","ok":"良い","bad":"悪い","created":"作成","redirect":"大人のGreasyfork","filter":"他の言語をフィルタリングする","dtime":"表示タイムアウト","save":"拯救","reset":"リセット","codePreview":"Preview Code","saveFile":"Save File"},"nl":{"legacy":"RESET UW CONFIG!","createdby":"Gemaakt door","name":"Naam","daily":"Dagelijkse Installaties","close":"Sluit","filterA":"Filter","max":"Maximaliseer","min":"Minimaliseer","search":"Zoek","searcher":"Titel | Beschrijving | Auteur...","install":"Installeer","issue":"Nieuw Issue","version":"Versie","updated":"Laatste Update","total":"Totale Installaties","rating":"Beoordeling","good":"Goed","ok":"Ok","bad":"Slecht","created":"Aangemaakt","redirect":"Greasy Fork voor volwassenen","filter":"Filter andere talen","dtime":"Weergave timeout","save":"Opslaan","reset":"Opnieuw instellen","codePreview":"Preview Code","saveFile":"Save File"},"ru":{"legacy":"ПОЖАЛУЙСТА, СБРОСЬТЕ КОНФИГ!","createdby":"Сделано","name":"Имя","daily":"Ежедневные установки","close":"Больше не показывать","filterA":"Фильтр","max":"Максимизировать","min":"Минимизировать","search":"Поиск","searcher":"Название | Описание | Автор...","install":"Установите","issue":"Новый выпуск","version":"Версия","updated":"Последнее обновление","total":"Всего установок","rating":"Рейтинги","good":"Хорошо","ok":"Хорошо","bad":"Плохо","created":"Создано","redirect":"Greasy Fork для взрослых","filter":"Отфильтровать другие языки","dtime":"Тайм-аут отображения","save":"Сохранить","reset":"Перезагрузить","codePreview":"Preview Code","saveFile":"Save File"},"zh":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","searcher":"标题|描述|作者...","install":"安装","issue":"新问题","version":"版本","updated":"最后更新","total":"总安装量","rating":"评级","good":"好的","ok":"好的","bad":"不好","created":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","codePreview":"Preview Code","saveFile":"Save File"}};
+const inIframe = () => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+}
+if (inIframe()) {
+  return;
+}
+/******************************************************************************/
+// #region Console
+const dbg = (...msg) => {
+  const dt = new Date();
+  console.debug(
+    '[%cMagic Userscript+%c] %cDBG',
+    'color: rgb(29, 155, 240);',
+    '',
+    'color: rgb(255, 212, 0);',
+    `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
+    ...msg
+  );
+};
+const err = (...msg) => {
+  console.error(
+    '[%cMagic Userscript+%c] %cERROR',
+    'color: rgb(29, 155, 240);',
+    '',
+    'color: rgb(249, 24, 128);',
+    ...msg
+  );
+  for (const ex of msg) {
+    if (typeof ex === 'object' && 'cause' in ex && typeof alert !== 'undefined') {
+      alert(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
+    }
+  }
+};
+const info = (...msg) => {
+  console.info(
+    '[%cMagic Userscript+%c] %cINF',
+    'color: rgb(29, 155, 240);',
+    '',
+    'color: rgb(0, 186, 124);',
+    ...msg
+  );
+};
+const log = (...msg) => {
+  console.log(
+    '[%cMagic Userscript+%c] %cLOG',
+    'color: rgb(29, 155, 240);',
+    '',
+    'color: rgb(219, 160, 73);',
+    ...msg
+  );
+};
+// #endregion
+
 let cfg = {};
-let lang = {};
-let legacyMsg = null;
+let ghMsg = null;
+
+const winLocation = window.top.location;
+/** @type { import("../typings/UserJS.d.ts").safeSelf } */
+function safeSelf() {
+  if (userjs.safeSelf) {
+    return userjs.safeSelf;
+  }
+  const g = globalThis;
+  const safe = {
+    XMLHttpRequest: g.XMLHttpRequest,
+    createElement: g.document.createElement.bind(g.document),
+    createElementNS: g.document.createElementNS.bind(g.document),
+    createTextNode: g.document.createTextNode.bind(g.document),
+    setTimeout: g.setTimeout,
+    clearTimeout: g.clearTimeout
+  };
+  userjs.safeSelf = safe;
+  return safe;
+}
 
 // Lets highlight me :)
 const authorID = 166061;
@@ -95,117 +180,206 @@ const goodUserJS = [
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js'
 ];
 // Unsupport webpages for each engine
-const unsupported = {
+const engineUnsupported = {
   greasyfork: ['pornhub.com'],
   sleazyfork: ['pornhub.com'],
   openuserjs: [],
   github: []
 };
+const getUAData = () => {
+  if (typeof userjs.isMobile !== 'undefined') {
+    return userjs.isMobile;
+  }
+  try {
+    const { platform, mobile } = navigator.userAgentData ?? {};
+    userjs.isMobile =
+      /Mobile|Tablet/.test(navigator.userAgent ?? '') ||
+      mobile ||
+      /Android|Apple/.test(platform ?? '');
+  } catch (ex) {
+    err({ cause: 'getUAData', message: ex.message });
+    userjs.isMobile = false;
+  }
+  return userjs.isMobile;
+};
+const isMobile = getUAData();
+const isGM = typeof GM !== 'undefined';
+const MU = {};
+const META_START_COMMENT = '// ==UserScript==';
+const META_END_COMMENT = '// ==/UserScript==';
+const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
+const APPLIES_TO_ALL_PATTERNS = [
+  'http://*',
+  'https://*',
+  'http://*/*',
+  'https://*/*',
+  'http*://*',
+  'http*://*/*',
+  '*',
+  '*://*',
+  '*://*/*',
+  'http*'
+];
+const builtinList = {
+  local: /localhost|router|gov|(\d+\.){3}\d+/,
+  finance:
+    /school|pay|bank|money|cart|checkout|authorize|bill|wallet|venmo|zalo|skrill|bluesnap|coin|crypto|currancy|insurance|finance/,
+  social: /login|join|signin|signup|sign-up|password|reset|password_reset/,
+  unsupported: {
+    host: 'fakku.net',
+    pathname: '/hentai/.+/read/page/.+'
+  }
+};
+const defcfg = {
+  cache: true,
+  codePreview: false,
+  autoexpand: false,
+  filterlang: false,
+  sleazyredirect: false,
+  time: 10000,
+  blacklist: ['userjs-local', 'userjs-finance', 'userjs-social', 'userjs-unsupported'],
+  engines: [
+    {
+      enabled: true,
+      name: 'greasyfork',
+      url: 'https://greasyfork.org'
+    },
+    {
+      enabled: false,
+      name: 'sleazyfork',
+      url: 'https://sleazyfork.org'
+    },
+    {
+      enabled: false,
+      name: 'openuserjs',
+      url: 'https://openuserjs.org/?q='
+    },
+    {
+      enabled: false,
+      name: 'github',
+      url: 'https://api.github.com/search/code?q=',
+      token: ''
+    }
+  ],
+  theme: {
+    'even-row': '',
+    'odd-row': '',
+    'even-err': '',
+    'odd-err': '',
+    'background-color': '',
+    'gf-color': '',
+    'sf-color': '',
+    'border-b-color': '',
+    'gf-btn-color': '',
+    'sf-btn-color': '',
+    'sf-txt-color': '',
+    'txt-color': '',
+    'chck-color': '',
+    'chck-gf': '',
+    'chck-git': '',
+    'chck-open': '',
+    placeholder: '',
+    'position-top': '',
+    'position-bottom': '',
+    'position-left': '',
+    'position-right': '',
+    'font-family': ''
+  },
+  recommend: {
+    author: true,
+    others: true
+  }
+};
+class LanguageHandler {
+  constructor() {
+    this.current = (navigator.language ?? 'en').split('-')[0] ?? 'en';
+    this.cache = [];
 
-const isMobile = /Mobile|Tablet/.test(navigator.userAgent);
-const Supports = {
-  gm: typeof GM !== 'undefined'
-};
-// #region Console
-// eslint-disable-next-line no-unused-vars
-const dbg = (...msg) => {
-  const dt = new Date();
-  console.debug(
-    '[%cUserJS%c] %cDBG',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(255, 212, 0);',
-    `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
-    ...msg
-  );
-};
-const err = (...msg) => {
-  console.error(
-    '[%cUserJS%c] %cERROR',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(249, 24, 128);',
-    ...msg
-  );
-  let alertBrowser = false;
-  for (const ex of msg) {
-    if (typeof ex === 'object' && 'cause' in ex) {
-      alertBrowser = true;
-      break;
+    const languages = navigator.languages ?? [];
+    for (const nlang of languages) {
+      const lg = nlang.split('-')[0];
+      if (this.cache.indexOf(lg) === -1) {
+        this.cache.push(lg);
+      }
+    }
+
+    if (!this.cache.includes(this.current)) {
+      this.cache.push(this.current);
     }
   }
-  if (isMobile || alertBrowser) {
-    alert(...msg);
+}
+const language = new LanguageHandler();
+const i18n$ = (...args) => {
+  const list = translations[cfg.language] ?? translations[language.current];
+  const arr = [];
+  for (const arg of args) {
+    arr.push(list[arg]);
+  }
+  return arr.length !== 1 ? arr : arr[0];
+};
+// #region Utilities
+/**
+ * @type { import("../typings/UserJS.d.ts").hasOwn }
+ */
+const hasOwn = (...args) => {
+  if (typeof Object.hasOwn !== 'undefined') {
+    return Object.hasOwn(...args);
+  }
+  return Object.prototype.hasOwnProperty.call(...args);
+};
+/**
+ * @type { import("../typings/UserJS.d.ts").objToStr }
+ */
+const objToStr = (obj) => {
+  return Object.prototype.toString.call(obj);
+};
+/**
+ * @type { import("../typings/UserJS.d.ts").strToURL }
+ */
+const strToURL = (str) => {
+  try {
+    return objToStr(str).includes('URL') ? str : new URL(str || window.location || 'about:blank');
+  } catch (ex) {
+    err({ cause: 'strToURL', message: ex.message });
+    return window.location;
   }
 };
-const info = (...msg) => {
-  console.info(
-    '[%cUserJS%c] %cINF',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(0, 186, 124);',
-    ...msg
-  );
-};
-const log = (...msg) => {
-  console.log(
-    '[%cUserJS%c] %cLOG',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(219, 160, 73);',
-    ...msg
-  );
-};
-// #endregion
-const MU = {};
-const hasOwn = Object.hasOwn || Object.prototype.hasOwnProperty.call;
 /**
- * Object is typeof `Element`
- * @template O
- * @param { O } obj
- * @returns { boolean }
+ * @type { import("../typings/UserJS.d.ts").isRegExp }
+ */
+const isRegExp = (obj) => {
+  const s = objToStr(obj);
+  return s.includes('RegExp');
+};
+/**
+ * @type { import("../typings/UserJS.d.ts").isElem }
  */
 const isElem = (obj) => {
-  /** @type { string } */
-  const s = Object.prototype.toString.call(obj);
+  const s = objToStr(obj);
   return s.includes('Element');
 };
 /**
- * Object is typeof `Function`
- * @template O
- * @param { O } obj
- * @returns { boolean }
- */
-const isFN = (obj) => {
-  /** @type { string } */
-  const s = Object.prototype.toString.call(obj);
-  return s.includes('Function');
-};
-/**
- * Object is typeof `object` / JSON Object
- * @template O
- * @param { O } obj
- * @returns { boolean }
+ * @type { import("../typings/UserJS.d.ts").isObj }
  */
 const isObj = (obj) => {
-  /** @type { string } */
-  const s = Object.prototype.toString.call(obj);
+  const s = objToStr(obj);
   return s.includes('Object');
 };
 /**
- * Object is `null` or `undefined`
- * @template O
- * @param { O } obj
- * @returns { boolean }
+ * @type { import("../typings/UserJS.d.ts").isFN }
+ */
+const isFN = (obj) => {
+  const s = objToStr(obj);
+  return s.includes('Function');
+};
+/**
+ * @type { import("../typings/UserJS.d.ts").isNull }
  */
 const isNull = (obj) => {
   return Object.is(obj, null) || Object.is(obj, undefined);
 };
 /**
- * Object is Blank
- * @template O
- * @param { O } obj
- * @returns { boolean }
+ * @type { import("../typings/UserJS.d.ts").isBlank }
  */
 const isBlank = (obj) => {
   return (
@@ -216,19 +390,13 @@ const isBlank = (obj) => {
   );
 };
 /**
- * Object is Empty
- * @template O
- * @param { O } obj
- * @returns { boolean }
+ * @type { import("../typings/UserJS.d.ts").isEmpty }
  */
 const isEmpty = (obj) => {
   return isNull(obj) || isBlank(obj);
 };
 /**
- * @template B
- * @param { {} } objA
- * @param { B } objB
- * @returns { B }
+ * @type { import("../typings/UserJS.d.ts").setObj }
  */
 const setObj = (objA = {}, objB = {}) => {
   objA = objA || {};
@@ -243,27 +411,122 @@ const setObj = (objA = {}, objB = {}) => {
   return objB;
 };
 /**
- * @template T
- * @param { T } target
- * @param { Element } root
- * @param { boolean } toQuery
- * @returns { T[] }
+ * @type { import("../typings/UserJS.d.ts").normalizeTarget }
  */
-const normalizeTarget = (target, root = document, toQuery = true) => {
-  if (isNull(target)) {
+const normalizeTarget = (target, toQuery = true, root) => {
+  if (Object.is(target, null) || Object.is(target, undefined)) {
     return [];
   }
   if (Array.isArray(target)) {
     return target;
   }
   if (typeof target === 'string') {
-    return toQuery ? Array.from(root.querySelectorAll(target)) : [target];
+    return toQuery ? Array.from((root || document).querySelectorAll(target)) : [target];
   }
   if (isElem(target)) {
     return [target];
   }
   return Array.from(target);
 };
+/**
+ * @type { import("../typings/UserJS.d.ts").ael }
+ */
+const ael = (el, type, listener, options = {}) => {
+  try {
+    for (const elem of normalizeTarget(el)) {
+      if (!elem) {
+        continue;
+      }
+      if (isMobile && type === 'click') {
+        elem.addEventListener('touchstart', listener);
+        continue;
+      }
+      elem.addEventListener(type, listener, options);
+    }
+  } catch (ex) {
+    err(ex);
+  }
+};
+/**
+ * @type { import("../typings/UserJS.d.ts").formAttrs }
+ */
+const formAttrs = (elem, attr = {}) => {
+  if (!elem) {
+    return elem;
+  }
+  for (const key in attr) {
+    if (typeof attr[key] === 'object') {
+      formAttrs(elem[key], attr[key]);
+    } else if (isFN(attr[key])) {
+      if (/^on/.test(key)) {
+        elem[key] = attr[key];
+        continue;
+      }
+      ael(elem, key, attr[key]);
+    } else if (key === 'class') {
+      elem.className = attr[key];
+    } else {
+      elem[key] = attr[key];
+    }
+  }
+  return elem;
+};
+/**
+ * @type { import("../typings/UserJS.d.ts").make }
+ */
+const make = (tagName, cname, attrs) => {
+  let el;
+  try {
+    const safe = safeSelf();
+    el = safe.createElement(tagName);
+    if (!isEmpty(cname)) {
+      if (typeof cname === 'string') {
+        el.className = cname;
+      } else if (isObj(cname)) {
+        formAttrs(el, attrs);
+      }
+    }
+    if (!isEmpty(attrs)) {
+      if (typeof attrs === 'string') {
+        el.textContent = attrs;
+      } else if (isObj(attrs)) {
+        formAttrs(el, attrs);
+      }
+    }
+  } catch (ex) {
+    err(ex);
+  }
+  return el;
+};
+/**
+ * @type { import("../typings/UserJS.d.ts").getGMInfo }
+ */
+const getGMInfo = () => {
+  if (isGM) {
+    if (isFN(GM.info)) {
+      return GM.info;
+    } else if (isFN(GM_info)) {
+      return GM_info;
+    }
+  }
+  return {
+    script: {
+      icon: '',
+      name: 'Magic Userscript+',
+      namespace: 'https://github.com/magicoflolis/Userscript-Plus',
+      updateURL: 'https://github.com/magicoflolis/Userscript-Plus/releases',
+      version: 'Bookmarklet',
+      bugs: 'https://github.com/magicoflolis/Magic-PH/issues/new/choose'
+    }
+  };
+};
+MU.info = getGMInfo();
+// #endregion
+/**
+ * Based on uBlock Origin by Raymond Hill (https://github.com/gorhill/uBlock)
+ *
+ * [uBlock Origin Reference](https://github.com/gorhill/uBlock/blob/master/src/js/dom.js)
+ */
 class dom {
   /**
    * @template { HTMLElement } T
@@ -282,17 +545,6 @@ class dom {
         elem.setAttribute(attr, value);
       }
     }
-  }
-  /**
-   * @template { HTMLElementTagNameMap } K
-   * @param { K } a
-   * @returns { HTMLElementTagNameMap[K] }
-   */
-  static create(a) {
-    if (typeof a === 'string') {
-      return document.createElement(a);
-    }
-    throw new Error('"a" must be a typeof "String"');
   }
   /**
    * @template { HTMLElement } T
@@ -366,73 +618,10 @@ dom.cl = class {
     return false;
   }
 };
-class Language {
-  static get cache() {
-    return languageList[cfg.language] ?? languageList[Language.navLang];
-  }
-
-  static navLang = navigator.language.split('-')[0] ?? 'en';
-}
-class Task {
-  static queue(func, timeout = 5000) {
-    if (typeof requestIdleCallback === 'undefined') {
-      return setTimeout(func, 1);
-    }
-    return requestIdleCallback(func, { timeout });
-  }
-
-  /**
-   * requestIdleCallback or setTimeout w/ Promise
-   * @param {number} timeout - Timeout in milliseconds (ms)
-   * @returns {Promise<void>} Promise object
-   */
-  static delay(timeout = 5000) {
-    return new Promise((resolve) => Task.queue(resolve, timeout));
-  }
-
-  static drop(id) {
-    if (typeof cancelIdleCallback === 'undefined') {
-      return clearTimeout(id);
-    }
-    return cancelIdleCallback(id);
-  }
-
-  static timeout(timeout = 5000) {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  }
-
-  static requestAFrame() {
-    return new Promise((resolve) => requestAnimationFrame(resolve));
-  }
-}
-class Timeout {
-  constructor() {
-    this.ids = [];
-  }
-
-  set(delay, reason) {
-    return new Promise((resolve, reject) => {
-      const id = setTimeout(() => {
-        isNull(reason) ? resolve() : reject(reason);
-        this.clear(id);
-      }, delay);
-      this.ids.push(id);
-    });
-  }
-
-  clear(...ids) {
-    this.ids = this.ids.filter((id) => {
-      if (ids.includes(id)) {
-        clearTimeout(id);
-        return false;
-      }
-      return true;
-    });
-  }
-}
 class Memorize {
   constructor() {
-    this.cache = new Map();
+    this.store = new Map();
+    this.create('cfg', 'container', 'userjs');
   }
   /**
    * @template { string } S
@@ -442,321 +631,16 @@ class Memorize {
   create(...maps) {
     const resp = [];
     for (const key of maps) {
-      if (this.cache.has(key)) {
-        return this.cache.get(key);
+      if (this.store.has(key)) {
+        return this.store.get(key);
       }
-      this.cache.set(key, new Map());
-      resp.push(this.cache.get(key));
+      this.store.set(key, new Map());
+      resp.push(this.store.get(key));
     }
     return resp.length >= 2 ? resp : resp[0];
   }
 }
-const alang = [];
-const defcfg = {
-  cache: true,
-  codePreview: false,
-  autoexpand: false,
-  filterlang: false,
-  sleazyredirect: false,
-  time: 10000,
-  blacklist: [
-    {
-      enabled: true,
-      regex: true,
-      flags: '',
-      name: 'Blacklist 1',
-      url: '(gov|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)'
-    },
-    {
-      enabled: true,
-      regex: true,
-      flags: '',
-      name: 'Blacklist 2',
-      url: '(pay|bank|money|localhost|authorize|checkout|bill|wallet|router)'
-    },
-    {
-      enabled: true,
-      regex: false,
-      flags: '',
-      name: 'Blacklist 3',
-      url: 'https://home.bluesnap.com'
-    },
-    {
-      enabled: true,
-      regex: false,
-      flags: '',
-      name: 'Blacklist 4',
-      url: ['zalo.me', 'skrill.com']
-    }
-  ],
-  engines: [
-    {
-      enabled: true,
-      name: 'greasyfork',
-      url: 'https://greasyfork.org'
-    },
-    {
-      enabled: false,
-      name: 'sleazyfork',
-      url: 'https://sleazyfork.org'
-    },
-    {
-      enabled: false,
-      name: 'openuserjs',
-      url: 'https://openuserjs.org/?q='
-    },
-    {
-      enabled: false,
-      name: 'github',
-      url: 'https://api.github.com/search/code?q=',
-      token: ''
-    }
-  ],
-  theme: {
-    'even-row': '',
-    'odd-row': '',
-    'even-err': '',
-    'odd-err': '',
-    'background-color': '',
-    'gf-color': '',
-    'sf-color': '',
-    'border-b-color': '',
-    'gf-btn-color': '',
-    'sf-btn-color': '',
-    'sf-txt-color': '',
-    'txt-color': '',
-    'chck-color': '',
-    'chck-gf': '',
-    'chck-git': '',
-    'chck-open': '',
-    placeholder: '',
-    'position-top': '',
-    'position-bottom': '',
-    'position-left': '',
-    'position-right': ''
-  },
-  recommend: {
-    author: true,
-    others: true
-  }
-};
-/**
- * Add Event Listener
- * @template { HTMLElement } E
- * @template { keyof HTMLElementEventMap } K
- * @param { E } el
- * @param { K } event
- * @param { (this: E, ev: HTMLElementEventMap[K]) => any } callback
- * @param { boolean | AddEventListenerOptions } options
- */
-const ael = (el, event, callback, options = {}) => {
-  try {
-    for (const elem of normalizeTarget(el)) {
-      if (!elem) {
-        continue;
-      }
-      if (isMobile && event === 'click') {
-        // event = 'mouseup';
-        elem.addEventListener('touchstart', callback);
-        // elem.addEventListener('touchend', callback);
-        return;
-      }
-      elem.addEventListener(event, callback, options);
-    }
-  } catch (ex) {
-    err(ex);
-  }
-};
-/**
- * Prefix for `document.querySelectorAll()`
- * @template { Element } E
- * @param { string } selectors - Elements for query selection
- * @param { E } root - Root selector Element
- * @returns { NodeListOf<E> }
- */
-const qsA = (selectors, root) => {
-  try {
-    return (root || document).querySelectorAll(selectors);
-  } catch (ex) {
-    err(ex);
-  }
-  return [];
-};
-/**
- * Prefix for `document.querySelector()`
- * @template { Element } E
- * @param { string } selector - Element for query selection
- * @param { E } root - Root selector Element
- * @returns { E | null }
- */
-const qs = (selector, root) => {
-  try {
-    return (root || document).querySelector(selector);
-  } catch (ex) {
-    err(ex);
-  }
-  return null;
-};
-/**
- * Prefix for `document.querySelector()` w/ Promise
- * @template { Element } E
- * @param { string } selector - Element for query selection
- * @param { E } root - Root selector Element
- * @returns { Promise<E | null> }
- */
-const query = async (selector, root) => {
-  let el = null;
-  try {
-    el = root || document;
-    while (isNull(el.querySelector(selector))) {
-      await Task.requestAFrame();
-    }
-    return el.querySelector(selector);
-  } catch (ex) {
-    err(ex);
-  }
-  return el;
-};
-/**
- * Form Attributes of Element
- * @template { keyof HTMLElementTagNameMap } K
- * @param { K } elem
- * @param { keyof HTMLElement } attr
- */
-const formAttrs = (elem, attr = {}) => {
-  for (const key in attr) {
-    if (typeof attr[key] === 'object') {
-      formAttrs(elem[key], attr[key]);
-    } else if (isFN(attr[key])) {
-      if (key === 'container') {
-        key();
-        continue;
-      }
-      if (/^on/.test(key)) {
-        elem[key] = attr[key];
-        continue;
-      }
-      ael(elem, key, attr[key]);
-    } else if (key === 'class') {
-      elem.className = attr[key];
-    } else {
-      elem[key] = attr[key];
-    }
-  }
-};
-/**
- * Make Element
- * @template { keyof HTMLElementTagNameMap } K
- * @param { K } tagName
- * @param { string } cname
- * @param { keyof HTMLElement } attrs
- * @returns { HTMLElementTagNameMap[K] }
- */
-const make = (tagName, cname, attrs = {}) => {
-  let el = null;
-  try {
-    el = document.createElement(tagName);
-    if (typeof cname === 'string' && !isEmpty(cname)) {
-      el.className = cname;
-    }
-    if (!isEmpty(attrs)) {
-      formAttrs(el, attrs);
-    }
-  } catch (ex) {
-    err(ex);
-  }
-  return el;
-};
-const Container = class {
-  constructor() {
-    this.remove = this.remove.bind(this);
-    this.onFrameLoad = this.onFrameLoad.bind(this);
-    this.ready = false;
-    this.supported = isFN(document.createElement('main-userjs').attachShadow);
-    if (this.supported) {
-      this.frame = make('main-userjs', '', {
-        dataset: {
-          insertedBy: 'userscript-plus',
-          role: 'primary-container'
-        }
-      });
-      /**
-       * @type { ShadowRoot }
-       */
-      this.root = this.frame.attachShadow({ mode: 'open', clonable: false, delegatesfocus: false });
-      this.ready = true;
-    } else {
-      this.frame = make('iframe', 'mujs-iframe', {
-        dataset: {
-          insertedBy: 'userscript-plus',
-          role: 'primary-iframe'
-        },
-        loading: 'lazy',
-        src: 'about:blank',
-        style:
-          'position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
-        onload: this.onFrameLoad
-      });
-    }
-    ael(window.self ?? window, 'beforeunload', this.remove);
-  }
-  /**
-   * @param { Function } callback
-   * @param { document } doc
-   */
-  async inject(callback, doc) {
-    if (!doc) {
-      return;
-    }
-    while (this.ready === false) {
-      await Task.requestAFrame();
-    }
-
-    doc.documentElement.appendChild(this.frame);
-
-    if (isFN(callback)) {
-      callback.call({}, this.root, doc);
-    }
-  }
-
-  remove() {
-    this.frame.remove();
-  }
-
-  onFrameLoad(iFrame) {
-    /**
-     * @type { HTMLIFrameElement }
-     */
-    const target = iFrame.target;
-    this.root = target.contentDocument.documentElement;
-    this.ready = true;
-
-    dom.cl.add([this.root, target.contentDocument.body], 'mujs-iframe');
-  }
-};
-const container = new Container();
-const listener = (evt) => {
-  if (evt.isTrusted !== true) {
-    return;
-  }
-  if (evt.disposition !== 'enforce') {
-    return;
-  }
-  if (evt.target.tagName !== 'MAIN-USERJS') {
-    return;
-  }
-  container.remove();
-  err('Failed to inject due to CSP violation', {
-    url: evt.blockedURL || evt.blockedURI,
-    policy: evt.originalPolicy,
-    directive: evt.effectiveDirective || evt.violatedDirective
-  });
-  document.removeEventListener('securitypolicyviolation', listener);
-};
-if (document !== null) {
-  document.addEventListener('securitypolicyviolation', listener);
-}
-
+const memory = new Memorize();
 const iconSVG = {
   cfg: {
     viewBox: '0 0 24 24',
@@ -821,8 +705,8 @@ const iconSVG = {
     html: '<g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g>'
   },
   load(type, container) {
-    const xmlns = 'http://www.w3.org/2000/svg';
-    const svgElem = document.createElementNS(xmlns, 'svg');
+    const safe = safeSelf();
+    const svgElem = safe.createElementNS('http://www.w3.org/2000/svg', 'svg');
     for (const [k, v] of Object.entries(iconSVG[type])) {
       if (k === 'html') {
         continue;
@@ -840,40 +724,72 @@ const iconSVG = {
   }
 };
 /**
- * @template { string } S
- * @param { S } str
- * @param { boolean } lowerCase
- * @returns { S }
+ * @type { import("../typings/UserJS.d.ts").StorageSystem }
  */
-const bscStr = (str = '', lowerCase = true) => {
-  const txt = str[lowerCase ? 'toLowerCase' : 'toUpperCase']();
-  return txt.replaceAll(/\W/g, '');
+const StorageSystem = {
+  getItem(key) {
+    return window.localStorage.getItem(key);
+  },
+  has(key) {
+    return !isNull(this.getItem(key));
+  },
+  setItem(key, value) {
+    window.localStorage.setItem(key, value);
+  },
+  remove(key) {
+    window.localStorage.removeItem(key);
+  },
+  async setValue(key, v) {
+    v = typeof v === 'string' ? v : JSON.stringify(v ?? {});
+    if (isGM) {
+      if (isFN(GM.setValue)) {
+        await GM.setValue(key, v);
+      } else if (isFN(GM_setValue)) {
+        GM_setValue(key, v);
+      }
+    } else {
+      this.setItem(`MUJS-${key}`, v);
+    }
+  },
+  async getValue(key, def = {}) {
+    try {
+      if (isGM) {
+        let GMType;
+        if (isFN(GM.getValue)) {
+          GMType = await GM.getValue(key, JSON.stringify(def));
+        } else if (isFN(GM_getValue)) {
+          GMType = GM_getValue(key, JSON.stringify(def));
+        }
+        if (!isNull(GMType)) {
+          return JSON.parse(GMType);
+        }
+      }
+      return this.has(`MUJS-${key}`)
+        ? JSON.parse(this.getItem(`MUJS-${key}`))
+        : def;
+    } catch (ex) {
+      err(ex);
+    }
+  }
 };
+/**
+ * @type { import("../typings/UserJS.d.ts").Network }
+ */
 const Network = {
-  /**
-   * Fetch a URL with fetch API as fallback
-   *
-   * When GM is supported, makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy
-   * @link https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest
-   * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
-   * @param { RequestInfo | URL } url - The URL to fetch
-   * @param { GM.Request['method'] | Request['method'] } method - Fetch method
-   * @param { GM.Request['responseType'] | 'buffer' | 'json' | 'text' | 'blob' | 'document' } responseType - Response type
-   * @param { RequestInit | GM.Request | XMLHttpRequest } data - Fetch parameters
-   * @param { boolean } useFetch
-   * @returns { Promise<Response> } Fetch results
-   */
   async req(url, method = 'GET', responseType = 'json', data = {}, useFetch = false) {
     if (isEmpty(url)) {
       throw new Error('"url" parameter is empty');
     }
-    method = bscStr(method, false);
-    responseType = bscStr(responseType);
+    method = Network.bscStr(method, false);
+    responseType = Network.bscStr(responseType);
     const params = {
       method,
       ...data
     };
-    if (Supports.gm && !useFetch) {
+    if (params.hermes) {
+      delete params.hermes;
+    }
+    if (isGM && !useFetch) {
       if (params.credentials) {
         Object.assign(params, {
           anonymous: false
@@ -889,46 +805,7 @@ const Network = {
       delete params.onprogress;
     }
     return await new Promise((resolve, reject) => {
-      /**
-       * @param { Response } response
-       * @returns { Response | Document }
-       */
-      const fetchResp = (response_1) => {
-        if (!response_1.ok) reject(response_1);
-        const check = (str_2 = 'text') => {
-          return isFN(response_1[str_2]) ? response_1[str_2]() : response_1;
-        };
-        if (responseType.match(/buffer/i)) {
-          resolve(check('arrayBuffer'));
-        } else if (responseType.match(/json/i)) {
-          resolve(check('json'));
-        } else if (responseType.match(/text/i)) {
-          resolve(check('text'));
-        } else if (responseType.match(/blob/i)) {
-          resolve(check('blob'));
-        } else if (responseType.match(/formdata/i)) {
-          resolve(check('formData'));
-        } else if (responseType.match(/clone/i)) {
-          resolve(check('clone'));
-        } else if (responseType.match(/document/i) && isFN(response_1.text)) {
-          const domParser = new DOMParser();
-          const respTxt = response_1.text();
-          if (respTxt instanceof Promise) {
-            respTxt.then((txt) => {
-              const doc = domParser.parseFromString(txt, 'text/html');
-              resolve(doc);
-            });
-          } else {
-            const doc = domParser.parseFromString(respTxt, 'text/html');
-            resolve(doc);
-          }
-        } else {
-          resolve(response_1);
-        }
-      };
-      if (responseType.match(/buffer/i)) {
-        fetch(url, params).then(fetchResp).catch(reject);
-      } else if (Supports.gm && !useFetch) {
+      if (isGM && !useFetch) {
         Network.xmlRequest({
           url,
           responseType,
@@ -936,12 +813,46 @@ const Network = {
           onerror: reject,
           onload: (r_1) => {
             if (r_1.status !== 200) reject(new Error(`${r_1.status} ${url}`));
-            if (responseType.match(/basic/i)) resolve(r_1);
+            if (responseType.match(/basic/)) resolve(r_1);
             resolve(r_1.response);
           }
         });
       } else {
-        fetch(url, params).then(fetchResp).catch(reject);
+        fetch(url, params)
+          .then((response_1) => {
+            if (!response_1.ok) reject(response_1);
+            const check = (str_2 = 'text') => {
+              return isFN(response_1[str_2]) ? response_1[str_2]() : response_1;
+            };
+            if (responseType.match(/buffer/)) {
+              resolve(check('arrayBuffer'));
+            } else if (responseType.match(/json/)) {
+              resolve(check('json'));
+            } else if (responseType.match(/text/)) {
+              resolve(check('text'));
+            } else if (responseType.match(/blob/)) {
+              resolve(check('blob'));
+            } else if (responseType.match(/formdata/)) {
+              resolve(check('formData'));
+            } else if (responseType.match(/clone/)) {
+              resolve(check('clone'));
+            } else if (responseType.match(/document/)) {
+              const domParser = new DOMParser();
+              const respTxt = check('text');
+              if (respTxt instanceof Promise) {
+                respTxt.then((txt) => {
+                  const doc = domParser.parseFromString(txt, 'text/html');
+                  resolve(doc);
+                });
+              } else {
+                const doc = domParser.parseFromString(respTxt, 'text/html');
+                resolve(doc);
+              }
+            } else {
+              resolve(response_1);
+            }
+          })
+          .catch(reject);
       }
     });
   },
@@ -949,291 +860,727 @@ const Network = {
     if (Number.isNaN(bytes)) return '0 Bytes';
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const i = Math.floor(Math.pow(bytes) / Math.log(k));
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${Network.sizes[i]}`;
   },
-  prog(evt) {
-    return Object.is(evt.total, 0)
-      ? Network.format(evt.loaded)
-      : `${+((evt.loaded / evt.total) * 100).toFixed(2)}%`;
-  },
   sizes: ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-  /**
-   * @param { GM.Request } details
-   * @returns { Promise<void> }
-   */
-  xmlRequest(details) {
-    if (Supports.gm) {
-      return GM.xmlHttpRequest(details);
+  async xmlRequest(details) {
+    if (isGM) {
+      if (isFN(GM.xmlHttpRequest)) {
+        return GM.xmlHttpRequest(details);
+      } else if (isFN(GM_xmlhttpRequest)) {
+        return GM_xmlhttpRequest(details);
+      }
     }
-    try {
-      return new Promise((resolve, reject) => {
-        const req = new XMLHttpRequest();
-        let method = 'GET';
-        let url = 'about:blank';
-        let body;
-        for (const [key, value] of Object.entries(details)) {
-          if (key === 'onload') {
-            req.addEventListener('load', () => {
-              if (isFN(value)) {
-                value(req);
-              }
-              resolve(req);
-            });
-          } else if (key === 'onerror') {
-            req.addEventListener('error', (evt) => {
-              if (isFN(value)) {
-                value(evt);
-              }
-              reject(evt);
-            });
-          } else if (key === 'onabort') {
-            req.addEventListener('abort', (evt) => {
-              if (isFN(value)) {
-                value(evt);
-              }
-              reject(evt);
-            });
-          } else if (key === 'onprogress') {
-            req.addEventListener('progress', value);
-          } else if (key === 'responseType') {
-            if (value.match(/buffer|blob|document|json|text/i)) {
-              if (value.match(/buffer/i)) {
-                req.responseType = 'arraybuffer';
-              } else {
-                req.responseType = value;
-              }
+    const safe = safeSelf();
+    return await new Promise((resolve, reject) => {
+      const req = new safe.XMLHttpRequest();
+      let method = 'GET';
+      let url = 'about:blank';
+      let body;
+      for (const [key, value] of Object.entries(details)) {
+        if (key === 'onload') {
+          req.addEventListener('load', () => {
+            if (isFN(value)) {
+              value(req);
             }
-          } else if (key === 'method') {
-            method = value;
-          } else if (key === 'url') {
-            url = value;
-          } else if (key === 'body') {
-            body = value;
+            resolve(req);
+          });
+        } else if (key === 'onerror') {
+          req.addEventListener('error', (evt) => {
+            if (isFN(value)) {
+              value(evt);
+            }
+            reject(evt);
+          });
+        } else if (key === 'onabort') {
+          req.addEventListener('abort', (evt) => {
+            if (isFN(value)) {
+              value(evt);
+            }
+            reject(evt);
+          });
+        } else if (key === 'onprogress') {
+          req.addEventListener('progress', value);
+        } else if (key === 'responseType') {
+          if (value === 'buffer') {
+            req.responseType = 'arraybuffer';
+          } else {
+            req.responseType = value;
           }
+        } else if (key === 'method') {
+          method = value;
+        } else if (key === 'url') {
+          url = value;
+        } else if (key === 'body') {
+          body = value;
         }
-        req.open(method, url);
+      }
+      req.open(method, url);
 
-        if (isEmpty(req.responseType)) {
-          req.responseType = 'text';
-        }
+      if (isEmpty(req.responseType)) {
+        req.responseType = 'text';
+      }
 
-        if (body) {
-          req.send(body);
-        } else {
-          req.send();
-        }
-      });
-    } catch (ex) {
-      err(ex);
-    }
+      if (body) {
+        req.send(body);
+      } else {
+        req.send();
+      }
+    });
+  },
+  bscStr(str = '', lowerCase = true) {
+    const txt = str[lowerCase ? 'toLowerCase' : 'toUpperCase']();
+    return txt.replaceAll(/\W/g, '');
   }
 };
 /**
- * Get info of script
- * @returns { GM["info"] } Script info
- * @link https://violentmonkey.github.io/api/gm/#gm_info
+ * @type { import("../typings/UserJS.d.ts").qs }
  */
-MU.info = Supports.gm
-  ? isFN(GM.info)
-    ? GM.info
-    : GM_info
-  : {
-      script: {
-        icon: '',
-        name: 'Magic Userscript+',
-        namespace: 'https://github.com/magicoflolis/Userscript-Plus',
-        updateURL: 'https://github.com/magicoflolis/Userscript-Plus/releases',
-        version: 'Bookmarklet'
-      }
-    };
-MU.tab = {
-  /**
-   * Open a new window
-   * @param { string } url - URL of webpage to open
-   * @param { object } params - GM parameters
-   * @returns { WindowProxy | null | void } `GM.openInTab` or `GM_openInTab` with `window.open` as a fallback
-   * @link https://violentmonkey.github.io/api/gm/#gm_openintab
-   * @link https://developer.mozilla.org/docs/Web/API/Window/open
-   */
-  open(
-    url,
-    params = {
-      active: true,
-      insert: true
-    },
-    features
-  ) {
-    if (!Supports.gm && isBlank(params)) {
-      params = '_blank';
-    }
-    if (features) {
-      return window.open(url, params, features);
-    }
-    if (Supports.gm) {
-      return isFN(GM.openInTab) ? GM.openInTab(url, params) : GM_openInTab(url, params);
-    }
-    return window.open(url, params);
+const qs = (selector, root) => {
+  try {
+    return (root || document).querySelector(selector);
+  } catch (ex) {
+    err(ex);
   }
+  return null;
 };
-MU.storage = {
-  getItem(key) {
-    return window.localStorage.getItem(key);
-  },
-  has(key) {
-    return !isNull(this.getItem(key));
-  },
-  setItem(key, value) {
-    window.localStorage.setItem(key, value);
-  },
-  remove(key) {
-    window.localStorage.removeItem(key);
-  },
-  /**
-   * Set value - Saves key to either GM managed storage or `window.localStorage`
-   * @param { string } key - Key to set the value of
-   * @param { object } v - Value of key
-   * @link https://violentmonkey.github.io/api/gm/#gm_setvalue
-   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
-   */
-  async setValue(key, v) {
-    v = typeof v === 'string' ? v : JSON.stringify(v ?? {});
-    if (Supports.gm) {
-      let GMType;
-      if (isFN(GM.setValue)) {
-        GMType = GM.setValue(key, v);
-      } else {
-        GMType = Promise.resolve(GM_setValue(key, v));
-      }
-      await GMType;
-    } else {
-      this.setItem(`MUJS-${key}`, v);
-    }
-  },
-  /**
-   * Get Value
-   * @link https://violentmonkey.github.io/api/gm/#gm_getvalue
-   * @link https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
-   */
-  async getValue(key, def = {}) {
-    try {
-      if (Supports.gm) {
-        let GMType;
-        if (isFN(GM.getValue)) {
-          GMType = await GM.getValue(key, JSON.stringify(def));
-        } else {
-          GMType = GM_getValue(key, JSON.stringify(def));
-        }
-        return JSON.parse(GMType);
-      }
-      return this.has(`MUJS-${key}`) ? JSON.parse(this.getItem(`MUJS-${key}`)) : def;
-    } catch (ex) {
-      err(ex);
-    }
+/**
+ * @type { import("../typings/UserJS.d.ts").qsA }
+ */
+const qsA = (selectors, root) => {
+  try {
+    return (root || document).querySelectorAll(selectors);
+  } catch (ex) {
+    err(ex);
   }
+  return [];
 };
-
 const sleazyRedirect = () => {
-  if (!/greasyfork\.org/.test(window.location.hostname) && cfg.sleazyredirect) {
+  const { hostname } = winLocation;
+  const gfSite = /greasyfork\.org/.test(hostname);
+  if (!gfSite && cfg.sleazyredirect) {
     return;
   }
-  const otherSite = /greasyfork\.org/.test(window.location.hostname) ? 'sleazyfork' : 'greasyfork';
-  qs('span.sign-in-link')
-    ? /scripts\/\d+/.test(window.location.href)
-      ? !qs('#script-info') && (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a'))
-        ? window.location.assign(
-            window.location.href.replace(
-              /\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/,
-              '//$1' + otherSite + '.org'
-            )
-          )
-        : false
-      : false
-    : false;
+  const otherSite = gfSite ? 'sleazyfork' : 'greasyfork';
+  if (!qs('span.sign-in-link')) {
+    return;
+  }
+  if (!/scripts\/\d+/.test(winLocation.href)) {
+    return;
+  }
+  if (
+    !qs('#script-info') &&
+    (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a'))
+  ) {
+    const str = winLocation.href.replace(
+      /\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/,
+      '//$1' + otherSite + '.org'
+    );
+    if (isFN(winLocation.assign)) {
+      winLocation.assign(str);
+    } else {
+      winLocation.href = str;
+    }
+  }
 };
-// #region Primary Function
-/**
- * @param { ShadowRoot | HTMLIFrameElement } injCon
- * @param { Document } doc
- */
-const primaryFN = (injCon, doc) => {
-  try {
-    const mujsRoot = make('mujs-root');
-    /**
-     * Inject CSS (Cascading Style Sheet Document) into `document.head`
-     * @param { string } css - CSS to inject
-     * @param { string } name - (optional) Name of stylesheet `mph-`
-     * @param { * } root - (optional) Custom `document.head` path
-     * @return { HTMLStyleElement | null } Style element
-     */
-    const loadCSS = (css, name = 'CSS', root = document) => {
-      /** @type {Element} */
-      let el;
-      try {
-        if (typeof css !== 'string') {
-          throw new Error('[loadCSS] "css" must be a typeof "String"');
-        }
-        if (typeof name !== 'string') {
-          throw new Error('[loadCSS] "name" must be a typeof "String"');
-        }
-        el = root || doc;
-        if (isBlank(css)) {
-          throw new Error(`[loadCSS] "${name}" contains empty CSS string`);
-        }
-        if (el.querySelector(`style[data-role="${name}"]`)) {
-          return el.querySelector(`style[data-role="${name}"]`);
-        }
-        const sty = make('style', `mujs-${name}`, {
-          textContent: css,
+const intersect = (a = [], b = []) => {
+  for (const v of a) {
+    if (b.includes(v)) {
+      return true;
+    }
+  }
+  for (const v of b) {
+    if (a.includes(v)) {
+      return true;
+    }
+  }
+  return false;
+};
+// #region Container
+class initContainer {
+  constructor(url) {
+    this.remove = this.remove.bind(this);
+    this.webpage = strToURL(url || window.location);
+    this.host = this.getHost(this.webpage.host);
+    this.domain = this.getDomain(this.webpage.host);
+    this.ready = false;
+    this.injected = false;
+    this.shadowRoot = undefined;
+    this.supported = isFN(make('main-userjs').attachShadow);
+    this.frame = this.supported
+      ? make('main-userjs', '', {
           dataset: {
-            insertedBy: 'userscript-plus',
-            role: name
+            insertedBy: MU.info.script.name,
+            role: 'primary-container'
+          }
+        })
+      : make('iframe', 'mujs-iframe', {
+          dataset: {
+            insertedBy: MU.info.script.name,
+            role: 'primary-iframe'
+          },
+          loading: 'lazy',
+          src: 'about:blank',
+          style:
+            'position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
+          onload: (iFrame) => {
+            /**
+             * @type { HTMLIFrameElement }
+             */
+            const target = iFrame.target;
+            if (!target.contentDocument) {
+              return;
+            }
+            this.shadowRoot = target.contentDocument.documentElement;
+            this.ready = true;
+            dom.cl.add([this.shadowRoot, target.contentDocument.body], 'mujs-iframe');
           }
         });
-        if (!isEmpty(el.shadowRoot)) {
-          el.shadowRoot.appendChild(sty);
+    if (this.supported) {
+      /**
+       * @type { ShadowRoot }
+       */
+      this.shadowRoot = this.frame.attachShadow({
+        mode: 'open',
+        clonable: false,
+        delegatesfocus: false
+      });
+      this.ready = true;
+    }
+    this.cache = memory.store.get('container');
+    this.userjsCache = memory.store.get('userjs');
+    this.root = make('mujs-root');
+    this.unsaved = false;
+    this.isBlacklisted = false;
+    this.rebuild = false;
+    this.counters = {
+      total: 0
+    };
+    this.opacityMin = '0.15';
+    this.opacityMax = '1';
+    this.Timeout = class {
+      constructor() {
+        this.ids = [];
+      }
+
+      set(delay, reason) {
+        return new Promise((resolve, reject) => {
+          const id = setTimeout(() => {
+            Object.is(reason, null) || Object.is(reason, undefined) ? resolve() : reject(reason);
+            this.clear(id);
+          }, delay);
+          this.ids.push(id);
+        });
+      }
+
+      clear(...ids) {
+        this.ids = this.ids.filter((id) => {
+          if (ids.includes(id)) {
+            clearTimeout(id);
+            return false;
+          }
+          return true;
+        });
+      }
+    };
+    window.addEventListener('beforeunload', this.remove);
+  }
+  /**
+   * @param { Function } callback
+   * @param { Document } doc
+   */
+  async inject(callback, doc) {
+    if (this.checkBlacklist(this.host)) {
+      err('Blacklisted website');
+      this.remove();
+      return;
+    }
+    if (!this.shadowRoot) {
+      return;
+    }
+    if (!doc) {
+      return;
+    }
+    while (this.ready === false) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    try {
+      doc.documentElement.appendChild(this.frame);
+      if (this.injected) {
+        return;
+      }
+      this.shadowRoot.append(this.root);
+      if (isNull(this.loadCSS(main_css, 'primary-stylesheet'))) {
+        throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
+      }
+      this.injected = true;
+      if (isFN(callback)) {
+        callback.call(this, this.shadowRoot);
+      }
+    } catch (ex) {
+      err(ex);
+      this.remove();
+    }
+  }
+  remove() {
+    memory.store.clear();
+    if (this.frame) {
+      this.frame.remove();
+    }
+  }
+  async save() {
+    this.unsaved = false;
+    await StorageSystem.setValue('Config', cfg);
+    info('Saved:', cfg);
+    return cfg;
+  }
+  /**
+   * @param { string } css - CSS to inject
+   * @param { string } name - Name of stylesheet
+   * @return { HTMLStyleElement } Style element
+   */
+  loadCSS(css, name = 'CSS') {
+    try {
+      if (typeof name !== 'string') {
+        throw new Error('"name" must be a typeof "string"', { cause: 'loadCSS' });
+      }
+      if (qs(`style[data-role="${name}"]`, this.root)) {
+        return qs(`style[data-role="${name}"]`, this.root);
+      }
+      if (typeof css !== 'string') {
+        throw new Error('"css" must be a typeof "string"', { cause: 'loadCSS' });
+      }
+      if (isBlank(css)) {
+        throw new Error(`"${name}" contains empty CSS string`, { cause: 'loadCSS' });
+      }
+      const parent = isEmpty(this.root.shadowRoot) ? this.root : this.root.shadowRoot;
+      if (isGM) {
+        let sty;
+        if (isFN(GM.addElement)) {
+          sty = GM.addElement(parent, 'style', {
+            textContent: css
+          });
+        } else if (isFN(GM_addElement)) {
+          sty = GM_addElement(parent, 'style', {
+            textContent: css
+          });
+        }
+        if (isElem(sty)) {
+          sty.dataset.insertedBy = MU.info.script.name;
+          sty.dataset.role = name;
+          return sty;
+        }
+      }
+      const sty = make('style', '', {
+        textContent: css,
+        dataset: {
+          insertedBy: MU.info.script.name,
+          role: name
+        }
+      });
+      parent.appendChild(sty);
+      return sty;
+    } catch (ex) {
+      err(ex);
+    }
+    return null;
+  }
+  checkBlacklist(str) {
+    str = str || this.host;
+    let blacklisted = false;
+    for (const b of normalizeTarget(cfg.blacklist)) {
+      if (typeof b === 'string') {
+        if (b.startsWith('userjs-')) {
+          const r = /userjs-(\w+)/.exec(b)[1];
+          const biList = builtinList[r];
+          if (isRegExp(biList)) {
+            if (!biList.test(str)) continue;
+            blacklisted = true;
+          } else if (isObj(biList) && biList.host === this.host) {
+            blacklisted = true;
+          }
+        }
+      } else if (isObj(b)) {
+        if (!b.enabled) {
+          continue;
+        }
+        if (b.regex === true) {
+          const reg = new RegExp(b.url, b.flags);
+          if (!reg.test(str)) continue;
+          blacklisted = true;
+        }
+        if (Array.isArray(b.url)) {
+          for (const c of b.url) {
+            if (!str.includes(c)) continue;
+            blacklisted = true;
+          }
+        }
+        if (!str.includes(b.url)) continue;
+        blacklisted = true;
+      }
+    }
+    this.isBlacklisted = blacklisted;
+    return blacklisted;
+  }
+  getInfo(url) {
+    const webpage = strToURL(url || this.webpage || window.location);
+    const host = this.getHost(webpage.host);
+    const domain = this.getDomain(webpage.host);
+    return {
+      domain,
+      host,
+      webpage
+    };
+  }
+  /**
+   * @template { string } S
+   * @param { S } str
+   * @returns { S }
+   */
+  getHost(str = '') {
+    return str.split('.').splice(-2).join('.');
+  }
+  /**
+   * @template { string } S
+   * @param { S } str
+   * @returns { S }
+   */
+  getDomain(str = '') {
+    return str.split('.').at(-2) ?? 'about:blank';
+  }
+  renderTheme(theme) {
+    theme = theme || cfg.theme;
+    if (theme === defcfg.theme) {
+      return;
+    }
+    const sty = this.root.style;
+    for (const [k, v] of Object.entries(theme)) {
+      const str = `--mujs-${k}`;
+      const prop = sty.getPropertyValue(str);
+      if (isEmpty(v)) {
+        theme[k] = prop;
+      }
+      if (prop === v) {
+        continue;
+      }
+      sty.removeProperty(str);
+      sty.setProperty(str, v);
+    }
+  }
+}
+const container = new initContainer();
+// #endregion
+// #region Primary Function
+function primaryFN() {
+  try {
+    const mouseTimeout = new container.Timeout();
+    const frameTimeout = new container.Timeout();
+
+    const urlBar = make('input', 'mujs-url-bar', {
+      autocomplete: 'off',
+      spellcheck: false,
+      type: 'text',
+      placeholder: i18n$('search_placeholder')
+    });
+    const mainbtn = make('count-frame', 'mainbtn', {
+      textContent: '0'
+    });
+    const rateContainer = make('mujs-column', 'rate-container');
+    const footer = make('mujs-row', 'mujs-footer');
+    const tabbody = make('tbody');
+    const toolbar = make('mujs-toolbar');
+    const table = make('table');
+    const tabhead = make('thead');
+    const header = make('mujs-header');
+    const tbody = make('mujs-body');
+    const cfgpage = make('mujs-row', 'mujs-cfg hidden');
+    const countframe = make('mujs-column');
+    const btnframe = make('mujs-column', 'btn-frame');
+    const exBtn = make('mujs-column', 'mujs-sty-flex hidden');
+    const fsearch = make('mujs-btn', 'hidden');
+    const exportCFG = make('mujs-btn', 'mujs-export', {
+      textContent: i18n$('export_config'),
+      dataset: {
+        command: 'export-cfg'
+      }
+    });
+    const importCFG = make('mujs-btn', 'mujs-import', {
+      textContent: i18n$('import_config'),
+      dataset: {
+        command: 'import-cfg'
+      }
+    });
+    const exportTheme = make('mujs-btn', 'mujs-export', {
+      textContent: i18n$('export_theme'),
+      dataset: {
+        command: 'export-theme'
+      }
+    });
+    const importTheme = make('mujs-btn', 'mujs-import', {
+      textContent: i18n$('import_theme'),
+      dataset: {
+        command: 'import-theme'
+      }
+    });
+    const btnHandles = make('mujs-column', 'btn-handles');
+    const btnHide = make('mujs-btn', 'hide-list', {
+      title: i18n$('min'),
+      innerHTML: iconSVG.load('hide'),
+      dataset: {
+        command: 'hide-list'
+      }
+    });
+    const btnfullscreen = make('mujs-btn', 'fullscreen', {
+      title: i18n$('max'),
+      innerHTML: iconSVG.load('fullscreen'),
+      dataset: {
+        command: 'fullscreen'
+      }
+    });
+    const main = make('mujs-main', 'hidden');
+    const urlContainer = make('mujs-url');
+    const closebtn = make('mujs-btn', 'close', {
+      title: i18n$('close'),
+      innerHTML: iconSVG.load('close'),
+      dataset: {
+        command: 'close'
+      }
+    });
+    const btncfg = make('mujs-btn', 'settings hidden', {
+      title: 'Settings',
+      innerHTML: iconSVG.load('cfg'),
+      dataset: {
+        command: 'settings'
+      }
+    });
+    const btnhome = make('mujs-btn', 'github hidden', {
+      title: `GitHub (v${
+        MU.info.script.version.includes('.') || MU.info.script.version.includes('Book')
+          ? MU.info.script.version
+          : MU.info.script.version.slice(0, 5)
+      })`,
+      innerHTML: iconSVG.load('gh'),
+      dataset: {
+        command: 'open-tab',
+        webpage: MU.info.script.namespace
+      }
+    });
+    const btnissue = make('mujs-btn', 'issue hidden', {
+      innerHTML: iconSVG.load('issue'),
+      title: i18n$('issue'),
+      dataset: {
+        command: 'open-tab',
+        webpage: MU.info.script.bugs
+      }
+    });
+    const btngreasy = make('mujs-btn', 'greasy hidden', {
+      title: 'Greasy Fork',
+      innerHTML: iconSVG.load('gf'),
+      dataset: {
+        command: 'open-tab',
+        webpage: 'https://greasyfork.org/scripts/421603'
+      }
+    });
+    const btnnav = make('mujs-btn', 'nav', {
+      title: 'Navigation',
+      innerHTML: iconSVG.load('nav'),
+      dataset: {
+        command: 'navigation'
+      }
+    });
+    const mainframe = make('mu-js', 'mainframe', {
+      style: `opacity: ${container.opacityMin};`
+    });
+    btnHandles.append(btnHide, btnfullscreen, closebtn);
+    btnframe.append(btnhome, btngreasy, btnissue, btncfg, btnnav);
+    toolbar.append(btnHandles);
+    urlContainer.append(urlBar);
+    header.append(urlContainer, rateContainer, countframe, btnframe);
+    tbody.append(table, cfgpage);
+    main.append(toolbar, header, tbody, footer);
+    mainframe.append(mainbtn);
+    exBtn.append(importCFG, importTheme, exportCFG, exportTheme);
+    header.append(exBtn);
+    container.root.append(mainframe, main);
+    for (const engine of cfg.engines) {
+      container.counters[engine.name] = 0;
+      if (!engine.enabled) {
+        continue;
+      }
+      const counter = make('count-frame', '', {
+        dataset: {
+          counter: engine.name
+        },
+        title: engine.url,
+        textContent: '0'
+      });
+      countframe.append(counter);
+    }
+    class Tabs {
+      constructor() {
+        this.Tab = new Map();
+        this.blank = 'about:blank';
+        this.protocal = 'mujs:';
+        this.protoReg = new RegExp(`${this.protocal}(.+)`);
+        this.el = {
+          add: make('mujs-addtab', '', {
+            textContent: '+',
+            dataset: {
+              command: 'new-tab'
+            }
+          }),
+          head: make('mujs-tabs')
+        };
+        this.el.head.append(this.el.add);
+        toolbar.append(this.el.head);
+      }
+      hasTab(...params) {
+        for (const p of params) {
+          if (!this.Tab.has(p)) {
+            return false;
+          }
+          const content = normalizeTarget(this.Tab.get(p)).filter((t) => p === t.dataset.host);
+          if (isBlank(content)) {
+            return false;
+          }
+        }
+        return true;
+      }
+      storeTab(host) {
+        const h = host ?? this.blank;
+        if (!this.Tab.has(h)) {
+          this.Tab.set(h, new Set());
+        }
+        return this.Tab.get(h);
+      }
+      cache(host, ...tabs) {
+        const h = host ?? this.blank;
+        const tabCache = this.storeTab(h);
+        for (const t of normalizeTarget(tabs)) {
+          if (tabCache.has(t)) {
+            continue;
+          }
+          tabCache.add(t);
+        }
+        this.Tab.set(h, tabCache);
+        return tabCache;
+      }
+      mujs(host) {
+        if (!host.startsWith(this.protocal)) {
+          return;
+        }
+        const type = host.match(this.protoReg)[1];
+        if (type === 'settings') {
+          dom.cl.remove([cfgpage, exBtn], 'hidden');
+          dom.cl.add(table, 'hidden');
+          if (!container.supported) {
+            dom.attr(container.frame, 'style', 'height: 100%;');
+          }
+        }
+      }
+      active(tab, build = true) {
+        for (const t of normalizeTarget(tab, false)) {
+          dom.cl.add([cfgpage, exBtn], 'hidden');
+          dom.cl.remove(table, 'hidden');
+          dom.cl.remove(qsA('mujs-tab', this.el.head), 'active');
+          dom.cl.add(t, 'active');
+          if (!build) {
+            continue;
+          }
+          const host = t.dataset.host ?? this.blank;
+          if (host === this.blank) {
+            MUJS.refresh();
+          } else if (host.startsWith(this.protocal)) {
+            this.mujs(host);
+          } else {
+            buildlist(host);
+          }
+        }
+      }
+      /** @param { HTMLElement } tab */
+      close(tab) {
+        for (const t of normalizeTarget(tab, false)) {
+          const host = t.dataset.host;
+          if (container.cache.has(host)) {
+            container.cache.delete(host);
+          }
+          if (dom.cl.has(t, 'active')) {
+            MUJS.refresh();
+          }
+          const sibling = t.previousElementSibling ?? t.nextElementSibling;
+          if (sibling) {
+            if (sibling.dataset.command !== 'new-tab') {
+              this.active(sibling);
+            }
+          }
+          if (this.Tab.has(host)) {
+            this.Tab.delete(host);
+          }
+          t.remove();
+        }
+      }
+      create(host = undefined) {
+        if (typeof host === 'string') {
+          if (host.startsWith(this.protocal) && this.hasTab(host)) {
+            this.active(this.Tab.get(host));
+            return;
+          }
+          const content = normalizeTarget(this.storeTab(host)).filter(
+            (t) => host === t.dataset.host
+          );
+          if (!isEmpty(content)) {
+            return;
+          }
+        }
+        const tab = make('mujs-tab', '', {
+          dataset: {
+            command: 'switch-tab'
+          },
+          style: `order: ${this.el.head.childElementCount};`
+        });
+        const tabClose = make('mu-js', '', {
+          dataset: {
+            command: 'close-tab'
+          },
+          title: i18n$('close'),
+          textContent: 'X'
+        });
+        const tabHost = make('mujs-host');
+        tab.append(tabHost, tabClose);
+        this.el.head.append(tab);
+        this.active(tab, false);
+        this.cache(host, tab);
+        if (isNull(host)) {
+          MUJS.refresh();
+          urlBar.placeholder = i18n$('newTab');
+          tab.dataset.host = this.blank;
+          tabHost.title = i18n$('newTab');
+          tabHost.textContent = i18n$('newTab');
+        } else if (host.startsWith(this.protocal)) {
+          const type = host.match(this.protoReg)[1];
+          tab.dataset.host = host || container.host;
+          tabHost.title = type || tab.dataset.host;
+          tabHost.textContent = tabHost.title;
+          this.mujs(host);
         } else {
-          el.appendChild(sty);
+          tab.dataset.host = host || container.host;
+          tabHost.title = host || container.host;
+          tabHost.textContent = tabHost.title;
         }
-        return sty;
-      } catch (ex) {
-        err(ex);
-      }
-      return null;
-    };
-    const injectedCore = loadCSS(main_css, 'primary-stylesheet', mujsRoot);
-    if (!injectedCore) {
-      throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
-    }
-    injCon.append(mujsRoot);
-    if (navigator.languages.length > 0) {
-      for (const nlang of navigator.languages) {
-        const lg = nlang.split('-')[0];
-        if (alang.indexOf(lg) === -1) {
-          alang.push(lg);
-        }
+        return tab;
       }
     }
-    if (!alang.includes(Language.navLang)) {
-      alang.push(Language.navLang);
-    }
-
-    const memory = new Memorize();
-    const memorized = memory.cache;
-    memory.create('cfg', 'container', 'userjs');
-
-    const getHost = (str = '') => {
-      return str.split('.').splice(-2).join('.');
-    };
-    const cfgMap = memorized.get('cfg');
+    const tab = new Tabs();
+    const cfgMap = memory.store.get('cfg');
     const rebuildCfg = () => {
-      for (const i of cfg.engines) {
-        if (cfgMap.has(i.name)) {
-          const inp = cfgMap.get(i.name);
-          inp.checked = i.enabled;
-          if (i.name === 'github') {
+      for (const engine of cfg.engines) {
+        if (cfgMap.has(engine.name)) {
+          const inp = cfgMap.get(engine.name);
+          inp.checked = engine.enabled;
+          if (engine.name === 'github') {
             const txt = cfgMap.get('github-token');
-            dom.prop(txt, 'value', i.token);
+            dom.prop(txt, 'value', engine.token);
           }
         }
       }
@@ -1251,470 +1598,627 @@ const primaryFN = (injCon, doc) => {
       }
       dom.prop(cfgMap.get('blacklist'), 'value', JSON.stringify(cfg.blacklist, null, ' '));
       dom.prop(cfgMap.get('theme'), 'value', JSON.stringify(cfg.theme, null, ' '));
-      renderTheme(cfg.theme);
+      container.renderTheme(cfg.theme);
     };
-    const ntHead = make('mujs-tabs');
-    const ntAdd = make('mujs-addtab', '', {
-      dataset: {
-        command: 'new-tab'
-      },
-      innerHTML: '+'
-    });
-    const activeTab = (tab) => {
-      dom.cl.remove(qsA('mujs-tab', ntHead), 'active');
-      dom.cl.add(tab, 'active');
-      if (tab.dataset.host === 'about:blank') {
-        MUJS.refresh();
+    const doInstallProcess = async (installLink) => {
+      if (isFN(winLocation.assign)) {
+        winLocation.assign(installLink.href);
       } else {
-        buildlist(tab.dataset.host);
+        winLocation.href = installLink.href;
       }
+      installLink.remove();
+      await init();
     };
-    /** @param { Element } tab */
-    const closeTab = (tab) => {
-      if (MUJS.cache.has(tab.dataset.host)) {
-        MUJS.cache.delete(tab.dataset.host);
-      }
-      if (dom.cl.has(tab, 'active')) {
-        MUJS.refresh();
-      }
-      const sibling = tab.previousElementSibling ?? tab.nextElementSibling;
-      if (sibling) {
-        if (sibling.dataset.command !== 'new-tab') {
-          activeTab(sibling);
+    // #region Main event handlers
+    ael(main, 'click', async (evt) => {
+      try {
+        /** @type { HTMLElement } */
+        const target = evt.target.closest('[data-command]');
+        if (!target) {
+          return;
         }
-      }
-      tab.remove();
-    };
-    const newTab = (host = undefined) => {
-      const tab = make('mujs-tab', '', {
-        dataset: {
-          command: 'switch-tab'
-        },
-        style: `order: ${ntHead.childElementCount};`
-      });
-      const tabClose = make('mu-js', '', {
-        dataset: {
-          command: 'close-tab'
-        },
-        innerHTML: 'X'
-      });
-      const tabHost = make('mujs-host');
-      tab.append(tabHost, tabClose);
-      ntHead.append(tab);
-      dom.cl.remove(qsA('mujs-tab', ntHead), 'active');
-      dom.cl.add(tab, 'active');
-
-      if (isNull(host)) {
-        MUJS.refresh();
-        tab.dataset.host = 'about:blank';
-        const siteSearcher = make('input', 'mujs-searcher', {
-          autocomplete: 'off',
-          spellcheck: false,
-          type: 'text',
-          placeholder: host || MUJS.host,
-          onchange(evt) {
-            evt.preventDefault();
-            const value = getHost(evt.target.value);
-            if (MUJS.checkBlacklist(value)) {
-              MUJS.showError(`Host blacklisted "${value}"`);
-              return;
+        const dataset = target.dataset;
+        const cmd = dataset.command;
+        if (cmd === 'install-script' && dataset.userjs) {
+          const dlBtn = make('a', '', {
+            onclick(evt) {
+              evt.preventDefault();
+              doInstallProcess(evt.target);
             }
-            tab.dataset.host = value;
-            tabHost.textContent = value;
-            buildlist(value);
-            siteSearcher.remove();
+          });
+          dlBtn.href = dataset.userjs;
+          dlBtn.click();
+        } else if (cmd === 'open-tab' && dataset.webpage) {
+          if (isGM) {
+            if (isFN(GM.openInTab)) {
+              return GM.openInTab(dataset.webpage);
+            } else if (isFN(GM_openInTab)) {
+              return GM_openInTab(dataset.webpage, {
+                active: true,
+                insert: true
+              });
+            }
           }
-        });
-        tabHost.append(siteSearcher);
-      } else {
-        tab.dataset.host = host || MUJS.host;
-        tabHost.textContent = host || MUJS.host;
-      }
-    };
-    const table = make('table');
-    const tabbody = make('tbody');
-    const tabhead = make('thead');
-    const mouseTimeout = new Timeout();
-    const main = make('mu-js', 'main hidden', {
-      onmouseenter(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        timeout.clear(...timeout.ids);
-        mouseTimeout.clear(...mouseTimeout.ids);
-        evt.target.style.opacity = '1';
-      },
-      async onmouseleave(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        const target = evt.target;
-        await mouseTimeout.set(2500);
-        target.style.opacity = '0.15';
-      },
-      // #region Event handler
-      async onclick(evt) {
-        try {
-          /** @type { Element } */
-          const target = evt.target.closest('[data-command]');
-          if (!target) {
+          return window.open(dataset.webpage, '_blank');
+        } else if (cmd === 'navigation') {
+          if (dom.cl.has(btngreasy, 'hidden')) {
+            dom.cl.remove([btncfg, btngreasy, btnhome, btnissue], 'hidden');
+          } else {
+            dom.cl.add([btncfg, btngreasy, btnhome, btnissue], 'hidden');
+          }
+        } else if (cmd === 'list-description') {
+          const arr = [];
+          const ignoreTags = new Set(['TD', 'MUJS-A', 'MU-JS']);
+          for (const node of target.parentElement.childNodes) {
+            if (ignoreTags.has(node.tagName)) {
+              continue;
+            }
+            if (node.tagName === 'TEXTAREA' && isEmpty(node.value)) {
+              continue;
+            }
+            arr.push(node);
+          }
+          if (target.nextElementSibling) {
+            arr.push(target.nextElementSibling);
+            if (target.nextElementSibling.nextElementSibling) {
+              arr.push(target.nextElementSibling.nextElementSibling);
+            }
+          }
+          if (dom.cl.has(arr[0], 'hidden')) {
+            dom.cl.remove(arr, 'hidden');
+          } else {
+            dom.cl.add(arr, 'hidden');
+          }
+        } else if (cmd === 'close') {
+          container.remove();
+        } else if (cmd === 'show-filter') {
+          dom.cl.toggle(fsearch, 'hidden');
+        } else if (cmd === 'fullscreen') {
+          if (dom.cl.has(btnfullscreen, 'expanded')) {
+            dom.cl.remove([btnfullscreen, main], 'expanded');
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsOpen'));
+          } else {
+            dom.cl.add([btnfullscreen, main], 'expanded');
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
+          }
+        } else if (cmd === 'hide-list') {
+          dom.cl.add(main, 'hidden');
+          dom.cl.remove(mainframe, 'hidden');
+          timeoutFrame();
+        } else if (cmd === 'save') {
+          if (!isNull(ghMsg)) {
+            ghMsg = null;
+            container.rebuild = true;
+            dom.prop(rateContainer, 'innerHTML', '');
+          }
+          if (!dom.prop(target, 'disabled')) {
+            container.save();
+            sleazyRedirect();
+            if (container.rebuild) {
+              container.cache.clear();
+              buildlist();
+            }
+            container.unsaved = false;
+            container.rebuild = false;
+          }
+        } else if (cmd === 'reset') {
+          cfg = defcfg;
+          dom.cl.remove(mainframe, 'error');
+          if (qs('.error', footer)) {
+            for (const elem of normalizeTarget(qsA('.error', footer))) {
+              elem.remove();
+            }
+          }
+          if (container.oldBlacklist) {
+            delete container.oldBlacklist;
+          }
+          container.unsaved = true;
+          container.rebuild = true;
+          rebuildCfg();
+        } else if (cmd === 'settings') {
+          if (container.unsaved) {
+            MUJS.showError('Unsaved changes');
+          }
+          tab.create('mujs:settings');
+          container.rebuild = false;
+        } else if (cmd === 'new-tab') {
+          tab.create();
+        } else if (cmd === 'switch-tab') {
+          tab.active(target);
+        } else if (cmd === 'close-tab' && target.parentElement) {
+          tab.close(target.parentElement);
+        } else if (cmd === 'download-userjs') {
+          if (!container.userjsCache.has(+dataset.userjs)) {
             return;
           }
-          const dataset = target.dataset;
-          const cmd = dataset.command;
-          if (cmd === 'open-tab' && dataset.webpage) {
-            MU.tab.open(dataset.webpage);
-          } else if (cmd === 'navigation') {
-            if (dom.cl.has(btngreasy, 'hidden')) {
-              dom.cl.remove([btngreasy, btnhome, btnissue], 'hidden');
-            } else {
-              dom.cl.add([btngreasy, btnhome, btnissue], 'hidden');
-            }
-          } else if (cmd === 'list-description') {
-            const arr = [];
-            const ignoreTags = new Set(['TD', 'MUJS-A', 'MU-JS']);
-            for (const node of target.parentElement.childNodes) {
-              if (ignoreTags.has(node.tagName)) {
-                continue;
-              }
-              if (node.tagName === 'TEXTAREA' && isEmpty(node.value)) {
-                continue;
-              }
-              arr.push(node);
-            }
-            if (target.nextElementSibling) {
-              arr.push(target.nextElementSibling);
-              if (target.nextElementSibling.nextElementSibling) {
-                arr.push(target.nextElementSibling.nextElementSibling);
-              }
-            }
-            if (dom.cl.has(arr[0], 'hidden')) {
-              dom.cl.remove(arr, 'hidden');
-            } else {
-              dom.cl.add(arr, 'hidden');
-            }
-          } else if (cmd === 'close') {
-            container.remove();
-          } else if (cmd === 'show-filter') {
-            dom.cl.toggle(fsearch, 'hidden');
-          } else if (cmd === 'fullscreen') {
-            if (dom.cl.has(btnfullscreen, 'expanded')) {
-              dom.cl.remove([btnfullscreen, main], 'expanded');
-              dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsOpen'));
-            } else {
-              dom.cl.add([btnfullscreen, main], 'expanded');
-              dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
-            }
-          } else if (cmd === 'hide-list') {
-            dom.cl.add(main, 'hidden');
-            dom.cl.remove(mainframe, 'hidden');
-            timeoutFrame();
-          } else if (cmd === 'save') {
-            // MUJS.refresh();
-            if (!isNull(legacyMsg)) {
-              legacyMsg = null;
-              MUJS.rebuild = true;
-              dom.prop(rateContainer, 'innerHTML', '');
-            }
-            if (!dom.prop(target, 'disabled')) {
-              MUJS.save();
-              sleazyRedirect();
-              if (MUJS.rebuild) {
-                MUJS.cache.clear();
-                buildlist();
-              }
-              MUJS.unsaved = false;
-              MUJS.rebuild = false;
-            }
-          } else if (cmd === 'reset') {
-            cfg = defcfg;
-            MUJS.unsaved = true;
-            MUJS.rebuild = true;
-            rebuildCfg();
-          } else if (cmd === 'settings') {
-            if (MUJS.unsaved) {
-              MUJS.showError('Unsaved changes');
-            }
-            if (dom.cl.has(cfgpage, 'hidden')) {
-              dom.cl.remove(cfgpage, 'hidden');
-              dom.cl.add(table, 'hidden');
-              if (!container.supported) {
-                dom.attr(container.frame, 'style', 'height: 100%;');
+          const dataUserJS = container.userjsCache.get(+dataset.userjs);
+          const txt = await reqCode(dataUserJS);
+          if (typeof txt !== 'string') {
+            return;
+          }
+          const makeUserJS = new Blob([txt], { type: 'text/plain' });
+          const dlBtn = make('a', 'mujs_Downloader');
+          dlBtn.href = URL.createObjectURL(makeUserJS);
+          dlBtn.download = `${dataset.userjsName ?? dataset.userjs}.user.js`;
+          dlBtn.click();
+          URL.revokeObjectURL(dlBtn.href);
+          dlBtn.remove();
+        } else if (cmd === 'load-userjs') {
+          if (!container.userjsCache.has(+dataset.userjs)) {
+            return;
+          }
+          const codeArea = qs('textarea', target.parentElement.parentElement);
+          if (!isEmpty(codeArea.value)) {
+            dom.cl.toggle(codeArea, 'hidden');
+            return;
+          }
+          const dataUserJS = container.userjsCache.get(+dataset.userjs);
+          const txt = await reqCode(dataUserJS);
+          if (typeof txt !== 'string') {
+            return;
+          }
+          codeArea.value = txt;
+          dom.cl.remove(codeArea, 'hidden');
+
+          const apTo = (name, elem) => {
+            if (isEmpty(dataUserJS[name])) {
+              const el = make('mujs-a', '', {
+                textContent: i18n$('listing_none')
+              });
+              elem.append(el);
+              if (name === 'antifeatures') {
+                dom.cl.add(elem, 'hidden');
               }
             } else {
-              dom.cl.add(cfgpage, 'hidden');
-              dom.cl.remove(table, 'hidden');
-              if (!container.supported) {
-                dom.attr(container.frame, 'style', '');
-              }
-            }
-            MUJS.rebuild = false;
-          } else if (cmd === 'new-tab') {
-            newTab();
-          } else if (cmd === 'switch-tab') {
-            dom.cl.add(cfgpage, 'hidden');
-            dom.cl.remove(table, 'hidden');
-            activeTab(target);
-          } else if (cmd === 'close-tab' && target.parentElement) {
-            closeTab(target.parentElement);
-          } else if (cmd === 'download-userjs') {
-            if (!MUJS.userjsCache.has(+dataset.userjs)) {
-              return;
-            }
-            const txt = await reqCode(MUJS.userjsCache.get(+dataset.userjs));
-            if (typeof txt !== 'string') {
-              return;
-            }
-            const makeUserJS = new Blob([txt], { type: 'text/plain' });
-            const dlBtn = make('a', 'mujs_Downloader');
-            dlBtn.href = URL.createObjectURL(makeUserJS);
-            dlBtn.download = 'test.user.js';
-            dlBtn.click();
-            URL.revokeObjectURL(dlBtn.href);
-            dlBtn.remove();
-          } else if (cmd === 'load-userjs') {
-            if (!MUJS.userjsCache.has(+dataset.userjs)) {
-              return;
-            }
-            const codeArea = qs('textarea', target.parentElement.parentElement);
-            if (!isEmpty(codeArea.value)) {
-              dom.cl.toggle(codeArea, 'hidden');
-              return;
-            }
-            const txt = await reqCode(MUJS.userjsCache.get(+dataset.userjs));
-            if (typeof txt !== 'string') {
-              return;
-            }
-            codeArea.value = txt;
-            dom.cl.remove(codeArea, 'hidden');
-          } else if (/export-/.test(cmd)) {
-            const str = JSON.stringify(cmd === 'export-cfg' ? cfg : cfg.theme, null, ' ');
-            const bytes = new TextEncoder().encode(str);
-            const blob = new Blob([bytes], { type: 'application/json;charset=utf-8' });
-            const dlBtn = make('a', 'mujs-exporter', {
-              href: URL.createObjectURL(blob),
-              download: `Magic_Userscript_${cmd === 'export-cfg' ? 'config' : 'theme'}.json`
-            });
-            dlBtn.click();
-            URL.revokeObjectURL(dlBtn.href);
-          } else if (/import-/.test(cmd)) {
-            if (qs('input', target.parentElement)) {
-              qs('input', target.parentElement).click();
-              return;
-            }
-            const inpJSON = make('input', 'hidden', {
-              type: 'file',
-              accept: '.json',
-              onchange: (evt) => {
-                try {
-                  [...evt.target.files].forEach((file) => {
-                    const reader = new FileReader();
-                    reader.readAsText(file);
-                    reader.onload = () => {
-                      const result = JSON.parse(reader.result);
-                      if (result.blacklist) {
-                        log(`Imported config: { ${file.name} }`, result);
-                        cfg = result;
-                        MUJS.unsaved = true;
-                        MUJS.rebuild = true;
-                        rebuildCfg();
-                        MUJS.save();
-                        sleazyRedirect();
-                        MUJS.cache.clear();
-                        buildlist();
-                        MUJS.unsaved = false;
-                        MUJS.rebuild = false;
-                      } else {
-                        log(`Imported theme: { ${file.name} }`, result);
-                        cfg.theme = result;
-                        renderTheme(cfg.theme);
-                      }
-                      inpJSON.remove();
-                    };
-                    reader.onerror = () => {
-                      MUJS.showError(reader.error);
-                      inpJSON.remove();
-                    };
+              for (const c of dataUserJS[name]) {
+                if (isObj(c)) {
+                  const el = make('mujs-a', '', {
+                    textContent: c.text
                   });
-                } catch (ex) {
-                  MUJS.showError(ex);
-                  inpJSON.remove();
+                  if (c.domain) {
+                    el.dataset.command = 'open-tab';
+                    el.dataset.webpage = `https://${c.text}`;
+                  }
+                  elem.append(el);
+                } else {
+                  const el = make('mujs-a', '', {
+                    textContent: c
+                  });
+                  elem.append(el);
                 }
               }
-            });
-            target.parentElement.append(inpJSON);
-            inpJSON.click();
+              if (name === 'antifeatures') {
+                dom.cl.remove(elem, 'hidden');
+              }
+            }
+          };
+          const matchElem = qs(
+            '[data-type="match-urls"] > .mujs-grants',
+            target.parentElement.parentElement
+          );
+          const grantElem = qs(
+            '[data-type="grants"] > .mujs-grants',
+            target.parentElement.parentElement
+          );
+          const afElem = qs(
+            '[data-type="antifeatures"] > .mujs-grants',
+            target.parentElement.parentElement
+          );
+          const sizeElem = qs(
+            '[data-type="size"] > .mujs-grants',
+            target.parentElement.parentElement
+          );
+          dom.prop([matchElem, grantElem, afElem, sizeElem], 'innerHTML', '');
+          apTo('code_match', matchElem);
+          apTo('code_grant', grantElem);
+          apTo('antifeatures', afElem);
+          apTo('code_size', sizeElem);
+        } else if (/export-/.test(cmd)) {
+          const str = JSON.stringify(cmd === 'export-cfg' ? cfg : cfg.theme, null, ' ');
+          const bytes = new TextEncoder().encode(str);
+          const blob = new Blob([bytes], { type: 'application/json;charset=utf-8' });
+          const dlBtn = make('a', 'mujs-exporter', {
+            href: URL.createObjectURL(blob),
+            download: `Magic_Userscript_${cmd === 'export-cfg' ? 'config' : 'theme'}.json`
+          });
+          dlBtn.click();
+          URL.revokeObjectURL(dlBtn.href);
+        } else if (/import-/.test(cmd)) {
+          if (qs('input', target.parentElement)) {
+            qs('input', target.parentElement).click();
+            return;
+          }
+          const inpJSON = make('input', 'hidden', {
+            type: 'file',
+            accept: '.json',
+            onchange(evt) {
+              try {
+                [...evt.target.files].forEach((file) => {
+                  const reader = new FileReader();
+                  reader.readAsText(file);
+                  reader.onload = () => {
+                    const result = JSON.parse(reader.result);
+                    if (result.blacklist) {
+                      log(`Imported config: { ${file.name} }`, result);
+                      cfg = result;
+                      container.unsaved = true;
+                      container.rebuild = true;
+                      rebuildCfg();
+                      container.save();
+                      sleazyRedirect();
+                      container.cache.clear();
+                      buildlist();
+                      container.unsaved = false;
+                      container.rebuild = false;
+                    } else {
+                      log(`Imported theme: { ${file.name} }`, result);
+                      cfg.theme = result;
+                      container.renderTheme(cfg.theme);
+                    }
+                    inpJSON.remove();
+                  };
+                  reader.onerror = () => {
+                    MUJS.showError(reader.error);
+                    inpJSON.remove();
+                  };
+                });
+              } catch (ex) {
+                MUJS.showError(ex);
+                inpJSON.remove();
+              }
+            }
+          });
+          target.parentElement.append(inpJSON);
+          inpJSON.click();
+        }
+      } catch (ex) {
+        MUJS.showError(ex);
+      }
+    });
+    ael(main, 'auxclick', (evt) => {
+      if (evt.button !== 1) {
+        return;
+      }
+      /** @type { HTMLElement } */
+      const target = evt.target.closest('[data-command]');
+      if (!target) {
+        return;
+      }
+      const dataset = target.dataset;
+      const cmd = dataset.command;
+      if (cmd === 'switch-tab' || cmd === 'close-tab') {
+        tab.close(target);
+      } else if (cmd === 'new-tab') {
+        tab.create();
+      }
+    });
+    if (!isMobile) {
+      const fade = async (target, type) => {
+        if (type === 'mouseenter') {
+          frameTimeout.clear(...frameTimeout.ids);
+          mouseTimeout.clear(...mouseTimeout.ids);
+          target.style.opacity = container.opacityMax;
+        } else if (type === 'mouseleave') {
+          await mouseTimeout.set(cfg.time);
+          target.style.opacity = container.opacityMin;
+        }
+      };
+      for (const e of ['mouseenter', 'mouseleave']) {
+        ael(main, e, (evt) => {
+          evt.preventDefault();
+          evt.stopPropagation();
+          fade(evt.target, evt.type);
+        });
+      }
+    }
+    // #endregion
+    const ContainerHandler = class {
+      constructor() {
+        this.showError = this.showError.bind(this);
+      }
+
+      checkBlacklist(str) {
+        if (container.checkBlacklist(str)) {
+          this.showError('Blacklisted');
+          timeoutFrame();
+          return true;
+        }
+        return false;
+      }
+
+      updateCounter(count, engine) {
+        container.counters[engine.name] += count;
+        container.counters.total += count;
+        this.updateCounters();
+      }
+
+      updateCounters() {
+        for (const [k, v] of Object.entries(container.counters)) {
+          if (k === 'total') {
+            continue;
+          }
+          if (qs(`count-frame[data-counter="${k}"]`, countframe)) {
+            dom.text(qs(`count-frame[data-counter="${k}"]`, countframe), v);
+          }
+        }
+        dom.text(mainbtn, container.counters.total);
+      }
+
+      makeError(...ex) {
+        const safe = safeSelf();
+        const error = make('mu-js', 'error');
+        let str = '';
+        for (const e of ex) {
+          str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message} ${e.stack ?? ''}`}\n`;
+          if (isObj(e)) {
+            if (e.notify) {
+              dom.cl.add(mainframe, 'error');
+            }
+          }
+        }
+        error.appendChild(safe.createTextNode(str));
+        footer.append(error);
+      }
+
+      showError(...ex) {
+        err(...ex);
+        this.makeError(...ex);
+      }
+
+      refresh() {
+        urlBar.placeholder = i18n$('newTab');
+        container.counters.total = 0;
+        for (const engine of cfg.engines) {
+          container.counters[engine.name] = 0;
+        }
+        this.updateCounters();
+        dom.prop([tabbody, rateContainer, footer], 'innerHTML', '');
+      }
+    };
+    const MUJS = new ContainerHandler();
+    const timeoutFrame = async (time) => {
+      time = time ?? cfg.time;
+      frameTimeout.clear(...frameTimeout.ids);
+      if (dom.cl.has(mainframe, 'hidden')) {
+        return;
+      }
+      if (typeof time === 'number' && !Number.isNaN(time)) {
+        await frameTimeout.set(container.isBlacklisted ? time / 2 : time);
+      } else {
+        await frameTimeout.set(10000);
+      }
+      container.remove();
+      return frameTimeout.clear(...frameTimeout.ids);
+    };
+    /**
+     * @param { string } code
+     */
+    const get_meta_block = (code) => {
+      if (isEmpty(code)) {
+        return null;
+      }
+      const start_block = code.indexOf(META_START_COMMENT);
+      if (isNull(start_block)) {
+        return null;
+      }
+      const end_block = code.indexOf(META_END_COMMENT, start_block);
+      if (isNull(end_block)) {
+        return null;
+      }
+      return code.substring(start_block + META_START_COMMENT.length, end_block);
+    };
+    /**
+     * @param { string } code
+     */
+    const parse_meta = (code) => {
+      if (isEmpty(code)) {
+        return null;
+      }
+      const meta = {};
+      const meta_block = get_meta_block(code);
+      const meta_block_map = new Map();
+      for (const meta_line of meta_block.split('\n')) {
+        const meta_match = meta_line.match(/\/\/\s+@([a-zA-Z:-]+)\s+(.*)/);
+        if (isNull(meta_match)) {
+          continue;
+        }
+        const key = meta_match[1].trim();
+        const value = meta_match[2].trim();
+        if (!meta_block_map.has(key)) {
+          meta_block_map.set(key, []);
+        }
+        const meta_map = meta_block_map.get(key);
+        meta_map.push(value);
+        meta_block_map.set(key, meta_map);
+      }
+      for (const [key, value] of meta_block_map) {
+        if (value.length > 1) {
+          meta[key] = value;
+        } else {
+          meta[key] = value[0];
+        }
+      }
+      return meta;
+    };
+    /**
+     * @template { string } S
+     * @param { S } code
+     * @returns { S[] }
+     */
+    const calculate_applies_to_names = (code) => {
+      if (isEmpty(code)) {
+        return null;
+      }
+      const meta = parse_meta(code);
+      let patterns = [];
+      for (const [k, v] of Object.entries(meta)) {
+        if (/include|match/.test(k)) {
+          if (Array.isArray(v)) {
+            patterns = patterns.concat(v);
+          } else {
+            patterns = patterns.concat([v]);
+          }
+        }
+      }
+      if (isEmpty(patterns)) {
+        return [];
+      }
+      if (intersect(patterns, APPLIES_TO_ALL_PATTERNS)) {
+        return [];
+      }
+      const name_set = new Set();
+      const addObj = (obj) => {
+        if (name_set.has(obj)) {
+          return;
+        }
+        name_set.add(obj);
+      };
+      for (let p of patterns) {
+        try {
+          const original_pattern = p;
+          let pre_wildcards = [];
+          if (p.match(/^\/(.*)\/$/)) {
+            pre_wildcards = [p];
+          } else {
+            let m = p.match(/^\*(https?:.*)/i);
+            if (!isNull(m)) {
+              p = m[1];
+            }
+            p = p
+              .replace(/^\*:/i, 'http:')
+              .replace(/^\*\/\//i, 'http://')
+              .replace(/^http\*:/i, 'http:')
+              .replace(/^(https?):([^/])/i, '$1://$2');
+            m = p.match(/^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i);
+            if (!isNull(m)) {
+              p = m[1] + m[2];
+            }
+            m = p.match(/^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i);
+            if (!isNull(m)) {
+              p = `http://${m[1]}`;
+            }
+            m = p.match(/^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i);
+            if (!isNull(m)) {
+              p = `http://${m[1]}`;
+            }
+            m = p.match(/^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/);
+            if (!isNull(m)) {
+              if (m[2].match(/A([0-9]+\.){2,}z/)) {
+                p = `${m[1]}tld${m[3]}`;
+                pre_wildcards = [p.split('*')[0]];
+              } else {
+                pre_wildcards = [p];
+              }
+            } else {
+              pre_wildcards = [p];
+            }
+          }
+          for (const pre_wildcard of pre_wildcards) {
+            try {
+              const urlObj = new URL(pre_wildcard);
+              const { host } = urlObj;
+              if (isNull(host)) {
+                addObj({ text: original_pattern, domain: false, tld_extra: false });
+              } else if (!host.includes('.') && host.includes('*')) {
+                addObj({ text: original_pattern, domain: false, tld_extra: false });
+              } else if (host.endsWith('.tld')) {
+                for (let i = 0; i < TLD_EXPANSION.length; i++) {
+                  const tld = TLD_EXPANSION[i];
+                  addObj({
+                    text: host.replace(/tld$/i, tld),
+                    domain: true,
+                    tld_extra: i != 0
+                  });
+                }
+              } else if (host.endsWith('.')) {
+                addObj({
+                  text: host.slice(0, -1),
+                  domain: true,
+                  tld_extra: false
+                });
+              } else {
+                addObj({
+                  text: host,
+                  domain: true,
+                  tld_extra: false
+                });
+              }
+              // eslint-disable-next-line no-unused-vars
+            } catch (ex) {
+              addObj({ text: original_pattern, domain: false, tld_extra: false });
+            }
           }
         } catch (ex) {
           err(ex);
         }
       }
-      // #endregion
-    });
-    const tbody = make('mu-js', 'mujs-body');
-    const header = make('mu-js', 'mujs-header-prim');
-    const footer = make('mujs-row', 'mujs-footer');
-    const cfgpage = make('mujs-row', 'mujs-cfg hidden');
-    const countframe = make('mujs-column');
-    const btnframe = make('mujs-column');
-    const btnHandles = make('mujs-column', 'btn-handles');
-    const gfcounter = make('count-frame', '', {
-      dataset: {
-        counter: 'gsfork'
-      },
-      title: 'https://greasyfork.org + https://sleazyfork.org'
-    });
-    const sfcounter = make('count-frame', '', {
-      dataset: {
-        counter: 'custom'
-      },
-      title: 'https://openuserjs.org'
-    });
-    const fsearch = make('mujs-btn', 'hidden');
-    const mainbtn = make('count-frame', 'mainbtn', {
-      innerHTML: '0'
-    });
-    const rateContainer = make('mujs-column', 'rate-container');
-    const ContainerHandler = class {
-      constructor() {
-        this.showError = this.showError.bind(this);
-        this.cleanup = this.cleanup.bind(this);
-        try {
-          // Unsure if `window.location` would be better
-          this.webpage = new URL(window.top.document.location.href);
-        } catch (ex) {
-          err(ex, { cause: 'ContainerHandler' });
-          this.webpage = window.location;
-        }
-        this.host = getHost(this.webpage.hostname);
-        this.cache = memorized.get('container');
-        this.userjsCache = memorized.get('userjs');
-        this.unsaved = false;
-        this.isBlacklisted = false;
-        this.rebuild = false;
-        this.forkCount = 0;
-        this.customCount = 0;
-
-        ael(window.self ?? window, 'beforeunload', this.cleanup);
-      }
-
-      checkBlacklist(str) {
-        str = str || this.host;
-        let blacklisted = false;
-        for (const b of cfg.blacklist.filter((b) => b.enabled)) {
-          if (b.regex === true) {
-            const reg = new RegExp(b.url, b.flags);
-            if (!reg.test(str)) continue;
-            blacklisted = true;
-          }
-          if (Array.isArray(b.url)) {
-            for (const c of b.url) {
-              if (!str.includes(c)) continue;
-              blacklisted = true;
-            }
-          }
-          if (!str.includes(b.url)) continue;
-          blacklisted = true;
-        }
-        if (blacklisted) {
-          this.showError('Blacklisted');
-          timeoutFrame();
-        }
-        this.isBlacklisted = blacklisted;
-        return blacklisted;
-      }
-
-      addCustomCnt(cnt) {
-        this.customCount += cnt;
-        this.updateCounters();
-      }
-
-      addForkCnt(cnt) {
-        this.forkCount += cnt;
-        this.updateCounters();
-      }
-
-      updateCounters() {
-        dom.prop(sfcounter, 'innerHTML', this.customCount);
-        dom.prop(gfcounter, 'innerHTML', this.forkCount);
-        dom.prop(mainbtn, 'innerHTML', this.customCount + this.forkCount);
-      }
-
-      save() {
-        this.unsaved = false;
-        MU.storage.setValue('Config', cfg);
-        info('Saved:', cfg);
-      }
-
-      showError(...ex) {
-        err(...ex);
-        const error = make('mu-js', 'error');
-        let str = '';
-        for (const e of ex) {
-          str += `${typeof e === 'string' ? e : `${e.message} ${e.stack}`}\n`;
-        }
-        error.appendChild(document.createTextNode(str));
-        footer.append(error);
-      }
-
-      refresh() {
-        this.forkCount = 0;
-        this.customCount = 0;
-        this.updateCounters();
-        dom.prop([tabbody, rateContainer, footer], 'innerHTML', '');
-      }
-
-      cleanup() {
-        this.cache.clear();
-      }
+      return [...name_set];
     };
-    const MUJS = new ContainerHandler();
-    const timeout = new Timeout();
-    const timeoutFrame = async () => {
-      timeout.clear(...timeout.ids);
-      if (dom.cl.has(mainframe, 'hidden')) {
-        return;
-      }
-      if (typeof cfg.time === 'number' && !Number.isNaN(cfg.time)) {
-        await timeout.set(MUJS.isBlacklisted ? cfg.time / 2 : cfg.time);
-      } else {
-        await timeout.set(10000);
-      }
-      container.remove();
-      return timeout.clear(...timeout.ids);
-    };
-    const renderTheme = (theme) => {
-      theme = theme || cfg.theme;
-      if (theme === defcfg.theme) {
-        return;
-      }
-      const sty = mujsRoot.style;
-      for (const [k, v] of Object.entries(theme)) {
-        const str = `--mujs-${k}`;
-        const prop = sty.getPropertyValue(str);
-        if (isEmpty(v)) {
-          theme[k] = prop;
-        }
-        if (prop === v) {
-          continue;
-        }
-        sty.removeProperty(str);
-        sty.setProperty(str, v);
-      }
-    };
-    const reqCode = async (obj = {}) => {
+    const reqCode = async (obj = {}, translate = false) => {
       if (obj.code_data) {
         return obj.code_data;
       }
-      const txt = await Network.req(obj.code_url, 'GET', 'text').catch(MUJS.showError);
-      if (typeof txt !== 'string') {
-        return;
-      }
-      if (isNull(txt.match(/\/\/\s@[\w][\s\S]+/g))) {
+      /** @type { string } */
+      const code = await Network.req(obj.code_url, 'GET', 'text').catch(MUJS.showError);
+      if (typeof code !== 'string') {
         return;
       }
       Object.assign(obj, {
-        code_data: txt
+        code_data: code,
+        code_size: [Network.format(code.length)],
+        code_match: [],
+        code_grant: [],
+        antifeatures: []
       });
-      return txt;
+      const grantSet = new Set();
+      const afSet = new Set();
+      const meta = parse_meta(code);
+      const applies_to_names = calculate_applies_to_names(code);
+      for (const [key, value] of Object.entries(meta)) {
+        if (/grant/.test(key)) {
+          for (const v of normalizeTarget(value, false)) {
+            if (grantSet.has(v)) {
+              continue;
+            }
+            grantSet.add(v);
+          }
+        } else if (/antifeature/.test(key)) {
+          for (const v of normalizeTarget(value, false)) {
+            if (afSet.has(v)) {
+              continue;
+            }
+            afSet.add(v);
+          }
+        }
+      }
+      Object.assign(obj, {
+        code_match: applies_to_names,
+        code_grant: [...grantSet],
+        antifeatures: [...afSet]
+      });
+      if (translate) {
+        const headers = code.match(/\/\/\s*@[\w][\s\S]+/g);
+        if (isNull(headers)) {
+          return code;
+        }
+        for (const lng of language.cache) {
+          const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
+          const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
+          if (!isNull(findName)) {
+            Object.assign(obj, {
+              name: findName[1],
+              translated: true
+            });
+          }
+          if (!isNull(findDesc)) {
+            Object.assign(obj, {
+              description: findDesc[1],
+              translated: true
+            });
+          }
+        }
+      }
+      return code;
     };
     const template = {
       id: 0,
@@ -1737,6 +2241,66 @@ const primaryFN = (injCon, doc) => {
         }
       ]
     };
+    const mergeTemplate = (obj = {}) => {
+      for (const key in template) {
+        if (hasOwn(obj, key)) continue;
+        obj[key] = template[key];
+      }
+      return obj;
+    };
+    const mkList = (txt = '', obj = {}) => {
+      if (!obj.root || !obj.type) {
+        return;
+      }
+      const { root, type } = obj;
+      const list = obj.list ?? [];
+      const appliesTo = make('mu-js', 'mujs-list', {
+        textContent: `${txt}: `
+      });
+      const applyList = make('mu-js', 'mujs-grants');
+      const ujsURLs = make('mujs-column', 'mujs-list', {
+        dataset: {
+          el: 'matches',
+          type
+        }
+      });
+      ujsURLs.append(appliesTo, applyList);
+      root.append(ujsURLs);
+      if (isEmpty(list)) {
+        const elem = make('mujs-a', '', {
+          textContent: i18n$('listing_none')
+        });
+        applyList.append(elem);
+        if (type === 'antifeatures') {
+          dom.cl.add(ujsURLs, 'hidden');
+        }
+        return;
+      }
+      for (const c of list) {
+        if (isObj(c)) {
+          const elem = make('mujs-a', '', {
+            textContent: c.text
+          });
+          if (c.domain) {
+            elem.dataset.command = 'open-tab';
+            elem.dataset.webpage = `https://${c.text}`;
+          }
+          applyList.append(elem);
+        } else {
+          const elem = make('mujs-a', '', {
+            textContent: c
+          });
+          applyList.append(elem);
+        }
+      }
+      if (type === 'antifeatures') {
+        dom.cl.remove(ujsURLs, 'hidden');
+      }
+    };
+    const toLocaleDate = (str = '') => {
+      return new Intl.DateTimeFormat(navigator.language).format(new Date(str));
+    };
+    // #region Create UserJS
     const createjs = (ujs, engine) => {
       for (const key in template) {
         if (hasOwn(ujs, key)) continue;
@@ -1746,89 +2310,103 @@ const primaryFN = (injCon, doc) => {
       if (ujs.id === 421603) {
         return;
       }
-      if (!MUJS.userjsCache.has(ujs.id)) {
-        MUJS.userjsCache.set(ujs.id, ujs);
+      if (!container.userjsCache.has(ujs.id)) {
+        container.userjsCache.set(ujs.id, ujs);
       }
       const eframe = make('td', 'install-btn');
       const uframe = make('td', 'mujs-uframe');
       const fdaily = make('td', 'mujs-list', {
-        innerHTML: ujs.daily_installs
+        textContent: ujs.daily_installs
       });
       const fupdated = make('td', 'mujs-list', {
-        innerHTML: new Intl.DateTimeFormat(navigator.language).format(new Date(ujs.code_updated_at))
+        textContent: toLocaleDate(ujs.code_updated_at)
       });
       const fname = make('td', 'mujs-name');
+      const fmore = make('mujs-column', 'mujs-list hidden', {
+        dataset: {
+          el: 'more-info'
+        }
+      });
+      const fBtns = make('mujs-column', 'mujs-list hidden');
+      const jsInfo = make('mujs-row', 'mujs-list');
+      const jsInfoB = make('mujs-row', 'mujs-list');
+      const ratings = make('mujs-column', 'mujs-list');
       const ftitle = make('mujs-a', 'mujs-homepage', {
-        innerHTML: ujs.name,
+        textContent: ujs.name,
         title: ujs.url,
         dataset: {
           command: 'open-tab',
           webpage: ujs.url
         }
       });
-      const fmore = make('mujs-column', 'mujs-list hidden');
       const fver = make('mu-js', 'mujs-list', {
-        innerHTML: `${lang.version}: ${ujs.version}`
+        textContent: `${i18n$('version_number')}: ${ujs.version}`
       });
       const fcreated = make('mu-js', 'mujs-list', {
-        innerHTML: `${lang.created}: ${new Intl.DateTimeFormat(navigator.language).format(
-          new Date(ujs.created_at)
-        )}`
+        textContent: `${i18n$('created_date')}: ${toLocaleDate(ujs.created_at)}`
       });
       const flicense = make('mu-js', 'mujs-list', {
-        title: ujs.license ?? 'Not licensed',
-        innerHTML: `License: ${ujs.license ?? 'N/A'}`,
+        title: ujs.license ?? i18n$('no_license'),
+        textContent: `${i18n$('license')}: ${ujs.license ?? i18n$('no_license')}`,
         style:
           'text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: fit-content; max-width: 20em;'
       });
       const ftotal = make('mu-js', 'mujs-list', {
-        innerHTML: `${lang.total}: ${ujs.total_installs}`
+        textContent: `${i18n$('total_installs')}: ${ujs.total_installs}`
       });
       const fratings = make('mu-js', 'mujs-list', {
-        title: lang.rating,
-        innerHTML: `${lang.rating}:`
+        title: i18n$('ratings'),
+        textContent: `${i18n$('ratings')}:`
       });
       const fgood = make('mu-js', 'mujs-list mujs-ratings', {
-        title: lang.good,
-        innerHTML: ujs.good_ratings,
-        style:
-          'border-color: rgb(51, 155, 51); background-color: #339b331a; color: rgb(51, 255, 51);'
+        title: i18n$('good'),
+        textContent: ujs.good_ratings,
+        dataset: {
+          el: 'good'
+        }
       });
       const fok = make('mu-js', 'mujs-list mujs-ratings', {
-        title: lang.ok,
-        innerHTML: ujs.ok_ratings,
-        style:
-          'border-color: rgb(155, 155, 0); background-color: #9b9b001a; color: rgb(255, 255, 0);'
+        title: i18n$('ok'),
+        textContent: ujs.ok_ratings,
+        dataset: {
+          el: 'ok'
+        }
       });
       const fbad = make('mu-js', 'mujs-list mujs-ratings', {
-        title: lang.bad,
-        innerHTML: ujs.bad_ratings,
-        style: 'border-color: rgb(155, 0, 0); background-color: #9b33331a; color: rgb(255, 0, 0);'
+        title: i18n$('bad'),
+        textContent: ujs.bad_ratings,
+        dataset: {
+          el: 'bad'
+        }
       });
       const fdesc = make('mu-js', 'mujs-list mujs-pointer', {
         title: ujs.description,
-        innerHTML: ujs.description,
+        textContent: ujs.description,
         dataset: {
           command: 'list-description'
         }
       });
-      const fdwn = make('mu-jsbtn', 'install', {
-        innerHTML: `${iconSVG.load('install')} ${lang.install}`,
-        title: `${lang.install} "${ujs.name}"`,
+      const scriptInstall = make('mu-jsbtn', 'install', {
+        innerHTML: `${iconSVG.load('install')} ${i18n$('install')}`,
+        title: `${i18n$('install')} "${ujs.name}"`,
         dataset: {
-          command: 'open-tab',
-          webpage: ujs.code_url
+          command: 'install-script',
+          userjs: ujs.code_url
         }
       });
-      const fBtns = make('mujs-column', 'mujs-list hidden');
-      const dwnCode = make('mu-jsbtn', '', {
-        innerHTML: `${iconSVG.load('install')} ${lang.saveFile}`,
+      const scriptDownload = make('mu-jsbtn', '', {
+        innerHTML: `${iconSVG.load('install')} ${i18n$('saveFile')}`,
         dataset: {
           command: 'download-userjs',
-          userjs: ujs.id
+          userjs: ujs.id,
+          userjsName: ujs.name
         }
       });
-      const tr = make('tr', 'frame');
+      const tr = make('tr', 'frame', {
+        dataset: {
+          scriptId: ujs.id
+        }
+      });
       const codeArea = make('textarea', 'code-area hidden', {
         dataset: {
           name: 'code'
@@ -1839,7 +2417,7 @@ const primaryFN = (injCon, doc) => {
         wrap: 'soft'
       });
       const loadCode = make('mu-jsbtn', '', {
-        innerHTML: `${iconSVG.load('search')} ${lang.codePreview}`,
+        innerHTML: `${iconSVG.load('search')} ${i18n$('preview_code')}`,
         dataset: {
           command: 'load-userjs',
           userjs: ujs.id
@@ -1850,10 +2428,6 @@ const primaryFN = (injCon, doc) => {
         if (!engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.url)) {
           tr.dataset.good = 'upsell';
         }
-      }
-      // cfg.codePreview &&
-      if (ujs.code_data) {
-        codeArea.value = ujs.code_data;
       }
       for (const u of ujs.users) {
         const user = make('mujs-a', '', {
@@ -1873,41 +2447,75 @@ const primaryFN = (injCon, doc) => {
       if (engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.id)) {
         tr.dataset.good = 'upsell';
       }
-      eframe.append(fdwn);
-      fmore.append(ftotal, fratings, fgood, fok, fbad, fver, fcreated, flicense);
-      fBtns.append(dwnCode, loadCode);
+      eframe.append(scriptInstall);
+      ratings.append(fratings, fgood, fok, fbad);
+      jsInfo.append(ftotal, ratings, fver, fcreated);
+      mkList('Size', {
+        list: ujs.code_size,
+        type: 'size',
+        root: jsInfo
+      });
+
+      jsInfoB.append(flicense);
+      mkList(i18n$('antifeatures'), {
+        list: ujs.antifeatures,
+        type: 'antifeatures',
+        root: jsInfoB
+      });
+      mkList(i18n$('applies_to'), {
+        list: ujs.code_match,
+        type: 'match-urls',
+        root: jsInfoB
+      });
+      mkList('@grant', {
+        list: ujs.code_grant,
+        type: 'grants',
+        root: jsInfoB
+      });
+      fmore.append(jsInfo, jsInfoB);
+      fBtns.append(scriptDownload, loadCode);
       fname.append(ftitle, fdesc, fmore, fBtns, codeArea);
+
+      if (ujs.code_data) {
+        codeArea.value = ujs.code_data;
+      }
 
       for (const e of [fname, uframe, fdaily, fupdated, eframe]) {
         tr.append(e);
       }
       tabbody.append(tr);
     };
+    // #endregion
     //#region Build List
     const buildlist = async (host = undefined) => {
       try {
         if (isEmpty(host)) {
-          host = MUJS.host;
+          host = container.host;
         }
-        if (!qs(`mujs-tab[data-host="${host}"]`, ntHead)) {
-          newTab(host);
+        if (container.oldBlacklist) {
+          MUJS.makeError({ message: i18n$('legacy'), cause: 'Blacklist outdated', notify: true });
+          return;
         }
-        MUJS.refresh();
         if (MUJS.checkBlacklist(host)) {
           return;
         }
-        if (!MUJS.cache.has(host)) {
+        if (!isNull(ghMsg)) {
+          const txt = make('mujs-row', 'legacy-config', {
+            textContent: ghMsg
+          });
+          rateContainer.append(txt);
+          return;
+        }
+        MUJS.refresh();
+        if (!container.cache.has(host)) {
           const engineTemplate = {};
           for (const engine of cfg.engines) {
             engineTemplate[engine.name] = [];
           }
-          MUJS.cache.set(host, engineTemplate);
+          container.cache.set(host, engineTemplate);
         }
-        const engines = cfg.engines.filter((e) => e.enabled);
-        const cache = MUJS.cache.get(host);
-        const customRecords = [];
         const isSupported = (name) => {
-          for (const [k, v] of Object.entries(unsupported)) {
+          for (const [k, v] of Object.entries(engineUnsupported)) {
             if (k !== name) {
               continue;
             }
@@ -1917,17 +2525,31 @@ const primaryFN = (injCon, doc) => {
           }
           return true;
         };
-        info('Building list', { cache, MUJS, engines, allCache: MUJS.cache });
-        if (!isNull(legacyMsg)) {
-          const txt = make('mujs-row', 'legacy-config', {
-            innerHTML: legacyMsg
-          });
-          rateContainer.append(txt);
+        const engines = cfg.engines.filter((e) => e.enabled && isSupported(e.name));
+        // Fully hide when on a unsupported site.
+        if (isEmpty(engines)) {
+          container.opacityMin = '0';
+          mainframe.style.opacity = container.opacityMin;
           return;
         }
+        const cache = container.cache.get(host);
+        const customRecords = [];
+
+        info('Building list', { cache, MUJS, engines });
+
+        const initUserJS = async (ujs, engine) => {
+          if (cfg.codePreview && !ujs.code_data) {
+            await reqCode(ujs);
+          }
+          createjs(ujs, engine);
+        };
         for (const engine of engines) {
-          if (!isSupported(engine.name)) {
-            MUJS.showError(`Search engine "${engine.name}" does not support this host`);
+          const cEngine = cache[`${engine.name}`];
+          if (!isEmpty(cEngine)) {
+            for (const ujs of cEngine) {
+              createjs(ujs, engine.name);
+            }
+            MUJS.updateCounter(cEngine.length, engine);
             continue;
           }
           const forkFN = async (data) => {
@@ -1935,157 +2557,90 @@ const primaryFN = (injCon, doc) => {
               return;
             }
             const hideData = [];
+            const inUserLanguage = (d) => {
+              const dlocal = d.locale.split('-')[0] ?? d.locale;
+              if (language.cache.includes(dlocal)) {
+                return true;
+              }
+              hideData.push(d);
+              return false;
+            };
             const filterLang = data.filter((d) => {
               if (d.deleted) {
                 return false;
               }
-              if (cfg.filterlang) {
-                const dlocal = d.locale.split('-')[0] ?? d.locale;
-                if (alang.includes(dlocal)) {
-                  return true;
-                }
-                hideData.push(d);
+              if (cfg.filterlang && !inUserLanguage(d)) {
                 return false;
               }
               return true;
             });
             let finalList = filterLang;
-
             const hds = [];
-            for (const h of hideData) {
-              const txt = await reqCode(h);
-              if (typeof txt !== 'string') {
-                continue;
-              }
-              const headers = txt.match(/\/\/\s@[\w][\s\S]+/g);
-              if (isNull(headers)) {
-                continue;
-              }
-              for (const lng of alang) {
-                const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-                const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(
-                  headers[0]
-                );
-                if (!isNull(findName)) {
-                  Object.assign(h, {
-                    name: findName[1],
-                    translated: true
-                  });
-                }
-                if (!isNull(findDesc)) {
-                  Object.assign(h, {
-                    description: findDesc[1],
-                    translated: true
-                  });
-                }
-              }
-              if (h.translated) {
-                hds.push(h);
+            for (const ujs of hideData) {
+              await reqCode(ujs);
+              if (ujs.translated) {
+                hds.push(ujs);
               }
             }
             finalList = [...new Set([...hds, ...filterLang])];
 
             for (const ujs of finalList) {
-              if (cfg.codePreview && !ujs.code_data) {
-                await reqCode(ujs);
-              }
-              createjs(ujs, engine.name);
+              initUserJS(ujs, engine.name);
             }
             cache[engine.name].push(...finalList);
-            MUJS.addForkCnt(finalList.length);
+            MUJS.updateCounter(finalList.length, engine);
           };
           const customFN = async (htmlDocument) => {
-            if (!htmlDocument) {
-              return;
-            }
-            const selected = htmlDocument.documentElement;
-            if (qs('.col-sm-8 .tr-link', selected)) {
-              for (const i of qsA('.col-sm-8 .tr-link', selected)) {
-                await query('.script-version', i);
-                const fixurl = dom
-                  .prop(qs('.tr-link-a', i), 'href')
-                  .replace(new RegExp(document.location.origin, 'gi'), 'https://openuserjs.org');
-                const layout = {
-                  name: dom.text(qs('.tr-link-a', i)),
-                  description: dom.text(qs('p', i)),
-                  version: dom.text(qs('.script-version', i)),
-                  url: fixurl,
-                  code_url: `${fixurl.replace(/\/scripts/gi, '/install')}.user.js`,
-                  total_installs: dom.text(qs('td:nth-child(2) p', i)),
-                  created_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
-                  code_updated_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
-                  users: [
-                    {
-                      name: dom.text(qs('.inline-block a', i)),
-                      url: dom.prop(qs('.inline-block a', i), 'href')
-                    }
-                  ]
-                };
-                createjs(layout, engine.name);
-                customRecords.push(layout);
+            try {
+              if (!htmlDocument) {
+                return;
               }
-            }
-            if (qs('div.gist-snippet', selected)) {
-              for (const g of qsA('div.gist-snippet', selected)) {
-                if (qs('span > a:nth-child(2)', g).textContent.includes('.user.js')) {
-                  const fixurl = qs('span > a:nth-child(2)', g).href.replace(
-                    new RegExp(document.location.origin, 'gi'),
-                    'https://gist.github.com'
-                  );
-                  const layout = {};
-                  Object.assign(layout, {
+              const selected = htmlDocument.documentElement;
+              if (/openuserjs/gi.test(engine.name)) {
+                for (const i of normalizeTarget(qsA('.col-sm-8 .tr-link', selected))) {
+                  while (isNull(qs('.script-version', i))) {
+                    await new Promise((resolve) => requestAnimationFrame(resolve));
+                  }
+                  const fixurl = dom
+                    .prop(qs('.tr-link-a', i), 'href')
+                    .replace(new RegExp(document.location.origin, 'gi'), 'https://openuserjs.org');
+                  const ujs = mergeTemplate({
+                    name: dom.text(qs('.tr-link-a', i)),
+                    description: dom.text(qs('p', i)),
+                    version: dom.text(qs('.script-version', i)),
                     url: fixurl,
-                    code_url: `${fixurl}/raw/${qs('span > a:nth-child(2)', g).textContent}`,
-                    created_at: qs('time-ago.no-wrap', g).getAttribute('datetime'),
+                    code_url: `${fixurl.replace(/\/scripts/gi, '/install')}.user.js`,
+                    total_installs: dom.text(qs('td:nth-child(2) p', i)),
+                    created_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
+                    code_updated_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
                     users: [
                       {
-                        name: qs('span > a[data-hovercard-type]', g).textContent,
-                        url: qs('span > a[data-hovercard-type]', g).href.replace(
-                          new RegExp(document.location.origin, 'gi'),
-                          'https://gist.github.com'
-                        )
+                        name: dom.text(qs('.inline-block a', i)),
+                        url: dom.prop(qs('.inline-block a', i), 'href')
                       }
                     ]
                   });
-                  for (const i of qsA('.file-box table tr .blob-code', g)) {
-                    const headers = dom.text(i).match(/\/\/\s@[\w][\s\S]+/gi) || [];
-                    if (headers.length > 0) {
-                      const crop = headers[0].split(
-                        /\/\/\s@(name|description|author|version)\s+/gi
-                      );
-                      if (headers[0].includes('@name') && !headers[0].includes('@namespace')) {
-                        Object.assign(layout, {
-                          name: crop[2].trim()
-                        });
-                      }
-                      if (headers[0].includes('@description')) {
-                        Object.assign(layout, {
-                          description: crop[2].trim()
-                        });
-                      }
-                      if (headers[0].includes('@version')) {
-                        Object.assign(layout, {
-                          version: crop[2].trim()
-                        });
-                      }
-                    }
+                  if (cfg.codePreview && !ujs.code_data) {
+                    await reqCode(ujs);
                   }
-                  createjs(layout, engine.name);
-                  customRecords.push(layout);
+                  createjs(ujs, engine.name);
+                  customRecords.push(ujs);
                 }
               }
+              cache[engine.name].push(...customRecords);
+              MUJS.updateCounter(customRecords.length, engine);
+            } catch (ex) {
+              MUJS.showError(ex);
             }
-            cache[engine.name].push(...customRecords);
-            MUJS.addCustomCnt(customRecords.length);
           };
           const gitFN = async (data) => {
             try {
               if (isBlank(data.items)) return;
               for (const r of data.items) {
-                const layout = {
+                const ujs = mergeTemplate({
                   name: r.name,
                   description: isEmpty(r.repository.description)
-                    ? 'No Description'
+                    ? i18n$('no_license')
                     : r.repository.description,
                   url: r.html_url,
                   code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
@@ -2097,78 +2652,70 @@ const primaryFN = (injCon, doc) => {
                       url: r.repository.owner.html_url
                     }
                   ]
-                };
-                createjs(layout, engine.name);
-                customRecords.push(layout);
+                });
+                if (cfg.codePreview && !ujs.code_data) {
+                  await reqCode(ujs);
+                }
+                createjs(ujs, engine.name);
+                customRecords.push(ujs);
               }
               cache[engine.name].push(...customRecords);
-              MUJS.addCustomCnt(data.items.length);
+              MUJS.updateCounter(data.items.length, engine);
             } catch (ex) {
               MUJS.showError(ex);
             }
           };
-          const eURL = engine.url;
-          const cEngine = cache[`${engine.name}`];
-          if (!isEmpty(cEngine)) {
-            for (const ujs of cEngine) {
-              createjs(ujs, engine.name);
-            }
-            if (engine.name.includes('fork')) {
-              MUJS.addForkCnt(cEngine.length);
-            } else {
-              MUJS.addCustomCnt(cEngine.length);
-            }
-            continue;
-          }
           if (engine.name.includes('fork')) {
-            Network.req(`${eURL}/scripts/by-site/${host}.json`).then(forkFN).catch(MUJS.showError);
-          } else if (engine.name.match(/(openuserjs|github)/gi)) {
-            if (/github/gi.test(engine.name)) {
-              if (isEmpty(engine.token)) {
-                MUJS.showError(`"${engine.name}" requires a token to use`);
-                continue;
+            Network.req(`${engine.url}/scripts/by-site/${host}.json`)
+              .then(forkFN)
+              .catch(MUJS.showError);
+          } else if (/github/gi.test(engine.name)) {
+            if (isEmpty(engine.token)) {
+              MUJS.showError(`"${engine.name}" requires a token to use`);
+              continue;
+            }
+            Network.req(
+              `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
+              'GET',
+              'json',
+              {
+                headers: {
+                  Accept: 'application/vnd.github+json',
+                  Authorization: `Bearer ${engine.token}`,
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
               }
-              Network.req(
-                `${eURL}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
-                'GET',
-                'json',
-                {
+            )
+              .then(gitFN)
+              .then(() => {
+                Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
                   headers: {
                     Accept: 'application/vnd.github+json',
                     Authorization: `Bearer ${engine.token}`,
                     'X-GitHub-Api-Version': '2022-11-28'
                   }
-                }
-              )
-                .then(gitFN)
-                .then(() => {
-                  Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
-                    headers: {
-                      Accept: 'application/vnd.github+json',
-                      Authorization: `Bearer ${engine.token}`,
-                      'X-GitHub-Api-Version': '2022-11-28'
+                })
+                  .then((data) => {
+                    for (const [key, value] of Object.entries(data.resources.code_search)) {
+                      const txt = make('mujs-row', 'rate-info', {
+                        textContent: `${key.toUpperCase()}: ${value}`
+                      });
+                      rateContainer.append(txt);
                     }
                   })
-                    .then((data) => {
-                      for (const [key, value] of Object.entries(data.resources.code_search)) {
-                        const txt = make('mujs-row', 'rate-info', {
-                          innerHTML: `${key.toUpperCase()}: ${value}`
-                        });
-                        rateContainer.append(txt);
-                      }
-                    })
-                    .catch(MUJS.showError);
-                })
-                .catch(MUJS.showError);
-            } else {
-              Network.req(`${eURL}${host}`, 'GET', 'document')
-                .then(customFN)
-                .catch((error) => {
-                  MUJS.showError(`Engine: "${engine.name}"`, error);
-                });
-            }
+                  .catch(MUJS.showError);
+              })
+              .catch(MUJS.showError);
+          } else {
+            Network.req(`${engine.url}${host}`, 'GET', 'document')
+              .then(customFN)
+              .catch((error) => {
+                MUJS.showError(`Engine: "${engine.name}"`, error);
+              });
           }
         }
+        urlBar.placeholder = i18n$('search_placeholder');
+        urlBar.value = '';
       } catch (ex) {
         MUJS.showError(ex);
       }
@@ -2176,41 +2723,13 @@ const primaryFN = (injCon, doc) => {
     //#endregion
     //#region Make Config
     const makecfg = () => {
-      const exBtn = make('mu-js', 'mujs-sty-flex');
-      const exportCFG = make('mujs-btn', 'mujs-export', {
-        innerHTML: 'Export Config',
-        dataset: {
-          command: 'export-cfg'
-        }
-      });
-      const importCFG = make('mujs-btn', 'mujs-import', {
-        innerHTML: 'Import Config',
-        dataset: {
-          command: 'import-cfg'
-        }
-      });
-      const exportTheme = make('mujs-btn', 'mujs-export', {
-        innerHTML: 'Export Theme',
-        dataset: {
-          command: 'export-theme'
-        }
-      });
-      const importTheme = make('mujs-btn', 'mujs-import', {
-        innerHTML: 'Import Theme',
-        dataset: {
-          command: 'import-theme'
-        }
-      });
-      exBtn.append(importCFG, importTheme, exportCFG, exportTheme);
-      cfgpage.append(exBtn);
-
-      const makerow = (desc = 'Placeholder', type = null, nm = 'Placeholder', attrs = {}) => {
-        const sec = make('mujs-section', 'mujs-cfg-section', {
-          style: !Supports.gm && nm === 'cache' ? 'display: none;' : ''
-        });
+      const makerow = (desc, type = null, nm, attrs = {}) => {
+        desc = desc ?? i18n$('no_license');
+        nm = nm ?? i18n$('no_license');
+        const sec = make('mujs-section', 'mujs-cfg-section');
         const lb = make('label');
         const divDesc = make('mu-js', 'mujs-cfg-desc', {
-          innerHTML: desc
+          textContent: desc
         });
         lb.append(divDesc);
         sec.append(lb);
@@ -2246,17 +2765,17 @@ const primaryFN = (injCon, doc) => {
               inp.checked = i.enabled;
               inp.dataset.engine = i.name;
               ael(inp, 'change', (evt) => {
-                MUJS.unsaved = true;
-                MUJS.rebuild = true;
+                container.unsaved = true;
+                container.rebuild = true;
                 i.enabled = evt.target.checked;
               });
             }
           } else {
             inp.checked = cfg[nm];
             ael(inp, 'change', (evt) => {
-              MUJS.unsaved = true;
+              container.unsaved = true;
               if (/filterlang/i.test(nm)) {
-                MUJS.rebuild = true;
+                container.rebuild = true;
               }
               cfg[nm] = evt.target.checked;
             });
@@ -2266,8 +2785,10 @@ const primaryFN = (injCon, doc) => {
         }
         return inp;
       };
-      makerow('Sync with GM', 'checkbox', 'cache');
-      makerow('Auto Fullscreen', 'checkbox', 'autoexpand', {
+      if (isGM) {
+        makerow('Sync with GM', 'checkbox', 'cache');
+      }
+      makerow(i18n$('userjs_fullscreen'), 'checkbox', 'autoexpand', {
         onchange(e) {
           if (e.target.checked) {
             dom.cl.add([btnfullscreen, main], 'expanded');
@@ -2278,9 +2799,9 @@ const primaryFN = (injCon, doc) => {
           }
         }
       });
-      makerow(lang.redirect, 'checkbox', 'sleazyredirect');
-      makerow(lang.filter, 'checkbox', 'filterlang');
-      makerow(lang.codePreview, 'checkbox', 'codePreview');
+      makerow(i18n$('redirect'), 'checkbox', 'sleazyredirect');
+      makerow(i18n$('filter'), 'checkbox', 'filterlang');
+      makerow(i18n$('preview_code'), 'checkbox', 'codePreview');
       for (const inp of [
         makerow('Recommend author', 'checkbox', 'recommend-author'),
         makerow('Recommend scripts', 'checkbox', 'recommend-others')
@@ -2288,7 +2809,7 @@ const primaryFN = (injCon, doc) => {
         const nm = inp.dataset.name === 'recommend-author' ? 'author' : 'others';
         inp.checked = cfg.recommend[nm];
         ael(inp, 'change', (evt) => {
-          MUJS.unsaved = true;
+          container.unsaved = true;
           cfg.recommend[nm] = evt.target.checked;
         });
       }
@@ -2302,16 +2823,16 @@ const primaryFN = (injCon, doc) => {
         value: ghAPI.token ?? '',
         placeholder: 'Paste Access Token',
         onchange(evt) {
-          MUJS.unsaved = true;
-          MUJS.rebuild = true;
-          if (isNull(legacyMsg)) {
+          container.unsaved = true;
+          container.rebuild = true;
+          if (isNull(ghMsg)) {
             ghAPI.token = evt.target.value;
           }
         }
       });
       ghToken.dataset.engine = 'github-token';
       cfgMap.set('github-token', ghToken);
-      makerow(`${lang.dtime} (ms)`, 'number', 'time', {
+      makerow(`${i18n$('dtime')} (ms)`, 'number', 'time', {
         defaultValue: 10000,
         value: cfg.time,
         min: 0,
@@ -2326,7 +2847,7 @@ const primaryFN = (injCon, doc) => {
           }
         },
         oninput(evt) {
-          MUJS.unsaved = true;
+          container.unsaved = true;
           const t = evt.target;
           if (t.validity.badInput || (t.validity.rangeUnderflow && t.value !== '-1')) {
             dom.cl.add(t, 'mujs-invalid');
@@ -2338,17 +2859,16 @@ const primaryFN = (injCon, doc) => {
           }
         }
       });
-
       const cbtn = make('mu-js', 'mujs-sty-flex');
       const savebtn = make('mujs-btn', 'save', {
+        textContent: i18n$('save'),
         dataset: {
           command: 'save'
         },
-        disabled: false,
-        innerHTML: lang.save
+        disabled: false
       });
       const resetbtn = make('mujs-btn', 'reset', {
-        innerHTML: lang.reset,
+        textContent: i18n$('reset'),
         dataset: {
           command: 'reset'
         }
@@ -2394,8 +2914,8 @@ const primaryFN = (injCon, doc) => {
           let isvalid = true;
           try {
             cfg.theme = JSON.parse(evt.target.value);
+            container.renderTheme(JSON.parse(evt.target.value));
             isvalid = true;
-            renderTheme(JSON.parse(evt.target.value));
           } catch (ex) {
             err(ex);
             isvalid = false;
@@ -2425,147 +2945,121 @@ const primaryFN = (injCon, doc) => {
       tabhead.append(tr);
       table.append(tabhead, tabbody);
     };
-    const btnHide = make('mujs-btn', 'hide-list', {
-      title: lang.min,
-      innerHTML: iconSVG.load('hide'),
-      dataset: {
-        command: 'hide-list'
+    ael(mainframe, 'mouseenter', (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      evt.target.style.opacity = container.opacityMax;
+      frameTimeout.clear(...frameTimeout.ids);
+    });
+    ael(mainframe, 'mouseleave', (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      evt.target.style.opacity = container.opacityMin;
+      timeoutFrame();
+    });
+    ael(mainframe, 'click', (evt) => {
+      evt.preventDefault();
+      frameTimeout.clear(...frameTimeout.ids);
+      dom.cl.remove(main, 'hidden');
+      dom.cl.add(mainframe, 'hidden');
+      if (cfg.autoexpand) {
+        dom.cl.add([btnfullscreen, main], 'expanded');
+        dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
+      }
+      if (dom.cl.has(mainframe, 'error')) {
+        tab.create('mujs:settings');
       }
     });
-    const btnfullscreen = make('mujs-btn', 'fullscreen', {
-      title: lang.max,
-      innerHTML: iconSVG.load('fullscreen'),
-      dataset: {
-        command: 'fullscreen'
+    ael(urlBar, 'input', (evt) => {
+      evt.preventDefault();
+      if (urlBar.placeholder === i18n$('newTab')) {
+        return;
       }
-    });
-    const mainframe = make('mu-js', 'mainframe', {
-      style: 'opacity: 0.15;',
-      onmouseleave(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        evt.target.style.opacity = '0.15';
-        timeoutFrame();
-      },
-      onmouseenter(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        evt.target.style.opacity = '1';
-        timeout.clear(...timeout.ids);
-      },
-      onclick(e) {
-        e.preventDefault();
-        timeout.clear(...timeout.ids);
-        dom.cl.remove(main, 'hidden');
-        dom.cl.add(mainframe, 'hidden');
-        if (cfg.autoexpand) {
-          dom.cl.add([btnfullscreen, main], 'expanded');
-          dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
+      const val = evt.target.value;
+      if (isEmpty(val)) {
+        dom.cl.remove(qsA('tr[data-engine]', tabbody), 'hidden');
+        return;
+      }
+      const reg = new RegExp(val, 'gi');
+      const finds = new Set();
+      const userjsCache = container.userjsCache;
+      for (const [k, v] of userjsCache) {
+        const elem = qs(`tr[data-script-id="${k}"]`, tabbody);
+        if (!elem) {
+          continue;
+        }
+        if (finds.has(elem)) {
+          continue;
+        }
+        if (v.name && v.name.match(reg)) {
+          finds.add(elem);
+        }
+        if (v.description && v.description.match(reg)) {
+          finds.add(elem);
+        }
+        if (v.code_data) {
+          const meta = parse_meta(v.code_data);
+          for (const key of Object.keys(meta)) {
+            if (/name|desc/i.test(key) && key.match(reg)) {
+              finds.add(elem);
+            }
+          }
         }
       }
+      dom.cl.add(qsA('tr[data-engine]', tabbody), 'hidden');
+      dom.cl.remove([...finds], 'hidden');
     });
-    const filterList = make('input', 'mujs-fltlist', {
-      autocomplete: 'off',
-      spellcheck: false,
-      type: 'text',
-      placeholder: lang.searcher,
-      oninput(evt) {
-        evt.preventDefault();
-        if (isEmpty(evt.target.value)) {
-          dom.cl.remove(qsA('tr', tabbody), 'hidden');
+    ael(urlBar, 'change', (evt) => {
+      evt.preventDefault();
+      const val = evt.target.value;
+      if (urlBar.placeholder === i18n$('newTab') && qs('mujs-tab.active', toolbar)) {
+        const tabElem = qs('mujs-tab.active', toolbar);
+        const tabHost = qs('mujs-host', tabElem);
+        if (val.startsWith('mujs:')) {
+          tab.close(tabElem);
+          if (tab.hasTab(val)) {
+            tab.active(tab.Tab.get(val));
+          } else {
+            tab.create(val);
+          }
+          return;
+        } else if (val === '*') {
+          tabElem.dataset.host = val;
+          tabHost.title = '<All Sites>';
+          tabHost.textContent = '<All Sites>';
+          buildlist(val);
           return;
         }
-        const reg = new RegExp(evt.target.value, 'gi');
-        for (const ujs of qsA('tr', tabbody)) {
-          const m = ujs.children[0];
-          const n = ujs.children[1];
-          const final = m.textContent.match(reg) || n.textContent.match(reg) || [];
-          final.length === 0 ? dom.cl.add(ujs, 'hidden') : dom.cl.remove(ujs, 'hidden');
+        const value = container.getHost(val);
+        if (MUJS.checkBlacklist(value)) {
+          MUJS.showError(`Host blacklisted "${value}"`);
+          return;
         }
+        tabElem.dataset.host = value;
+        tabHost.title = value;
+        tabHost.textContent = value;
+        buildlist(value);
+        return;
       }
     });
-    const filterBtn = make('mujs-btn', 'filter', {
-      title: lang.filterA,
-      innerHTML: iconSVG.load('filter'),
-      dataset: {
-        command: 'show-filter'
-      }
-    });
-    const closebtn = make('mujs-btn', 'close', {
-      title: lang.close,
-      innerHTML: iconSVG.load('close'),
-      dataset: {
-        command: 'close'
-      }
-    });
-    const btncfg = make('mujs-btn', 'settings', {
-      title: 'Settings',
-      innerHTML: iconSVG.load('cfg'),
-      dataset: {
-        command: 'settings'
-      }
-    });
-    const btnhome = make('mujs-btn', 'github hidden', {
-      title: `GitHub (v${
-        MU.info.script.version.includes('.') || MU.info.script.version.includes('Book')
-          ? MU.info.script.version
-          : MU.info.script.version.slice(0, 5)
-      })`,
-      innerHTML: iconSVG.load('gh'),
-      dataset: {
-        command: 'open-tab',
-        webpage: 'https://github.com/magicoflolis/Userscript-Plus'
-      }
-    });
-    const btnissue = make('mujs-btn', 'issue hidden', {
-      innerHTML: iconSVG.load('issue'),
-      title: lang.issue,
-      dataset: {
-        command: 'open-tab',
-        webpage: 'https://github.com/magicoflolis/Userscript-Plus/issues/new'
-      }
-    });
-    const btngreasy = make('mujs-btn', 'greasy hidden', {
-      title: 'Greasy Fork',
-      innerHTML: iconSVG.load('gf'),
-      dataset: {
-        command: 'open-tab',
-        webpage: 'https://greasyfork.org/scripts/421603'
-      }
-    });
-    const btnnav = make('mujs-btn', 'nav', {
-      title: 'Navigation',
-      innerHTML: iconSVG.load('nav'),
-      dataset: {
-        command: 'navigation'
-      }
-    });
-    renderTheme(cfg.theme);
-
-    countframe.append(gfcounter, sfcounter);
-    fsearch.append(filterList);
-    btnHandles.append(btnHide, btnfullscreen, closebtn);
-    btnframe.append(fsearch, filterBtn, btncfg, btnissue, btnhome, btngreasy, btnnav, btnHandles);
-    header.append(countframe, rateContainer, btnframe);
-    ntHead.append(ntAdd);
-    tbody.append(table, cfgpage);
+    container.renderTheme(cfg.theme);
 
     makeTHead([
       {
         class: 'mujs-header-name',
-        textContent: lang.name
+        textContent: i18n$('name')
       },
       {
-        textContent: lang.createdby
+        textContent: i18n$('createdby')
       },
       {
-        textContent: lang.daily
+        textContent: i18n$('daily_installs')
       },
       {
-        textContent: lang.updated
+        textContent: i18n$('updated')
       },
       {
-        textContent: lang.install
+        textContent: i18n$('install')
       }
     ]);
 
@@ -2579,12 +3073,10 @@ const primaryFN = (injCon, doc) => {
         getCellValue(asc ? b : a, idx)
       );
     for (const th of tabhead.rows[0].cells) {
-      if (dom.text(th) === lang.install) continue;
+      if (dom.text(th) === i18n$('install')) continue;
       dom.cl.add(th, 'mujs-pointer');
       ael(th, 'click', () => {
-        /**
-         * @link https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407
-         */
+        /** [Stack Overflow Reference](https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407) */
         const table = th.closest('table');
         const tbody = table.querySelector('tbody');
         Array.from(tbody.querySelectorAll('tr'))
@@ -2592,44 +3084,107 @@ const primaryFN = (injCon, doc) => {
           .forEach((tr) => tbody.appendChild(tr));
       });
     }
-    main.append(header, ntHead, tbody, footer);
-    mainframe.append(mainbtn);
-    mujsRoot.append(mainframe, main);
-
     makecfg();
+    tab.create(container.host);
     buildlist().then(timeoutFrame);
-
-    if (cfg.injection) {
-      info('Migrating old config...');
-      delete cfg.injection;
-      MUJS.save();
-    }
+    dbg('Container', container);
   } catch (ex) {
     err(ex);
     container.remove();
   }
-};
+}
 // #endregion
 /**
- * @param { Function } callback
+ * @template { Function } F
+ * @param { (this: F, doc: Document) => any } onDomReady
  */
-const loadDOM = (callback) => {
-  if (!isFN(callback)) {
+const loadDOM = (onDomReady) => {
+  if (!isFN(onDomReady)) {
     return;
   }
   if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    callback.call({}, document);
+    onDomReady.call({}, document);
   }
-  document.addEventListener('DOMContentLoaded', (evt) => callback.call({}, evt.target), {
+  document.addEventListener('DOMContentLoaded', (evt) => onDomReady.call({}, evt.target), {
     once: true
   });
 };
-const Setup = async () => {
+const updateList = () => {
   try {
-    cfg = setObj(defcfg, await MU.storage.getValue('Config'));
-    lang = Language.cache;
-    info('Config:', cfg);
-    loadDOM((doc) => {
+    const oldList = normalizeTarget(cfg.blacklist).filter(
+      (b) => typeof b?.name === 'string' && /Blacklist/.test(b.name)
+    );
+    if (isBlank(oldList)) {
+      return;
+    }
+    const legacy = [
+      {
+        enabled: true,
+        regex: true,
+        flags: '',
+        name: 'Blacklist 1',
+        url: '(gov|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)'
+      },
+      {
+        enabled: true,
+        regex: true,
+        flags: '',
+        name: 'Blacklist 2',
+        url: '(pay|bank|money|localhost|authorize|checkout|bill|wallet|router)'
+      },
+      {
+        enabled: true,
+        regex: false,
+        flags: '',
+        name: 'Blacklist 3',
+        url: 'https://home.bluesnap.com'
+      },
+      {
+        enabled: true,
+        regex: false,
+        flags: '',
+        name: 'Blacklist 4',
+        url: ['zalo.me', 'skrill.com']
+      }
+    ];
+    let toUpdate = false;
+    for (let i = 0; i < oldList.length; i++) {
+      const o = oldList[i];
+      const p = legacy[i];
+      if (o.url === p.url) {
+        continue;
+      }
+      toUpdate = true;
+    }
+    if (toUpdate) {
+      const list = normalizeTarget(cfg.blacklist);
+      if (oldList.length === list.length) {
+        cfg.blacklist = defcfg.blacklist;
+        container.save();
+        return;
+      }
+      for (let i = 0; i < list.length; i++) {
+        const b = list[i];
+        if (typeof b?.name === 'string' && /Blacklist/.test(b.name)) {
+          delete list[i];
+          list[i] = defcfg.blacklist[i];
+        }
+      }
+      container.save();
+      return;
+    }
+    container.oldBlacklist = true;
+  } catch (ex) {
+    err(ex);
+  }
+};
+const init = async () => {
+  const stored = await StorageSystem.getValue('Config', defcfg);
+  cfg = setObj(defcfg, stored);
+  updateList();
+  info('Config:', cfg);
+  loadDOM((doc) => {
+    try {
       if (window.location === null) {
         err('"window.location" is null, reload the webpage or use a different one');
         return;
@@ -2640,11 +3195,11 @@ const Setup = async () => {
       }
       sleazyRedirect();
       container.inject(primaryFN, doc);
-    });
-  } catch (ex) {
-    err(ex);
-  }
+    } catch (ex) {
+      err(ex);
+    }
+  });
 };
-Setup();
+init();
 
 })();

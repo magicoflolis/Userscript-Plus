@@ -1,0 +1,134 @@
+{
+  "extName": {
+    "message": "نص المستخدم السحري +",
+    "description": "Must not exceed 45 characters"
+  },
+  "extDesc": {
+    "message": "العثور على UserJS المتاح لصفحة الويب الحالية، وقوة Greasy Fork أثناء التنقل!",
+    "description": "Must not exceed 132 characters"
+  },
+  "extShortDesc": {
+    "message": "قوة Greasy Fork أثناء التنقل!",
+    "description": "Must not exceed 112 characters"
+  },
+  "userjs_name": {
+    "message": "Magic Userscript+: عرض جميع ملفات UserJS"
+  },
+  "userjs_description": {
+    "message": "يبحث عن نصوص المستخدمين المتاحة لصفحة الويب الحالية."
+  },
+  "legacy": {
+    "message": "يرجى إعادة ضبط التكوين الخاص بك!"
+  },
+  "createdby": {
+    "message": "انشأ من قبل"
+  },
+  "name": {
+    "message": "اسم"
+  },
+  "daily_installs": {
+    "message": "التثبيت اليومي"
+  },
+  "close": {
+    "message": "يغلق"
+  },
+  "filterA": {
+    "message": "منقي"
+  },
+  "max": {
+    "message": "تحقيق أقصى قدر"
+  },
+  "min": {
+    "message": "تصغير"
+  },
+  "search": {
+    "message": "يبحث"
+  },
+  "search_placeholder": {
+    "message": "بحث في البرامج النصية"
+  },
+  "install": {
+    "message": "تثبيت"
+  },
+  "issue": {
+    "message": "إصدار جديد"
+  },
+  "version_number": {
+    "message": "الإصدار"
+  },
+  "updated": {
+    "message": "آخر تحديث"
+  },
+  "total_installs": {
+    "message": "إجمالي التثبيت"
+  },
+  "ratings": {
+    "message": "التقييمات"
+  },
+  "good": {
+    "message": "جيد"
+  },
+  "ok": {
+    "message": "جيد"
+  },
+  "bad": {
+    "message": "سيء"
+  },
+  "created_date": {
+    "message": "تم إنشاؤه"
+  },
+  "redirect": {
+    "message": "شوكة دهنية للكبار"
+  },
+  "filter": {
+    "message": "تصفية اللغات الأخرى"
+  },
+  "dtime": {
+    "message": "عرض المهلة"
+  },
+  "save": {
+    "message": "حفظ"
+  },
+  "reset": {
+    "message": "إعادة تعيين"
+  },
+  "preview_code": {
+    "message": "كود المعاينة"
+  },
+  "saveFile": {
+    "message": "احفظ الملف"
+  },
+  "newTab": {
+    "message": "علامة تبويب جديدة"
+  },
+  "applies_to": {
+    "message": "ينطبق على"
+  },
+  "license": {
+    "message": "الترخيص"
+  },
+  "no_license": {
+    "message": "لا يوجد"
+  },
+  "antifeatures": {
+    "message": "إعلانات"
+  },
+  "userjs_fullscreen": {
+    "message": "ملء الشاشة الكاملة التلقائي"
+  },
+  "listing_none": {
+    "message": "(لا يوجد)"
+  },
+  "export_config": {
+    "message": "تهيئة التصدير"
+  },
+  "export_theme": {
+    "message": "تصدير السمة"
+  },
+  "import_config": {
+    "message": "استيراد تهيئة الاستيراد"
+  },
+  "import_theme": {
+    "message": "استيراد النسق"
+  }
+}

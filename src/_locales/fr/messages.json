@@ -11,11 +11,11 @@
     "message": "Finds available UserJS for the current webpage.",
     "description": "Must not exceed 112 characters"
   },
-  "userjsName": {
+  "userjs_name": {
     "message": "Magic Userscript+ : Afficher le site Tous les UserJS"
   },
-  "userjsDescription": {
-    "message": "Afficher le site actuel avec tous les UserJS, le moyen le plus simple d'installer UserJs pour Tampermonkey."
+  "userjs_description": {
+    "message": "Recherche les userscripts disponibles pour la page web en cours."
   },
   "legacy": {
     "message": "VEUILLEZ RÉINITIALISER VOTRE CONFIG !"
@@ -26,7 +26,7 @@
   "name": {
     "message": "Nom"
   },
-  "daily": {
+  "daily_installs": {
     "message": "Installations quotidiennes"
   },
   "close": {
@@ -44,8 +44,8 @@
   "search": {
     "message": "Recherche"
   },
-  "searcher": {
-    "message": "Titre | Description | Auteur..."
+  "search_placeholder": {
+    "message": "Rechercher des userscripts"
   },
   "install": {
     "message": "Installer"
@@ -53,16 +53,16 @@
   "issue": {
     "message": "Nouveau numéro"
   },
-  "version": {
+  "version_number": {
     "message": "Version"
   },
   "updated": {
     "message": "Dernière mise à jour"
   },
-  "total": {
+  "total_installs": {
     "message": "Total des installations"
   },
-  "rating": {
+  "ratings": {
     "message": "Notations"
   },
   "good": {
@@ -74,7 +74,7 @@
   "bad": {
     "message": "Mauvais"
   },
-  "created": {
+  "created_date": {
     "message": "Créé"
   },
   "redirect": {
@@ -92,10 +92,43 @@
   "reset": {
     "message": "Réinitialiser"
   },
-  "codePreview": {
-    "message": "Preview Code"
+  "preview_code": {
+    "message": "Prévisualiser le code"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "Enregistrer le fichier"
+  },
+  "newTab": {
+    "message": "Nouvel onglet"
+  },
+  "applies_to": {
+    "message": "S'applique à"
+  },
+  "license": {
+    "message": "Licence"
+  },
+  "no_license": {
+    "message": "N/A"
+  },
+  "antifeatures": {
+    "message": "Antifeatures"
+  },
+  "userjs_fullscreen": {
+    "message": "Plein écran automatique"
+  },
+  "listing_none": {
+    "message": "(Aucun)"
+  },
+  "export_config": {
+    "message": "Export Config"
+  },
+  "export_theme": {
+    "message": "Exporter le thème"
+  },
+  "import_config": {
+    "message": "Importer la configuration"
+  },
+  "import_theme": {
+    "message": "Importer le thème"
   }
 }

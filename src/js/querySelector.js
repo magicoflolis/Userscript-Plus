@@ -70,11 +70,11 @@ const isElem = (obj) => {
 /**
  * @template T
  * @param { T } target
- * @param { Element } root
  * @param { boolean } toQuery
+ * @param { Element | Document | undefined } root
  * @returns { T[] }
  */
-const normalizeTarget = (target, root = document, toQuery = true) => {
+const normalizeTarget = (target, toQuery = true, root) => {
   if (Object.is(target, null) || Object.is(target, undefined)) {
     return [];
   }
@@ -82,7 +82,7 @@ const normalizeTarget = (target, root = document, toQuery = true) => {
     return target;
   }
   if (typeof target === 'string') {
-    return toQuery ? Array.from(root.querySelectorAll(target)) : [target];
+    return toQuery ? Array.from((root || document).querySelectorAll(target)) : [target];
   }
   if (isElem(target)) {
     return [target];
@@ -128,6 +128,22 @@ class dom {
   static create(a) {
     if (typeof a === 'string') {
       return document.createElement(a);
+    }
+  }
+
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } prop
+   * @param { * } [value=undefined]
+   * @returns { keyof T | void }
+   */
+  static prop(target, prop, value = undefined) {
+    for (const elem of normalizeTarget(target)) {
+      if (value === undefined) {
+        return elem[prop];
+      }
+      elem[prop] = value;
     }
   }
 

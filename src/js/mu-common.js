@@ -80,19 +80,19 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
   /**
    * @template T
    * @param { T } target
-   * @param { Element } root
    * @param { boolean } toQuery
+   * @param { Element | Document | undefined } root
    * @returns { T[] }
    */
-  const normalizeTarget = (target, root = document, toQuery = true) => {
-    if (isNull(target)) {
+  const normalizeTarget = (target, toQuery = true, root) => {
+    if (Object.is(target, null) || Object.is(target, undefined)) {
       return [];
     }
     if (Array.isArray(target)) {
       return target;
     }
     if (typeof target === 'string') {
-      return toQuery ? Array.from(root.querySelectorAll(target)) : [target];
+      return toQuery ? Array.from((root || document).querySelectorAll(target)) : [target];
     }
     if (isElem(target)) {
       return [target];
@@ -183,34 +183,25 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
    * @returns { Promise<void> } Promise object
    */
   const delay = (timeout = 5000) => new Promise((resolve) => setTimeout(resolve, timeout));
-  /**
-   * @template { string } S
-   * @param { S } str
-   * @param { boolean } lowerCase
-   * @returns { S }
-   */
-  const bscStr = (str = '', lowerCase = true) => {
-    const txt = str[lowerCase ? 'toLowerCase' : 'toUpperCase']();
-    return txt.replaceAll(/\W/g, '');
-  };
-  /**
-   * Fetch a URL with fetch API as fallback
-   *
-   * When GM is supported, makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy
-   * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
-   * @param { RequestInfo | URL } url - The URL to fetch
-   * @param { Request['method'] } method - Fetch method
-   * @param { 'buffer' | 'json' | 'text' | 'blob' | 'document' } responseType - Response type
-   * @param { RequestInit } data - Fetch parameters
-   * @returns { Promise<Response> } Fetch results
-   */
-  const req = async (url, method = 'GET', responseType = 'json', data = {}) => {
-    try {
+  const Network = {
+    /**
+     * Fetch a URL with fetch API as fallback
+     *
+     * When GM is supported, makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy
+     * @link https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest
+     * @link https://developer.mozilla.org/docs/Web/API/Fetch_API
+     * @param { RequestInfo | URL } url - The URL to fetch
+     * @param { Request['method'] } method - Fetch method
+     * @param { 'buffer' | 'json' | 'text' | 'blob' | 'document' } responseType - Response type
+     * @param { RequestInit } data - Fetch parameters
+     * @returns { Promise<Response> } Fetch results
+     */
+    async req(url, method = 'GET', responseType = 'json', data = {}) {
       if (isEmpty(url)) {
         throw new Error('"url" parameter is empty');
       }
-      method = bscStr(method, false);
-      responseType = bscStr(responseType);
+      method = Network.bscStr(method, false);
+      responseType = Network.bscStr(responseType);
       const params = {
         method,
         ...data
@@ -255,9 +246,260 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
         };
         fetch(url, params).then(fetchResp).catch(reject);
       });
-    } catch (ex) {
-      return console.error(ex);
+    },
+    format(bytes, decimals = 2) {
+      if (Number.isNaN(bytes)) return '0 Bytes';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${Network.sizes[i]}`;
+    },
+    sizes: ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    /**
+     * @template { string } S
+     * @param { S } str
+     * @param { boolean } lowerCase
+     * @returns { S }
+     */
+    bscStr(str = '', lowerCase = true) {
+      const txt = str[lowerCase ? 'toLowerCase' : 'toUpperCase']();
+      return txt.replaceAll(/\W/g, '');
     }
+  };
+
+  const META_START_COMMENT = '// ==UserScript==';
+  const META_END_COMMENT = '// ==/UserScript==';
+  const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
+  const APPLIES_TO_ALL_PATTERNS = [
+    'http://*',
+    'https://*',
+    'http://*/*',
+    'https://*/*',
+    'http*://*',
+    'http*://*/*',
+    '*',
+    '*://*',
+    '*://*/*',
+    'http*'
+  ];
+  /**
+   * @param { string } code
+   */
+  const get_meta_block = (code) => {
+    if (isEmpty(code)) {
+      return null;
+    }
+    const start_block = code.indexOf(META_START_COMMENT);
+    if (isNull(start_block)) {
+      return null;
+    }
+    const end_block = code.indexOf(META_END_COMMENT, start_block);
+    if (isNull(end_block)) {
+      return null;
+    }
+    return code.substring(start_block + META_START_COMMENT.length, end_block);
+  };
+  /**
+   * @param { string } code
+   */
+  const parse_meta = (code) => {
+    if (isEmpty(code)) {
+      return null;
+    }
+    const meta = {};
+    const meta_block = get_meta_block(code);
+    const meta_block_map = new Map();
+    for (const meta_line of meta_block.split('\n')) {
+      const meta_match = meta_line.match(/\/\/\s+@([a-zA-Z:-]+)\s+(.*)/);
+      if (isNull(meta_match)) {
+        continue;
+      }
+      const key = meta_match[1].trim();
+      const value = meta_match[2].trim();
+      if (!meta_block_map.has(key)) {
+        meta_block_map.set(key, []);
+      }
+      const meta_map = meta_block_map.get(key);
+      meta_map.push(value);
+      meta_block_map.set(key, meta_map);
+    }
+    for (const [key, value] of meta_block_map) {
+      if (value.length > 1) {
+        meta[key] = value;
+      } else {
+        meta[key] = value[0];
+      }
+    }
+    return meta;
+  };
+  const intersect = (a = [], b = []) => {
+    for (const v of a) {
+      if (b.includes(v)) {
+        return true;
+      }
+    }
+    for (const v of b) {
+      if (a.includes(v)) {
+        return true;
+      }
+    }
+    return false;
+  };
+  /**
+   * @template { string } S
+   * @param { S } code
+   * @returns { S[] }
+   */
+  const calculate_applies_to_names = (code) => {
+    if (isEmpty(code)) {
+      return null;
+    }
+    const meta = parse_meta(code);
+    let patterns = [];
+    for (const [k, v] of Object.entries(meta)) {
+      if (/include|match/.test(k)) {
+        if (Array.isArray(v)) {
+          patterns = patterns.concat(v);
+        } else {
+          patterns = patterns.concat([v]);
+        }
+      }
+    }
+    if (isEmpty(patterns)) {
+      return [];
+    }
+    if (intersect(patterns, APPLIES_TO_ALL_PATTERNS)) {
+      return [];
+    }
+    const name_set = new Set();
+    const addObj = (obj) => {
+      if (name_set.has(obj)) {
+        return;
+      }
+      name_set.add(obj);
+    };
+    for (let p of patterns) {
+      try {
+        const original_pattern = p;
+        let pre_wildcards = [];
+        if (p.match(/^\/(.*)\/$/)) {
+          pre_wildcards = [p];
+        } else {
+          let m = p.match(/^\*(https?:.*)/i);
+          if (!isNull(m)) {
+            p = m[1];
+          }
+          p = p
+            .replace(/^\*:/i, 'http:')
+            .replace(/^\*\/\//i, 'http://')
+            .replace(/^http\*:/i, 'http:')
+            .replace(/^(https?):([^/])/i, '$1://$2');
+          m = p.match(/^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i);
+          if (!isNull(m)) {
+            p = m[1] + m[2];
+          }
+          m = p.match(/^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i);
+          if (!isNull(m)) {
+            p = `http://${m[1]}`;
+          }
+          m = p.match(/^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i);
+          if (!isNull(m)) {
+            p = `http://${m[1]}`;
+          }
+          m = p.match(/^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/);
+          if (!isNull(m)) {
+            if (m[2].match(/A([0-9]+\.){2,}z/)) {
+              p = `${m[1]}tld${m[3]}`;
+              pre_wildcards = [p.split('*')[0]];
+            } else {
+              pre_wildcards = [p];
+            }
+          } else {
+            pre_wildcards = [p];
+          }
+        }
+        for (const pre_wildcard of pre_wildcards) {
+          try {
+            const uri = new URL(pre_wildcard);
+            if (isNull(uri.host)) {
+              addObj({ text: original_pattern, domain: false, tld_extra: false });
+            } else if (!uri.host.includes('.') && uri.host.includes('*')) {
+              addObj({ text: original_pattern, domain: false, tld_extra: false });
+            } else if (uri.host.endsWith('.tld')) {
+              for (let i = 0; i < TLD_EXPANSION.length; i++) {
+                const tld = TLD_EXPANSION[i];
+                addObj({
+                  text: uri.host.replace(/tld$/i, tld),
+                  domain: true,
+                  tld_extra: i != 0
+                });
+              }
+            } else if (uri.host.endsWith('.')) {
+              addObj({
+                text: uri.host.slice(0, -1),
+                domain: true,
+                tld_extra: false
+              });
+            } else {
+              addObj({
+                text: uri.host,
+                domain: true,
+                tld_extra: false
+              });
+            }
+          } catch (error) {
+            addObj({ text: original_pattern, domain: false, tld_extra: false });
+          }
+        }
+      } catch (ex) {
+        console.error(ex);
+      }
+    }
+    return [...name_set];
+  };
+  const reqCode = async (obj = {}) => {
+    if (obj.code_data) {
+      return obj.code_data;
+    }
+    /** @type { string } */
+    const code = await Network.req(obj.code_url, 'GET', 'text');
+    if (typeof code !== 'string') {
+      return;
+    }
+    Object.assign(obj, {
+      code_data: code,
+      code_size: [Network.format(code.length)],
+      code_match: [],
+      code_grant: [],
+      antifeatures: []
+    });
+    const grantSet = new Set();
+    const afSet = new Set();
+    const meta = parse_meta(code);
+    const applies_to_names = calculate_applies_to_names(code);
+    for (const [key, value] of Object.entries(meta)) {
+      if (/grant/.test(key)) {
+        for (const v of normalizeTarget(value, false)) {
+          if (grantSet.has(v)) {
+            continue;
+          }
+          grantSet.add(v);
+        }
+      } else if (/antifeature/.test(key)) {
+        for (const v of normalizeTarget(value, false)) {
+          if (afSet.has(v)) {
+            continue;
+          }
+          afSet.add(v);
+        }
+      }
+    }
+    Object.assign(obj, {
+      code_match: applies_to_names,
+      code_grant: [...grantSet],
+      antifeatures: [...afSet]
+    });
+    return code;
   };
 
   class Timeout {
@@ -315,7 +557,13 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
   userjs.formAttrs = formAttrs;
   userjs.make = make;
   userjs.delay = delay;
-  userjs.req = req;
+  userjs.req = Network.req;
+  userjs.get_meta_block = get_meta_block;
+  userjs.parse_meta = parse_meta;
+  userjs.intersect = intersect;
+  userjs.calculate_applies_to_names = calculate_applies_to_names;
+  userjs.reqCode = reqCode;
+  userjs.normalizeTarget = normalizeTarget;
 
   Object.assign(userjs, {
     makeImage(imgSrc = '', attrs = {}, cname) {

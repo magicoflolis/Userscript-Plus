@@ -11,11 +11,11 @@
     "message": "Finds available UserJS for the current webpage.",
     "description": "Must not exceed 112 characters"
   },
-  "userjsName": {
+  "userjs_name": {
     "message": "Magic Userscript+ : サイトをすべて表示 UserJS"
   },
-  "userjsDescription": {
-    "message": "サイトのユーザー スクリプト (UserJS) を表示します。 Tampermonkey のカスタム スクリプトをインストールする簡単な方法。"
+  "userjs_description": {
+    "message": "現在のウェブページで利用可能なユーザスクリプトを検索します。"
   },
   "legacy": {
     "message": "設定をリセットしてください。"
@@ -26,7 +26,7 @@
   "name": {
     "message": "名前"
   },
-  "daily": {
+  "daily_installs": {
     "message": "デイリーインストール"
   },
   "close": {
@@ -44,8 +44,8 @@
   "search": {
     "message": "検索"
   },
-  "searcher": {
-    "message": "タイトル｜説明｜著者..."
+  "search_placeholder": {
+    "message": "ユーザースクリプトの検索"
   },
   "install": {
     "message": "インストール"
@@ -53,16 +53,16 @@
   "issue": {
     "message": "新刊のご案内"
   },
-  "version": {
+  "version_number": {
     "message": "バージョン"
   },
   "updated": {
     "message": "最終更新日"
   },
-  "total": {
+  "total_installs": {
     "message": "総インストール数"
   },
-  "rating": {
+  "ratings": {
     "message": "レーティング"
   },
   "good": {
@@ -74,7 +74,7 @@
   "bad": {
     "message": "悪い"
   },
-  "created": {
+  "created_date": {
     "message": "作成"
   },
   "redirect": {
@@ -92,10 +92,43 @@
   "reset": {
     "message": "リセット"
   },
-  "codePreview": {
-    "message": "Preview Code"
+  "preview_code": {
+    "message": "コードのプレビュー"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "ファイルを保存"
+  },
+  "newTab": {
+    "message": "新しいタブ"
+  },
+  "applies_to": {
+    "message": "適用対象"
+  },
+  "license": {
+    "message": "ライセンス"
+  },
+  "no_license": {
+    "message": "不明"
+  },
+  "antifeatures": {
+    "message": "アンチ機能"
+  },
+  "userjs_fullscreen": {
+    "message": "自動フルスクリーン"
+  },
+  "listing_none": {
+    "message": "(なし)"
+  },
+  "export_config": {
+    "message": "エクスポート設定"
+  },
+  "export_theme": {
+    "message": "テーマのエクスポート"
+  },
+  "import_config": {
+    "message": "設定のインポート"
+  },
+  "import_theme": {
+    "message": "テーマのインポート"
   }
 }

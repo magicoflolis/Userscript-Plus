@@ -1,6 +1,6 @@
 module.exports = {
   artifactsDir: './build',
-  sourceDir: './tests/firefox',
+  sourceDir: './build/WebExtension/firefox',
   verbose: true,
   build: {
     asNeeded: false,
@@ -11,7 +11,7 @@ module.exports = {
     firefox: 'firefox',
     firefoxProfile: 'debug',
     startUrl: ['https://www.google.com'],
-    watchFile: ['./tests/firefox/*']
+    watchFile: ['./build/WebExtension/firefox/*']
   },
   ignoreFiles: [
     '*.web-extension-id',

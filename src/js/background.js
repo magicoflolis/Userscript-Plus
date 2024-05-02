@@ -1,25 +1,33 @@
 'use strict';
 // eslint-disable-next-line no-unused-vars
-import { dbg, log, err } from './logger.js';
+import { dbg, log, err, info } from './logger.js';
 import Config from './config.js';
 
-const hermes = userjs.hermes;
-
 const win = self ?? window;
+const MUJS = {
+  cache: new Map()
+};
+
+win.MUJS = MUJS;
 win.Config = Config;
 
+const { hermes, reqCode, isNull, isEmpty } = userjs;
+
+const msgCache = {};
 webext.runtime.onConnect.addListener((p) => {
   hermes.port = p;
+  const cfg = Config.cachedLocalStorage ?? {};
   /**
    * Default post message to send to all connected scripts
    */
-  hermes.send('Config', { cfg: Config.cachedLocalStorage });
-  const cfg = Config.cachedLocalStorage;
+  Object.assign(msgCache, { cfg });
+  hermes.send('Config', msgCache);
+  // hermes.send('Config', { cfg: Config.cachedLocalStorage });
   hermes.getPort().onMessage.addListener((root) => {
     log('Background Script: received message from content script', root);
     const r = root.msg;
     if (root.channel === 'Save') {
-      if (userjs.isNull(r.value)) {
+      if (isNull(r.value)) {
         Config.local.handler.set(r.prop, cfg[r.prop]);
       } else {
         Config.local.handler.set(r.prop, r.value);
@@ -33,7 +41,6 @@ webext.runtime.onConnect.addListener((p) => {
 
 const alang = [];
 const clang = navigator.language.split('-')[0] ?? 'en';
-
 if (navigator.languages.length > 0) {
   for (const nlang of navigator.languages) {
     const lg = nlang.split('-')[0];
@@ -46,39 +53,25 @@ if (!alang.includes(clang)) {
   alang.push(clang);
 }
 
-const formatURL = (txt) =>
-    txt
-      .split('.')
-      .splice(-2)
-      .join('.')
-      .replace(/\/|https:/g, '');
-
-const reqCode = async (obj = {}) => {
-  if (obj.code_data) {
-    return obj.code_data;
-  }
-  const txt = await userjs.req(obj.code_url, 'GET', 'text').catch(err);
-  if (typeof txt !== 'string') {
-    return;
-  }
-  if (userjs.isNull(txt.match(/\/\/\s@[\w][\s\S]+/g))) {
-    return;
-  }
-  Object.assign(obj, {
-    code_data: txt
-  });
-  return txt;
+// Unsupport webpages for each engine
+const unsupported = {
+  greasyfork: ['pornhub.com'],
+  sleazyfork: ['pornhub.com'],
+  openuserjs: [],
+  github: []
 };
 
-const MUJS = {
-  cache: new Map()
-}
+const formatURL = (txt) =>
+  txt
+    .split('.')
+    .splice(-2)
+    .join('.')
+    .replace(/\/|https:/g, '');
 
 const webFetcher = async (loc) => {
+  const cfg = Config.cachedLocalStorage ?? {};
   const sites = [];
   const host = formatURL(loc);
-  const cfg = Config.cachedLocalStorage;
-
   let isBlacklisted = false;
   for (const b of cfg.blacklist.filter((b) => b.enabled)) {
     if (b.regex === true) {
@@ -96,9 +89,9 @@ const webFetcher = async (loc) => {
     isBlacklisted = true;
   }
 
-  log('Blacklisted: ', isBlacklisted, host);
+  log('Blacklisted:', isBlacklisted, host);
   if (isBlacklisted) {
-    return log(isBlacklisted);
+    return;
   }
 
   if (!MUJS.cache.has(host)) {
@@ -109,8 +102,21 @@ const webFetcher = async (loc) => {
     MUJS.cache.set(host, engineTemplate);
   }
 
-  const engines = cfg.engines.filter((e) => e.enabled);
+  const isSupported = (name) => {
+    for (const [k, v] of Object.entries(unsupported)) {
+      if (k !== name) {
+        continue;
+      }
+      if (v.includes(host)) {
+        return false;
+      }
+    }
+    return true;
+  };
+  const engines = cfg.engines.filter((e) => e.enabled && isSupported(e.name));
   const cache = MUJS.cache.get(host);
+
+  info('Building list', { cache, engines, allCache: MUJS.cache });
 
   for (const engine of engines) {
     const forkFN = async (data) => {
@@ -140,39 +146,36 @@ const webFetcher = async (loc) => {
         if (typeof txt !== 'string') {
           continue;
         }
-        const headers = txt.match(/\/\/\s@[\w][\s\S]+/g);
-        if (userjs.isNull(headers)) {
+        const headers = txt.match(/\/\/\s*@[\w][\s\S]+/g);
+        if (isNull(headers)) {
           continue;
         }
         for (const lng of alang) {
           const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-          const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(
-            headers[0]
-          );
-          if (!userjs.isNull(findName)) {
+          const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
+          if (!isNull(findName)) {
             Object.assign(h, {
               name: findName[1],
               translated: true
             });
           }
-          if (!userjs.isNull(findDesc)) {
+          if (!isNull(findDesc)) {
             Object.assign(h, {
               description: findDesc[1],
               translated: true
             });
           }
         }
-        if (h.translated) {
-          hds.push(h);
-        }
       }
       finalList = [...new Set([...hds, ...filterLang])];
 
-      for (const ujs of finalList) {
-        if (cfg.codePreview && !ujs.code_data) {
-          await reqCode(ujs);
+      if (cfg.codePreview) {
+        for (const ujs of finalList) {
+          if (!ujs.code_data) {
+            await reqCode(ujs);
+          }
+          // createjs(ujs, false);
         }
-        // createjs(ujs, false);
       }
       cache[engine.name].push(...finalList);
       // MUJS.addForkCnt(finalList.length);
@@ -180,17 +183,21 @@ const webFetcher = async (loc) => {
     };
     const eURL = engine.url;
     const cEngine = cache[`${engine.name}`];
+    if (!isEmpty(cEngine)) {
+      sites.push({
+        engine,
+        data: userjs.normalizeTarget(cEngine),
+        host
+      });
+      continue;
+    }
     if (engine.name.includes('fork')) {
-      if (!userjs.isEmpty(cEngine)) {
-        // for (const ujs of cEngine) {
-        //   createjs(ujs, false);
-        // }
-        // MUJS.addForkCnt(cEngine.length);
-        sites.push(...cEngine);
-        continue;
-      }
       const data = await userjs.req(`${eURL}/scripts/by-site/${host}.json`).then(forkFN).catch(err);
-      sites.push(...data);
+      sites.push({
+        engine,
+        data,
+        host
+      });
     }
   }
   return sites;
@@ -212,28 +219,20 @@ webext.webRequest.onHeadersReceived.addListener(
 );
 
 /**
- * [handleMessage description]
+ * [onMessage description]
  * @param  msg      The message itself. This is a JSON-ifiable object.
  * @param  sender       A brws.runtime.MessageSender object representing the sender of the message.
- * @param  response A function to call, at most once, to send a response to the message. The function takes a single argument, which may be any JSON-ifiable object. This argument is passed back to the message sender.
+ * @param  callback  A function to call, at most once, to send a response to the message. The function takes a single argument, which may be any JSON-ifiable object. This argument is passed back to the message sender.
  */
-function handleMessage(msg, sender, response) {
+function onMessage(msg, sender, callback) {
   if (sender.url.includes('popup.html')) {
     if (msg.location) {
-      webFetcher(msg.location).then((data) => response(data));
+      webFetcher(msg.location).then((data) => callback(data));
     } else {
       webext.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         for (const tab of tabs) {
           const loc = new URL(tab.url);
-          const host = formatURL(loc.host);
-          if (MUJS.cache.has(host)) {
-            const cache = MUJS.cache.get(host);
-            const arr = [];
-            for (const v of Object.values(cache)) {
-              arr.push(...v);
-            }
-            response(arr);
-          }
+          webFetcher(loc.host).then((data) => callback(data));
         }
       });
     }
@@ -242,15 +241,15 @@ function handleMessage(msg, sender, response) {
   if (msg.name) {
     if (sender.url.includes('settings.html')) {
       Config.local.handler.set(msg.name, msg.value);
-      response({
+      callback({
         name: msg.name,
         value: msg.value
       });
     } else {
-      response({ value: Config.cachedLocalStorage[msg.name] });
+      callback({ value: Config.cachedLocalStorage[msg.name] });
     }
   }
   return true;
 }
 
-webext.runtime.onMessage.addListener(handleMessage);
+webext.runtime.onMessage.addListener(onMessage);
