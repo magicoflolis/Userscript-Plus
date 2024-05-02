@@ -2,7 +2,7 @@
 
 > Last updated: 5/2/2024
 
-[Submit a New Issue](https://github.com/magicoflolis/Magic-PH/issues/new/choose)
+[Submit a New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
 - [Currently known issues by Web Browser](#currently-known-issues-by-web-browser)
   - [Google Chrome](#google-chrome)

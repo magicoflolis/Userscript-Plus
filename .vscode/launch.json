@@ -3,7 +3,7 @@
   "compounds": [
       {
         "name": "Attach/Launch",
-        "configurations": ["Attach:Firefox", "SF"]
+        "configurations": ["SF", "Attach:Firefox"]
       }
     ],
   "configurations": [
@@ -16,19 +16,37 @@
       "name": "SF",
       "type": "firefox",
       "request": "launch",
+      "profile": "UserJS",
       "clearConsoleOnReload": true,
       "reAttach": true,
       "reloadOnAttach": true,
       "keepProfileChanges": false,
-      "reloadOnChange": "${workspaceFolder}/src/js/**",
       "url": "https://www.google.com/",
-      "addonPath": "${workspaceFolder}\\tests\\firefox",
+      "addonPath": "${workspaceFolder}/build/firefox",
+      "reloadOnChange": {
+        "watch": [
+          "${workspaceFolder}/src/**"
+        ],
+        "ignore": [
+          "${workspaceFolder}/node_modules/**"
+        ]
+      },
       "pathMappings": [
         {
           "url": "webpack:///js",
           "path": "${workspaceFolder}/src/js"
+        },
+        {
+          "url": "webpack:///src/",
+          "path": "${webRoot}/src/"
         }
-      ]
+      ],
+      "log": {
+        "fileName": "${workspaceFolder}/log.txt",
+        "fileLevel": {
+          "default": "Debug"
+        }
+      }
     }
   ]
 }
