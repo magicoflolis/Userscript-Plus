@@ -99,7 +99,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 * Try again on another webpage [[Test Page](https://youtube.com)]
 * Default timeout is 10000ms before the count disappears
-* If issue persists, see [Viewing UserJS Logs](#viewing-userjs-logs) or submit a [New Issue](https://github.com/magicoflolis/Magic-PH/issues/new/choose)
+* If issue persists, see [Viewing UserJS Logs](#viewing-userjs-logs) or submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
 **Error occurred while injecting Container:**
 
@@ -123,7 +123,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * Open your web browsers Inspect Element and navigate to it's Console
 * Locate the following **[UserJS] < message >** ( you can filter your Console by entering **UserJS** or **[** )
 * **If nothing appears, this means the script is not executing at all!**
-* For any additional help, submit a [New Issue](https://github.com/magicoflolis/Magic-PH/issues/new/choose)
+* For any additional help, submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
 ## Build
 
