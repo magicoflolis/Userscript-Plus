@@ -1,3 +1,5 @@
+// TODO: Add polish (pl)
+
 // #region Console
 const dbg = (...msg) => {
   const dt = new Date();
@@ -47,7 +49,6 @@ const log = (...msg) => {
 let cfg = {};
 let ghMsg = null;
 
-const winLocation = window.top.location;
 /** @type { import("../typings/UserJS.d.ts").safeSelf } */
 function safeSelf() {
   if (userjs.safeSelf) {
@@ -104,7 +105,7 @@ const getUAData = () => {
 };
 const isMobile = getUAData();
 const isGM = typeof GM !== 'undefined';
-const MU = {};
+const winLocation = window.top.location;
 const META_START_COMMENT = '// ==UserScript==';
 const META_END_COMMENT = '// ==/UserScript==';
 const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
@@ -210,7 +211,7 @@ class LanguageHandler {
 }
 const language = new LanguageHandler();
 const i18n$ = (...args) => {
-  const list = translations[cfg.language] ?? translations[language.current];
+  const list = translations[cfg.language] ?? translations[language.current] ?? translations['en'];
   const arr = [];
   for (const arg of args) {
     arr.push(list[arg]);
@@ -221,11 +222,11 @@ const i18n$ = (...args) => {
 /**
  * @type { import("../typings/UserJS.d.ts").hasOwn }
  */
-const hasOwn = (...args) => {
+const hasOwn = (obj, prop) => {
   if (typeof Object.hasOwn !== 'undefined') {
-    return Object.hasOwn(...args);
+    return Object.hasOwn(obj, prop);
   }
-  return Object.prototype.hasOwnProperty.call(...args);
+  return Object.prototype.hasOwnProperty.call(obj, prop);
 };
 /**
  * @type { import("../typings/UserJS.d.ts").objToStr }
@@ -238,7 +239,8 @@ const objToStr = (obj) => {
  */
 const strToURL = (str) => {
   try {
-    return objToStr(str).includes('URL') ? str : new URL(str || window.location || 'about:blank');
+    str = str ?? window.location ?? 'about:blank';
+    return objToStr(str).includes('URL') ? str : new URL(str);
   } catch (ex) {
     err({ cause: 'strToURL', message: ex.message });
     return window.location;
@@ -296,21 +298,6 @@ const isEmpty = (obj) => {
   return isNull(obj) || isBlank(obj);
 };
 /**
- * @type { import("../typings/UserJS.d.ts").setObj }
- */
-const setObj = (objA = {}, objB = {}) => {
-  objA = objA || {};
-  objB = objB || {};
-  for (const [key, value] of Object.entries(objA)) {
-    if (!hasOwn(objB, key)) {
-      objB[key] = value;
-    } else if (typeof value === 'object') {
-      setObj(value, objB[key]);
-    }
-  }
-  return objB;
-};
-/**
  * @type { import("../typings/UserJS.d.ts").normalizeTarget }
  */
 const normalizeTarget = (target, toQuery = true, root) => {
@@ -338,7 +325,7 @@ const ael = (el, type, listener, options = {}) => {
         continue;
       }
       if (isMobile && type === 'click') {
-        elem.addEventListener('touchstart', listener);
+        elem.addEventListener('touchstart', listener, options);
         continue;
       }
       elem.addEventListener(type, listener, options);
@@ -383,7 +370,7 @@ const make = (tagName, cname, attrs) => {
       if (typeof cname === 'string') {
         el.className = cname;
       } else if (isObj(cname)) {
-        formAttrs(el, attrs);
+        formAttrs(el, cname);
       }
     }
     if (!isEmpty(attrs)) {
@@ -398,14 +385,15 @@ const make = (tagName, cname, attrs) => {
   }
   return el;
 };
+
 /**
  * @type { import("../typings/UserJS.d.ts").getGMInfo }
  */
 const getGMInfo = () => {
   if (isGM) {
-    if (isFN(GM.info)) {
+    if (isObj(GM.info)) {
       return GM.info;
-    } else if (isFN(GM_info)) {
+    } else if (isObj(GM_info)) {
       return GM_info;
     }
   }
@@ -416,25 +404,17 @@ const getGMInfo = () => {
       namespace: 'https://github.com/magicoflolis/Userscript-Plus',
       updateURL: 'https://github.com/magicoflolis/Userscript-Plus/releases',
       version: 'Bookmarklet',
-      bugs: 'https://github.com/magicoflolis/Magic-PH/issues/new/choose'
+      bugs: 'https://github.com/magicoflolis/Userscript-Plus/issues'
     }
   };
 };
-MU.info = getGMInfo();
+const $info = getGMInfo();
 // #endregion
 /**
- * Based on uBlock Origin by Raymond Hill (https://github.com/gorhill/uBlock)
- *
- * [uBlock Origin Reference](https://github.com/gorhill/uBlock/blob/master/src/js/dom.js)
+ * @type { import("../typings/UserJS.d.ts").dom }
  */
-class dom {
-  /**
-   * @template { HTMLElement } T
-   * @param { T } target
-   * @param { string } attr
-   * @param { * } [value=undefined]
-   */
-  static attr(target, attr, value = undefined) {
+const dom = {
+  attr(target, attr, value = undefined) {
     for (const elem of normalizeTarget(target)) {
       if (value === undefined) {
         return elem.getAttribute(attr);
@@ -445,28 +425,16 @@ class dom {
         elem.setAttribute(attr, value);
       }
     }
-  }
-  /**
-   * @template { HTMLElement } T
-   * @param { T } target
-   * @param { string } prop
-   * @param { * } [value=undefined]
-   * @returns { keyof T | void }
-   */
-  static prop(target, prop, value = undefined) {
+  },
+  prop(target, prop, value = undefined) {
     for (const elem of normalizeTarget(target)) {
       if (value === undefined) {
         return elem[prop];
       }
       elem[prop] = value;
     }
-  }
-  /**
-   * @template { HTMLElement } T
-   * @param { T } target
-   * @param { string } text
-   */
-  static text(target, text) {
+  },
+  text(target, text) {
     const targets = normalizeTarget(target);
     if (text === undefined) {
       return targets.length !== 0 ? targets[0].textContent : undefined;
@@ -474,52 +442,52 @@ class dom {
     for (const elem of targets) {
       elem.textContent = text;
     }
-  }
-}
-dom.cl = class {
-  static add(target, name) {
-    if (Array.isArray(name)) {
+  },
+  cl: {
+    add(target, token) {
+      if (Array.isArray(token)) {
+        for (const elem of normalizeTarget(target)) {
+          elem.classList.add(...token);
+        }
+      } else {
+        for (const elem of normalizeTarget(target)) {
+          elem.classList.add(token);
+        }
+      }
+    },
+    remove(target, token) {
+      if (Array.isArray(token)) {
+        for (const elem of normalizeTarget(target)) {
+          elem.classList.remove(...token);
+        }
+      } else {
+        for (const elem of normalizeTarget(target)) {
+          elem.classList.remove(token);
+        }
+      }
+    },
+    toggle(target, token, force) {
+      let r;
       for (const elem of normalizeTarget(target)) {
-        elem.classList.add(...name);
+        r = elem.classList.toggle(token, force);
       }
-    } else {
+      return r;
+    },
+    has(target, token) {
       for (const elem of normalizeTarget(target)) {
-        elem.classList.add(name);
+        if (elem.classList.contains(token)) {
+          return true;
+        }
       }
+      return false;
     }
-  }
-
-  static remove(target, name) {
-    if (Array.isArray(name)) {
-      for (const elem of normalizeTarget(target)) {
-        elem.classList.remove(...name);
-      }
-    } else {
-      for (const elem of normalizeTarget(target)) {
-        elem.classList.remove(name);
-      }
-    }
-  }
-
-  static toggle(target, name, state) {
-    let r;
-    for (const elem of normalizeTarget(target)) {
-      r = elem.classList.toggle(name, state);
-    }
-    return r;
-  }
-
-  static has(target, name) {
-    for (const elem of normalizeTarget(target)) {
-      if (elem.classList.contains(name)) {
-        return true;
-      }
-    }
-    return false;
   }
 };
 class Memorize {
   constructor() {
+    /**
+     * @type {Map<string, Map<string, any>>}
+     */
     this.store = new Map();
     this.create('cfg', 'container', 'userjs');
   }
@@ -664,9 +632,7 @@ const StorageSystem = {
           return JSON.parse(GMType);
         }
       }
-      return this.has(`MUJS-${key}`)
-        ? JSON.parse(this.getItem(`MUJS-${key}`))
-        : def;
+      return this.has(`MUJS-${key}`) ? JSON.parse(this.getItem(`MUJS-${key}`)) : def;
     } catch (ex) {
       err(ex);
     }
@@ -901,7 +867,7 @@ const intersect = (a = [], b = []) => {
 class initContainer {
   constructor(url) {
     this.remove = this.remove.bind(this);
-    this.webpage = strToURL(url || window.location);
+    this.webpage = strToURL(url);
     this.host = this.getHost(this.webpage.host);
     this.domain = this.getDomain(this.webpage.host);
     this.ready = false;
@@ -911,13 +877,13 @@ class initContainer {
     this.frame = this.supported
       ? make('main-userjs', '', {
           dataset: {
-            insertedBy: MU.info.script.name,
+            insertedBy: $info.script.name,
             role: 'primary-container'
           }
         })
       : make('iframe', 'mujs-iframe', {
           dataset: {
-            insertedBy: MU.info.script.name,
+            insertedBy: $info.script.name,
             role: 'primary-iframe'
           },
           loading: 'lazy',
@@ -1067,7 +1033,7 @@ class initContainer {
           });
         }
         if (isElem(sty)) {
-          sty.dataset.insertedBy = MU.info.script.name;
+          sty.dataset.insertedBy = $info.script.name;
           sty.dataset.role = name;
           return sty;
         }
@@ -1075,7 +1041,7 @@ class initContainer {
       const sty = make('style', '', {
         textContent: css,
         dataset: {
-          insertedBy: MU.info.script.name,
+          insertedBy: $info.script.name,
           role: name
         }
       });
@@ -1124,7 +1090,7 @@ class initContainer {
     return blacklisted;
   }
   getInfo(url) {
-    const webpage = strToURL(url || this.webpage || window.location);
+    const webpage = strToURL(url || this.webpage);
     const host = this.getHost(webpage.host);
     const domain = this.getDomain(webpage.host);
     return {
@@ -1256,14 +1222,14 @@ function primaryFN() {
     });
     const btnhome = make('mujs-btn', 'github hidden', {
       title: `GitHub (v${
-        MU.info.script.version.includes('.') || MU.info.script.version.includes('Book')
-          ? MU.info.script.version
-          : MU.info.script.version.slice(0, 5)
+        $info.script.version.includes('.') || $info.script.version.includes('Book')
+          ? $info.script.version
+          : $info.script.version.slice(0, 5)
       })`,
       innerHTML: iconSVG.load('gh'),
       dataset: {
         command: 'open-tab',
-        webpage: MU.info.script.namespace
+        webpage: $info.script.namespace
       }
     });
     const btnissue = make('mujs-btn', 'issue hidden', {
@@ -1271,7 +1237,7 @@ function primaryFN() {
       title: i18n$('issue'),
       dataset: {
         command: 'open-tab',
-        webpage: MU.info.script.bugs
+        webpage: $info.script.bugs
       }
     });
     const btngreasy = make('mujs-btn', 'greasy hidden', {
@@ -1605,7 +1571,7 @@ function primaryFN() {
           cfg = defcfg;
           dom.cl.remove(mainframe, 'error');
           if (qs('.error', footer)) {
-            for (const elem of normalizeTarget(qsA('.error', footer))) {
+            for (const elem of qsA('.error', footer)) {
               elem.remove();
             }
           }
@@ -2452,8 +2418,13 @@ function primaryFN() {
             MUJS.updateCounter(cEngine.length, engine);
             continue;
           }
-          const forkFN = async (data) => {
-            if (!data) {
+          const forkFN = async (dataQ) => {
+            if (!dataQ) {
+              MUJS.showError('Invalid data received from the server, TODO fix this');
+              return;
+            }
+            const data = dataQ.query;
+            if (!Array.isArray(data)) {
               return;
             }
             const hideData = [];
@@ -2490,14 +2461,18 @@ function primaryFN() {
             cache[engine.name].push(...finalList);
             MUJS.updateCounter(finalList.length, engine);
           };
+          /**
+           * @param {Document} htmlDocument
+           */
           const customFN = async (htmlDocument) => {
             try {
               if (!htmlDocument) {
+                MUJS.showError('Invalid data received from the server, TODO fix this');
                 return;
               }
               const selected = htmlDocument.documentElement;
               if (/openuserjs/gi.test(engine.name)) {
-                for (const i of normalizeTarget(qsA('.col-sm-8 .tr-link', selected))) {
+                for (const i of qsA('.col-sm-8 .tr-link', selected)) {
                   while (isNull(qs('.script-version', i))) {
                     await new Promise((resolve) => requestAnimationFrame(resolve));
                   }
@@ -2535,7 +2510,10 @@ function primaryFN() {
           };
           const gitFN = async (data) => {
             try {
-              if (isBlank(data.items)) return;
+              if (isBlank(data.items)) {
+                MUJS.showError('Invalid data received from the server, TODO fix this');
+                return;
+              }
               for (const r of data.items) {
                 const ujs = mergeTemplate({
                   name: r.name,
@@ -2836,15 +2814,6 @@ function primaryFN() {
       cfgpage.append(blacklist, theme, cbtn);
     };
     //#endregion
-    const makeTHead = (rows) => {
-      const tr = make('tr');
-      for (const r of normalizeTarget(rows)) {
-        const tparent = make('th', r.class ?? '', r);
-        tr.append(tparent);
-      }
-      tabhead.append(tr);
-      table.append(tabhead, tabbody);
-    };
     ael(mainframe, 'mouseenter', (evt) => {
       evt.preventDefault();
       evt.stopPropagation();
@@ -2944,6 +2913,15 @@ function primaryFN() {
     });
     container.renderTheme(cfg.theme);
 
+    const makeTHead = (rows) => {
+      const tr = make('tr');
+      for (const r of normalizeTarget(rows)) {
+        const tparent = make('th', r.class ?? '', r);
+        tr.append(tparent);
+      }
+      tabhead.append(tr);
+      table.append(tabhead, tabbody);
+    };
     makeTHead([
       {
         class: 'mujs-header-name',
@@ -3009,79 +2987,28 @@ const loadDOM = (onDomReady) => {
     once: true
   });
 };
-const updateList = () => {
-  try {
-    const oldList = normalizeTarget(cfg.blacklist).filter(
-      (b) => typeof b?.name === 'string' && /Blacklist/.test(b.name)
-    );
-    if (isBlank(oldList)) {
-      return;
-    }
-    const legacy = [
-      {
-        enabled: true,
-        regex: true,
-        flags: '',
-        name: 'Blacklist 1',
-        url: '(gov|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)'
-      },
-      {
-        enabled: true,
-        regex: true,
-        flags: '',
-        name: 'Blacklist 2',
-        url: '(pay|bank|money|localhost|authorize|checkout|bill|wallet|router)'
-      },
-      {
-        enabled: true,
-        regex: false,
-        flags: '',
-        name: 'Blacklist 3',
-        url: 'https://home.bluesnap.com'
-      },
-      {
-        enabled: true,
-        regex: false,
-        flags: '',
-        name: 'Blacklist 4',
-        url: ['zalo.me', 'skrill.com']
-      }
-    ];
-    let toUpdate = false;
-    for (let i = 0; i < oldList.length; i++) {
-      const o = oldList[i];
-      const p = legacy[i];
-      if (o.url === p.url) {
-        continue;
-      }
-      toUpdate = true;
-    }
-    if (toUpdate) {
-      const list = normalizeTarget(cfg.blacklist);
-      if (oldList.length === list.length) {
-        cfg.blacklist = defcfg.blacklist;
-        container.save();
-        return;
-      }
-      for (let i = 0; i < list.length; i++) {
-        const b = list[i];
-        if (typeof b?.name === 'string' && /Blacklist/.test(b.name)) {
-          delete list[i];
-          list[i] = defcfg.blacklist[i];
-        }
-      }
-      container.save();
-      return;
-    }
-    container.oldBlacklist = true;
-  } catch (ex) {
-    err(ex);
-  }
-};
+// /**
+//  * @type { import("../typings/UserJS.d.ts").setObj }
+//  */
+// const setObj = (objA = {}, objB = {}) => {
+//   objA = objA || {};
+//   objB = objB || {};
+//   for (const [key, value] of Object.entries(objA)) {
+//     if (!hasOwn(objB, key)) {
+//       objB[key] = value;
+//     } else if (typeof value === 'object') {
+//       setObj(value, objB[key]);
+//     }
+//   }
+//   return objB;
+// };
 const init = async () => {
   const stored = await StorageSystem.getValue('Config', defcfg);
-  cfg = setObj(defcfg, stored);
-  updateList();
+  // cfg = setObj(defcfg, stored);
+  cfg = {
+    ...defcfg,
+    ...stored
+  };
   info('Config:', cfg);
   loadDOM((doc) => {
     try {

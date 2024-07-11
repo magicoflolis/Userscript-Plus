@@ -1,18 +1,18 @@
 {
-  "name": "uscript-plus-firefox",
+  "name": "userscript-plus",
   "description": "Finds available userscripts for the current webpage.",
   "author": "Magic <magicoflolis@tuta.io>",
   "version": "4.0.0",
   "license": "MIT",
   "homepage": "https://github.com/magicoflolis/Userscript-Plus",
   "bugs": {
-    "url": "https://github.com/magicoflolis/Magic-PH/issues/new/choose"
+    "url": "https://github.com/magicoflolis/Userscript-Plus/issues"
   },
   "userJS": {
-    "version": "6.6.0",
+    "version": "6.6.2",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "description": "Finds available userscripts for the current webpage.",
-    "bugs": "https://github.com/magicoflolis/Magic-PH/issues/new/choose",
+    "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues",
     "homepage": "https://github.com/magicoflolis/Userscript-Plus",
     "icon": "./src/img/icon_64.png",
     "downloadURL": "https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjs.user.js",
@@ -101,6 +101,7 @@
     "@types/chrome": "0.0.267",
     "@types/firefox-webext-browser": "120.0.3",
     "@types/greasemonkey": "4.0.7",
+    "@types/node": "^20.12.11",
     "@types/tampermonkey": "^5.0.2",
     "@violentmonkey/types": "0.1.7",
     "browserslist": "^4.23.0",
@@ -131,6 +132,7 @@
     "type": "git",
     "url": "git+https://github.com/magicoflolis/Userscript-Plus.git"
   },
+  "private": true,
   "keywords": [
     "magicuserscriptplus",
     "userscript",

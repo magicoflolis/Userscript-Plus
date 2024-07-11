@@ -19,11 +19,11 @@ export declare function safeSelf(): {
   clearTimeout: typeof clearTimeout;
 };
 
-export declare function hasOwn(...args: any[]): boolean;
+export declare function hasOwn(obj: object, prop: string): boolean;
 
 export declare function objToStr<O>(obj: O): string;
 
-export declare function strToURL(str: string): URL;
+export declare function strToURL<S extends string | URL>(str: S): URL;
 
 /**
  * Object is typeof `RegExp`
@@ -72,27 +72,25 @@ export declare function normalizeTarget<T>(
 export declare function halt(evt: Event): void;
 
 interface UserJSTagNameMap extends HTMLElementTagNameMap {
-  "count-frame": HTMLElement;
-  "mu-js": HTMLElement;
-  "mu-jsbtn": HTMLElement; // wtf y did I do this to myself
-  "mujs-a": HTMLElement;
-  "mujs-addtab": HTMLElement;
-  "mujs-body": HTMLElement;
-  "mujs-btn": HTMLElement;
-  "mujs-column": HTMLElement;
-  "mujs-elem": HTMLElement;
-  "mujs-header": HTMLElement;
-  "mujs-host": HTMLElement;
-  "mujs-jsbtn": HTMLElement; // wtf y did I do this to myself
-  "mujs-main": HTMLElement;
-  "mujs-root": HTMLElement;
-  "mujs-row": HTMLElement;
-  "mujs-section": HTMLElement;
-  "mujs-tabs": HTMLElement;
-  "mujs-tab": HTMLElement;
-  "mujs-toolbar": HTMLElement;
-  "mujs-url": HTMLElement;
-
+  'count-frame': HTMLElement;
+  'mu-js': HTMLElement;
+  'mu-jsbtn': HTMLElement; // wtf y did I do this to myself
+  'mujs-a': HTMLElement;
+  'mujs-addtab': HTMLElement;
+  'mujs-body': HTMLElement;
+  'mujs-btn': HTMLElement; // wtf y did I do this to myself
+  'mujs-column': HTMLElement;
+  'mujs-elem': HTMLElement;
+  'mujs-header': HTMLElement;
+  'mujs-host': HTMLElement;
+  'mujs-main': HTMLElement;
+  'mujs-root': HTMLElement;
+  'mujs-row': HTMLElement;
+  'mujs-section': HTMLElement;
+  'mujs-tabs': HTMLElement;
+  'mujs-tab': HTMLElement;
+  'mujs-toolbar': HTMLElement;
+  'mujs-url': HTMLElement;
 }
 
 /**
@@ -124,21 +122,17 @@ export declare function ael<E extends HTMLElement, K extends keyof HTMLElementEv
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/querySelector)
  */
-export declare function qs<E extends HTMLElement>(selector: string, root: E): E | null;
+export declare function qs<E extends HTMLElement, S extends string>(selector: S, root: E): E | null;
+// ReturnType<E['querySelector']>;
+// export declare function qs<E extends HTMLElement, S extends string>(selector: S, root: E): E | null;
 
 /**
  * Returns all element descendants of node that match selectors.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/querySelectorAll)
  */
-export declare function qsA<E extends HTMLElement>(selectors: string, root: E): NodeListOf<E>;
-
-/**
- * Form Attributes of Element
- * @template { keyof UserJSTagNameMap } K
- * @param { K } elem
- * @param { keyof HTMLElement } attr
- */
+export declare function qsA<E extends HTMLElement, S extends string>(selectors: S, root: E): ReturnType<E['querySelectorAll']>;
+// export declare function qsA<E extends HTMLElement, S extends string>(selectors: S, root: E): NodeListOf<E>;
 
 /**
  * Set attributes for an element.
@@ -153,10 +147,13 @@ export declare function formAttrs<E extends HTMLElement>(elem: E, attr: keyof E)
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/createElement)
  */
-export declare function make<K extends keyof UserJSTagNameMap>(
+// T[keyof T]
+export declare function make<K extends keyof UserJSTagNameMap, A extends keyof UserJSTagNameMap[K]>(
   tagName: K,
-  cname: string,
-  attrs: keyof HTMLElement
+  cname?: string,
+  attrs?: {
+    [key in A]: unknown;
+  }
 ): UserJSTagNameMap[K];
 
 export declare function loadCSS(css: string, name: string): HTMLStyleElement | undefined;
@@ -192,19 +189,19 @@ export interface StorageSystem {
   /**
    * Alias of `window.localStorage.getItem`
    */
-  getItem(key: string): string | null;
+  getItem<K extends string>(key: K): string | null;
 
-  has(key: string): boolean;
+  has<K extends string>(key: K): boolean;
 
   /**
    * Alias of `window.localStorage.setItem`
    */
-  setItem(key: string, value: string): void;
+  setItem<K extends string, V extends string>(key: K, value: V): void;
 
   /**
    * Alias of `window.localStorage.removeItem`
    */
-  remove(key: string): void;
+  remove<K extends string>(key: K): void;
 
   /**
    * Set value - Saves key to either GM managed storage or `window.localStorage`
@@ -213,7 +210,7 @@ export interface StorageSystem {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API)
    */
-  setValue(key: string, v: object): Promise<void>;
+  setValue<K extends string, V>(key: K, v: V): Promise<void>;
 
   /**
    * Get value
@@ -222,7 +219,7 @@ export interface StorageSystem {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API)
    */
-  getValue<D extends {}>(key: string, def?: D): Promise<D>;
+  getValue<K extends string, D>(key: K, def?: D): Promise<D>;
 }
 
 export interface Network {
@@ -249,4 +246,28 @@ export interface Network {
     details: VMScriptGMXHRDetails<T> | RequestInit
   ): Promise<T | typeof GM_xmlhttpRequest<T>>;
   bscStr<S extends string>(str: S, lowerCase: boolean): S;
+}
+/**
+ * Based on uBlock Origin by Raymond Hill (https://github.com/gorhill/uBlock)
+ *
+ * [uBlock Origin Reference](https://github.com/gorhill/uBlock/blob/master/src/js/dom.js)
+ */
+export interface dom {
+  attr<T extends HTMLElement, A extends string, V extends unknown>(
+    target: T,
+    attr: A,
+    value?: V
+  ): V extends ReturnType<T['getAttribute']> ? V : void;
+  prop<T extends HTMLElement, P extends keyof T, V extends T[keyof T]>(
+    target: T,
+    prop: P,
+    value?: V
+  ): V | undefined;
+  text<T extends HTMLElement, V extends unknown>(target: T, text?: V): string | null | undefined;
+  cl: {
+    add<T extends HTMLElement>(target: T, token: string | string[]): void;
+    remove<T extends HTMLElement>(target: T, token: string | string[]): void;
+    toggle<T extends HTMLElement>(target: T, token: string | string[], force?: boolean): boolean;
+    has<T extends HTMLElement>(target: T, token: string | string[]): boolean;
+  };
 }

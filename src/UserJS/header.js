@@ -16,6 +16,16 @@ const translations = [[languageList]];
  * [Uncompiled Cascading Style Sheet](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass)
  */
 const main_css = `[[mainCSS]]`;
+const inIframe = () => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+}
+if (inIframe()) {
+  return;
+}
 let userjs = self.userjs;
 /**
  * Skip text/plain documents, based on uBlock Origin `vapi.js` file
@@ -31,16 +41,6 @@ if (
   userjs = self.userjs = { UserJS: true };
 }
 if (!(typeof userjs === 'object' && userjs.UserJS)) {
-  return;
-}
-const inIframe = () => {
-  try {
-    return window.self !== window.top;
-  } catch (e) {
-    return true;
-  }
-}
-if (inIframe()) {
   return;
 }
 /******************************************************************************/

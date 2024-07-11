@@ -4,7 +4,12 @@ import dotenv from 'dotenv';
 import watch from 'node-watch';
 import { loadLanguages } from './languageLoader.js';
 
+/**
+ * @typedef { import('../package.json') } CFG
+ */
+
 const replaceTemplate = /\[\[(.*?)\]\]/g;
+const metaStr = '[[metadata]]';
 
 const log = (...msg) => {
   console.log('[LOG]', ...msg);
@@ -86,7 +91,7 @@ const fileToJSON = async (filePath, encoding = 'utf-8') => {
 const writeUserJS = async (destinationFilePath, data) => {
   return await fs.promises.writeFile(destinationFilePath, data);
 };
-const toDate = () => {
+const toTime = () => {
   return new Intl.DateTimeFormat('default', {
     hour: 'numeric',
     minute: 'numeric',
@@ -120,16 +125,30 @@ const filterData = [
   'bugs',
   'license'
 ];
-const initUserJS = async () => {
+
+(async () => {
   /** @type { dotenv.DotenvConfigOutput } */
   let result = {};
   try {
+    // const args = process.argv.filter((val, i) => i >= 2);
+
+    // if ('USERJS_META' in process.env) {
+    //   args.push(process.env.USERJS_META);
+    // }
+
+    // if (Object.is(args.length, 0)) {
+    //   args.push('./package.json');
+    // }
+
+    /**
+     * @type { CFG }
+     */
     const jsonData = await fileToJSON('./package.json');
     if (!isObj(jsonData)) {
-      throw new Error('"jsonData" IS NOT A JSON OBJECT');
+      throw new Error('"jsonData" must be an object.');
     }
     if (!jsonData.userJS) {
-      throw new Error('Missing "userJS" key in package.json');
+      throw new Error('Missing "userJS" key');
     }
     const userJS = jsonData.userJS;
     const { build } = userJS;
@@ -222,12 +241,6 @@ const initUserJS = async () => {
           }
           return resp;
         };
-        /**
-         * @template { import('../package.json') } J
-         * @template { string } S
-         * @param { S[] } arr
-         * @returns { J["userJS"][S] }
-         */
         const getData = () => {
           for (const [k, v] of Object.entries(userJS)) {
             if (typeof v !== 'string') {
@@ -303,19 +316,19 @@ const initUserJS = async () => {
               nanoCFG[k] = extraFile;
             }
           }
-        };
+        }
         const outFile = `${build.paths[dp].dir}/${build.paths[dp].fileName}.user.js`;
         await writeUserJS(outFile, nano(headerFile, nanoCFG));
         log('UserJS Build:', {
           path: outFile,
-          time: toDate()
+          time: toTime()
         });
         if (!js_env) {
           const outMeta = `${build.paths[dp].dir}/${build.paths[dp].fileName}.meta.js`;
-          await writeUserJS(outMeta, nano('[[metadata]]', { metadata: userJSHeader }));
+          await writeUserJS(outMeta, nano(metaStr, { metadata: userJSHeader }));
           log('UserJS Metadata:', {
             path: outMeta,
-            time: toDate()
+            time: toTime()
           });
         }
       } catch (ex) {
@@ -346,6 +359,4 @@ const initUserJS = async () => {
   } catch (ex) {
     err(ex);
   }
-};
-
-initUserJS();
+})();
