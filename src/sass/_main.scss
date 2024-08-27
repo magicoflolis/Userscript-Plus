@@ -502,6 +502,17 @@ mujs-body {
       }
     }
 
+    @media screen and (max-width: 550px) {
+      .frame:not(.webext-page) {
+        td {
+          margin: 1rem !important;
+          &:not(.mujs-name, .install-btn) {
+            width: auto !important;
+          }
+        }
+      }
+    }
+
     width: 100%;
     width: -moz-available;
     width: -webkit-fill-available;

@@ -1,21 +1,25 @@
 // ==UserScript==
-// @version      6.6.2
+// @version      6.7.0
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
+// @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
 // @name:es      Magic Userscript+: Mostrar sitio todos los UserJS
 // @name:fr      Magic Userscript+ : Afficher le site Tous les UserJS
 // @name:ja      Magic Userscript+ : サイトをすべて表示 UserJS
 // @name:nl      Magic Userscript+: Site alle UserJS tonen
+// @name:pl      Magic Userscript+ : Pokaż witrynę Wszystkie UserJS
 // @name:ru      Magic Userscript+: показать сайт всем UserJS
 // @name:zh      Magic Userscript+ ：显示站点所有 UserJS
 // @name:zh-CN      Magic Userscript+ ：显示站点所有 UserJS
 // @name:zh-TW      Magic Userscript+ ：显示站点所有 UserJS
 // @description  Finds available userscripts for the current webpage.
 // @description:ar      يبحث عن نصوص المستخدمين المتاحة لصفحة الويب الحالية.
+// @description:de      Findet verfügbare Benutzerskripte für die aktuelle Webseite.
 // @description:es      Busca los usercripts disponibles para la página web actual.
 // @description:fr      Recherche les userscripts disponibles pour la page web en cours.
 // @description:ja      現在のウェブページで利用可能なユーザスクリプトを検索します。
 // @description:nl      Zoekt beschikbare gebruikerscripts voor de huidige webpagina.
+// @description:pl      Wyszukuje dostępne skrypty użytkownika dla bieżącej strony internetowej.
 // @description:ru      Находит доступные юзерскрипты для текущей веб-страницы.
 // @description:zh      为当前网页查找可用的用户脚本。
 // @description:zh-CN      为当前网页查找可用的用户脚本。

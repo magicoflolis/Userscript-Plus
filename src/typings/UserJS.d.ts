@@ -131,7 +131,10 @@ export declare function qs<E extends HTMLElement, S extends string>(selector: S,
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/querySelectorAll)
  */
-export declare function qsA<E extends HTMLElement, S extends string>(selectors: S, root: E): ReturnType<E['querySelectorAll']>;
+export declare function qsA<E extends HTMLElement, S extends string>(
+  selectors: S,
+  root: E
+): ReturnType<E['querySelectorAll']>;
 // export declare function qsA<E extends HTMLElement, S extends string>(selectors: S, root: E): NodeListOf<E>;
 
 /**
@@ -163,8 +166,6 @@ export declare function observe<E extends Node>(
   listener: MutationCallback,
   options: MutationObserverInit
 ): MutationObserver;
-
-export declare function setObj<X, Y>(objA: X, objB: Y): Y;
 
 /**
  * Opens a new window and loads a document specified by a given URL. Also, opens a new window that uses the url parameter and the name parameter to collect the output of the write method and the writeln method.
@@ -271,3 +272,52 @@ export interface dom {
     has<T extends HTMLElement>(target: T, token: string | string[]): boolean;
   };
 }
+
+export type GSForkQuery = {
+  id: number;
+  created_at: string;
+  daily_installs: number;
+  total_installs: number;
+  code_updated_at: string;
+  support_url: string;
+  fan_score: string;
+  namespace: string;
+  contribution_url: any;
+  contribution_amount: any;
+  good_ratings: number;
+  ok_ratings: number;
+  bad_ratings: number;
+  users: {
+    id: number;
+    name: string;
+    url: string;
+  }[];
+  name: string;
+  description: string;
+  url: string;
+  code_url: string;
+  license: string;
+  version: string;
+  locale: string;
+  deleted: boolean;
+};
+
+export type GSFork = {
+  model: 'Script';
+  term: string;
+  options: {
+    fields: string[];
+    boost_by: string[];
+    where: {
+      script_type: number;
+      locale: number;
+      site_application_id: number;
+      available_as_js: boolean;
+    };
+    order: { daily_installs: string; };
+    page: number;
+    per_page: number;
+    includes: string[];
+  };
+  query: GSForkQuery[];
+};

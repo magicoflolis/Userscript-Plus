@@ -17,9 +17,6 @@
   "userjs_description": {
     "message": "Recherche les userscripts disponibles pour la page web en cours."
   },
-  "legacy": {
-    "message": "VEUILLEZ RÉINITIALISER VOTRE CONFIG !"
-  },
   "createdby": {
     "message": "Créé par"
   },
@@ -130,5 +127,8 @@
   },
   "import_theme": {
     "message": "Importer le thème"
+  },
+  "code_size": {
+    "message": "Code Taille"
   }
 }

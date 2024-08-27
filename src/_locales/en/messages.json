@@ -17,9 +17,6 @@
   "userjs_description": {
     "message": "Finds available userscripts for the current webpage."
   },
-  "legacy": {
-    "message": "PLEASE RESET YOUR CONFIG!"
-  },
   "createdby": {
     "message": "Created by"
   },
@@ -69,7 +66,7 @@
     "message": "Good"
   },
   "ok": {
-    "message": "Ok"
+    "message": "Okay"
   },
   "bad": {
     "message": "Bad"
@@ -130,5 +127,8 @@
   },
   "import_theme": {
     "message": "Import Theme"
+  },
+  "code_size": {
+    "message": "Code Size"
   }
 }

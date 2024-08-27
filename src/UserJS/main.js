@@ -1,5 +1,3 @@
-// TODO: Add polish (pl)
-
 // #region Console
 const dbg = (...msg) => {
   const dt = new Date();
@@ -61,7 +59,8 @@ function safeSelf() {
     createElementNS: g.document.createElementNS.bind(g.document),
     createTextNode: g.document.createTextNode.bind(g.document),
     setTimeout: g.setTimeout,
-    clearTimeout: g.clearTimeout
+    clearTimeout: g.clearTimeout,
+    trustedTypes: g.trustedTypes
   };
   userjs.safeSelf = safe;
   return safe;
@@ -581,9 +580,12 @@ const iconSVG = {
       }
       svgElem.setAttributeNS(null, k, v);
     }
-    if (typeof iconSVG[type].html === 'string') {
-      svgElem.innerHTML = iconSVG[type].html;
-    }
+    try {
+      if (typeof iconSVG[type].html === 'string') {
+        svgElem.innerHTML = iconSVG[type].html;
+      }
+    // eslint-disable-next-line no-unused-vars
+    } catch (ex) { /* empty */ }
     if (container) {
       container.appendChild(svgElem);
       return svgElem;
@@ -726,7 +728,7 @@ const Network = {
     if (Number.isNaN(bytes)) return '0 Bytes';
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
-    const i = Math.floor(Math.pow(bytes) / Math.log(k));
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${Network.sizes[i]}`;
   },
   sizes: ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
@@ -843,6 +845,7 @@ const sleazyRedirect = () => {
       /\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/,
       '//$1' + otherSite + '.org'
     );
+    info(`Redirecting to "${str}"`);
     if (isFN(winLocation.assign)) {
       winLocation.assign(str);
     } else {
@@ -958,7 +961,7 @@ class initContainer {
    */
   async inject(callback, doc) {
     if (this.checkBlacklist(this.host)) {
-      err('Blacklisted website');
+      err(`Blacklisted "${this.host}"`);
       this.remove();
       return;
     }
@@ -1055,6 +1058,9 @@ class initContainer {
   checkBlacklist(str) {
     str = str || this.host;
     let blacklisted = false;
+    if (/accounts*\.google\./.test(this.webpage.host)) {
+      blacklisted = true;
+    }
     for (const b of normalizeTarget(cfg.blacklist)) {
       if (typeof b === 'string') {
         if (b.startsWith('userjs-')) {
@@ -1575,9 +1581,6 @@ function primaryFN() {
               elem.remove();
             }
           }
-          if (container.oldBlacklist) {
-            delete container.oldBlacklist;
-          }
           container.unsaved = true;
           container.rebuild = true;
           rebuildCfg();
@@ -1785,7 +1788,7 @@ function primaryFN() {
 
       checkBlacklist(str) {
         if (container.checkBlacklist(str)) {
-          this.showError('Blacklisted');
+          this.showError(`Blacklisted "${str}"`);
           timeoutFrame();
           return true;
         }
@@ -2031,6 +2034,7 @@ function primaryFN() {
       }
       Object.assign(obj, {
         code_data: code,
+        code_meta: {},
         code_size: [Network.format(code.length)],
         code_match: [],
         code_grant: [],
@@ -2040,6 +2044,24 @@ function primaryFN() {
       const afSet = new Set();
       const meta = parse_meta(code);
       const applies_to_names = calculate_applies_to_names(code);
+
+      if (translate) {
+        for (const lng of language.cache) {
+          if (meta[`name:${lng}`]) {
+            Object.assign(obj, {
+              name: meta[`name:${lng}`],
+              translated: true
+            });
+          }
+          if (meta[`description:${lng}`]) {
+            Object.assign(obj, {
+              description: meta[`description:${lng}`],
+              translated: true
+            });
+          }
+        }
+      }
+
       for (const [key, value] of Object.entries(meta)) {
         if (/grant/.test(key)) {
           for (const v of normalizeTarget(value, false)) {
@@ -2058,32 +2080,11 @@ function primaryFN() {
         }
       }
       Object.assign(obj, {
+        code_meta: meta,
         code_match: applies_to_names,
         code_grant: [...grantSet],
         antifeatures: [...afSet]
       });
-      if (translate) {
-        const headers = code.match(/\/\/\s*@[\w][\s\S]+/g);
-        if (isNull(headers)) {
-          return code;
-        }
-        for (const lng of language.cache) {
-          const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-          const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-          if (!isNull(findName)) {
-            Object.assign(obj, {
-              name: findName[1],
-              translated: true
-            });
-          }
-          if (!isNull(findDesc)) {
-            Object.assign(obj, {
-              description: findDesc[1],
-              translated: true
-            });
-          }
-        }
-      }
       return code;
     };
     const template = {
@@ -2291,6 +2292,12 @@ function primaryFN() {
       });
       if (engine) {
         tr.dataset.engine = engine;
+        // if (engine.includes('fork')) {
+        //   fdaily.dataset.command = 'open-tab';
+        //   fdaily.dataset.webpage = `${ujs.url}/stats`;
+        //   fupdated.dataset.command = 'open-tab';
+        //   fupdated.dataset.webpage = `${ujs.url}/versions`;
+        // }
         if (!engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.url)) {
           tr.dataset.good = 'upsell';
         }
@@ -2316,7 +2323,7 @@ function primaryFN() {
       eframe.append(scriptInstall);
       ratings.append(fratings, fgood, fok, fbad);
       jsInfo.append(ftotal, ratings, fver, fcreated);
-      mkList('Size', {
+      mkList(i18n$('code_size'), {
         list: ujs.code_size,
         type: 'size',
         root: jsInfo
@@ -2357,10 +2364,6 @@ function primaryFN() {
       try {
         if (isEmpty(host)) {
           host = container.host;
-        }
-        if (container.oldBlacklist) {
-          MUJS.makeError({ message: i18n$('legacy'), cause: 'Blacklist outdated', notify: true });
-          return;
         }
         if (MUJS.checkBlacklist(host)) {
           return;
@@ -2409,6 +2412,7 @@ function primaryFN() {
           }
           createjs(ujs, engine);
         };
+        const arr = [];
         for (const engine of engines) {
           const cEngine = cache[`${engine.name}`];
           if (!isEmpty(cEngine)) {
@@ -2418,16 +2422,24 @@ function primaryFN() {
             MUJS.updateCounter(cEngine.length, engine);
             continue;
           }
+          /**
+           * @param { import("../typings/UserJS.d.ts").GSFork } dataQ
+           */
           const forkFN = async (dataQ) => {
             if (!dataQ) {
-              MUJS.showError('Invalid data received from the server, TODO fix this');
+              MUJS.showError('Invalid data received from the server, check internet connection');
               return;
             }
-            const data = dataQ.query;
-            if (!Array.isArray(data)) {
+
+            const data = (Array.isArray(dataQ.query) ? dataQ.query : []).filter((d) => !d.deleted);
+            if (isBlank(data)) {
               return;
             }
             const hideData = [];
+            /**
+             * @param {import("../typings/UserJS.d.ts").GSForkQuery} d
+             * @returns {boolean}
+             */
             const inUserLanguage = (d) => {
               const dlocal = d.locale.split('-')[0] ?? d.locale;
               if (language.cache.includes(dlocal)) {
@@ -2437,9 +2449,6 @@ function primaryFN() {
               return false;
             };
             const filterLang = data.filter((d) => {
-              if (d.deleted) {
-                return false;
-              }
               if (cfg.filterlang && !inUserLanguage(d)) {
                 return false;
               }
@@ -2448,7 +2457,7 @@ function primaryFN() {
             let finalList = filterLang;
             const hds = [];
             for (const ujs of hideData) {
-              await reqCode(ujs);
+              await reqCode(ujs, true);
               if (ujs.translated) {
                 hds.push(ujs);
               }
@@ -2543,8 +2552,9 @@ function primaryFN() {
               MUJS.showError(ex);
             }
           };
+          let netFN;
           if (engine.name.includes('fork')) {
-            Network.req(`${engine.url}/scripts/by-site/${host}.json`)
+            netFN = Network.req(`${engine.url}/scripts/by-site/${host}.json`)
               .then(forkFN)
               .catch(MUJS.showError);
           } else if (/github/gi.test(engine.name)) {
@@ -2552,7 +2562,7 @@ function primaryFN() {
               MUJS.showError(`"${engine.name}" requires a token to use`);
               continue;
             }
-            Network.req(
+            netFN = Network.req(
               `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
               'GET',
               'json',
@@ -2585,15 +2595,22 @@ function primaryFN() {
               })
               .catch(MUJS.showError);
           } else {
-            Network.req(`${engine.url}${host}`, 'GET', 'document')
+            netFN = Network.req(`${engine.url}${host}`, 'GET', 'document')
               .then(customFN)
               .catch((error) => {
                 MUJS.showError(`Engine: "${engine.name}"`, error);
               });
           }
+          if (netFN) {
+            arr.push(netFN);
+          }
         }
         urlBar.placeholder = i18n$('search_placeholder');
         urlBar.value = '';
+        Promise.allSettled(arr).then(() => {
+          tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
+          tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
+        });
       } catch (ex) {
         MUJS.showError(ex);
       }
@@ -2955,11 +2972,9 @@ function primaryFN() {
       dom.cl.add(th, 'mujs-pointer');
       ael(th, 'click', () => {
         /** [Stack Overflow Reference](https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407) */
-        const table = th.closest('table');
-        const tbody = table.querySelector('tbody');
-        Array.from(tbody.querySelectorAll('tr'))
+        Array.from(tabbody.querySelectorAll('tr'))
           .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (this.asc = !this.asc)))
-          .forEach((tr) => tbody.appendChild(tr));
+          .forEach((tr) => tabbody.appendChild(tr));
       });
     }
     makecfg();
@@ -2987,24 +3002,8 @@ const loadDOM = (onDomReady) => {
     once: true
   });
 };
-// /**
-//  * @type { import("../typings/UserJS.d.ts").setObj }
-//  */
-// const setObj = (objA = {}, objB = {}) => {
-//   objA = objA || {};
-//   objB = objB || {};
-//   for (const [key, value] of Object.entries(objA)) {
-//     if (!hasOwn(objB, key)) {
-//       objB[key] = value;
-//     } else if (typeof value === 'object') {
-//       setObj(value, objB[key]);
-//     }
-//   }
-//   return objB;
-// };
 const init = async () => {
   const stored = await StorageSystem.getValue('Config', defcfg);
-  // cfg = setObj(defcfg, stored);
   cfg = {
     ...defcfg,
     ...stored
@@ -3013,12 +3012,15 @@ const init = async () => {
   loadDOM((doc) => {
     try {
       if (window.location === null) {
-        err('"window.location" is null, reload the webpage or use a different one');
-        return;
+        throw new Error ('"window.location" is null, reload the webpage or use a different one');
       }
       if (doc === null) {
-        err('"doc" is null, reload the webpage or use a different one');
-        return;
+        throw new Error ('"doc" is null, reload the webpage or use a different one');
+      }
+      if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        window.trustedTypes.createPolicy('default', {
+          createHTML: (string) => string
+        });
       }
       sleazyRedirect();
       container.inject(primaryFN, doc);

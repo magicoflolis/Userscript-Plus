@@ -1,21 +1,25 @@
 // ==UserScript==
-// @version      6.6.2
+// @version      6.7.0
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
+// @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
 // @name:es      Magic Userscript+: Mostrar sitio todos los UserJS
 // @name:fr      Magic Userscript+ : Afficher le site Tous les UserJS
 // @name:ja      Magic Userscript+ : サイトをすべて表示 UserJS
 // @name:nl      Magic Userscript+: Site alle UserJS tonen
+// @name:pl      Magic Userscript+ : Pokaż witrynę Wszystkie UserJS
 // @name:ru      Magic Userscript+: показать сайт всем UserJS
 // @name:zh      Magic Userscript+ ：显示站点所有 UserJS
 // @name:zh-CN      Magic Userscript+ ：显示站点所有 UserJS
 // @name:zh-TW      Magic Userscript+ ：显示站点所有 UserJS
 // @description  Finds available userscripts for the current webpage.
 // @description:ar      يبحث عن نصوص المستخدمين المتاحة لصفحة الويب الحالية.
+// @description:de      Findet verfügbare Benutzerskripte für die aktuelle Webseite.
 // @description:es      Busca los usercripts disponibles para la página web actual.
 // @description:fr      Recherche les userscripts disponibles pour la page web en cours.
 // @description:ja      現在のウェブページで利用可能なユーザスクリプトを検索します。
 // @description:nl      Zoekt beschikbare gebruikerscripts voor de huidige webpagina.
+// @description:pl      Wyszukuje dostępne skrypty użytkownika dla bieżącej strony internetowej.
 // @description:ru      Находит доступные юзерскрипты для текущей веб-страницы.
 // @description:zh      为当前网页查找可用的用户脚本。
 // @description:zh-CN      为当前网页查找可用的用户脚本。
@@ -62,13 +66,13 @@
  *
  * [languageLoader.js](https://github.com/magicoflolis/Userscript-Plus/blob/master/tools/languageLoader.js)
  */
-const translations = {"ar":{"legacy":"يرجى إعادة ضبط التكوين الخاص بك!","createdby":"انشأ من قبل","name":"اسم","daily_installs":"التثبيت اليومي","close":"يغلق","filterA":"منقي","max":"تحقيق أقصى قدر","min":"تصغير","search":"يبحث","search_placeholder":"بحث في البرامج النصية","install":"تثبيت","issue":"إصدار جديد","version_number":"الإصدار","updated":"آخر تحديث","total_installs":"إجمالي التثبيت","ratings":"التقييمات","good":"جيد","ok":"جيد","bad":"سيء","created_date":"تم إنشاؤه","redirect":"شوكة دهنية للكبار","filter":"تصفية اللغات الأخرى","dtime":"عرض المهلة","save":"حفظ","reset":"إعادة تعيين","preview_code":"كود المعاينة","saveFile":"احفظ الملف","newTab":"علامة تبويب جديدة","applies_to":"ينطبق على","license":"الترخيص","no_license":"لا يوجد","antifeatures":"إعلانات","userjs_fullscreen":"ملء الشاشة الكاملة التلقائي","listing_none":"(لا يوجد)","export_config":"تهيئة التصدير","export_theme":"تصدير السمة","import_config":"استيراد تهيئة الاستيراد","import_theme":"استيراد النسق"},"en":{"legacy":"PLEASE RESET YOUR CONFIG!","createdby":"Created by","name":"Name","daily_installs":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","search_placeholder":"Search for userscripts","install":"Install","issue":"New Issue","version_number":"Version","updated":"Last Updated","total_installs":"Total Installs","ratings":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created_date":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset","preview_code":"Preview Code","saveFile":"Save File","newTab":"New Tab","applies_to":"Applies to","license":"License","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Automatic Fullscreen","listing_none":"(None)","export_config":"Export Config","export_theme":"Export Theme","import_config":"Import Config","import_theme":"Import Theme"},"en_GB":{"legacy":"PLEASE RESET YOUR CONFIG!","createdby":"Created by","name":"Name","daily_installs":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","search_placeholder":"Search scripts","install":"Install","issue":"New Issue","version_number":"Version","updated":"Last Updated","total_installs":"Total Installs","ratings":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created_date":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset","preview_code":"Preview Code","saveFile":"Save File","newTab":"New Tab","applies_to":"Applies to","license":"License","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Automatic Fullscreen","listing_none":"(None)","export_config":"Export Config","export_theme":"Export Theme","import_config":"Import Config","import_theme":"Import Theme"},"es":{"legacy":"¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!","createdby":"Creado por","name":"Nombre","daily_installs":"Instalaciones diarias","close":"Ya no se muestra","filterA":"Filtro","max":"Maximizar","min":"Minimizar","search":"Busque en","search_placeholder":"Buscar userscripts","install":"Instalar","issue":"Nueva edición","version_number":"Versión","updated":"Última actualización","total_installs":"Total de instalaciones","ratings":"Clasificaciones","good":"Bueno","ok":"Ok","bad":"Malo","created_date":"Creado","redirect":"Greasy Fork para adultos","filter":"Filtrar otros idiomas","dtime":"Mostrar el tiempo de espera","save":"Guardar","reset":"Reiniciar","preview_code":"Vista previa del código","saveFile":"Guardar archivo","newTab":"Guardar archivo","applies_to":"Se aplica a","license":"Licencia","no_license":"Desconocida","antifeatures":"Características indeseables","userjs_fullscreen":"Pantalla completa automática","listing_none":"(Ninguno)","export_config":"Exportar configuración","export_theme":"Exportar tema","import_config":"Importar configuración","import_theme":"Importar tema"},"fr":{"legacy":"VEUILLEZ RÉINITIALISER VOTRE CONFIG !","createdby":"Créé par","name":"Nom","daily_installs":"Installations quotidiennes","close":"Ne plus montrer","filterA":"Filtre","max":"Maximiser","min":"Minimiser","search":"Recherche","search_placeholder":"Rechercher des userscripts","install":"Installer","issue":"Nouveau numéro","version_number":"Version","updated":"Dernière mise à jour","total_installs":"Total des installations","ratings":"Notations","good":"Bon","ok":"Ok","bad":"Mauvais","created_date":"Créé","redirect":"Greasy Fork pour les adultes","filter":"Filtrer les autres langues","dtime":"Délai d'affichage","save":"Sauvez","reset":"Réinitialiser","preview_code":"Prévisualiser le code","saveFile":"Enregistrer le fichier","newTab":"Nouvel onglet","applies_to":"S'applique à","license":"Licence","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Plein écran automatique","listing_none":"(Aucun)","export_config":"Export Config","export_theme":"Exporter le thème","import_config":"Importer la configuration","import_theme":"Importer le thème"},"ja":{"legacy":"設定をリセットしてください。","createdby":"によって作成された","name":"名前","daily_installs":"デイリーインストール","close":"表示されなくなりました","filterA":"フィルター","max":"最大化","min":"ミニマム","search":"検索","search_placeholder":"ユーザースクリプトの検索","install":"インストール","issue":"新刊のご案内","version_number":"バージョン","updated":"最終更新日","total_installs":"総インストール数","ratings":"レーティング","good":"グッド","ok":"良い","bad":"悪い","created_date":"作成","redirect":"大人のGreasyfork","filter":"他の言語をフィルタリングする","dtime":"表示タイムアウト","save":"拯救","reset":"リセット","preview_code":"コードのプレビュー","saveFile":"ファイルを保存","newTab":"新しいタブ","applies_to":"適用対象","license":"ライセンス","no_license":"不明","antifeatures":"アンチ機能","userjs_fullscreen":"自動フルスクリーン","listing_none":"(なし)","export_config":"エクスポート設定","export_theme":"テーマのエクスポート","import_config":"設定のインポート","import_theme":"テーマのインポート"},"nl":{"legacy":"RESET UW CONFIG!","createdby":"Gemaakt door","name":"Naam","daily_installs":"Dagelijkse Installaties","close":"Sluit","filterA":"Filter","max":"Maximaliseer","min":"Minimaliseer","search":"Zoek","search_placeholder":"Zoeken naar gebruikersscripts","install":"Installeer","issue":"Nieuw Issue","version_number":"Versie","updated":"Laatste Update","total_installs":"Totale Installaties","ratings":"Beoordeling","good":"Goed","ok":"Ok","bad":"Slecht","created_date":"Aangemaakt","redirect":"Greasy Fork voor volwassenen","filter":"Filter andere talen","dtime":"Weergave timeout","save":"Opslaan","reset":"Opnieuw instellen","preview_code":"Voorbeeldcode","saveFile":"Bestand opslaan","newTab":"Nieuw tabblad","applies_to":"Geldt voor","license":"Licentie","no_license":"N.v.t.","antifeatures":"Functies voor eigen gewin","userjs_fullscreen":"Automatisch volledig scherm","listing_none":"(Geen)","export_config":"Configuratie exporteren","export_theme":"Thema exporteren","import_config":"Configuratie importeren","import_theme":"Thema importeren"},"ru":{"legacy":"ПОЖАЛУЙСТА, СБРОСЬТЕ КОНФИГ!","createdby":"Сделано","name":"Имя","daily_installs":"Ежедневные установки","close":"Больше не показывать","filterA":"Фильтр","max":"Максимизировать","min":"Минимизировать","search":"Поиск","search_placeholder":"Поиск юзерскриптов","install":"Установите","issue":"Новый выпуск","version_number":"Версия","updated":"Последнее обновление","total_installs":"Всего установок","ratings":"Рейтинги","good":"Хорошо","ok":"Хорошо","bad":"Плохо","created_date":"Создано","redirect":"Greasy Fork для взрослых","filter":"Отфильтровать другие языки","dtime":"Тайм-аут отображения","save":"Сохранить","reset":"Перезагрузить","preview_code":"Предварительный просмотр кода","saveFile":"Сохранить файл","newTab":"Новая вкладка","applies_to":"Применяется к","license":"Лицензия","no_license":"Недоступно","antifeatures":"Нежелательная функциональность","userjs_fullscreen":"Автоматический полноэкранный режим","listing_none":"(нет)","export_config":"Экспорт конфигурации","export_theme":"Экспорт темы","import_config":"Импорт конфигурации","import_theme":"Импортировать тему"},"zh":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题"},"zh_CN":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题"},"zh_TW":{"legacy":"请重置您的配置！","createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题"}};
+const translations = {"ar":{"createdby":"انشأ من قبل","name":"اسم","daily_installs":"التثبيت اليومي","close":"يغلق","filterA":"منقي","max":"تحقيق أقصى قدر","min":"تصغير","search":"يبحث","search_placeholder":"بحث في البرامج النصية","install":"تثبيت","issue":"إصدار جديد","version_number":"الإصدار","updated":"آخر تحديث","total_installs":"إجمالي التثبيت","ratings":"التقييمات","good":"جيد","ok":"جيد","bad":"سيء","created_date":"تم إنشاؤه","redirect":"شوكة دهنية للكبار","filter":"تصفية اللغات الأخرى","dtime":"عرض المهلة","save":"حفظ","reset":"إعادة تعيين","preview_code":"كود المعاينة","saveFile":"احفظ الملف","newTab":"علامة تبويب جديدة","applies_to":"ينطبق على","license":"الترخيص","no_license":"لا يوجد","antifeatures":"إعلانات","userjs_fullscreen":"ملء الشاشة الكاملة التلقائي","listing_none":"(لا يوجد)","export_config":"تهيئة التصدير","export_theme":"تصدير السمة","import_config":"استيراد تهيئة الاستيراد","import_theme":"استيراد النسق","code_size":"حجم الرمز"},"de":{"createdby":"Erstellt von","name":"Name","daily_installs":"Tägliche Installationen","close":"Schließen Sie","filterA":"Filter","max":"Maximieren Sie","min":"minimieren","search":"Suche","search_placeholder":"Suche nach Userscripts","install":"Installieren Sie","issue":"Neue Ausgabe","version_number":"Version","updated":"Zuletzt aktualisiert","total_installs":"Installationen insgesamt","ratings":"Bewertungen","good":"Gut","ok":"Okay","bad":"Schlecht","created_date":"Erstellt","redirect":"Greasy Fork für Erwachsene","filter":"Andere Sprachen herausfiltern","dtime":"Zeitüberschreitung anzeigen","save":"Speichern Sie","reset":"Zurücksetzen","preview_code":"Vorschau Code","saveFile":"Datei speichern","newTab":"Neue Registerkarte","applies_to":"Gilt für","license":"Lizenz","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Automatischer Vollbildmodus","listing_none":"(Keine)","export_config":"Konfig exportieren","export_theme":"Thema exportieren","import_config":"Konfig importieren","import_theme":"Thema importieren","code_size":"Code Größe"},"en":{"createdby":"Created by","name":"Name","daily_installs":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","search_placeholder":"Search for userscripts","install":"Install","issue":"New Issue","version_number":"Version","updated":"Last Updated","total_installs":"Total Installs","ratings":"Ratings","good":"Good","ok":"Okay","bad":"Bad","created_date":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset","preview_code":"Preview Code","saveFile":"Save File","newTab":"New Tab","applies_to":"Applies to","license":"License","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Automatic Fullscreen","listing_none":"(None)","export_config":"Export Config","export_theme":"Export Theme","import_config":"Import Config","import_theme":"Import Theme","code_size":"Code Size"},"en_GB":{"createdby":"Created by","name":"Name","daily_installs":"Daily Installs","close":"Close","filterA":"Filter","max":"Maximize","min":"Minimize","search":"Search","search_placeholder":"Search scripts","install":"Install","issue":"New Issue","version_number":"Version","updated":"Last Updated","total_installs":"Total Installs","ratings":"Ratings","good":"Good","ok":"Ok","bad":"Bad","created_date":"Created","redirect":"Greasy Fork for adults","filter":"Filter out other languages","dtime":"Display Timeout","save":"Save","reset":"Reset","preview_code":"Preview Code","saveFile":"Save File","newTab":"New Tab","applies_to":"Applies to","license":"License","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Automatic Fullscreen","listing_none":"(None)","export_config":"Export Config","export_theme":"Export Theme","import_config":"Import Config","import_theme":"Import Theme","code_size":"Code Size"},"es":{"createdby":"Creado por","name":"Nombre","daily_installs":"Instalaciones diarias","close":"Ya no se muestra","filterA":"Filtro","max":"Maximizar","min":"Minimizar","search":"Busque en","search_placeholder":"Buscar userscripts","install":"Instalar","issue":"Nueva edición","version_number":"Versión","updated":"Última actualización","total_installs":"Total de instalaciones","ratings":"Clasificaciones","good":"Bueno","ok":"Ok","bad":"Malo","created_date":"Creado","redirect":"Greasy Fork para adultos","filter":"Filtrar otros idiomas","dtime":"Mostrar el tiempo de espera","save":"Guardar","reset":"Reiniciar","preview_code":"Vista previa del código","saveFile":"Guardar archivo","newTab":"Guardar archivo","applies_to":"Se aplica a","license":"Licencia","no_license":"Desconocida","antifeatures":"Características indeseables","userjs_fullscreen":"Pantalla completa automática","listing_none":"(Ninguno)","export_config":"Exportar configuración","export_theme":"Exportar tema","import_config":"Importar configuración","import_theme":"Importar tema","code_size":"Código Tamaño"},"fr":{"createdby":"Créé par","name":"Nom","daily_installs":"Installations quotidiennes","close":"Ne plus montrer","filterA":"Filtre","max":"Maximiser","min":"Minimiser","search":"Recherche","search_placeholder":"Rechercher des userscripts","install":"Installer","issue":"Nouveau numéro","version_number":"Version","updated":"Dernière mise à jour","total_installs":"Total des installations","ratings":"Notations","good":"Bon","ok":"Ok","bad":"Mauvais","created_date":"Créé","redirect":"Greasy Fork pour les adultes","filter":"Filtrer les autres langues","dtime":"Délai d'affichage","save":"Sauvez","reset":"Réinitialiser","preview_code":"Prévisualiser le code","saveFile":"Enregistrer le fichier","newTab":"Nouvel onglet","applies_to":"S'applique à","license":"Licence","no_license":"N/A","antifeatures":"Antifeatures","userjs_fullscreen":"Plein écran automatique","listing_none":"(Aucun)","export_config":"Export Config","export_theme":"Exporter le thème","import_config":"Importer la configuration","import_theme":"Importer le thème","code_size":"Code Taille"},"ja":{"createdby":"によって作成された","name":"名前","daily_installs":"デイリーインストール","close":"表示されなくなりました","filterA":"フィルター","max":"最大化","min":"ミニマム","search":"検索","search_placeholder":"ユーザースクリプトの検索","install":"インストール","issue":"新刊のご案内","version_number":"バージョン","updated":"最終更新日","total_installs":"総インストール数","ratings":"レーティング","good":"グッド","ok":"良い","bad":"悪い","created_date":"作成","redirect":"大人のGreasyfork","filter":"他の言語をフィルタリングする","dtime":"表示タイムアウト","save":"拯救","reset":"リセット","preview_code":"コードのプレビュー","saveFile":"ファイルを保存","newTab":"新しいタブ","applies_to":"適用対象","license":"ライセンス","no_license":"不明","antifeatures":"アンチ機能","userjs_fullscreen":"自動フルスクリーン","listing_none":"(なし)","export_config":"エクスポート設定","export_theme":"テーマのエクスポート","import_config":"設定のインポート","import_theme":"テーマのインポート","code_size":"コード・サイズ"},"nl":{"createdby":"Gemaakt door","name":"Naam","daily_installs":"Dagelijkse Installaties","close":"Sluit","filterA":"Filter","max":"Maximaliseer","min":"Minimaliseer","search":"Zoek","search_placeholder":"Zoeken naar gebruikersscripts","install":"Installeer","issue":"Nieuw Issue","version_number":"Versie","updated":"Laatste Update","total_installs":"Totale Installaties","ratings":"Beoordeling","good":"Goed","ok":"Ok","bad":"Slecht","created_date":"Aangemaakt","redirect":"Greasy Fork voor volwassenen","filter":"Filter andere talen","dtime":"Weergave timeout","save":"Opslaan","reset":"Opnieuw instellen","preview_code":"Voorbeeldcode","saveFile":"Bestand opslaan","newTab":"Nieuw tabblad","applies_to":"Geldt voor","license":"Licentie","no_license":"N.v.t.","antifeatures":"Functies voor eigen gewin","userjs_fullscreen":"Automatisch volledig scherm","listing_none":"(Geen)","export_config":"Configuratie exporteren","export_theme":"Thema exporteren","import_config":"Configuratie importeren","import_theme":"Thema importeren","code_size":"Code Grootte"},"pl":{"createdby":"Stworzony przez","name":"Nazwa","daily_installs":"Codzienne instalacje","close":"Zamknij","filterA":"Filtr","max":"Maksymalizuj","min":"Minimalizuj","search":"Wyszukiwanie","search_placeholder":"Wyszukiwanie skryptów użytkownika","install":"Instalacja","issue":"Nowy numer","version_number":"Wersja","updated":"Ostatnia aktualizacja","total_installs":"Łączna liczba instalacji","ratings":"Oceny","good":"Dobry","ok":"Ok","bad":"Zły","created_date":"Utworzony","redirect":"Greasy Fork dla dorosłych","filter":"Odfiltruj inne języki","dtime":"Limit czasu wyświetlania","save":"Zapisz","reset":"Reset","preview_code":"Kod podglądu","saveFile":"Zapisz plik","newTab":"Nowa karta","applies_to":"Dotyczy","license":"Licencja","no_license":"N/A","antifeatures":"Antywzorce","userjs_fullscreen":"Automatyczny pełny ekran","listing_none":"(Brak)","export_config":"Konfiguracja eksportu","export_theme":"Motyw eksportu","import_config":"Importuj konfigurację","import_theme":"Importuj motyw","code_size":"Kod Rozmiar"},"ru":{"createdby":"Сделано","name":"Имя","daily_installs":"Ежедневные установки","close":"Больше не показывать","filterA":"Фильтр","max":"Максимизировать","min":"Минимизировать","search":"Поиск","search_placeholder":"Поиск юзерскриптов","install":"Установите","issue":"Новый выпуск","version_number":"Версия","updated":"Последнее обновление","total_installs":"Всего установок","ratings":"Рейтинги","good":"Хорошо","ok":"Хорошо","bad":"Плохо","created_date":"Создано","redirect":"Greasy Fork для взрослых","filter":"Отфильтровать другие языки","dtime":"Тайм-аут отображения","save":"Сохранить","reset":"Перезагрузить","preview_code":"Предварительный просмотр кода","saveFile":"Сохранить файл","newTab":"Новая вкладка","applies_to":"Применяется к","license":"Лицензия","no_license":"Недоступно","antifeatures":"Нежелательная функциональность","userjs_fullscreen":"Автоматический полноэкранный режим","listing_none":"(нет)","export_config":"Экспорт конфигурации","export_theme":"Экспорт темы","import_config":"Импорт конфигурации","import_theme":"Импортировать тему","code_size":"Код Размер"},"zh":{"createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题","code_size":"代码 尺寸"},"zh_CN":{"createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题","code_size":"代码 尺寸"},"zh_TW":{"createdby":"由...制作","name":"姓名","daily_installs":"日常安装","close":"不再显示","filterA":"过滤器","max":"最大化","min":"最小化","search":"搜索","search_placeholder":"搜索用户脚本","install":"安装","issue":"新问题","version_number":"版本","updated":"最后更新","total_installs":"总安装量","ratings":"评级","good":"好的","ok":"好的","bad":"不好","created_date":"创建","redirect":"大人的Greasyfork","filter":"过滤掉其他语言","dtime":"显示超时","save":"拯救","reset":"重置","preview_code":"预览代码","saveFile":"保存存档","newTab":"新标签","applies_to":"适用于","license":"许可证","no_license":"暂无","antifeatures":"可能不受欢迎的功能","userjs_fullscreen":"自动全屏","listing_none":"(无)","export_config":"导出配置","export_theme":"导出主题","import_config":"导入配置","import_theme":"导入主题","code_size":"代码 尺寸"}};
 /**
  * To compile this CSS `pnpm run build:Sass`
  *
  * [Uncompiled Cascading Style Sheet](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass)
  */
-const main_css = `mujs-root{--mujs-even-row: hsl(222, 14%, 22%);--mujs-odd-row: hsl(222, 14%, 11%);--mujs-even-err: hsl(0, 100%, 22%);--mujs-odd-err: hsl(0, 100%, 11%);--mujs-background-color: hsl(222, 14%, 33%);--mujs-gf-color: hsl(204, 100%, 40%);--mujs-sf-color: hsl(12, 86%, 50%);--mujs-border-b-color: hsla(0, 0%, 0%, 0);--mujs-gf-btn-color: hsl(211, 87%, 56%);--mujs-sf-btn-color: hsl(12, 86%, 50%);--mujs-sf-txt-color: hsl(12, 79%, 55%);--mujs-txt-color: hsl(0, 0%, 100%);--mujs-chck-color: hsla(0, 0%, 100%, 0.568);--mujs-chck-gf: hsla(197, 100%, 50%, 0.568);--mujs-chck-git: hsla(213, 13%, 16%, 0.568);--mujs-chck-open: hsla(12, 86%, 50%, 0.568);--mujs-placeholder: hsl(81, 56%, 54%);--mujs-position-top: unset;--mujs-position-bottom: 1em;--mujs-position-left: unset;--mujs-position-right: 1em;--mujs-font-family: Arial, Helvetica, sans-serif;font-family:var(--mujs-font-family, Arial, Helvetica, sans-serif);text-rendering:optimizeLegibility;word-break:normal;font-size:14px;color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-root *{scrollbar-color:var(--mujs-txt-color, hsl(0, 0%, 100%)) #2e323d;scrollbar-width:thin}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:16px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:16px;background-color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-image:-webkit-linear-gradient(45deg, hsla(0, 0%, 100%, 0.2) 25%, transparent 25%, transparent 50%, hsla(0, 0%, 100%, 0.2) 50%, hsla(0, 0%, 100%, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background:var(--mujs-txt-color, hsl(0, 0%, 100%))}}mu-js{line-height:normal}mujs-section>label,.mujs-homepag e,td.mujs-list,.install{font-size:16px}.install,.mujs-homepage{font-weight:700}mujs-section>label,td.mujs-list{font-weight:500}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}mujs-tabs,mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:.5em}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-column count-frame[data-counter=greasyfork]{background:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-column count-frame[data-counter=sleazyfork]{background:var(--mujs-sf-color, hsl(12, 86%, 50%))}mujs-column count-frame[data-counter=github]{background:#23282e}mujs-column count-frame[data-counter=openuserjs]{background:rgba(237,62,18,.568)}mujs-row{flex-flow:column wrap}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}mujs-main{width:100%;width:-moz-available;width:-webkit-fill-available;background:var(--mujs-background-color, hsl(222, 14%, 33%)) !important;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:16px}@media screen and (max-height: 720px){mujs-main:not(.webext-page){height:100% !important;bottom:0rem !important;right:0rem !important;margin:0rem !important}}mujs-main.expanded{height:100% !important;bottom:0rem !important}mujs-main:not(.webext-page){position:fixed;height:492px}mujs-main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}mujs-main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}mujs-main>*{width:100%;width:-moz-available;width:-webkit-fill-available}mujs-main mujs-toolbar{order:0;padding:.5em;display:flex;place-content:space-between}mujs-main mujs-toolbar mujs-tabs{overflow:hidden;order:0}mujs-main mujs-toolbar mujs-column{flex-flow:row nowrap;order:999999999999}mujs-main mujs-toolbar>*{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-main mujs-tabs{gap:.5em;text-align:center;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;flex-flow:row wrap}mujs-main mujs-tabs mujs-tab{padding:.25em;min-width:150px;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;display:flex;place-content:space-between;border:1px solid rgba(0,0,0,0);border-radius:4px;background:rgba(0,0,0,0)}mujs-main mujs-tabs mujs-tab.active{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tabs mujs-tab:not(.active):hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tabs mujs-tab mujs-host{float:left;overflow:auto;overflow-wrap:break-word;text-overflow:ellipsis;white-space:nowrap}mujs-main mujs-tabs mujs-tab mu-js{float:right}mujs-main mujs-tabs mujs-addtab{order:999999999999;font-size:20px;padding:0px .25em}mujs-main mujs-tabs mujs-addtab:hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tab,mujs-main mujs-btn,mujs-main input{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}mujs-main input{background:rgba(0,0,0,0);color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-main input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}mujs-main textarea{background:inherit;overflow-y:auto;color:var(--mujs-placeholder, hsl(81, 56%, 54%));border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:10px;resize:vertical;outline:none;font-family:monospace;font-size:14px}mujs-main textarea:focus{outline:none}mujs-main th,mujs-main .mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}mujs-main .mujs-footer{order:3;overflow-x:hidden;text-align:center;border-radius:16px}mujs-main .mujs-footer>*{min-height:50px}mujs-main .mujs-footer .error:nth-child(even){background:var(--mujs-even-err, hsl(0, 100%, 22%)) !important}mujs-main .mujs-footer .error:nth-child(odd){background:var(--mujs-odd-err, hsl(0, 100%, 11%)) !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:var(--mujs-position-bottom, 1rem);right:var(--mujs-position-right, 1rem);top:var(--mujs-position-top, unset);left:var(--mujs-position-left, unset)}.mainframe count-frame{width:fit-content;width:-moz-fit-content;width:-webkit-fit-content;height:auto;padding:14px 16px}.mainframe.error{opacity:1 !important}.mainframe.error count-frame{background:var(--mujs-even-err, hsl(0, 100%, 22%)) !important}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:1000px;margin:0px 3px;padding:4px 6px;border:2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em;background:var(--mujs-background-color, hsl(222, 14%, 33%));-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}mujs-header{order:1;display:flex;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-left:.5em;padding-right:.5em;padding-bottom:.5em;font-size:1em;place-content:space-between;height:fit-content;height:-moz-fit-content;height:-webkit-fit-content;gap:1em}mujs-header>*:not(mujs-url){height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}mujs-header mujs-url{order:0;flex-grow:1}mujs-header mujs-url>input{width:100%;height:100%;background:var(--mujs-even-row, hsl(222, 14%, 18%));border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:4px}mujs-header .rate-container{order:1}mujs-header .mujs-sty-flex{order:2}mujs-header .btn-frame{order:999999999999}mujs-body{order:2;overflow-x:hidden;padding:0px;height:100%;border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-bottom-left-radius:16px;border-bottom-right-radius:16px}mujs-body .mujs-ratings{padding:0 .25em;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:1000px;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-body mu-jsbtn{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}mujs-body table,mujs-body th,mujs-body td{border-collapse:collapse}mujs-body table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 1180px){mujs-body table thead>tr{display:table-column}mujs-body table .frame:not(.webext-page){width:100%;display:flex;flex-flow:row wrap;align-items:center;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-top:.5em;padding-bottom:.5em}mujs-body table .frame:not(.webext-page) td{margin:auto;border-bottom:1px solid rgba(0,0,0,0)}mujs-body table .frame:not(.webext-page) td>mujs-a,mujs-body table .frame:not(.webext-page) td>mu-js,mujs-body table .frame:not(.webext-page) td>mujs-column{text-align:center;justify-content:center}mujs-body table .frame:not(.webext-page) td:not(.mujs-name,.install-btn){width:25%}mujs-body table .frame:not(.webext-page) .mujs-name{width:100%}}mujs-body table th,mujs-body table td{border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table th{position:-webkit-sticky;position:sticky;top:0;background:rgba(72,79,96,.75)}mujs-body table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){mujs-body table th.mujs-header-name{width:auto !important}}mujs-body table .frame:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}mujs-body table .frame:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mujs-a{color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}mujs-body table .frame[data-engine=sleazyfork] mujs-a,mujs-body table .frame[data-engine=greasyfork] mujs-a{color:var(--mujs-gf-color, hsl(197, 100%, 50%))}mujs-body table .frame[data-engine=sleazyfork] mujs-a:hover,mujs-body table .frame[data-engine=greasyfork] mujs-a:hover{color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn,mujs-body table .frame[data-engine=greasyfork] mu-jsbtn{background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn:hover,mujs-body table .frame[data-engine=greasyfork] mu-jsbtn:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}mujs-body table .frame[data-good] mujs-a,mujs-body table .frame[data-author] mujs-a{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}mujs-body table .frame[data-good] mujs-a:hover,mujs-body table .frame[data-author] mujs-a:hover{color:#80ab30}mujs-body table .frame[data-good] .mujs-list,mujs-body table .frame[data-author] .mujs-list{color:#fff}mujs-body table .frame[data-good] mu-jsbtn,mujs-body table .frame[data-author] mu-jsbtn{color:#20385a;background:var(--mujs-placeholder, hsl(81, 56%, 54%));border-color:var(--mujs-placeholder, hsl(81, 56%, 54%))}mujs-body table .frame[data-good] mu-jsbtn:hover,mujs-body table .frame[data-author] mu-jsbtn:hover{background:#b5d874;border-color:#b5d874}mujs-body table .frame .mujs-ratings[data-el=good]{border-color:#393;background-color:rgba(51,153,51,.102);color:#3f3}mujs-body table .frame .mujs-ratings[data-el=ok]{border-color:#990;background-color:rgba(153,153,0,.102);color:#ff0}mujs-body table .frame .mujs-ratings[data-el=bad]{border-color:#900;background-color:rgba(153,51,51,.102);color:red}mujs-body table .frame svg{fill:currentColor;width:14px;height:14px;background:rgba(0,0,0,0)}mujs-body table .frame>td:not(.mujs-name){text-align:center}mujs-body table .frame>.mujs-name>mujs-a{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-body table .frame>.mujs-name mu-jsbtn,mujs-body table .frame>.mujs-name mu-js{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}mujs-body table .frame>.mujs-name>mu-jsbtn{margin:auto}mujs-body table .frame>.mujs-name>mujs-column>mu-jsbtn{padding:0px 7px}mujs-body table .frame>.mujs-uframe>mujs-a{font-size:16px;font-weight:500;padding-left:.5rem;padding-right:.5rem}mujs-body table .frame [data-el=more-info]>mujs-row{gap:.25em}mujs-body table .frame [data-el=matches]{gap:.25em;max-width:40em}mujs-body table .frame [data-el=matches] .mujs-grants{display:inline-flex;flex-flow:row wrap;overflow:auto;overflow-wrap:break-word;text-overflow:ellipsis;white-space:nowrap;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;max-height:5em;gap:.2em}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a{display:inline}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a:not([data-command]){cursor:default !important;color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a::after{content:", ";color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a:last-child::after{content:""}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}@media screen and (max-height: 720px){.mujs-cfg:not(.webext-page){height:100%;height:-moz-available;height:-webkit-fill-available;width:100%;width:-moz-available;width:-webkit-fill-available;overflow-x:auto;padding:.5em}}.mujs-cfg mujs-section{border-radius:16px;padding:.5em}.mujs-cfg mujs-section:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-cfg mujs-section:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){font-size:14px;position:relative;border-radius:4px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg mujs-section>label input[type=text]::-webkit-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-moz-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]:-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label{margin-left:0;background:var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type=checkbox][data-name=sleazyfork]:checked+label{background:var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=openuserjs]:checked+label{background:var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=github]:checked+label{background:var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568))}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:var(--mujs-txt-color, hsl(0, 0%, 100%));position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]{background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-cfg:not(.webext-page){margin:1rem 25rem}mujs-a{display:inline-block}.mujs-name{display:flex;flex-flow:column wrap;gap:.5em}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:500;font-variant:normal;text-transform:none;text-rendering:auto;text-align:center;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:var(--mujs-txt-color, hsl(0, 0%, 100%));width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block;text-align:center}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}
+const main_css = `mujs-root{--mujs-even-row: hsl(222, 14%, 22%);--mujs-odd-row: hsl(222, 14%, 11%);--mujs-even-err: hsl(0, 100%, 22%);--mujs-odd-err: hsl(0, 100%, 11%);--mujs-background-color: hsl(222, 14%, 33%);--mujs-gf-color: hsl(204, 100%, 40%);--mujs-sf-color: hsl(12, 86%, 50%);--mujs-border-b-color: hsla(0, 0%, 0%, 0);--mujs-gf-btn-color: hsl(211, 87%, 56%);--mujs-sf-btn-color: hsl(12, 86%, 50%);--mujs-sf-txt-color: hsl(12, 79%, 55%);--mujs-txt-color: hsl(0, 0%, 100%);--mujs-chck-color: hsla(0, 0%, 100%, 0.568);--mujs-chck-gf: hsla(197, 100%, 50%, 0.568);--mujs-chck-git: hsla(213, 13%, 16%, 0.568);--mujs-chck-open: hsla(12, 86%, 50%, 0.568);--mujs-placeholder: hsl(81, 56%, 54%);--mujs-position-top: unset;--mujs-position-bottom: 1em;--mujs-position-left: unset;--mujs-position-right: 1em;--mujs-font-family: Arial, Helvetica, sans-serif;font-family:var(--mujs-font-family, Arial, Helvetica, sans-serif);text-rendering:optimizeLegibility;word-break:normal;font-size:14px;color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-root *{scrollbar-color:var(--mujs-txt-color, hsl(0, 0%, 100%)) #2e323d;scrollbar-width:thin}@supports not (scrollbar-width: thin){mujs-root * ::-webkit-scrollbar{width:1.4vw;height:3.3vh}mujs-root * ::-webkit-scrollbar-track{background-color:#2e323d;border-radius:16px;margin-top:3px;margin-bottom:3px;box-shadow:inset 0 0 6px rgba(0,0,0,.3)}mujs-root * ::-webkit-scrollbar-thumb{border-radius:16px;background-color:var(--mujs-txt-color, hsl(0, 0%, 100%));background-image:-webkit-linear-gradient(45deg, hsla(0, 0%, 100%, 0.2) 25%, transparent 25%, transparent 50%, hsla(0, 0%, 100%, 0.2) 50%, hsla(0, 0%, 100%, 0.2) 75%, transparent 75%, transparent)}mujs-root * ::-webkit-scrollbar-thumb:hover{background:var(--mujs-txt-color, hsl(0, 0%, 100%))}}mu-js{line-height:normal}mujs-section>label,.mujs-homepag e,td.mujs-list,.install{font-size:16px}.install,.mujs-homepage{font-weight:700}mujs-section>label,td.mujs-list{font-weight:500}.mujs-sty-flex>mujs-btn{margin:auto}.mujs-invalid{border-radius:8px !important;border-width:2px !important;border-style:solid !important;border-color:red !important}mujs-tabs,mujs-column,mujs-row,.mujs-sty-flex{display:flex}mujs-column,mujs-row{gap:.5em}@media screen and (max-width: 800px){mujs-column{flex-flow:row wrap}}mujs-column count-frame[data-counter=greasyfork]{background:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-column count-frame[data-counter=sleazyfork]{background:var(--mujs-sf-color, hsl(12, 86%, 50%))}mujs-column count-frame[data-counter=github]{background:#23282e}mujs-column count-frame[data-counter=openuserjs]{background:rgba(237,62,18,.568)}mujs-row{flex-flow:column wrap}mu-js{cursor:default}.hidden{display:none !important;z-index:-1 !important}mujs-main{width:100%;width:-moz-available;width:-webkit-fill-available;background:var(--mujs-background-color, hsl(222, 14%, 33%)) !important;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:16px}@media screen and (max-height: 720px){mujs-main:not(.webext-page){height:100% !important;bottom:0rem !important;right:0rem !important;margin:0rem !important}}mujs-main.expanded{height:100% !important;bottom:0rem !important}mujs-main:not(.webext-page){position:fixed;height:492px}mujs-main:not(.webext-page):not(.expanded){margin-left:1rem;margin-right:1rem;right:1rem;bottom:1rem}mujs-main:not(.hidden){z-index:100000000000000000 !important;display:flex !important;flex-direction:column !important}mujs-main>*{width:100%;width:-moz-available;width:-webkit-fill-available}mujs-main mujs-toolbar{order:0;padding:.5em;display:flex;place-content:space-between}mujs-main mujs-toolbar mujs-tabs{overflow:hidden;order:0}mujs-main mujs-toolbar mujs-column{flex-flow:row nowrap;order:999999999999}mujs-main mujs-toolbar>*{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-main mujs-tabs{gap:.5em;text-align:center;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;flex-flow:row wrap}mujs-main mujs-tabs mujs-tab{padding:.25em;min-width:150px;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;display:flex;place-content:space-between;border:1px solid rgba(0,0,0,0);border-radius:4px;background:rgba(0,0,0,0)}mujs-main mujs-tabs mujs-tab.active{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tabs mujs-tab:not(.active):hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tabs mujs-tab mujs-host{float:left;overflow:auto;overflow-wrap:break-word;text-overflow:ellipsis;white-space:nowrap}mujs-main mujs-tabs mujs-tab mu-js{float:right}mujs-main mujs-tabs mujs-addtab{order:999999999999;font-size:20px;padding:0px .25em}mujs-main mujs-tabs mujs-addtab:hover{background:var(--mujs-even-row, hsl(222, 14%, 18%))}mujs-main mujs-tab,mujs-main mujs-btn,mujs-main input{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}mujs-main input{background:rgba(0,0,0,0);color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-main input:not([type=checkbox]){border:rgba(0,0,0,0);outline:none !important}mujs-main textarea{background:inherit;overflow-y:auto;color:var(--mujs-placeholder, hsl(81, 56%, 54%));border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:10px;resize:vertical;outline:none;font-family:monospace;font-size:14px}mujs-main textarea:focus{outline:none}mujs-main th,mujs-main .mujs-cfg *:not(input[type=password],input[type=text],input[type=number]){-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important;user-select:none !important}mujs-main .mujs-footer{order:3;overflow-x:hidden;text-align:center;border-radius:16px}mujs-main .mujs-footer>*{min-height:50px}mujs-main .mujs-footer .error:nth-child(even){background:var(--mujs-even-err, hsl(0, 100%, 22%)) !important}mujs-main .mujs-footer .error:nth-child(odd){background:var(--mujs-odd-err, hsl(0, 100%, 11%)) !important}.mainframe{background:rgba(0,0,0,0);position:fixed;bottom:var(--mujs-position-bottom, 1rem);right:var(--mujs-position-right, 1rem);top:var(--mujs-position-top, unset);left:var(--mujs-position-left, unset)}.mainframe count-frame{width:fit-content;width:-moz-fit-content;width:-webkit-fit-content;height:auto;padding:14px 16px}.mainframe.error{opacity:1 !important}.mainframe.error count-frame{background:var(--mujs-even-err, hsl(0, 100%, 22%)) !important}.mainframe:not(.hidden){z-index:100000000000000000 !important;display:block}count-frame{border-radius:1000px;margin:0px 3px;padding:4px 6px;border:2px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));font-size:16px;font-weight:400;display:inline-block;text-align:center;min-width:1em;background:var(--mujs-background-color, hsl(222, 14%, 33%));-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}mujs-header{order:1;display:flex;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-left:.5em;padding-right:.5em;padding-bottom:.5em;font-size:1em;place-content:space-between;height:fit-content;height:-moz-fit-content;height:-webkit-fit-content;gap:1em}mujs-header>*:not(mujs-url){height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}mujs-header mujs-url{order:0;flex-grow:1}mujs-header mujs-url>input{width:100%;height:100%;background:var(--mujs-even-row, hsl(222, 14%, 18%));border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:4px}mujs-header .rate-container{order:1}mujs-header .mujs-sty-flex{order:2}mujs-header .btn-frame{order:999999999999}mujs-body{order:2;overflow-x:hidden;padding:0px;height:100%;border:1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));border-bottom-left-radius:16px;border-bottom-right-radius:16px}mujs-body .mujs-ratings{padding:0 .25em;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));border-radius:1000px;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-body mu-jsbtn{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}mujs-body table,mujs-body th,mujs-body td{border-collapse:collapse}mujs-body table{width:100%;width:-moz-available;width:-webkit-fill-available}@media screen and (max-width: 1180px){mujs-body table thead>tr{display:table-column}mujs-body table .frame:not(.webext-page){width:100%;display:flex;flex-flow:row wrap;align-items:center;border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));padding-top:.5em;padding-bottom:.5em}mujs-body table .frame:not(.webext-page) td{margin:auto;border-bottom:1px solid rgba(0,0,0,0)}mujs-body table .frame:not(.webext-page) td>mujs-a,mujs-body table .frame:not(.webext-page) td>mu-js,mujs-body table .frame:not(.webext-page) td>mujs-column{text-align:center;justify-content:center}mujs-body table .frame:not(.webext-page) td:not(.mujs-name,.install-btn){width:25%}mujs-body table .frame:not(.webext-page) .mujs-name{width:100%}}@media screen and (max-width: 550px){mujs-body table .frame:not(.webext-page) td{margin:1rem !important}mujs-body table .frame:not(.webext-page) td:not(.mujs-name,.install-btn){width:auto !important}}mujs-body table th,mujs-body table td{border-bottom:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table th{position:-webkit-sticky;position:sticky;top:0;background:rgba(72,79,96,.75)}mujs-body table th.mujs-header-name{width:50%}@media screen and (max-width: 800px){mujs-body table th.mujs-header-name{width:auto !important}}mujs-body table .frame:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}mujs-body table .frame:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mujs-a{color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}mujs-body table .frame:not([data-engine=sleazyfork],[data-engine=greasyfork]) mu-jsbtn:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}mujs-body table .frame[data-engine=sleazyfork] mujs-a,mujs-body table .frame[data-engine=greasyfork] mujs-a{color:var(--mujs-gf-color, hsl(197, 100%, 50%))}mujs-body table .frame[data-engine=sleazyfork] mujs-a:hover,mujs-body table .frame[data-engine=greasyfork] mujs-a:hover{color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn,mujs-body table .frame[data-engine=greasyfork] mu-jsbtn{background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}mujs-body table .frame[data-engine=sleazyfork] mu-jsbtn:hover,mujs-body table .frame[data-engine=greasyfork] mu-jsbtn:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}mujs-body table .frame[data-good] mujs-a,mujs-body table .frame[data-author] mujs-a{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}mujs-body table .frame[data-good] mujs-a:hover,mujs-body table .frame[data-author] mujs-a:hover{color:#80ab30}mujs-body table .frame[data-good] .mujs-list,mujs-body table .frame[data-author] .mujs-list{color:#fff}mujs-body table .frame[data-good] mu-jsbtn,mujs-body table .frame[data-author] mu-jsbtn{color:#20385a;background:var(--mujs-placeholder, hsl(81, 56%, 54%));border-color:var(--mujs-placeholder, hsl(81, 56%, 54%))}mujs-body table .frame[data-good] mu-jsbtn:hover,mujs-body table .frame[data-author] mu-jsbtn:hover{background:#b5d874;border-color:#b5d874}mujs-body table .frame .mujs-ratings[data-el=good]{border-color:#393;background-color:rgba(51,153,51,.102);color:#3f3}mujs-body table .frame .mujs-ratings[data-el=ok]{border-color:#990;background-color:rgba(153,153,0,.102);color:#ff0}mujs-body table .frame .mujs-ratings[data-el=bad]{border-color:#900;background-color:rgba(153,51,51,.102);color:red}mujs-body table .frame svg{fill:currentColor;width:14px;height:14px;background:rgba(0,0,0,0)}mujs-body table .frame>td:not(.mujs-name){text-align:center}mujs-body table .frame>.mujs-name>mujs-a{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}mujs-body table .frame>.mujs-name mu-jsbtn,mujs-body table .frame>.mujs-name mu-js{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content}mujs-body table .frame>.mujs-name>mu-jsbtn{margin:auto}mujs-body table .frame>.mujs-name>mujs-column>mu-jsbtn{padding:0px 7px}mujs-body table .frame>.mujs-uframe>mujs-a{font-size:16px;font-weight:500;padding-left:.5rem;padding-right:.5rem}mujs-body table .frame [data-el=more-info]>mujs-row{gap:.25em}mujs-body table .frame [data-el=matches]{gap:.25em;max-width:40em}mujs-body table .frame [data-el=matches] .mujs-grants{display:inline-flex;flex-flow:row wrap;overflow:auto;overflow-wrap:break-word;text-overflow:ellipsis;white-space:nowrap;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;max-height:5em;gap:.2em}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a{display:inline}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a:not([data-command]){cursor:default !important;color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a::after{content:", ";color:var(--mujs-txt-color, hsl(0, 0%, 100%))}mujs-body table .frame [data-el=matches] .mujs-grants>mujs-a:last-child::after{content:""}@media screen and (max-width: 1150px){.mujs-cfg{margin:0px auto 1rem auto !important}}.mujs-cfg{height:fit-content;height:-moz-fit-content;height:-webkit-fit-content}@media screen and (max-height: 720px){.mujs-cfg:not(.webext-page){height:100%;height:-moz-available;height:-webkit-fill-available;width:100%;width:-moz-available;width:-webkit-fill-available;overflow-x:auto;padding:.5em}}.mujs-cfg mujs-section{border-radius:16px;padding:.5em}.mujs-cfg mujs-section:nth-child(even){background:var(--mujs-even-row, hsl(222, 14%, 18%)) !important}.mujs-cfg mujs-section:nth-child(odd){background:var(--mujs-odd-row, hsl(222, 14%, 33%)) !important}.mujs-cfg mujs-section>label{display:flex;justify-content:space-between}.mujs-cfg mujs-section>label input:not([type=checkbox]){font-size:14px;position:relative;border-radius:4px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg mujs-section>label input[type=text]::-webkit-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-moz-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]:-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::-ms-input-placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg mujs-section>label input[type=text]::placeholder{color:var(--mujs-placeholder, hsl(81, 56%, 54%))}.mujs-cfg .mujs-inlab{position:relative;width:38px}.mujs-cfg .mujs-inlab input[type=checkbox]{display:none}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label{margin-left:0;background:var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox]:checked+label:before{right:0px}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=greasyfork]:checked+label,.mujs-cfg .mujs-inlab input[type=checkbox][data-name=sleazyfork]:checked+label{background:var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=openuserjs]:checked+label{background:var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568))}.mujs-cfg .mujs-inlab input[type=checkbox][data-name=github]:checked+label{background:var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568))}.mujs-cfg .mujs-inlab label{padding:0;display:block;overflow:hidden;height:16px;border-radius:20px;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%))}.mujs-cfg .mujs-inlab label:before{content:"";display:block;width:20px;height:20px;margin:-2px;background:var(--mujs-txt-color, hsl(0, 0%, 100%));position:absolute;top:0;right:20px;border-radius:20px}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]{background:var(--mujs-sf-btn-color, hsl(12, 86%, 50%));border-color:var(--mujs-sf-btn-color, hsl(12, 86%, 50%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset]:hover{background:var(--mujs-sf-txt-color, hsl(12, 79%, 55%));border-color:var(--mujs-sf-txt-color, hsl(12, 79%, 55%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]{background:var(--mujs-gf-color, hsl(204, 100%, 40%));border-color:var(--mujs-gf-color, hsl(204, 100%, 40%))}.mujs-cfg .mujs-sty-flex mujs-btn[data-command=save]:hover{background:var(--mujs-gf-btn-color, hsl(211, 87%, 56%));border-color:var(--mujs-gf-btn-color, hsl(211, 87%, 56%))}.mujs-cfg:not(.webext-page){margin:1rem 25rem}mujs-a{display:inline-block}.mujs-name{display:flex;flex-flow:column wrap;gap:.5em}.mujs-name span{font-size:.8em !important}mujs-btn{font-style:normal;font-weight:500;font-variant:normal;text-transform:none;text-rendering:auto;text-align:center;border:1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));font-size:16px;border-radius:4px;line-height:1;padding:6px 15px}mujs-btn svg{fill:var(--mujs-txt-color, hsl(0, 0%, 100%));width:14px;height:14px}mu-jsbtn{font-size:14px;border-radius:4px;font-style:normal;padding:7px 15%;font-weight:400;font-variant:normal;line-height:normal;display:block;text-align:center}mujs-a,mu-jsbtn,.mujs-pointer,.mujs-cfg mujs-section *:not(input[type=password],input[type=text],input[type=number]),.mainbtn,.mainframe,mujs-btn{cursor:pointer !important}
 `;
 const inIframe = () => {
   try {
@@ -159,7 +163,8 @@ function safeSelf() {
     createElementNS: g.document.createElementNS.bind(g.document),
     createTextNode: g.document.createTextNode.bind(g.document),
     setTimeout: g.setTimeout,
-    clearTimeout: g.clearTimeout
+    clearTimeout: g.clearTimeout,
+    trustedTypes: g.trustedTypes
   };
   userjs.safeSelf = safe;
   return safe;
@@ -679,9 +684,12 @@ const iconSVG = {
       }
       svgElem.setAttributeNS(null, k, v);
     }
-    if (typeof iconSVG[type].html === 'string') {
-      svgElem.innerHTML = iconSVG[type].html;
-    }
+    try {
+      if (typeof iconSVG[type].html === 'string') {
+        svgElem.innerHTML = iconSVG[type].html;
+      }
+    // eslint-disable-next-line no-unused-vars
+    } catch (ex) { /* empty */ }
     if (container) {
       container.appendChild(svgElem);
       return svgElem;
@@ -824,7 +832,7 @@ const Network = {
     if (Number.isNaN(bytes)) return '0 Bytes';
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
-    const i = Math.floor(Math.pow(bytes) / Math.log(k));
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${Network.sizes[i]}`;
   },
   sizes: ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
@@ -941,6 +949,7 @@ const sleazyRedirect = () => {
       /\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/,
       '//$1' + otherSite + '.org'
     );
+    info(`Redirecting to "${str}"`);
     if (isFN(winLocation.assign)) {
       winLocation.assign(str);
     } else {
@@ -1056,7 +1065,7 @@ class initContainer {
    */
   async inject(callback, doc) {
     if (this.checkBlacklist(this.host)) {
-      err('Blacklisted website');
+      err(`Blacklisted "${this.host}"`);
       this.remove();
       return;
     }
@@ -1153,6 +1162,9 @@ class initContainer {
   checkBlacklist(str) {
     str = str || this.host;
     let blacklisted = false;
+    if (/accounts*\.google\./.test(this.webpage.host)) {
+      blacklisted = true;
+    }
     for (const b of normalizeTarget(cfg.blacklist)) {
       if (typeof b === 'string') {
         if (b.startsWith('userjs-')) {
@@ -1673,9 +1685,6 @@ function primaryFN() {
               elem.remove();
             }
           }
-          if (container.oldBlacklist) {
-            delete container.oldBlacklist;
-          }
           container.unsaved = true;
           container.rebuild = true;
           rebuildCfg();
@@ -1883,7 +1892,7 @@ function primaryFN() {
 
       checkBlacklist(str) {
         if (container.checkBlacklist(str)) {
-          this.showError('Blacklisted');
+          this.showError(`Blacklisted "${str}"`);
           timeoutFrame();
           return true;
         }
@@ -2129,6 +2138,7 @@ function primaryFN() {
       }
       Object.assign(obj, {
         code_data: code,
+        code_meta: {},
         code_size: [Network.format(code.length)],
         code_match: [],
         code_grant: [],
@@ -2138,6 +2148,24 @@ function primaryFN() {
       const afSet = new Set();
       const meta = parse_meta(code);
       const applies_to_names = calculate_applies_to_names(code);
+
+      if (translate) {
+        for (const lng of language.cache) {
+          if (meta[`name:${lng}`]) {
+            Object.assign(obj, {
+              name: meta[`name:${lng}`],
+              translated: true
+            });
+          }
+          if (meta[`description:${lng}`]) {
+            Object.assign(obj, {
+              description: meta[`description:${lng}`],
+              translated: true
+            });
+          }
+        }
+      }
+
       for (const [key, value] of Object.entries(meta)) {
         if (/grant/.test(key)) {
           for (const v of normalizeTarget(value, false)) {
@@ -2156,32 +2184,11 @@ function primaryFN() {
         }
       }
       Object.assign(obj, {
+        code_meta: meta,
         code_match: applies_to_names,
         code_grant: [...grantSet],
         antifeatures: [...afSet]
       });
-      if (translate) {
-        const headers = code.match(/\/\/\s*@[\w][\s\S]+/g);
-        if (isNull(headers)) {
-          return code;
-        }
-        for (const lng of language.cache) {
-          const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-          const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-          if (!isNull(findName)) {
-            Object.assign(obj, {
-              name: findName[1],
-              translated: true
-            });
-          }
-          if (!isNull(findDesc)) {
-            Object.assign(obj, {
-              description: findDesc[1],
-              translated: true
-            });
-          }
-        }
-      }
       return code;
     };
     const template = {
@@ -2389,6 +2396,12 @@ function primaryFN() {
       });
       if (engine) {
         tr.dataset.engine = engine;
+        // if (engine.includes('fork')) {
+        //   fdaily.dataset.command = 'open-tab';
+        //   fdaily.dataset.webpage = `${ujs.url}/stats`;
+        //   fupdated.dataset.command = 'open-tab';
+        //   fupdated.dataset.webpage = `${ujs.url}/versions`;
+        // }
         if (!engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.url)) {
           tr.dataset.good = 'upsell';
         }
@@ -2414,7 +2427,7 @@ function primaryFN() {
       eframe.append(scriptInstall);
       ratings.append(fratings, fgood, fok, fbad);
       jsInfo.append(ftotal, ratings, fver, fcreated);
-      mkList('Size', {
+      mkList(i18n$('code_size'), {
         list: ujs.code_size,
         type: 'size',
         root: jsInfo
@@ -2455,10 +2468,6 @@ function primaryFN() {
       try {
         if (isEmpty(host)) {
           host = container.host;
-        }
-        if (container.oldBlacklist) {
-          MUJS.makeError({ message: i18n$('legacy'), cause: 'Blacklist outdated', notify: true });
-          return;
         }
         if (MUJS.checkBlacklist(host)) {
           return;
@@ -2507,6 +2516,7 @@ function primaryFN() {
           }
           createjs(ujs, engine);
         };
+        const arr = [];
         for (const engine of engines) {
           const cEngine = cache[`${engine.name}`];
           if (!isEmpty(cEngine)) {
@@ -2516,16 +2526,24 @@ function primaryFN() {
             MUJS.updateCounter(cEngine.length, engine);
             continue;
           }
+          /**
+           * @param { import("../typings/UserJS.d.ts").GSFork } dataQ
+           */
           const forkFN = async (dataQ) => {
             if (!dataQ) {
-              MUJS.showError('Invalid data received from the server, TODO fix this');
+              MUJS.showError('Invalid data received from the server, check internet connection');
               return;
             }
-            const data = dataQ.query;
-            if (!Array.isArray(data)) {
+
+            const data = (Array.isArray(dataQ.query) ? dataQ.query : []).filter((d) => !d.deleted);
+            if (isBlank(data)) {
               return;
             }
             const hideData = [];
+            /**
+             * @param {import("../typings/UserJS.d.ts").GSForkQuery} d
+             * @returns {boolean}
+             */
             const inUserLanguage = (d) => {
               const dlocal = d.locale.split('-')[0] ?? d.locale;
               if (language.cache.includes(dlocal)) {
@@ -2535,9 +2553,6 @@ function primaryFN() {
               return false;
             };
             const filterLang = data.filter((d) => {
-              if (d.deleted) {
-                return false;
-              }
               if (cfg.filterlang && !inUserLanguage(d)) {
                 return false;
               }
@@ -2546,7 +2561,7 @@ function primaryFN() {
             let finalList = filterLang;
             const hds = [];
             for (const ujs of hideData) {
-              await reqCode(ujs);
+              await reqCode(ujs, true);
               if (ujs.translated) {
                 hds.push(ujs);
               }
@@ -2641,8 +2656,9 @@ function primaryFN() {
               MUJS.showError(ex);
             }
           };
+          let netFN;
           if (engine.name.includes('fork')) {
-            Network.req(`${engine.url}/scripts/by-site/${host}.json`)
+            netFN = Network.req(`${engine.url}/scripts/by-site/${host}.json`)
               .then(forkFN)
               .catch(MUJS.showError);
           } else if (/github/gi.test(engine.name)) {
@@ -2650,7 +2666,7 @@ function primaryFN() {
               MUJS.showError(`"${engine.name}" requires a token to use`);
               continue;
             }
-            Network.req(
+            netFN = Network.req(
               `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
               'GET',
               'json',
@@ -2683,15 +2699,22 @@ function primaryFN() {
               })
               .catch(MUJS.showError);
           } else {
-            Network.req(`${engine.url}${host}`, 'GET', 'document')
+            netFN = Network.req(`${engine.url}${host}`, 'GET', 'document')
               .then(customFN)
               .catch((error) => {
                 MUJS.showError(`Engine: "${engine.name}"`, error);
               });
           }
+          if (netFN) {
+            arr.push(netFN);
+          }
         }
         urlBar.placeholder = i18n$('search_placeholder');
         urlBar.value = '';
+        Promise.allSettled(arr).then(() => {
+          tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
+          tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
+        });
       } catch (ex) {
         MUJS.showError(ex);
       }
@@ -3053,11 +3076,9 @@ function primaryFN() {
       dom.cl.add(th, 'mujs-pointer');
       ael(th, 'click', () => {
         /** [Stack Overflow Reference](https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407) */
-        const table = th.closest('table');
-        const tbody = table.querySelector('tbody');
-        Array.from(tbody.querySelectorAll('tr'))
+        Array.from(tabbody.querySelectorAll('tr'))
           .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (this.asc = !this.asc)))
-          .forEach((tr) => tbody.appendChild(tr));
+          .forEach((tr) => tabbody.appendChild(tr));
       });
     }
     makecfg();
@@ -3085,24 +3106,8 @@ const loadDOM = (onDomReady) => {
     once: true
   });
 };
-// /**
-//  * @type { import("../typings/UserJS.d.ts").setObj }
-//  */
-// const setObj = (objA = {}, objB = {}) => {
-//   objA = objA || {};
-//   objB = objB || {};
-//   for (const [key, value] of Object.entries(objA)) {
-//     if (!hasOwn(objB, key)) {
-//       objB[key] = value;
-//     } else if (typeof value === 'object') {
-//       setObj(value, objB[key]);
-//     }
-//   }
-//   return objB;
-// };
 const init = async () => {
   const stored = await StorageSystem.getValue('Config', defcfg);
-  // cfg = setObj(defcfg, stored);
   cfg = {
     ...defcfg,
     ...stored
@@ -3111,12 +3116,15 @@ const init = async () => {
   loadDOM((doc) => {
     try {
       if (window.location === null) {
-        err('"window.location" is null, reload the webpage or use a different one');
-        return;
+        throw new Error ('"window.location" is null, reload the webpage or use a different one');
       }
       if (doc === null) {
-        err('"doc" is null, reload the webpage or use a different one');
-        return;
+        throw new Error ('"doc" is null, reload the webpage or use a different one');
+      }
+      if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        window.trustedTypes.createPolicy('default', {
+          createHTML: (string) => string
+        });
       }
       sleazyRedirect();
       container.inject(primaryFN, doc);

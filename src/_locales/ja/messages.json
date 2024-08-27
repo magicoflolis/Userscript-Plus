@@ -17,9 +17,6 @@
   "userjs_description": {
     "message": "現在のウェブページで利用可能なユーザスクリプトを検索します。"
   },
-  "legacy": {
-    "message": "設定をリセットしてください。"
-  },
   "createdby": {
     "message": "によって作成された"
   },
@@ -130,5 +127,8 @@
   },
   "import_theme": {
     "message": "テーマのインポート"
+  },
+  "code_size": {
+    "message": "コード・サイズ"
   }
 }

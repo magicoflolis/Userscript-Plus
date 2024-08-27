@@ -12,123 +12,123 @@
     "description": "Must not exceed 112 characters"
   },
   "userjs_name": {
-    "message": "Magic Userscript+ : Show Site All UserJS"
+    "message": "Magic Userscript+ : Pokaż witrynę Wszystkie UserJS"
   },
   "userjs_description": {
-    "message": "Finds available userscripts for the current webpage."
+    "message": "Wyszukuje dostępne skrypty użytkownika dla bieżącej strony internetowej."
   },
   "createdby": {
-    "message": "Created by"
+    "message": "Stworzony przez"
   },
   "name": {
-    "message": "Name"
+    "message": "Nazwa"
   },
   "daily_installs": {
-    "message": "Daily Installs"
+    "message": "Codzienne instalacje"
   },
   "close": {
-    "message": "Close"
+    "message": "Zamknij"
   },
   "filterA": {
-    "message": "Filter"
+    "message": "Filtr"
   },
   "max": {
-    "message": "Maximize"
+    "message": "Maksymalizuj"
   },
   "min": {
-    "message": "Minimize"
+    "message": "Minimalizuj"
   },
   "search": {
-    "message": "Search"
+    "message": "Wyszukiwanie"
   },
   "search_placeholder": {
-    "message": "Search scripts"
+    "message": "Wyszukiwanie skryptów użytkownika"
   },
   "install": {
-    "message": "Install"
+    "message": "Instalacja"
   },
   "issue": {
-    "message": "New Issue"
+    "message": "Nowy numer"
   },
   "version_number": {
-    "message": "Version"
+    "message": "Wersja"
   },
   "updated": {
-    "message": "Last Updated"
+    "message": "Ostatnia aktualizacja"
   },
   "total_installs": {
-    "message": "Total Installs"
+    "message": "Łączna liczba instalacji"
   },
   "ratings": {
-    "message": "Ratings"
+    "message": "Oceny"
   },
   "good": {
-    "message": "Good"
+    "message": "Dobry"
   },
   "ok": {
     "message": "Ok"
   },
   "bad": {
-    "message": "Bad"
+    "message": "Zły"
   },
   "created_date": {
-    "message": "Created"
+    "message": "Utworzony"
   },
   "redirect": {
-    "message": "Greasy Fork for adults"
+    "message": "Greasy Fork dla dorosłych"
   },
   "filter": {
-    "message": "Filter out other languages"
+    "message": "Odfiltruj inne języki"
   },
   "dtime": {
-    "message": "Display Timeout"
+    "message": "Limit czasu wyświetlania"
   },
   "save": {
-    "message": "Save"
+    "message": "Zapisz"
   },
   "reset": {
     "message": "Reset"
   },
   "preview_code": {
-    "message": "Preview Code"
+    "message": "Kod podglądu"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "Zapisz plik"
   },
   "newTab": {
-    "message": "New Tab"
+    "message": "Nowa karta"
   },
   "applies_to": {
-    "message": "Applies to"
+    "message": "Dotyczy"
   },
   "license": {
-    "message": "License"
+    "message": "Licencja"
   },
   "no_license": {
     "message": "N/A"
   },
   "antifeatures": {
-    "message": "Antifeatures"
+    "message": "Antywzorce"
   },
   "userjs_fullscreen": {
-    "message": "Automatic Fullscreen"
+    "message": "Automatyczny pełny ekran"
   },
   "listing_none": {
-    "message": "(None)"
+    "message": "(Brak)"
   },
   "export_config": {
-    "message": "Export Config"
+    "message": "Konfiguracja eksportu"
   },
   "export_theme": {
-    "message": "Export Theme"
+    "message": "Motyw eksportu"
   },
   "import_config": {
-    "message": "Import Config"
+    "message": "Importuj konfigurację"
   },
   "import_theme": {
-    "message": "Import Theme"
+    "message": "Importuj motyw"
   },
   "code_size": {
-    "message": "Code Size"
+    "message": "Kod Rozmiar"
   }
 }

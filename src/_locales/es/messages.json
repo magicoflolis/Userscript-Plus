@@ -17,9 +17,6 @@
   "userjs_description": {
     "message": "Busca los usercripts disponibles para la página web actual."
   },
-  "legacy": {
-    "message": "¡POR FAVOR RESTABLECE TU CONFIGURACIÓN!"
-  },
   "createdby": {
     "message": "Creado por"
   },
@@ -130,5 +127,8 @@
   },
   "import_theme": {
     "message": "Importar tema"
+  },
+  "code_size": {
+    "message": "Código Tamaño"
   }
 }

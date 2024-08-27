@@ -12,97 +12,97 @@
     "description": "Must not exceed 112 characters"
   },
   "userjs_name": {
-    "message": "Magic Userscript+ : Show Site All UserJS"
+    "message": "Magic Userscript+ : Website anzeigen Alle UserJS"
   },
   "userjs_description": {
-    "message": "Finds available userscripts for the current webpage."
+    "message": "Findet verfügbare Benutzerskripte für die aktuelle Webseite."
   },
   "createdby": {
-    "message": "Created by"
+    "message": "Erstellt von"
   },
   "name": {
     "message": "Name"
   },
   "daily_installs": {
-    "message": "Daily Installs"
+    "message": "Tägliche Installationen"
   },
   "close": {
-    "message": "Close"
+    "message": "Schließen Sie"
   },
   "filterA": {
     "message": "Filter"
   },
   "max": {
-    "message": "Maximize"
+    "message": "Maximieren Sie"
   },
   "min": {
-    "message": "Minimize"
+    "message": "minimieren"
   },
   "search": {
-    "message": "Search"
+    "message": "Suche"
   },
   "search_placeholder": {
-    "message": "Search scripts"
+    "message": "Suche nach Userscripts"
   },
   "install": {
-    "message": "Install"
+    "message": "Installieren Sie"
   },
   "issue": {
-    "message": "New Issue"
+    "message": "Neue Ausgabe"
   },
   "version_number": {
     "message": "Version"
   },
   "updated": {
-    "message": "Last Updated"
+    "message": "Zuletzt aktualisiert"
   },
   "total_installs": {
-    "message": "Total Installs"
+    "message": "Installationen insgesamt"
   },
   "ratings": {
-    "message": "Ratings"
+    "message": "Bewertungen"
   },
   "good": {
-    "message": "Good"
+    "message": "Gut"
   },
   "ok": {
-    "message": "Ok"
+    "message": "Okay"
   },
   "bad": {
-    "message": "Bad"
+    "message": "Schlecht"
   },
   "created_date": {
-    "message": "Created"
+    "message": "Erstellt"
   },
   "redirect": {
-    "message": "Greasy Fork for adults"
+    "message": "Greasy Fork für Erwachsene"
   },
   "filter": {
-    "message": "Filter out other languages"
+    "message": "Andere Sprachen herausfiltern"
   },
   "dtime": {
-    "message": "Display Timeout"
+    "message": "Zeitüberschreitung anzeigen"
   },
   "save": {
-    "message": "Save"
+    "message": "Speichern Sie"
   },
   "reset": {
-    "message": "Reset"
+    "message": "Zurücksetzen"
   },
   "preview_code": {
-    "message": "Preview Code"
+    "message": "Vorschau Code"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "Datei speichern"
   },
   "newTab": {
-    "message": "New Tab"
+    "message": "Neue Registerkarte"
   },
   "applies_to": {
-    "message": "Applies to"
+    "message": "Gilt für"
   },
   "license": {
-    "message": "License"
+    "message": "Lizenz"
   },
   "no_license": {
     "message": "N/A"
@@ -111,24 +111,24 @@
     "message": "Antifeatures"
   },
   "userjs_fullscreen": {
-    "message": "Automatic Fullscreen"
+    "message": "Automatischer Vollbildmodus"
   },
   "listing_none": {
-    "message": "(None)"
+    "message": "(Keine)"
   },
   "export_config": {
-    "message": "Export Config"
+    "message": "Konfig exportieren"
   },
   "export_theme": {
-    "message": "Export Theme"
+    "message": "Thema exportieren"
   },
   "import_config": {
-    "message": "Import Config"
+    "message": "Konfig importieren"
   },
   "import_theme": {
-    "message": "Import Theme"
+    "message": "Thema importieren"
   },
   "code_size": {
-    "message": "Code Size"
+    "message": "Code Größe"
   }
 }

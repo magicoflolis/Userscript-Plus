@@ -17,9 +17,6 @@
   "userjs_description": {
     "message": "يبحث عن نصوص المستخدمين المتاحة لصفحة الويب الحالية."
   },
-  "legacy": {
-    "message": "يرجى إعادة ضبط التكوين الخاص بك!"
-  },
   "createdby": {
     "message": "انشأ من قبل"
   },
@@ -130,5 +127,8 @@
   },
   "import_theme": {
     "message": "استيراد النسق"
+  },
+  "code_size": {
+    "message": "حجم الرمز"
   }
 }
