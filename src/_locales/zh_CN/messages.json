@@ -18,13 +18,13 @@
     "message": "为当前网页查找可用的用户脚本。"
   },
   "createdby": {
-    "message": "由...制作"
+    "message": "由...创建"
   },
   "name": {
     "message": "姓名"
   },
   "daily_installs": {
-    "message": "日常安装"
+    "message": "日安装量"
   },
   "close": {
     "message": "不再显示"
@@ -72,7 +72,7 @@
     "message": "不好"
   },
   "created_date": {
-    "message": "创建"
+    "message": "创建于"
   },
   "redirect": {
     "message": "大人的Greasyfork"
@@ -84,7 +84,7 @@
     "message": "显示超时"
   },
   "save": {
-    "message": "拯救"
+    "message": "保存"
   },
   "reset": {
     "message": "重置"
@@ -93,10 +93,10 @@
     "message": "预览代码"
   },
   "saveFile": {
-    "message": "保存存档"
+    "message": "保存文件"
   },
   "newTab": {
-    "message": "新标签"
+    "message": "新标签打开"
   },
   "applies_to": {
     "message": "适用于"
@@ -129,6 +129,6 @@
     "message": "导入主题"
   },
   "code_size": {
-    "message": "代码 尺寸"
+    "message": "脚本大小"
   }
 }
