@@ -1,3 +1,5 @@
+// TODO: add translations to "Install as user style?"
+
 // #region Console
 const dbg = (...msg) => {
   const dt = new Date();
@@ -508,6 +510,7 @@ class Memorize {
   }
 }
 const memory = new Memorize();
+//#region Icon SVGs
 const iconSVG = {
   cfg: {
     viewBox: '0 0 24 24',
@@ -571,6 +574,11 @@ const iconSVG = {
     stroke: 'currentColor',
     html: '<g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g>'
   },
+  refresh: {
+    viewBox: '0 0 1024 1024',
+    fill: 'currentColor',
+    html: '<path d="M981.314663 554.296783a681.276879 681.276879 0 0 1-46.986468 152.746388q-105.706098 230.734238-360.983096 242.19829a593.06288 593.06288 0 0 1-228.689008-33.853939v-1.022615l-31.808709 79.979258a55.759429 55.759429 0 0 1-20.506122 22.551352 40.043451 40.043451 0 0 1-21.04434 5.382184 51.076928 51.076928 0 0 1-19.483507-5.382184 95.210839 95.210839 0 0 1-13.347817-7.158305 52.314831 52.314831 0 0 1-5.382184-4.628679L71.671707 731.908862a57.427906 57.427906 0 0 1-7.158305-21.528737 46.932646 46.932646 0 0 1 1.022615-17.438277 35.952991 35.952991 0 0 1 7.158305-13.347816 74.435608 74.435608 0 0 1 10.279972-10.279972 60.495751 60.495751 0 0 1 11.248765-7.373593 50.431066 50.431066 0 0 1 8.18092-3.606063 6.189512 6.189512 0 0 0 3.067845-1.776121l281.003839-74.866183a91.497132 91.497132 0 0 1 35.899168-2.583448 122.337047 122.337047 0 0 1 22.174599 6.404799 21.528737 21.528737 0 0 1 12.325202 12.325202 76.157907 76.157907 0 0 1 4.628679 14.854829 47.63233 47.63233 0 0 1 0 14.370431 55.167388 55.167388 0 0 1-2.04523 10.764369 10.764368 10.764368 0 0 0-1.022615 3.606063l-32.831324 79.979258a677.50935 677.50935 0 0 0 164.264262 39.505232q77.395809 7.696523 131.809692-3.606063a358.507291 358.507291 0 0 0 101.023598-36.921784 381.27393 381.27393 0 0 0 73.951211-50.753997 352.64071 352.64071 0 0 0 48.708767-55.382676 410.391547 410.391547 0 0 0 26.910921-41.550462c3.767529-7.481236 6.673908-13.616926 8.719139-18.460892zM40.885614 449.667121a685.69027 685.69027 0 0 1 63.563595-176.427998q118.0313-212.273346 374.330913-207.160271a571.803252 571.803252 0 0 1 207.160271 39.989629l33.853939-78.956643A75.619688 75.619688 0 0 1 735.187378 9.189165a37.67529 37.67529 0 0 1 15.393047-8.234742 42.303968 42.303968 0 0 1 14.854829-0.538219 47.578509 47.578509 0 0 1 13.347817 3.606064 102.907362 102.907362 0 0 1 11.302586 6.13569 49.569917 49.569917 0 0 1 6.673909 4.628678l3.067845 3.067845 154.84544 276.913379a81.970666 81.970666 0 0 1 6.13569 22.712817 46.986468 46.986468 0 0 1-1.022615 17.438277 32.293105 32.293105 0 0 1-7.696523 13.347817 69.322533 69.322533 0 0 1-10.764369 9.741753 92.142994 92.142994 0 0 1-11.302587 6.673909l-8.18092 4.09046a7.104483 7.104483 0 0 1-3.067845 1.022615l-283.049068 67.546412a112.003254 112.003254 0 0 1-46.125319-1.022615c-11.571696-3.390776-19.160576-8.019454-22.551352-13.832214a41.173709 41.173709 0 0 1-5.382184-21.04434 97.256069 97.256069 0 0 1 1.291724-17.438277 24.381295 24.381295 0 0 1 3.067845-8.234742L600.632773 296.81309a663.730958 663.730958 0 0 0-164.102797-43.057474q-77.987849-9.203535-131.809692 0a348.227319 348.227319 0 0 0-101.292707 33.853938 368.571976 368.571976 0 0 0-75.350579 49.246986 383.31916 383.31916 0 0 0-50.269601 54.360061 408.507783 408.507783 0 0 0-28.740863 41.012244A113.025869 113.025869 0 0 0 40.885614 449.667121z m0 0" fill="#ffffff" p-id="2275"></path>'
+  },
   load(type, container) {
     const safe = safeSelf();
     const svgElem = safe.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -584,8 +592,10 @@ const iconSVG = {
       if (typeof iconSVG[type].html === 'string') {
         svgElem.innerHTML = iconSVG[type].html;
       }
-    // eslint-disable-next-line no-unused-vars
-    } catch (ex) { /* empty */ }
+      // eslint-disable-next-line no-unused-vars
+    } catch (ex) {
+      /* empty */
+    }
     if (container) {
       container.appendChild(svgElem);
       return svgElem;
@@ -593,6 +603,7 @@ const iconSVG = {
     return svgElem.outerHTML;
   }
 };
+//#endregion
 /**
  * @type { import("../typings/UserJS.d.ts").StorageSystem }
  */
@@ -1159,6 +1170,7 @@ function primaryFN() {
       textContent: '0'
     });
     const rateContainer = make('mujs-column', 'rate-container');
+    const promptElem = make('mujs-row', 'mujs-prompt');
     const footer = make('mujs-row', 'mujs-footer');
     const tabbody = make('tbody');
     const toolbar = make('mujs-toolbar');
@@ -1270,7 +1282,7 @@ function primaryFN() {
     urlContainer.append(urlBar);
     header.append(urlContainer, rateContainer, countframe, btnframe);
     tbody.append(table, cfgpage);
-    main.append(toolbar, header, tbody, footer);
+    main.append(toolbar, header, tbody, footer, promptElem);
     mainframe.append(mainbtn);
     exBtn.append(importCFG, importTheme, exportCFG, exportTheme);
     header.append(exBtn);
@@ -1489,16 +1501,31 @@ function primaryFN() {
         if (!target) {
           return;
         }
-        const dataset = target.dataset;
-        const cmd = dataset.command;
+        const prmpt = /prompt-/.test(target.dataset.command);
+        let dataset = target.dataset;
+        let cmd = dataset.command;
+        let prmptChoice = false;
+        if (prmpt) {
+          dataset = target.parentElement.dataset;
+          cmd = dataset.command;
+          prmptChoice = /confirm/.test(target.dataset.command);
+          target.parentElement.parentElement.remove();
+        }
         if (cmd === 'install-script' && dataset.userjs) {
+          let installCode = dataset.userjs;
+          if (!prmpt && dataset.userjs.endsWith('.user.css')) {
+            MUJS.makePrompt('Install as user style?', dataset);
+            return;
+          } else if (prmpt !== prmptChoice) {
+            installCode = dataset.userjs.replace(/\.user\.css$/, '.user.js');
+          };
           const dlBtn = make('a', '', {
             onclick(evt) {
               evt.preventDefault();
               doInstallProcess(evt.target);
             }
           });
-          dlBtn.href = dataset.userjs;
+          dlBtn.href = installCode;
           dlBtn.click();
         } else if (cmd === 'open-tab' && dataset.webpage) {
           if (isGM) {
@@ -1811,6 +1838,43 @@ function primaryFN() {
           }
         }
         dom.text(mainbtn, container.counters.total);
+      }
+
+      makePrompt(txt, dataset = {}, usePrompt = true) {
+        if (qs('.prompt', promptElem)) {
+          for (const elem of qsA('.prompt', promptElem)) {
+            if (elem.dataset.prompt) {
+              elem.remove();
+            }
+          }
+        }
+        const el = make('mu-js', 'prompt', {
+          dataset: {
+            prompt: txt
+          }
+        });
+        const elHead = make('mu-js', 'prompt-head', {
+          innerHTML: `${iconSVG.load('refresh')} ${txt}`
+        });
+        el.append(elHead);
+        if (usePrompt) {
+          const elPrompt = make('mu-js', 'prompt-body', { dataset });
+          const elYes = make('mujs-btn', 'prompt-confirm', {
+            innerHTML: 'Confirm',
+            dataset: {
+              command: 'prompt-confirm'
+            }
+          });
+          const elNo = make('mujs-btn', 'prompt-deny', {
+            innerHTML: 'Deny',
+            dataset: {
+              command: 'prompt-deny'
+            }
+          });
+          elPrompt.append(elYes, elNo);
+          el.append(elPrompt);
+        }
+        promptElem.append(el);
       }
 
       makeError(...ex) {
@@ -3012,10 +3076,10 @@ const init = async () => {
   loadDOM((doc) => {
     try {
       if (window.location === null) {
-        throw new Error ('"window.location" is null, reload the webpage or use a different one');
+        throw new Error('"window.location" is null, reload the webpage or use a different one');
       }
       if (doc === null) {
-        throw new Error ('"doc" is null, reload the webpage or use a different one');
+        throw new Error('"doc" is null, reload the webpage or use a different one');
       }
       if (window.trustedTypes && window.trustedTypes.createPolicy) {
         window.trustedTypes.createPolicy('default', {
