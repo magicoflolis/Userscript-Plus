@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      6.7.1
+// @version      6.7.2
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -45,12 +45,14 @@
 // @grant     GM_getValue
 // @grant     GM_openInTab
 // @grant     GM_setValue
+// @grant     GM_registerMenuCommand
 // @grant     GM_xmlhttpRequest
 // @grant     GM.addElement
 // @grant     GM.info
 // @grant     GM.getValue
 // @grant     GM.openInTab
 // @grant     GM.setValue
+// @grant     GM.registerMenuCommand
 // @grant     GM.xmlHttpRequest
 // @match     https://*/*
 // @noframes
@@ -755,6 +757,31 @@ const StorageSystem = {
     }
   }
 };
+class jsCommand {
+  constructor() {
+    this.cmds = [];
+  }
+  register(text, command) {
+    if (!isGM) {
+      return;
+    }
+
+    if (isFN(command)) {
+      const found = this.cmds.find(c => command === c);
+      if (found) {
+        return;
+      }
+      this.cmds.push(command);
+    }
+
+    if (isFN(GM.registerMenuCommand)) {
+      GM.registerMenuCommand(text, command);
+    } else if (isFN(GM_registerMenuCommand)) {
+      GM_registerMenuCommand(text, command);
+    }
+  }
+};
+const Command = new jsCommand();
 /**
  * @type { import("../typings/UserJS.d.ts").Network }
  */
@@ -3192,6 +3219,12 @@ const init = async () => {
       }
       sleazyRedirect();
       container.inject(primaryFN, doc);
+      Command.register('Inject Userscript+', () => {
+        container.inject(primaryFN, doc);
+      });
+      Command.register('Close Userscript+', () => {
+        container.remove();
+      });
     } catch (ex) {
       err(ex);
     }

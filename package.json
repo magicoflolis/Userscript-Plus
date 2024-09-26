@@ -9,7 +9,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues"
   },
   "userJS": {
-    "version": "6.7.1",
+    "version": "6.7.2",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "description": "Finds available userscripts for the current webpage.",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues",
@@ -62,12 +62,14 @@
         "GM_getValue",
         "GM_openInTab",
         "GM_setValue",
+        "GM_registerMenuCommand",
         "GM_xmlhttpRequest",
         "GM.addElement",
         "GM.info",
         "GM.getValue",
         "GM.openInTab",
         "GM.setValue",
+        "GM.registerMenuCommand",
         "GM.xmlHttpRequest"
       ],
       "exclude": [],

@@ -651,6 +651,31 @@ const StorageSystem = {
     }
   }
 };
+class jsCommand {
+  constructor() {
+    this.cmds = [];
+  }
+  register(text, command) {
+    if (!isGM) {
+      return;
+    }
+
+    if (isFN(command)) {
+      const found = this.cmds.find(c => command === c);
+      if (found) {
+        return;
+      }
+      this.cmds.push(command);
+    }
+
+    if (isFN(GM.registerMenuCommand)) {
+      GM.registerMenuCommand(text, command);
+    } else if (isFN(GM_registerMenuCommand)) {
+      GM_registerMenuCommand(text, command);
+    }
+  }
+};
+const Command = new jsCommand();
 /**
  * @type { import("../typings/UserJS.d.ts").Network }
  */
@@ -3088,6 +3113,12 @@ const init = async () => {
       }
       sleazyRedirect();
       container.inject(primaryFN, doc);
+      Command.register('Inject Userscript+', () => {
+        container.inject(primaryFN, doc);
+      });
+      Command.register('Close Userscript+', () => {
+        container.remove();
+      });
     } catch (ex) {
       err(ex);
     }

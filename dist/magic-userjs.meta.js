@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      6.7.1
+// @version      6.7.2
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -45,12 +45,14 @@
 // @grant     GM_getValue
 // @grant     GM_openInTab
 // @grant     GM_setValue
+// @grant     GM_registerMenuCommand
 // @grant     GM_xmlhttpRequest
 // @grant     GM.addElement
 // @grant     GM.info
 // @grant     GM.getValue
 // @grant     GM.openInTab
 // @grant     GM.setValue
+// @grant     GM.registerMenuCommand
 // @grant     GM.xmlHttpRequest
 // @match     https://*/*
 // @noframes
