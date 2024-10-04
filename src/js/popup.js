@@ -1,10 +1,9 @@
 'use strict';
-// eslint-disable-next-line no-unused-vars
 import { err, log, info } from './logger.js';
 import { dom, normalizeTarget, qs, qsA } from './querySelector.js';
 let cfg = {};
 
-const { hermes, ael, make, isNull, isEmpty, isObj, reqCode, parse_meta } = userjs;
+const { hermes, ael, make, isBlank, isNull, isEmpty, isObj, reqCode, parse_meta } = userjs;
 const hasOwn = Object.hasOwn || Object.prototype.hasOwnProperty.call;
 
 // Lets highlight me :)
@@ -109,6 +108,11 @@ const iconSVG = {
     stroke: 'currentColor',
     html: '<g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g>'
   },
+  refresh: {
+    viewBox: '0 0 1024 1024',
+    fill: 'currentColor',
+    html: '<path d="M981.314663 554.296783a681.276879 681.276879 0 0 1-46.986468 152.746388q-105.706098 230.734238-360.983096 242.19829a593.06288 593.06288 0 0 1-228.689008-33.853939v-1.022615l-31.808709 79.979258a55.759429 55.759429 0 0 1-20.506122 22.551352 40.043451 40.043451 0 0 1-21.04434 5.382184 51.076928 51.076928 0 0 1-19.483507-5.382184 95.210839 95.210839 0 0 1-13.347817-7.158305 52.314831 52.314831 0 0 1-5.382184-4.628679L71.671707 731.908862a57.427906 57.427906 0 0 1-7.158305-21.528737 46.932646 46.932646 0 0 1 1.022615-17.438277 35.952991 35.952991 0 0 1 7.158305-13.347816 74.435608 74.435608 0 0 1 10.279972-10.279972 60.495751 60.495751 0 0 1 11.248765-7.373593 50.431066 50.431066 0 0 1 8.18092-3.606063 6.189512 6.189512 0 0 0 3.067845-1.776121l281.003839-74.866183a91.497132 91.497132 0 0 1 35.899168-2.583448 122.337047 122.337047 0 0 1 22.174599 6.404799 21.528737 21.528737 0 0 1 12.325202 12.325202 76.157907 76.157907 0 0 1 4.628679 14.854829 47.63233 47.63233 0 0 1 0 14.370431 55.167388 55.167388 0 0 1-2.04523 10.764369 10.764368 10.764368 0 0 0-1.022615 3.606063l-32.831324 79.979258a677.50935 677.50935 0 0 0 164.264262 39.505232q77.395809 7.696523 131.809692-3.606063a358.507291 358.507291 0 0 0 101.023598-36.921784 381.27393 381.27393 0 0 0 73.951211-50.753997 352.64071 352.64071 0 0 0 48.708767-55.382676 410.391547 410.391547 0 0 0 26.910921-41.550462c3.767529-7.481236 6.673908-13.616926 8.719139-18.460892zM40.885614 449.667121a685.69027 685.69027 0 0 1 63.563595-176.427998q118.0313-212.273346 374.330913-207.160271a571.803252 571.803252 0 0 1 207.160271 39.989629l33.853939-78.956643A75.619688 75.619688 0 0 1 735.187378 9.189165a37.67529 37.67529 0 0 1 15.393047-8.234742 42.303968 42.303968 0 0 1 14.854829-0.538219 47.578509 47.578509 0 0 1 13.347817 3.606064 102.907362 102.907362 0 0 1 11.302586 6.13569 49.569917 49.569917 0 0 1 6.673909 4.628678l3.067845 3.067845 154.84544 276.913379a81.970666 81.970666 0 0 1 6.13569 22.712817 46.986468 46.986468 0 0 1-1.022615 17.438277 32.293105 32.293105 0 0 1-7.696523 13.347817 69.322533 69.322533 0 0 1-10.764369 9.741753 92.142994 92.142994 0 0 1-11.302587 6.673909l-8.18092 4.09046a7.104483 7.104483 0 0 1-3.067845 1.022615l-283.049068 67.546412a112.003254 112.003254 0 0 1-46.125319-1.022615c-11.571696-3.390776-19.160576-8.019454-22.551352-13.832214a41.173709 41.173709 0 0 1-5.382184-21.04434 97.256069 97.256069 0 0 1 1.291724-17.438277 24.381295 24.381295 0 0 1 3.067845-8.234742L600.632773 296.81309a663.730958 663.730958 0 0 0-164.102797-43.057474q-77.987849-9.203535-131.809692 0a348.227319 348.227319 0 0 0-101.292707 33.853938 368.571976 368.571976 0 0 0-75.350579 49.246986 383.31916 383.31916 0 0 0-50.269601 54.360061 408.507783 408.507783 0 0 0-28.740863 41.012244A113.025869 113.025869 0 0 0 40.885614 449.667121z m0 0" fill="#ffffff" p-id="2275"></path>'
+  },
   load(type, container) {
     const xmlns = 'http://www.w3.org/2000/svg';
     const svgElem = document.createElementNS(xmlns, 'svg');
@@ -130,7 +134,7 @@ const iconSVG = {
 };
 const i18n$ = (txt) => webext.i18n.getMessage(txt);
 
-const main = qs('mujs-root > .main');
+const main = qs('mujs-main');
 const cfgpage = qs('.mujs-cfg');
 // const tbody = qs('.mujs-body');
 const footer = qs('.mujs-footer');
@@ -142,11 +146,18 @@ const table = qs('table');
 const tabbody = qs('tbody');
 const tabhead = qs('thead');
 
-const filterList = qs('.mujs-fltlist');
-filterList.placeholder = i18n$('search_placeholder');
+const urlBar = qs('.mujs-url-bar');
+urlBar.placeholder = i18n$('search_placeholder');
+const btncfg = qs('mujs-btn.settings');
 const btngreasy = qs('mujs-btn.greasy');
 const btnissue = qs('mujs-btn.issue');
 const btnhome = qs('mujs-btn.github');
+
+// const header = qs('mujs-header');
+const toolbar = qs('mujs-toolbar');
+
+const promptElem = make('mujs-row', 'mujs-prompt');
+main.append(promptElem);
 
 const makeTHead = (rows) => {
   const tr = make('tr');
@@ -157,6 +168,25 @@ const makeTHead = (rows) => {
   tabhead.append(tr);
   table.append(tabhead, tabbody);
 };
+makeTHead([
+  {
+    class: 'mujs-header-name',
+    textContent: i18n$('name')
+  },
+  {
+    textContent: i18n$('createdby')
+  },
+  {
+    textContent: i18n$('daily_installs')
+  },
+  {
+    textContent: i18n$('updated')
+  },
+  {
+    textContent: i18n$('install')
+  }
+]);
+
 const renderTheme = (theme) => {
   theme = theme || cfg.theme;
   if (isEmpty(theme)) {
@@ -268,6 +298,46 @@ const ContainerHandler = class {
   updateCounters() {
     dom.text(sfcounter, this.customCount);
     dom.text(gfcounter, this.forkCount);
+    webext.browserAction.setBadgeText({
+      text: `${this.forkCount + this.customCount}`
+    });
+  }
+
+  makePrompt(txt, dataset = {}, usePrompt = true) {
+    if (qs('.prompt', promptElem)) {
+      for (const elem of qsA('.prompt', promptElem)) {
+        if (elem.dataset.prompt) {
+          elem.remove();
+        }
+      }
+    }
+    const el = make('mu-js', 'prompt', {
+      dataset: {
+        prompt: txt
+      }
+    });
+    const elHead = make('mu-js', 'prompt-head', {
+      innerHTML: `${iconSVG.load('refresh')} ${txt}`
+    });
+    el.append(elHead);
+    if (usePrompt) {
+      const elPrompt = make('mu-js', 'prompt-body', { dataset });
+      const elYes = make('mujs-btn', 'prompt-confirm', {
+        innerHTML: 'Confirm',
+        dataset: {
+          command: 'prompt-confirm'
+        }
+      });
+      const elNo = make('mujs-btn', 'prompt-deny', {
+        innerHTML: 'Deny',
+        dataset: {
+          command: 'prompt-deny'
+        }
+      });
+      elPrompt.append(elYes, elNo);
+      el.append(elPrompt);
+    }
+    promptElem.append(el);
   }
 
   save() {
@@ -288,6 +358,7 @@ const ContainerHandler = class {
   }
 
   refresh() {
+    urlBar.placeholder = i18n$('newTab');
     this.forkCount = 0;
     this.customCount = 0;
     this.updateCounters();
@@ -296,78 +367,161 @@ const ContainerHandler = class {
 };
 const MUJS = new ContainerHandler();
 
-const ntHead = qs('mujs-tabs');
-const activeTab = (tab) => {
-  dom.cl.remove(qsA('mujs-tab', ntHead), 'active');
-  dom.cl.add(tab, 'active');
-  if (tab.dataset.host === 'about:blank') {
-    MUJS.refresh();
-  } else {
-    buildlist(tab.dataset.host);
+class Tabs {
+  constructor() {
+    this.Tab = new Map();
+    this.blank = 'about:blank';
+    this.protocal = 'mujs:';
+    this.protoReg = new RegExp(`${this.protocal}(.+)`);
+    this.el = {
+      add: make('mujs-addtab', '', {
+        textContent: '+',
+        dataset: {
+          command: 'new-tab'
+        }
+      }),
+      head: make('mujs-tabs')
+    };
+    this.el.head.append(this.el.add);
+    toolbar.append(this.el.head);
   }
-};
-/** @param { Element } tab */
-const closeTab = (tab) => {
-  if (MUJS.cache.has(tab.dataset.host)) {
-    MUJS.cache.delete(tab.dataset.host);
+  hasTab(...params) {
+    for (const p of params) {
+      if (!this.Tab.has(p)) {
+        return false;
+      }
+      const content = normalizeTarget(this.Tab.get(p)).filter((t) => p === t.dataset.host);
+      if (isBlank(content)) {
+        return false;
+      }
+    }
+    return true;
   }
-  if (dom.cl.has(tab, 'active')) {
-    MUJS.refresh();
+  storeTab(host) {
+    const h = host ?? this.blank;
+    if (!this.Tab.has(h)) {
+      this.Tab.set(h, new Set());
+    }
+    return this.Tab.get(h);
   }
-  const sibling = tab.previousElementSibling ?? tab.nextElementSibling;
-  if (sibling) {
-    if (sibling.dataset.command !== 'new-tab') {
-      activeTab(sibling);
+  cache(host, ...tabs) {
+    const h = host ?? this.blank;
+    const tabCache = this.storeTab(h);
+    for (const t of normalizeTarget(tabs)) {
+      if (tabCache.has(t)) {
+        continue;
+      }
+      tabCache.add(t);
+    }
+    this.Tab.set(h, tabCache);
+    return tabCache;
+  }
+  mujs(host) {
+    if (!host.startsWith(this.protocal)) {
+      return;
+    }
+    const type = host.match(this.protoReg)[1];
+    if (type === 'settings') {
+      dom.cl.remove([cfgpage], 'hidden');
+      dom.cl.add(table, 'hidden');
+      // if (!MUJS.supported) {
+      //   dom.attr(MUJS.frame, 'style', 'height: 100%;');
+      // }
     }
   }
-  tab.remove();
-};
-const newTab = (host = undefined) => {
-  const tab = make('mujs-tab', '', {
-    dataset: {
-      command: 'switch-tab'
-    },
-    style: `order: ${ntHead.childElementCount};`
-  });
-  const tabClose = make('mu-js', '', {
-    dataset: {
-      command: 'close-tab'
-    },
-    textContent: 'X'
-  });
-  const tabHost = make('mujs-host');
-  tab.append(tabHost, tabClose);
-  ntHead.append(tab);
-  dom.cl.remove(qsA('mujs-tab', ntHead), 'active');
-  dom.cl.add(tab, 'active');
-
-  if (isNull(host)) {
-    MUJS.refresh();
-    tab.dataset.host = 'about:blank';
-    const siteSearcher = make('input', 'mujs-searcher', {
-      autocomplete: 'off',
-      spellcheck: false,
-      type: 'text',
-      placeholder: i18n$('newTab'),
-      onchange(evt) {
-        evt.preventDefault();
-        const value = getHost(evt.target.value);
-        if (MUJS.checkBlacklist(value)) {
-          MUJS.showError(`Host blacklisted "${value}"`);
-          return;
-        }
-        tab.dataset.host = value;
-        tabHost.textContent = value;
-        buildlist(value);
-        siteSearcher.remove();
+  active(tab, build = true) {
+    for (const t of normalizeTarget(tab, false)) {
+      dom.cl.add([cfgpage], 'hidden');
+      dom.cl.remove(table, 'hidden');
+      dom.cl.remove(qsA('mujs-tab', this.el.head), 'active');
+      dom.cl.add(t, 'active');
+      if (!build) {
+        continue;
       }
-    });
-    tabHost.append(siteSearcher);
-  } else {
-    tab.dataset.host = host || MUJS.host;
-    tabHost.textContent = host || MUJS.host;
+      const host = t.dataset.host ?? this.blank;
+      if (host === this.blank) {
+        MUJS.refresh();
+      } else if (host.startsWith(this.protocal)) {
+        this.mujs(host);
+      } else {
+        buildlist(host);
+      }
+    }
   }
-};
+  /** @param { HTMLElement } tab */
+  close(tab) {
+    for (const t of normalizeTarget(tab, false)) {
+      const host = t.dataset.host;
+      if (MUJS.cache.has(host)) {
+        MUJS.cache.delete(host);
+      }
+      if (dom.cl.has(t, 'active')) {
+        MUJS.refresh();
+      }
+      const sibling = t.previousElementSibling ?? t.nextElementSibling;
+      if (sibling) {
+        if (sibling.dataset.command !== 'new-tab') {
+          this.active(sibling);
+        }
+      }
+      if (this.Tab.has(host)) {
+        this.Tab.delete(host);
+      }
+      t.remove();
+    }
+  }
+  create(host = undefined) {
+    if (typeof host === 'string') {
+      if (host.startsWith(this.protocal) && this.hasTab(host)) {
+        this.active(this.Tab.get(host));
+        return;
+      }
+      const content = normalizeTarget(this.storeTab(host)).filter((t) => host === t.dataset.host);
+      if (!isEmpty(content)) {
+        return;
+      }
+    }
+    const tab = make('mujs-tab', '', {
+      dataset: {
+        command: 'switch-tab'
+      },
+      style: `order: ${this.el.head.childElementCount};`
+    });
+    const tabClose = make('mu-js', '', {
+      dataset: {
+        command: 'close-tab'
+      },
+      title: i18n$('close'),
+      textContent: 'X'
+    });
+    const tabHost = make('mujs-host');
+    tab.append(tabHost, tabClose);
+    this.el.head.append(tab);
+    this.active(tab, false);
+    this.cache(host, tab);
+    if (isNull(host)) {
+      MUJS.refresh();
+      urlBar.placeholder = i18n$('newTab');
+      tab.dataset.host = this.blank;
+      tabHost.title = i18n$('newTab');
+      tabHost.textContent = i18n$('newTab');
+    } else if (host.startsWith(this.protocal)) {
+      const type = host.match(this.protoReg)[1];
+      tab.dataset.host = host || MUJS.host;
+      tabHost.title = type || tab.dataset.host;
+      tabHost.textContent = tabHost.title;
+      this.mujs(host);
+    } else {
+      tab.dataset.host = host || MUJS.host;
+      tabHost.title = host || MUJS.host;
+      tabHost.textContent = tabHost.title;
+    }
+    return tab;
+  }
+}
+const tab = new Tabs();
+
+// const ntHead = qs('mujs-tabs');
 
 const template = {
   id: 0,
@@ -631,35 +785,51 @@ const createjs = (ujs, engine) => {
 };
 // #endregion
 const doInstallProcess = async (installLink) => {
-  window.top.location.href = installLink.href;
-  installLink.remove();
-  // await Setup();
+  const jsStr = `
+  var evt = document.createEvent('MouseEvents');
+  evt.initEvent('click', true, true);
+  var link = document.createElement('a');
+  link.href = '${installLink}';
+  link.dispatchEvent(evt);
+  link.remove();
+  `;
+  webext.tabs.executeScript(null, { code: jsStr }).catch((ex) => {
+    MUJS.showError(ex);
+  });
 };
 ael(main, 'click', async (evt) => {
   try {
-    /** @type { Element } */
+    /** @type { HTMLElement } */
     const target = evt.target.closest('[data-command]');
     if (!target) {
       return;
     }
-    const dataset = target.dataset;
-    const cmd = dataset.command;
+    const prmpt = /prompt-/.test(target.dataset.command);
+    let dataset = target.dataset;
+    let cmd = dataset.command;
+    let prmptChoice = false;
+    if (prmpt) {
+      dataset = target.parentElement.dataset;
+      cmd = dataset.command;
+      prmptChoice = /confirm/.test(target.dataset.command);
+      target.parentElement.parentElement.remove();
+    }
     if (cmd === 'install-script' && dataset.userjs) {
-      const dlBtn = make('a', '', {
-        onclick(evt) {
-          evt.preventDefault();
-          doInstallProcess(evt.target);
-        }
-      });
-      dlBtn.href = dataset.userjs;
-      dlBtn.click();
+      let installCode = dataset.userjs;
+      if (!prmpt && dataset.userjs.endsWith('.user.css')) {
+        MUJS.makePrompt('Install as user style?', dataset);
+        return;
+      } else if (prmpt !== prmptChoice) {
+        installCode = dataset.userjs.replace(/\.user\.css$/, '.user.js');
+      }
+      doInstallProcess(installCode);
     } else if (cmd === 'open-tab' && dataset.webpage) {
       userjs.openInTab(dataset.webpage);
     } else if (cmd === 'navigation') {
       if (dom.cl.has(btngreasy, 'hidden')) {
-        dom.cl.remove([btngreasy, btnhome, btnissue], 'hidden');
+        dom.cl.remove([btncfg, btngreasy, btnhome, btnissue], 'hidden');
       } else {
-        dom.cl.add([btngreasy, btnhome, btnissue], 'hidden');
+        dom.cl.add([btncfg, btngreasy, btnhome, btnissue], 'hidden');
       }
     } else if (cmd === 'list-description') {
       const arr = [];
@@ -706,22 +876,25 @@ ael(main, 'click', async (evt) => {
       if (MUJS.unsaved) {
         MUJS.showError('Unsaved changes');
       }
-      if (dom.cl.has(cfgpage, 'hidden')) {
-        dom.cl.remove(cfgpage, 'hidden');
-        dom.cl.add(table, 'hidden');
-      } else {
-        dom.cl.add(cfgpage, 'hidden');
-        dom.cl.remove(table, 'hidden');
-      }
+      tab.create('mujs:settings');
+      // if (dom.cl.has(cfgpage, 'hidden')) {
+      //   dom.cl.remove(cfgpage, 'hidden');
+      //   dom.cl.add(table, 'hidden');
+      // } else {
+      //   dom.cl.add(cfgpage, 'hidden');
+      //   dom.cl.remove(table, 'hidden');
+      // }
       MUJS.rebuild = false;
     } else if (cmd === 'new-tab') {
-      newTab();
+      // newTab();
+      tab.create();
     } else if (cmd === 'switch-tab') {
-      dom.cl.add(cfgpage, 'hidden');
-      dom.cl.remove(table, 'hidden');
-      activeTab(target);
+      tab.active(target);
+      // dom.cl.add(cfgpage, 'hidden');
+      // dom.cl.remove(table, 'hidden');
+      // activeTab(target);
     } else if (cmd === 'close-tab' && target.parentElement) {
-      closeTab(target.parentElement);
+      tab.close(target.parentElement);
     } else if (cmd === 'download-userjs') {
       if (!MUJS.userjsCache.has(+dataset.userjs)) {
         return;
@@ -867,25 +1040,24 @@ ael(main, 'click', async (evt) => {
     MUJS.showError(ex);
   }
 });
-renderTheme(cfg.theme);
-makeTHead([
-  {
-    class: 'mujs-header-name',
-    textContent: i18n$('name')
-  },
-  {
-    textContent: i18n$('createdby')
-  },
-  {
-    textContent: i18n$('daily')
-  },
-  {
-    textContent: i18n$('updated')
-  },
-  {
-    textContent: i18n$('install')
+ael(main, 'auxclick', (evt) => {
+  if (evt.button !== 1) {
+    return;
   }
-]);
+  /** @type { HTMLElement } */
+  const target = evt.target.closest('[data-command]');
+  if (!target) {
+    return;
+  }
+  const dataset = target.dataset;
+  const cmd = dataset.command;
+  if (cmd === 'switch-tab' || cmd === 'close-tab') {
+    tab.close(target);
+  } else if (cmd === 'new-tab') {
+    tab.create();
+  }
+});
+renderTheme(cfg.theme);
 const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
 const comparer = (idx, asc) => (a, b) =>
   ((v1, v2) =>
@@ -897,23 +1069,23 @@ for (const th of tabhead.rows[0].cells) {
   if (dom.text(th) === i18n$('install')) continue;
   dom.cl.add(th, 'mujs-pointer');
   ael(th, 'click', () => {
-    /**
-     * @link https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407
-     */
-    const table = th.closest('table');
-    const tbody = table.querySelector('tbody');
-    Array.from(tbody.querySelectorAll('tr'))
+    /** [Stack Overflow Reference](https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407) */
+    Array.from(tabbody.querySelectorAll('tr'))
       .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (this.asc = !this.asc)))
-      .forEach((tr) => tbody.appendChild(tr));
+      .forEach((tr) => tabbody.appendChild(tr));
   });
 }
-ael(filterList, 'input', (evt) => {
+ael(urlBar, 'input', (evt) => {
   evt.preventDefault();
-  if (isEmpty(evt.target.value)) {
+  if (urlBar.placeholder === i18n$('newTab')) {
+    return;
+  }
+  const val = evt.target.value;
+  if (isEmpty(val)) {
     dom.cl.remove(qsA('tr[data-engine]', tabbody), 'hidden');
     return;
   }
-  const reg = new RegExp(evt.target.value, 'gi');
+  const reg = new RegExp(val, 'gi');
   const finds = new Set();
   const userjsCache = MUJS.userjsCache;
   for (const [k, v] of userjsCache) {
@@ -942,6 +1114,39 @@ ael(filterList, 'input', (evt) => {
   dom.cl.add(qsA('tr[data-engine]', tabbody), 'hidden');
   dom.cl.remove([...finds], 'hidden');
 });
+ael(urlBar, 'change', (evt) => {
+  evt.preventDefault();
+  const val = evt.target.value;
+  if (urlBar.placeholder === i18n$('newTab') && qs('mujs-tab.active', toolbar)) {
+    const tabElem = qs('mujs-tab.active', toolbar);
+    const tabHost = qs('mujs-host', tabElem);
+    if (val.startsWith('mujs:')) {
+      tab.close(tabElem);
+      if (tab.hasTab(val)) {
+        tab.active(tab.Tab.get(val));
+      } else {
+        tab.create(val);
+      }
+      return;
+    } else if (val === '*') {
+      tabElem.dataset.host = val;
+      tabHost.title = '<All Sites>';
+      tabHost.textContent = '<All Sites>';
+      buildlist(val);
+      return;
+    }
+    const value = getHost(val);
+    if (MUJS.checkBlacklist(value)) {
+      MUJS.showError(`Host blacklisted "${value}"`);
+      return;
+    }
+    tabElem.dataset.host = value;
+    tabHost.title = value;
+    tabHost.textContent = value;
+    buildlist(value);
+    return;
+  }
+});
 
 async function buildlist(host = undefined) {
   try {
@@ -951,16 +1156,19 @@ async function buildlist(host = undefined) {
     if (MUJS.checkBlacklist(host)) {
       return;
     }
-    if (!qs(`mujs-tab[data-host="${host}"]`, ntHead)) {
-      newTab(host);
-    }
+    tab.create(host);
+    // if (!qs(`mujs-tab[data-host="${host}"]`, ntHead)) {
+    //   tab.create(host);
+    // }
     MUJS.refresh();
     const data = await webext.runtime.sendMessage({
       location: host
     });
     primaryFN(data);
+    urlBar.placeholder = i18n$('search_placeholder');
+    urlBar.value = '';
   } catch (ex) {
-    err(ex)
+    err(ex);
   }
 }
 
@@ -971,9 +1179,10 @@ function primaryFN(data) {
     }
     for (const tabData of data) {
       const { engine, host } = tabData;
-      if (!qs(`mujs-tab[data-host="${host}"]`, ntHead)) {
-        newTab(host);
-      }
+      tab.create(host);
+      // if (!qs(`mujs-tab[data-host="${host}"]`, ntHead)) {
+      //   tab.create(host);
+      // }
       if (engine.name.includes('fork')) {
         MUJS.addForkCnt(tabData.data.length);
       } else {

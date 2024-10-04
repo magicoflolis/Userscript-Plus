@@ -2643,7 +2643,7 @@ function primaryFN() {
           };
           let netFN;
           if (engine.name.includes('fork')) {
-            netFN = Network.req(`${engine.url}/scripts/by-site/${host}.json`)
+            netFN = Network.req(`${engine.url}/scripts/by-site/${host}.json?language=all`)
               .then(forkFN)
               .catch(MUJS.showError);
           } else if (/github/gi.test(engine.name)) {

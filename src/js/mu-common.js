@@ -267,6 +267,33 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
     }
   };
 
+  class LanguageHandler {
+    constructor() {
+      this.current = (navigator.language ?? 'en').split('-')[0] ?? 'en';
+      this.cache = [];
+
+      const languages = navigator.languages ?? [];
+      for (const nlang of languages) {
+        const lg = nlang.split('-')[0];
+        if (this.cache.indexOf(lg) === -1) {
+          this.cache.push(lg);
+        }
+      }
+
+      if (!this.cache.includes(this.current)) {
+        this.cache.push(this.current);
+      }
+    }
+  }
+  const language = new LanguageHandler();
+  // const i18n$ = (...args) => {
+  //   const arr = [];
+  //   for (const arg of args) {
+  //     arr.push(webext.i18n.getMessage(arg));
+  //   }
+  //   return arr.length !== 1 ? arr : arr[0];
+  // };
+
   const META_START_COMMENT = '// ==UserScript==';
   const META_END_COMMENT = '// ==/UserScript==';
   const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
@@ -447,6 +474,7 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
                 tld_extra: false
               });
             }
+            // eslint-disable-next-line no-unused-vars
           } catch (error) {
             addObj({ text: original_pattern, domain: false, tld_extra: false });
           }
@@ -457,7 +485,7 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
     }
     return [...name_set];
   };
-  const reqCode = async (obj = {}) => {
+  const reqCode = async (obj = {}, translate = false) => {
     if (obj.code_data) {
       return obj.code_data;
     }
@@ -468,6 +496,7 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
     }
     Object.assign(obj, {
       code_data: code,
+      code_meta: {},
       code_size: [Network.format(code.length)],
       code_match: [],
       code_grant: [],
@@ -477,6 +506,24 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
     const afSet = new Set();
     const meta = parse_meta(code);
     const applies_to_names = calculate_applies_to_names(code);
+
+    if (translate) {
+      for (const lng of language.cache) {
+        if (meta[`name:${lng}`]) {
+          Object.assign(obj, {
+            name: meta[`name:${lng}`],
+            translated: true
+          });
+        }
+        if (meta[`description:${lng}`]) {
+          Object.assign(obj, {
+            description: meta[`description:${lng}`],
+            translated: true
+          });
+        }
+      }
+    }
+
     for (const [key, value] of Object.entries(meta)) {
       if (/grant/.test(key)) {
         for (const v of normalizeTarget(value, false)) {
@@ -495,6 +542,7 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
       }
     }
     Object.assign(obj, {
+      code_meta: meta,
       code_match: applies_to_names,
       code_grant: [...grantSet],
       antifeatures: [...afSet]
@@ -564,6 +612,7 @@ if (typeof userjs === 'object' && userjs.isNull instanceof Function === false) {
   userjs.calculate_applies_to_names = calculate_applies_to_names;
   userjs.reqCode = reqCode;
   userjs.normalizeTarget = normalizeTarget;
+  userjs.language = language;
 
   Object.assign(userjs, {
     makeImage(imgSrc = '', attrs = {}, cname) {

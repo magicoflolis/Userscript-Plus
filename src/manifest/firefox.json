@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/webextension.json",
   "manifest_version": 2,
   "default_locale": "en",
   "name": "__MSG_extName__",
@@ -16,7 +17,7 @@
       "64": "img/icon_64.png"
     },
     "default_popup": "popup.html",
-    "default_title": "UserJS - Popup"
+    "default_title": "UserJS"
   },
   "options_ui": {
     "page": "settings.html",
@@ -24,11 +25,10 @@
   },
   "permissions": [
     "tabs",
+    "<all_urls>",
     "storage",
     "unlimitedStorage",
-    "webNavigation",
-    "webRequest",
-    "<all_urls>"
+    "webRequest"
   ],
   "browser_specific_settings": {
     "gecko": {

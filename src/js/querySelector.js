@@ -256,11 +256,7 @@ dom.cl = class {
 /******************************************************************************/
 
 /**
- * Prefix for `document.querySelectorAll()`
- * @template { Element } E
- * @param { string } selectors - Elements for query selection
- * @param { E } root - Root selector Element
- * @returns { NodeListOf<E> }
+ * @type { import("../typings/UserJS.d.ts").qsA }
  */
 const qsA = (selectors, root) => {
   try {
@@ -271,11 +267,7 @@ const qsA = (selectors, root) => {
   return [];
 };
 /**
- * Prefix for `document.querySelector()`
- * @template { Element } E
- * @param { string } selector - Element for query selection
- * @param { E } root - Root selector Element
- * @returns { E | null }
+ * @type { import("../typings/UserJS.d.ts").qs }
  */
 const qs = (selector, root) => {
   try {

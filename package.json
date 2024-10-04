@@ -2,7 +2,7 @@
   "name": "userscript-plus",
   "description": "Finds available userscripts for the current webpage.",
   "author": "Magic <magicoflolis@tuta.io>",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "license": "MIT",
   "homepage": "https://github.com/magicoflolis/Userscript-Plus",
   "bugs": {
@@ -98,37 +98,37 @@
     "web-run:firefox-android": "web-ext run --config=./tools/web-ext.js -t firefox-android --firefox-apk org.mozilla.firefox"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.4.17",
-    "@types/chrome": "0.0.267",
-    "@types/firefox-webext-browser": "120.0.3",
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.7.26",
+    "@types/chrome": "0.0.277",
+    "@types/firefox-webext-browser": "120.0.4",
     "@types/greasemonkey": "4.0.7",
-    "@types/node": "^20.12.11",
-    "@types/tampermonkey": "^5.0.2",
+    "@types/node": "^22.7.4",
+    "@types/tampermonkey": "^5.0.3",
     "@violentmonkey/types": "0.1.7",
-    "browserslist": "^4.23.0",
-    "concurrently": "^8.2.2",
+    "browserslist": "^4.24.0",
+    "concurrently": "^9.0.1",
     "copy-webpack-plugin": "^12.0.2",
     "crx3": "^1.1.3",
-    "css-loader": "^7.1.1",
+    "css-loader": "^7.1.2",
     "dotenv": "^16.4.5",
-    "eslint": "^9.1.1",
+    "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
-    "globals": "^15.1.0",
+    "globals": "^15.10.0",
     "http-server": "^14.1.1",
-    "mini-css-extract-plugin": "^2.9.0",
+    "mini-css-extract-plugin": "^2.9.1",
     "node-watch": "^0.7.4",
     "path-browserify": "^1.0.1",
-    "prettier": "^3.2.5",
-    "sass": "^1.76.0",
-    "sass-loader": "^14.2.1",
+    "prettier": "^3.3.3",
+    "sass": "^1.79.4",
+    "sass-loader": "^16.0.2",
     "swc-loader": "^0.2.6",
     "terser-webpack-plugin": "^5.3.10",
-    "typescript": "^5.4.5",
-    "web-ext": "^7.11.0",
-    "webpack": "^5.91.0",
+    "typescript": "^5.6.2",
+    "web-ext": "^8.3.0",
+    "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
-    "webpack-merge": "^5.10.0"
+    "webpack-merge": "^6.0.1"
   },
   "repository": {
     "type": "git",
@@ -145,8 +145,8 @@
     "violentmonkey"
   ],
   "webExt": {
-    "sourceDir": "./dist/extension/",
-    "artifactsDir": "./build/"
+    "sourceDir": "./build/firefox/",
+    "artifactsDir": "./build"
   },
   "engines": {
     "node": ">=20"

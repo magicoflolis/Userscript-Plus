@@ -30,8 +30,6 @@ Finds available Userscripts for the current webpage, the power of [Greasy Fork](
 
 **Web Extension:**
 
-> Web Extension has not been updated for a long time, please use Userscript until this is resolved!
-
 | Version | Install | Alternative | Notes |
 |:----------:|:----------:|:----------:|:----------:|
 | Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | *N/A* | Work in progress |

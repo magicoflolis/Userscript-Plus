@@ -11,7 +11,7 @@ const MUJS = {
 win.MUJS = MUJS;
 win.Config = Config;
 
-const { hermes, reqCode, isNull, isEmpty } = userjs;
+const { hermes, reqCode, isBlank, isNull, isEmpty, language } = userjs;
 
 const msgCache = {};
 webext.runtime.onConnect.addListener((p) => {
@@ -39,20 +39,6 @@ webext.runtime.onConnect.addListener((p) => {
   });
 });
 
-const alang = [];
-const clang = navigator.language.split('-')[0] ?? 'en';
-if (navigator.languages.length > 0) {
-  for (const nlang of navigator.languages) {
-    const lg = nlang.split('-')[0];
-    if (alang.indexOf(lg) === -1) {
-      alang.push(lg);
-    }
-  }
-}
-if (!alang.includes(clang)) {
-  alang.push(clang);
-}
-
 // Unsupport webpages for each engine
 const unsupported = {
   greasyfork: ['pornhub.com'],
@@ -69,9 +55,13 @@ const formatURL = (txt) =>
     .replace(/\/|https:/g, '');
 
 const webFetcher = async (loc) => {
+  if (isBlank(loc)) {
+    return [];
+  }
   const cfg = Config.cachedLocalStorage ?? {};
   const sites = [];
   const host = formatURL(loc);
+
   let isBlacklisted = false;
   for (const b of cfg.blacklist.filter((b) => b.enabled)) {
     if (b.regex === true) {
@@ -119,64 +109,49 @@ const webFetcher = async (loc) => {
   info('Building list', { cache, engines, allCache: MUJS.cache });
 
   for (const engine of engines) {
-    const forkFN = async (data) => {
-      if (!data) {
+    const forkFN = async (dataQ) => {
+      if (!dataQ) {
+        err('Invalid data received from the server, check internet connection');
+        return;
+      }
+      const dq = Array.isArray(dataQ) ? dataQ : Array.isArray(dataQ.query) ? dataQ.query : [];
+      const data = dq.filter((d) => !d.deleted);
+      if (isBlank(data)) {
         return;
       }
       const hideData = [];
-      const filterLang = data.filter((d) => {
-        if (d.deleted) {
-          return false;
+      const inUserLanguage = (d) => {
+        const dlocal = d.locale.split('-')[0] ?? d.locale;
+        if (language.cache.includes(dlocal)) {
+          return true;
         }
-        if (cfg.filterlang) {
-          const dlocal = d.locale.split('-')[0] ?? d.locale;
-          if (alang.includes(dlocal)) {
-            return true;
-          }
-          hideData.push(d);
+        hideData.push(d);
+        return false;
+      };
+      const filterLang = data.filter((d) => {
+        if (cfg.filterlang && !inUserLanguage(d)) {
           return false;
         }
         return true;
       });
-      let finalList = filterLang;
 
+      let finalList = filterLang;
       const hds = [];
-      for (const h of hideData) {
-        const txt = await reqCode(h);
-        if (typeof txt !== 'string') {
-          continue;
-        }
-        const headers = txt.match(/\/\/\s*@[\w][\s\S]+/g);
-        if (isNull(headers)) {
-          continue;
-        }
-        for (const lng of alang) {
-          const findName = new RegExp(`//\\s*@name:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-          const findDesc = new RegExp(`//\\s*@description:${lng}\\s*(.*)`, 'gi').exec(headers[0]);
-          if (!isNull(findName)) {
-            Object.assign(h, {
-              name: findName[1],
-              translated: true
-            });
-          }
-          if (!isNull(findDesc)) {
-            Object.assign(h, {
-              description: findDesc[1],
-              translated: true
-            });
-          }
+      for (const ujs of hideData) {
+        await reqCode(ujs, true);
+        if (ujs.translated) {
+          hds.push(ujs);
         }
       }
       finalList = [...new Set([...hds, ...filterLang])];
 
-      if (cfg.codePreview) {
-        for (const ujs of finalList) {
-          if (!ujs.code_data) {
-            await reqCode(ujs);
-          }
-          // createjs(ujs, false);
-        }
-      }
+      // if (cfg.codePreview) {
+      //   for (const ujs of finalList) {
+      //     if (!ujs.code_data) {
+      //       await reqCode(ujs);
+      //     }
+      //   }
+      // }
       cache[engine.name].push(...finalList);
       // MUJS.addForkCnt(finalList.length);
       return finalList;
@@ -192,7 +167,7 @@ const webFetcher = async (loc) => {
       continue;
     }
     if (engine.name.includes('fork')) {
-      const data = await userjs.req(`${eURL}/scripts/by-site/${host}.json`).then(forkFN).catch(err);
+      const data = await userjs.req(`${eURL}/scripts/by-site/${host}.json?language=all`).then(forkFN).catch(err);
       sites.push({
         engine,
         data,
@@ -217,39 +192,68 @@ webext.webRequest.onHeadersReceived.addListener(
     ]
   }
 );
-
 /**
  * [onMessage description]
- * @param  msg      The message itself. This is a JSON-ifiable object.
- * @param  sender       A brws.runtime.MessageSender object representing the sender of the message.
- * @param  callback  A function to call, at most once, to send a response to the message. The function takes a single argument, which may be any JSON-ifiable object. This argument is passed back to the message sender.
+ * @param  {*} message - The message itself. This is a JSON-ifiable object.
+ * @param  {chrome.runtime.MessageSender} sender
+ * @param  {(response: any) => void} sendResponse - A function to call, at most once, to send a response to the message. The function takes a single argument, which may be any JSON-ifiable object. This argument is passed back to the message sender.
  */
-function onMessage(msg, sender, callback) {
+function onMessage(message, sender, sendResponse) {
   if (sender.url.includes('popup.html')) {
-    if (msg.location) {
-      webFetcher(msg.location).then((data) => callback(data));
+    if (message.location) {
+      webFetcher(message.location).then((data) => sendResponse(data));
     } else {
       webext.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         for (const tab of tabs) {
           const loc = new URL(tab.url);
-          webFetcher(loc.host).then((data) => callback(data));
+          webFetcher(loc.host).then((data) => sendResponse(data));
         }
       });
     }
   }
 
-  if (msg.name) {
+  if (message.name) {
     if (sender.url.includes('settings.html')) {
-      Config.local.handler.set(msg.name, msg.value);
-      callback({
-        name: msg.name,
-        value: msg.value
+      Config.local.handler.set(message.name, message.value);
+      sendResponse({
+        name: message.name,
+        value: message.value
       });
     } else {
-      callback({ value: Config.cachedLocalStorage[msg.name] });
+      sendResponse({ value: Config.cachedLocalStorage[message.name] });
     }
   }
   return true;
 }
 
 webext.runtime.onMessage.addListener(onMessage);
+
+const tc = (tab) => {
+  const loc = new URL(tab.url);
+  const host = formatURL(loc.host);
+  return {
+    loc,
+    host,
+    cache: MUJS.cache.get(host)
+  };
+}
+const updateCount = (tab) => {
+  const { cache } = tc(tab);
+  let cnt = 0;
+  if (cache) {
+    for (const v of Object.values(cache)) {
+      cnt += v.length;
+    }
+  }
+  webext.browserAction.setBadgeText({
+    text: `${cnt}`
+  });
+}
+
+webext.tabs.onActivated.addListener((activeInfo) => {
+  webext.tabs.get(activeInfo.tabId, updateCount);
+});
+
+webext.tabs.onUpdated.addListener((tabId) => {
+  webext.tabs.get(tabId, updateCount);
+});

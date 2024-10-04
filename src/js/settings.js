@@ -1,6 +1,6 @@
 'use strict';
 import { err, log } from './logger.js';
-// eslint-disable-next-line no-unused-vars
+ 
 import { dom, qs } from './querySelector.js';
 let cfg = {};
 
@@ -364,7 +364,7 @@ const makecfg = () => {
 
 userjs.hermes.getPort().onMessage.addListener((root = {}) => {
   const m = root.msg;
-  log('Settings', root);
+  // log('Settings', root);
   if (root.channel === 'Config' && isEmpty(cfg)) {
     cfg = m.cfg || cfg;
     makecfg();

@@ -1,7 +1,9 @@
+/* eslint-disable prefer-const, no-unused-vars */
 'use strict';
 
-// eslint-disable-next-line prefer-const, no-unused-vars
+/** @type { import("../typings/WebExt.d.ts").webext } */
 let webext = (self.webext = typeof browser == 'undefined' ? chrome : browser);
+/** @type { import("../typings/WebExt.d.ts").userjs } */
 let userjs = (self.userjs = {});
 
 /** Skip text/plain documents */

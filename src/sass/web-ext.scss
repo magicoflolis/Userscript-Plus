@@ -1,22 +1,5 @@
-// @font-face {
-//   font-family: Inter;
-//   font-style: normal;
-//   font-weight: normal;
-//   src: url('fonts/Inter-Regular.woff2') format('woff2');
-// }
-// @font-face {
-//   font-family: Inter;
-//   font-style: normal;
-//   font-weight: 600;
-//   src: url('fonts/Inter-SemiBold.woff2') format('woff2');
-// }
 
-// body.webext-page,
-// .main {
-//   font-family: Inter, sans-serif !important;
-// }
-
-body.webext-page {
+:root body.webext-page {
   overflow-x: hidden;
   padding: 0;
   margin: 0;
@@ -37,8 +20,11 @@ body.webext-page {
       width: -webkit-fill-available;
     }
   }
-  .main {
-    min-width: 50%;
+  mujs-main {
     height: 100%;
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    min-width: 18em;
   }
 }
