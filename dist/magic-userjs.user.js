@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      6.7.2
+// @version      6.7.3
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -2625,8 +2625,8 @@ function primaryFN() {
               MUJS.showError('Invalid data received from the server, check internet connection');
               return;
             }
-
-            const data = (Array.isArray(dataQ.query) ? dataQ.query : []).filter((d) => !d.deleted);
+            const dq = Array.isArray(dataQ) ? dataQ : Array.isArray(dataQ.query) ? dataQ.query : [];
+            const data = dq.filter((d) => !d.deleted);
             if (isBlank(data)) {
               return;
             }

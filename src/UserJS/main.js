@@ -2519,8 +2519,8 @@ function primaryFN() {
               MUJS.showError('Invalid data received from the server, check internet connection');
               return;
             }
-
-            const data = (Array.isArray(dataQ.query) ? dataQ.query : []).filter((d) => !d.deleted);
+            const dq = Array.isArray(dataQ) ? dataQ : Array.isArray(dataQ.query) ? dataQ.query : [];
+            const data = dq.filter((d) => !d.deleted);
             if (isBlank(data)) {
               return;
             }
