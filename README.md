@@ -3,13 +3,12 @@
 > [!IMPORTANT]
 > If the current webpage is set to block resources through CSP
 >
-> It will cause the userscript not work for that webpage!
+> It will cause the User Script not work for that webpage!
 >
 > [https://developer.mozilla.org/docs/Web/HTTP/CSP](https://developer.mozilla.org/docs/Web/HTTP/CSP)
 
 [![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/blob/master/LICENSE)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/issues)
-[![GitHub Release](https://img.shields.io/github/release/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/releases/latest)
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
 [![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
 
@@ -32,8 +31,8 @@ Finds available Userscripts for the current webpage, the power of [Greasy Fork](
 
 | Version | Install | Alternative | Notes |
 |:----------:|:----------:|:----------:|:----------:|
-| Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | *N/A* | Work in progress |
-| Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress |
+| Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest) | *N/A* | Work in progress |
+| Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress |
 
 **(Not Recommended) Bookmarklet:**
 
@@ -83,17 +82,13 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * Ability to change the position of floating counter
 * Ability to choose to have site based configs
 
-**Webextension Features:**
-
-* *N/A*
-
 ## FAQ / Troubleshooting
 
-**How do I open the menu?:**
+**(User Script) How do I open the menu?:**
 
 * Click or touch the bottom right of a webpage
 
-**Nothing appears bottom right:**
+**(User Script) Nothing appears bottom right:**
 
 > [List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
 
@@ -101,12 +96,12 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * Default timeout is 10000ms before the count disappears
 * If issue persists, see [Viewing UserJS Logs](#viewing-userjs-logs) or submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
-**Error occurred while injecting Container:**
+**(User Script) Error occurred while injecting Container:**
 
 * Try again on another webpage [[Test Page](https://youtube.com)]
 * This error is caused by the current webpage not supporting [attachShadow](https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow)
 
-**Error occurred while loading UserJS for this webpage:**
+**(User Script) Error occurred while loading UserJS for this webpage:**
 
 * Reload the webpage or try again on a different webpage [[Test Page](https://youtube.com)]
 * This error *may* be caused by
@@ -146,20 +141,20 @@ $ pnpm i
 # Watch and compile to local HTTP server
 $ pnpm run dev:UserJS
 
-# Compile UserJS
+# Compile User Script to "./dist"
 $ pnpm run pub:UserJS
 ```
 
 ### Webextension Version
 
 ``` sh
-# Compile webextension (dev version) for "Chromium" to "./tests/chrome"
+# Compile webextension (dev version) for "Chromium" to "./build/chrome"
 $ pnpm run dev:Cr
-# Compile webextension (dev version) for "Firefox" to "./tests/chrome"
+# Compile webextension (dev version) for "Firefox" to "./build/firefox"
 $ pnpm run dev:FF
-# Compile webextension (public version) for "Chromium" to "./tests/chrome"
+# Compile webextension (public version) for "Chromium" to "./build/chrome"
 $ pnpm run webpack:Cr
-# Compile webextension (public version) for "Firefox" to "./tests/chrome"
+# Compile webextension (public version) for "Firefox" to "./build/firefox"
 $ pnpm run webpack:FF
 
 # [ Testing ]
@@ -170,7 +165,11 @@ $ pnpm run webpack:FF
 
 ### Roadmap
 
-* Finish webextension version
+* Finish web extension version
+* Add translations to menu commands.
+* Add translations to "Install as user style?"
+* Add sorting to the following: "Total installs", "Ratings", "Created date"
+* Improve design of blacklist section.
 
 ### Source Code
 
