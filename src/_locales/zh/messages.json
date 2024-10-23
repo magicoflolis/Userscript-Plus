@@ -130,5 +130,14 @@
   },
   "code_size": {
     "message": "代码 尺寸"
+  },
+  "prmpt_css": {
+    "message": "安装为用户风格？"
+  },
+  "userjs_inject": {
+    "message": "注入 Userscript+"
+  },
+  "userjs_close": {
+    "message": "关闭 Userscript+"
   }
 }

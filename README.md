@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > If the current webpage is set to block resources through CSP
 >
-> It will cause the User Script not work for that webpage!
+> It will cause the UserScript not work for that webpage!
 >
 > [https://developer.mozilla.org/docs/Web/HTTP/CSP](https://developer.mozilla.org/docs/Web/HTTP/CSP)
 
@@ -12,9 +12,9 @@
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
 [![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
 
-*A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus#userscript)*
+*A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus)*
 
-Finds available Userscripts for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
+Finds available UserScripts for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
 
 [Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
 
@@ -22,10 +22,10 @@ Finds available Userscripts for the current webpage, the power of [Greasy Fork](
 
 ## **Download**
 
-**Userscript:**
+**UserScript:**
 
-[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://greasyfork.org/scripts/421603)
-[![Userscript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
+[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://greasyfork.org/scripts/421603)
+[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
 
 **Web Extension:**
 
@@ -47,7 +47,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 | Demos |
 |:----------:|
 |![Using Tabs](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/using-tabs.gif)|
-|![Installing Userscript](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/install-userscript.gif)|
+|![Installing UserScript](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/install-userscript.gif)|
 
 ---
 
@@ -55,53 +55,52 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 * Designed for mobile and desktop devices
 * Support multiple languages - date formats will match your current language
-* Ability to customize theme
-* Ability to import / export config and theme
-* Ability to search for userscripts
-* Ability to filter userscripts which do not match your current language
-* Ability to query userscripts from any hostname
-* Ability to sort userscripts, default sorting "Daily Installs"
-* Available search engines [Greasy Fork](https://greasyfork.org), [Sleazy Fork](https://sleazyfork.org), [Open UserJS](https://openuserjs.org), [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript==") ( requires a [Personal Access Token](https://github.com/settings/tokens), the token does not require any permissions )
-* Built-in userscript [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840)
-* Preview any userscript code before install
-* Save any userscript to local file
-* Highlights which userscripts are created by the [author](https://greasyfork.org/users/166061)
-* Highlights recommended userscripts from the [author](https://greasyfork.org/users/166061)
+* Query UserScripts from [Greasy Fork](https://greasyfork.org), [Sleazy Fork](https://sleazyfork.org), [Open UserJS](https://openuserjs.org), [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript==") ( requires a [Personal Access Token](https://github.com/settings/tokens), the token does not require any permissions )
+* Customize the theme
+* Import / export config and theme
+* Search for UserScripts
+* Filter UserScripts which do not match your current language
+* Sort UserScripts, default sorting "Daily Installs"
+* Preview UserScript code before install
+* Built-in UserScript [Greasyfork Search with Sleazyfork Results include](https://greasyfork.org/scripts/23840)
+* Save UserScript as a local file
+* Highlight UserScripts created by the [author](https://greasyfork.org/users/166061)
+* Highlight recommended UserScripts from the [author](https://greasyfork.org/users/166061)
 
-**Userscript Features:**
+**UserScript Features:**
 
 > Tested and compatible with [TamperMonkey](https://www.tampermonkey.net/) or [ViolentMonkey](https://violentmonkey.github.io/)
 
-* Ability to maximize, minimize, or exit the userscript list
-* Ability to change the position of floating counter
-* Sync config with Userscript Manager or choose to have site based configs
+* Maximize, minimize, or exit the UserScript list
+* Change the position of floating counter
+* Sync config with UserScript manager or per host
 
 **Bookmarklet Features:**
 
-* Ability to maximize, minimize, or exit the userscript list
-* Ability to change the position of floating counter
-* Ability to choose to have site based configs
+* Maximize, minimize, or exit the UserScript list
+* Change the position of floating counter
+* Separate config with every host
 
 ## FAQ / Troubleshooting
 
-**(User Script) How do I open the menu?:**
+**(UserScript) How do I open the menu?:**
 
 * Click or touch the bottom right of a webpage
 
-**(User Script) Nothing appears bottom right:**
+**(UserScript) Nothing appears bottom right:**
 
 > [List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
 
 * Try again on another webpage [[Test Page](https://youtube.com)]
 * Default timeout is 10000ms before the count disappears
-* If issue persists, see [Viewing UserJS Logs](#viewing-userjs-logs) or submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
+* If issue persists, see [View UserScript Logs](#view-userscript-logs) or submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
-**(User Script) Error occurred while injecting Container:**
+**(UserScript) Error occurred while injecting Container:**
 
 * Try again on another webpage [[Test Page](https://youtube.com)]
 * This error is caused by the current webpage not supporting [attachShadow](https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow)
 
-**(User Script) Error occurred while loading UserJS for this webpage:**
+**(UserScript) Error occurred while loading UserJS for this webpage:**
 
 * Reload the webpage or try again on a different webpage [[Test Page](https://youtube.com)]
 * This error *may* be caused by
@@ -113,7 +112,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * This error *can* be caused when no UserJS could be found in enabled search engines
 * If there are known UserJS to exist in enabled search engines, enable `Filter out other languages`
 
-## Viewing UserJS Logs
+## View UserScript Logs
 
 * Open your web browsers Inspect Element and navigate to it's Console
 * Locate the following **[UserJS] < message >** ( you can filter your Console by entering **UserJS** or **[** )
@@ -122,39 +121,37 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 ## Build
 
-> Developed in [VSCodium](https://vscodium.com)
-
-Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/). The version of Node.js should match `"node"` key in `package.json`.
+Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/). *The version of Node.js should match or be greater than the `"node"` key in `package.json`.*
 
 ``` sh
 # Install dependencies
 $ pnpm i
 ```
 
-### Userscript Version
+### UserScript Version
 
-> Desktop version - developed using [ViolentMonkey](https://violentmonkey.github.io/), see [How to edit scripts with your favorite editor?](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/)
->
-> Mobile version - developed using [FireFox Developer Edition](https://www.mozilla.org/firefox/developer/) "Responsive Design Mode" on desktop + [cromite](https://github.com/uazo/cromite) app on Android
+**Desktop** - Developed in [ViolentMonkey](https://violentmonkey.github.io/), see [How to edit scripts with your favorite editor?](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/)
+
+**Mobile** - Developed in [FireFox Developer Edition](https://www.mozilla.org/firefox/developer/) "Responsive Design Mode" on desktop + [cromite](https://github.com/uazo/cromite) app on Android
 
 ``` sh
 # Watch and compile to local HTTP server
 $ pnpm run dev:UserJS
 
-# Compile User Script to "./dist"
+# Compile UserScript to "./dist"
 $ pnpm run pub:UserJS
 ```
 
-### Webextension Version
+### WebExtension Version
 
 ``` sh
-# Compile webextension (dev version) for "Chromium" to "./build/chrome"
+# Compile WebExtension (developer version) for "Chromium" to "./build/chrome"
 $ pnpm run dev:Cr
-# Compile webextension (dev version) for "Firefox" to "./build/firefox"
+# Compile WebExtension (developer version) for "Firefox" to "./build/firefox"
 $ pnpm run dev:FF
-# Compile webextension (public version) for "Chromium" to "./build/chrome"
+# Compile WebExtension (public version) for "Chromium" to "./build/chrome"
 $ pnpm run webpack:Cr
-# Compile webextension (public version) for "Firefox" to "./build/firefox"
+# Compile WebExtension (public version) for "Firefox" to "./build/firefox"
 $ pnpm run webpack:FF
 
 # [ Testing ]
@@ -165,9 +162,7 @@ $ pnpm run webpack:FF
 
 ### Roadmap
 
-* Finish web extension version
-* Add translations to menu commands.
-* Add translations to "Install as user style?"
+* Finish WebExtension
 * Add sorting to the following: "Total installs", "Ratings", "Created date"
 * Improve design of blacklist section.
 

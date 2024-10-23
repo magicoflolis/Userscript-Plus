@@ -1,7 +1,8 @@
+import path from 'path';
 import { URL } from 'node:url';
 import fs from 'node:fs';
 import dotenv from 'dotenv';
-import watch from 'node-watch';
+import Watchpack from 'watchpack';
 import { loadLanguages } from './languageLoader.js';
 
 /**
@@ -60,14 +61,27 @@ const isBlank = (obj) => {
 const isEmpty = (obj) => {
   return isNull(obj) || isBlank(obj);
 };
+/**
+ * @template { string | { msg: string; } } T
+ * @template D
+ * @param { T } template
+ * @param { D } data
+ */
 const nano = (template, data) => {
-  return template.replace(replaceTemplate, (_match, key) => {
-    const keys = key.split('.');
-    let v = data[keys.shift()];
-    for (const i in keys.length) v = v[keys[i]];
-    return isEmpty(v) ? '' : v;
-  });
+  if (typeof template === 'string') {
+    return template.replace(replaceTemplate, (_match, key) => {
+      const keys = key.split('.');
+      let v = data[keys.shift()];
+      for (const i in keys.length) v = v[keys[i]];
+      return isEmpty(v) ? '' : v;
+    });
+  }
+  return '';
 };
+/**
+ * @param {import('node:fs').PathLike} filePath
+ * @param {string} encoding
+ */
 const canAccess = async (filePath, encoding = 'utf-8') => {
   const testAccess = await fs.promises.access(
     filePath,
@@ -81,6 +95,10 @@ const canAccess = async (filePath, encoding = 'utf-8') => {
     msg: `Cannot access provided filePath: ${filePath}`
   };
 };
+/**
+ * @param {import('node:fs').PathLike} filePath
+ * @param {string} encoding
+ */
 const fileToJSON = async (filePath, encoding = 'utf-8') => {
   const testAccess = await canAccess(filePath, encoding);
   if (isObj(testAccess)) {
@@ -88,6 +106,10 @@ const fileToJSON = async (filePath, encoding = 'utf-8') => {
   }
   return JSON.parse(testAccess);
 };
+/**
+ * @param {import('node:fs').PathLike} destinationFilePath
+ * @param data
+ */
 const writeUserJS = async (destinationFilePath, data) => {
   return await fs.promises.writeFile(destinationFilePath, data);
 };
@@ -99,9 +121,18 @@ const toTime = () => {
     fractionalSecondDigits: 3
   }).format(new Date());
 };
+/**
+ * @type { Map<string, any> }
+ */
 const dataMap = new Map();
 const compareArrays = (a, b) =>
   a.length === b.length && a.every((element, index) => element === b[index]);
+/**
+ * @template {string} K
+ * @template V
+ * @param {K} key
+ * @param {...V} values
+ */
 const addTo = (key, ...values) => {
   if (values.length === 0) {
     return '';
@@ -130,16 +161,6 @@ const filterData = [
   /** @type { dotenv.DotenvConfigOutput } */
   let result = {};
   try {
-    // const args = process.argv.filter((val, i) => i >= 2);
-
-    // if ('USERJS_META' in process.env) {
-    //   args.push(process.env.USERJS_META);
-    // }
-
-    // if (Object.is(args.length, 0)) {
-    //   args.push('./package.json');
-    // }
-
     /**
      * @type { CFG }
      */
@@ -215,7 +236,7 @@ const filterData = [
               resp[k] = o;
             }
           }
-          return JSON.stringify(resp);
+          return JSON.stringify(resp, null, ' ');
         };
         const compileLanguage = (type = 'userjs_name') => {
           const resp = [];
@@ -294,6 +315,8 @@ const filterData = [
             }
             if (k === 'license') {
               addTo(k, `// @${k}      ${v}`);
+            } else if (k === 'author') {
+              addTo(k, `// @${k}       ${v}`);
             }
           }
           if (userJS.metadata) {
@@ -335,21 +358,34 @@ const filterData = [
         err(ex);
       }
     };
-    const watcher = watch(build.watchDirs, {
-      recursive: true,
-      delay: 2000,
-      filter: /\.(js|[s]css)$/
-    });
     //#region Start Process
     log(`Node ENV: ${env.JS_ENV}`);
 
     if (js_env) {
-      watcher.on('change', buildUserJS);
-      watcher.on('error', (ex) => {
-        err(ex);
-        watcher.close();
+      const wp = new Watchpack();
+      let changed = new Set();
+      wp.watch(build.watch.files, build.watch.dirs);
+      wp.on('change', (changedFile, mtime) => {
+        if (mtime === null) {
+          changed.delete(changedFile);
+        } else {
+          changed.add(changedFile);
+        }
       });
-      watcher.on('ready', buildUserJS);
+      wp.on('aggregated', async () => {
+        // Filter out files that start with a dot from detected changes
+        // (as they are hidden files or temp files created by an editor).
+        const changes = Array.from(changed).filter((filePath) => {
+          return !path.basename(filePath).startsWith('.');
+        });
+        changed = new Set();
+
+        if (changes.length === 0) {
+          return;
+        }
+
+        await buildUserJS();
+      });
       return;
     }
     await buildUserJS();

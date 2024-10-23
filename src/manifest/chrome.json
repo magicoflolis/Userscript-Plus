@@ -1,36 +1,38 @@
 {
-  "$schema": "https://json.schemastore.org/chrome-manifest",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "default_locale": "en",
   "name": "__MSG_extName__",
   "description": "__MSG_extShortDesc__",
   "short_name": "userJSPlus",
   "background": {
-    "service_worker": "/js/background.js",
-    "type": "module"
+    "page": "background.html"
   },
-  "minimum_chrome_version": "105.0",
-  "options_page": "settings.html",
-  "optional_host_permissions": [
-    "<all_urls>"
+  "browser_action": {
+    "default_icon": {
+			"16": "img/icon_16.png",
+      "32": "img/icon_32.png",
+      "64": "img/icon_64.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "Magic UserJS+"
+  },
+  "options_ui": {
+    "page": "popup.html?mujs=settings",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "tabs",
+    "<all_urls>",
+    "storage",
+    "unlimitedStorage",
+    "webRequest"
   ],
+  "content_security_policy": "script-src 'self'; object-src 'self'",
   "icons": {
     "16": "img/icon_16.png",
     "32": "img/icon_32.png",
     "64": "img/icon_64.png",
     "128": "img/icon_128.png"
   },
-  "action": {
-    "default_icon": {
-      "16": "img/icon_16.png",
-      "32": "img/icon_32.png",
-      "64": "img/icon_64.png"
-    },
-    "default_popup": "popup.html"
-  },
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "storage"
-  ]
+  "commands": {}
 }

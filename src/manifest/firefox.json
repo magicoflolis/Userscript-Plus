@@ -17,10 +17,10 @@
       "64": "img/icon_64.png"
     },
     "default_popup": "popup.html",
-    "default_title": "UserJS"
+    "default_title": "Magic UserJS+"
   },
   "options_ui": {
-    "page": "settings.html",
+    "page": "popup.html?mujs=settings",
     "open_in_tab": true
   },
   "permissions": [

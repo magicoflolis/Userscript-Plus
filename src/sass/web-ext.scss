@@ -1,6 +1,5 @@
-
-:root body.webext-page {
-  overflow-x: hidden;
+body.webext-page {
+  // overflow-x: hidden;
   padding: 0;
   margin: 0;
   background: #495060;
@@ -21,10 +20,11 @@
     }
   }
   mujs-main {
-    height: 100%;
-    width: 100%;
-    width: -moz-available;
-    width: -webkit-fill-available;
-    min-width: 18em;
+    // max-width: 100%;
+    min-width: 480px;
+    // max-height: 100%;
+    // min-height: 200px;
+    // min-width: 50em;
+    min-height: 40em;
   }
 }

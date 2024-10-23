@@ -1,5 +1,3 @@
-// TODO: add translations to "Install as user style?"
-
 // #region Console
 const dbg = (...msg) => {
   const dt = new Date();
@@ -46,8 +44,11 @@ const log = (...msg) => {
 };
 // #endregion
 
+/**
+ * @type { import("../typings/types.d.ts").config }
+ */
 let cfg = {};
-let ghMsg = null;
+// let ghMsg = null;
 
 /** @type { import("../typings/UserJS.d.ts").safeSelf } */
 function safeSelf() {
@@ -68,6 +69,7 @@ function safeSelf() {
   return safe;
 }
 
+const BLANK_PAGE = 'about:blank';
 // Lets highlight me :)
 const authorID = 166061;
 // Some UserJS I personally enjoy
@@ -106,22 +108,6 @@ const getUAData = () => {
 };
 const isMobile = getUAData();
 const isGM = typeof GM !== 'undefined';
-const winLocation = window.top.location;
-const META_START_COMMENT = '// ==UserScript==';
-const META_END_COMMENT = '// ==/UserScript==';
-const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
-const APPLIES_TO_ALL_PATTERNS = [
-  'http://*',
-  'https://*',
-  'http://*/*',
-  'https://*/*',
-  'http*://*',
-  'http*://*/*',
-  '*',
-  '*://*',
-  '*://*/*',
-  'http*'
-];
 const builtinList = {
   local: /localhost|router|gov|(\d+\.){3}\d+/,
   finance:
@@ -132,7 +118,10 @@ const builtinList = {
     pathname: '/hentai/.+/read/page/.+'
   }
 };
-const defcfg = {
+/**
+ * @type { import("../typings/types.d.ts").config }
+ */
+const DEFAULT_CONFIG = {
   cache: true,
   codePreview: false,
   autoexpand: false,
@@ -193,6 +182,8 @@ const defcfg = {
   }
 };
 class LanguageHandler {
+  current;
+  cache;
   constructor() {
     this.current = (navigator.language ?? 'en').split('-')[0] ?? 'en';
     this.cache = [];
@@ -219,9 +210,12 @@ const i18n$ = (...args) => {
   }
   return arr.length !== 1 ? arr : arr[0];
 };
+const toLocaleDate = (str = '') => {
+  return new Intl.DateTimeFormat(navigator.language).format(new Date(str));
+};
 // #region Utilities
 /**
- * @type { import("../typings/UserJS.d.ts").hasOwn }
+ * @type { import("../typings/types.d.ts").hasOwn }
  */
 const hasOwn = (obj, prop) => {
   if (typeof Object.hasOwn !== 'undefined') {
@@ -230,59 +224,59 @@ const hasOwn = (obj, prop) => {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
 /**
- * @type { import("../typings/UserJS.d.ts").objToStr }
+ * @type { import("../typings/types.d.ts").objToStr }
  */
 const objToStr = (obj) => {
   return Object.prototype.toString.call(obj);
 };
 /**
- * @type { import("../typings/UserJS.d.ts").strToURL }
+ * @type { import("../typings/types.d.ts").strToURL }
  */
 const strToURL = (str) => {
   try {
-    str = str ?? window.location ?? 'about:blank';
+    str = str ?? window.location ?? BLANK_PAGE;
     return objToStr(str).includes('URL') ? str : new URL(str);
   } catch (ex) {
     err({ cause: 'strToURL', message: ex.message });
-    return window.location;
   }
+  return window.location;
 };
 /**
- * @type { import("../typings/UserJS.d.ts").isRegExp }
+ * @type { import("../typings/types.d.ts").isRegExp }
  */
 const isRegExp = (obj) => {
   const s = objToStr(obj);
   return s.includes('RegExp');
 };
 /**
- * @type { import("../typings/UserJS.d.ts").isElem }
+ * @type { import("../typings/types.d.ts").isElem }
  */
 const isElem = (obj) => {
   const s = objToStr(obj);
   return s.includes('Element');
 };
 /**
- * @type { import("../typings/UserJS.d.ts").isObj }
+ * @type { import("../typings/types.d.ts").isObj }
  */
 const isObj = (obj) => {
   const s = objToStr(obj);
   return s.includes('Object');
 };
 /**
- * @type { import("../typings/UserJS.d.ts").isFN }
+ * @type { import("../typings/types.d.ts").isFN }
  */
 const isFN = (obj) => {
   const s = objToStr(obj);
   return s.includes('Function');
 };
 /**
- * @type { import("../typings/UserJS.d.ts").isNull }
+ * @type { import("../typings/types.d.ts").isNull }
  */
 const isNull = (obj) => {
   return Object.is(obj, null) || Object.is(obj, undefined);
 };
 /**
- * @type { import("../typings/UserJS.d.ts").isBlank }
+ * @type { import("../typings/types.d.ts").isBlank }
  */
 const isBlank = (obj) => {
   return (
@@ -293,13 +287,13 @@ const isBlank = (obj) => {
   );
 };
 /**
- * @type { import("../typings/UserJS.d.ts").isEmpty }
+ * @type { import("../typings/types.d.ts").isEmpty }
  */
 const isEmpty = (obj) => {
   return isNull(obj) || isBlank(obj);
 };
 /**
- * @type { import("../typings/UserJS.d.ts").normalizeTarget }
+ * @type { import("../typings/types.d.ts").normalizeTarget }
  */
 const normalizeTarget = (target, toQuery = true, root) => {
   if (Object.is(target, null) || Object.is(target, undefined)) {
@@ -317,7 +311,7 @@ const normalizeTarget = (target, toQuery = true, root) => {
   return Array.from(target);
 };
 /**
- * @type { import("../typings/UserJS.d.ts").ael }
+ * @type { import("../typings/types.d.ts").ael }
  */
 const ael = (el, type, listener, options = {}) => {
   try {
@@ -336,7 +330,7 @@ const ael = (el, type, listener, options = {}) => {
   }
 };
 /**
- * @type { import("../typings/UserJS.d.ts").formAttrs }
+ * @type { import("../typings/types.d.ts").formAttrs }
  */
 const formAttrs = (elem, attr = {}) => {
   if (!elem) {
@@ -360,7 +354,7 @@ const formAttrs = (elem, attr = {}) => {
   return elem;
 };
 /**
- * @type { import("../typings/UserJS.d.ts").make }
+ * @type { import("../typings/types.d.ts").make }
  */
 const make = (tagName, cname, attrs) => {
   let el;
@@ -412,7 +406,7 @@ const getGMInfo = () => {
 const $info = getGMInfo();
 // #endregion
 /**
- * @type { import("../typings/UserJS.d.ts").dom }
+ * @type { import("../typings/types.d.ts").dom }
  */
 const dom = {
   attr(target, attr, value = undefined) {
@@ -608,6 +602,7 @@ const iconSVG = {
  * @type { import("../typings/UserJS.d.ts").StorageSystem }
  */
 const StorageSystem = {
+  prefix: 'MUJS',
   getItem(key) {
     return window.localStorage.getItem(key);
   },
@@ -629,7 +624,7 @@ const StorageSystem = {
         GM_setValue(key, v);
       }
     } else {
-      this.setItem(`MUJS-${key}`, v);
+      this.setItem(`${this.prefix}-${key}`, v);
     }
   },
   async getValue(key, def = {}) {
@@ -645,27 +640,26 @@ const StorageSystem = {
           return JSON.parse(GMType);
         }
       }
-      return this.has(`MUJS-${key}`) ? JSON.parse(this.getItem(`MUJS-${key}`)) : def;
+      return this.has(`${this.prefix}-${key}`)
+        ? JSON.parse(this.getItem(`${this.prefix}-${key}`))
+        : def;
     } catch (ex) {
       err(ex);
     }
   }
 };
-class jsCommand {
-  constructor() {
-    this.cmds = [];
-  }
+const Command = {
+  cmds: new Set(),
   register(text, command) {
     if (!isGM) {
       return;
     }
 
     if (isFN(command)) {
-      const found = this.cmds.find(c => command === c);
-      if (found) {
+      if (this.cmds.has(command)) {
         return;
       }
-      this.cmds.push(command);
+      this.cmds.add(command);
     }
 
     if (isFN(GM.registerMenuCommand)) {
@@ -675,7 +669,6 @@ class jsCommand {
     }
   }
 };
-const Command = new jsCommand();
 /**
  * @type { import("../typings/UserJS.d.ts").Network }
  */
@@ -684,8 +677,8 @@ const Network = {
     if (isEmpty(url)) {
       throw new Error('"url" parameter is empty');
     }
-    method = Network.bscStr(method, false);
-    responseType = Network.bscStr(responseType);
+    method = this.bscStr(method, false);
+    responseType = this.bscStr(responseType);
     const params = {
       method,
       ...data
@@ -761,11 +754,11 @@ const Network = {
     });
   },
   format(bytes, decimals = 2) {
-    if (Number.isNaN(bytes)) return '0 Bytes';
+    if (Number.isNaN(bytes)) return `0 ${this.sizes[0]}`;
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${Network.sizes[i]}`;
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${this.sizes[i]}`;
   },
   sizes: ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
   async xmlRequest(details) {
@@ -776,11 +769,11 @@ const Network = {
         return GM_xmlhttpRequest(details);
       }
     }
-    const safe = safeSelf();
     return await new Promise((resolve, reject) => {
+      const safe = safeSelf();
       const req = new safe.XMLHttpRequest();
       let method = 'GET';
-      let url = 'about:blank';
+      let url = BLANK_PAGE;
       let body;
       for (const [key, value] of Object.entries(details)) {
         if (key === 'onload') {
@@ -839,7 +832,7 @@ const Network = {
   }
 };
 /**
- * @type { import("../typings/UserJS.d.ts").qs }
+ * @type { import("../typings/types.d.ts").qs }
  */
 const qs = (selector, root) => {
   try {
@@ -850,7 +843,7 @@ const qs = (selector, root) => {
   return null;
 };
 /**
- * @type { import("../typings/UserJS.d.ts").qsA }
+ * @type { import("../typings/types.d.ts").qsA }
  */
 const qsA = (selectors, root) => {
   try {
@@ -861,7 +854,8 @@ const qsA = (selectors, root) => {
   return [];
 };
 const sleazyRedirect = () => {
-  const { hostname } = winLocation;
+  const locObj = window.top.location;
+  const { hostname } = locObj;
   const gfSite = /greasyfork\.org/.test(hostname);
   if (!gfSite && cfg.sleazyredirect) {
     return;
@@ -870,42 +864,53 @@ const sleazyRedirect = () => {
   if (!qs('span.sign-in-link')) {
     return;
   }
-  if (!/scripts\/\d+/.test(winLocation.href)) {
+  if (!/scripts\/\d+/.test(locObj.href)) {
     return;
   }
   if (
     !qs('#script-info') &&
     (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a'))
   ) {
-    const str = winLocation.href.replace(
+    const str = locObj.href.replace(
       /\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/,
       '//$1' + otherSite + '.org'
     );
     info(`Redirecting to "${str}"`);
-    if (isFN(winLocation.assign)) {
-      winLocation.assign(str);
+    if (isFN(locObj.assign)) {
+      locObj.assign(str);
     } else {
-      winLocation.href = str;
+      locObj.href = str;
     }
   }
-};
-const intersect = (a = [], b = []) => {
-  for (const v of a) {
-    if (b.includes(v)) {
-      return true;
-    }
-  }
-  for (const v of b) {
-    if (a.includes(v)) {
-      return true;
-    }
-  }
-  return false;
 };
 // #region Container
-class initContainer {
+/**
+ * @type { import("../typings/UserJS.d.ts").Container }
+ */
+class Container {
+  webpage;
+  host;
+  domain;
+  ready;
+  injected;
+  shadowRoot;
+  supported;
+  frame;
+  cache;
+  userjsCache;
+  root;
+  unsaved;
+  isBlacklisted;
+  rebuild;
+  counters;
+  opacityMin;
+  opacityMax;
   constructor(url) {
     this.remove = this.remove.bind(this);
+    this.refresh = this.refresh.bind(this);
+    this.updateCounter = this.updateCounter.bind(this);
+    this.updateCounters = this.updateCounters.bind(this);
+    this.showError = this.showError.bind(this);
     this.webpage = strToURL(url);
     this.host = this.getHost(this.webpage.host);
     this.domain = this.getDomain(this.webpage.host);
@@ -926,7 +931,7 @@ class initContainer {
             role: 'primary-iframe'
           },
           loading: 'lazy',
-          src: 'about:blank',
+          src: BLANK_PAGE,
           style:
             'position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
           onload: (iFrame) => {
@@ -943,9 +948,6 @@ class initContainer {
           }
         });
     if (this.supported) {
-      /**
-       * @type { ShadowRoot }
-       */
       this.shadowRoot = this.frame.attachShadow({
         mode: 'open',
         clonable: false,
@@ -964,7 +966,9 @@ class initContainer {
     };
     this.opacityMin = '0.15';
     this.opacityMax = '1';
-    this.Timeout = class {
+    this.elementsReady = this.init();
+
+    const Timeout = class {
       constructor() {
         this.ids = [];
       }
@@ -989,6 +993,11 @@ class initContainer {
         });
       }
     };
+    this.timeouts = {
+      frame: new Timeout(),
+      mouse: new Timeout()
+    };
+
     window.addEventListener('beforeunload', this.remove);
   }
   /**
@@ -1004,7 +1013,7 @@ class initContainer {
     if (!this.shadowRoot) {
       return;
     }
-    if (!doc) {
+    if (doc === null) {
       return;
     }
     while (this.ready === false) {
@@ -1020,13 +1029,392 @@ class initContainer {
         throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
       }
       this.injected = true;
-      if (isFN(callback)) {
+      this.initFn();
+      if (this.elementsReady && isFN(callback)) {
         callback.call(this, this.shadowRoot);
       }
     } catch (ex) {
       err(ex);
       this.remove();
     }
+  }
+  initFn() {
+    this.renderTheme(cfg.theme);
+
+    for (const engine of cfg.engines) {
+      if (engine.enabled) {
+        const counter = make('count-frame', '', {
+          dataset: {
+            counter: engine.name
+          },
+          title: engine.url,
+          textContent: '0'
+        });
+        this.countframe.append(counter);
+      }
+      this.counters[engine.name] = 0;
+    }
+
+    const cfgpage = this.cfgpage;
+    const table = this.table;
+    const exBtn = this.exBtn;
+    const supported = this.supported;
+    const frame = this.frame;
+    const refresh = this.refresh;
+    const cache = this.cache;
+    const cHost = this.host;
+    const urlBar = this.urlBar;
+
+    class Tabs {
+      /**
+       * @param { HTMLElement } root
+       */
+      constructor(root) {
+        this.Tab = new Map();
+        this.blank = BLANK_PAGE;
+        this.protocal = 'mujs:';
+        this.protoReg = new RegExp(`${this.protocal}(.+)`);
+        this.el = {
+          add: make('mujs-addtab', '', {
+            textContent: '+',
+            dataset: {
+              command: 'new-tab'
+            }
+          }),
+          head: make('mujs-tabs'),
+          root
+        };
+        this.el.head.append(this.el.add);
+        this.el.root.append(this.el.head);
+        this.custom = () => {};
+      }
+      hasTab(...params) {
+        for (const p of params) {
+          if (!this.Tab.has(p)) {
+            return false;
+          }
+          const content = normalizeTarget(this.Tab.get(p)).filter((t) => p === t.dataset.host);
+          if (isBlank(content)) {
+            return false;
+          }
+        }
+        return true;
+      }
+      storeTab(host) {
+        const h = host ?? this.blank;
+        if (!this.Tab.has(h)) {
+          this.Tab.set(h, new Set());
+        }
+        return this.Tab.get(h);
+      }
+      cache(host, ...tabs) {
+        const h = host ?? this.blank;
+        const tabCache = this.storeTab(h);
+        for (const t of normalizeTarget(tabs)) {
+          if (tabCache.has(t)) {
+            continue;
+          }
+          tabCache.add(t);
+        }
+        this.Tab.set(h, tabCache);
+        return tabCache;
+      }
+      intFN(host) {
+        if (!host.startsWith(this.protocal)) {
+          return;
+        }
+        const type = host.match(this.protoReg)[1];
+        if (type === 'settings') {
+          dom.cl.remove([cfgpage, exBtn], 'hidden');
+          dom.cl.add(table, 'hidden');
+          if (!supported) {
+            dom.attr(frame, 'style', 'height: 100%;');
+          }
+        }
+      }
+      active(tab, build = true) {
+        for (const t of normalizeTarget(tab, false)) {
+          dom.cl.add([cfgpage, exBtn], 'hidden');
+          dom.cl.remove(table, 'hidden');
+          dom.cl.remove(qsA('mujs-tab', this.el.head), 'active');
+          dom.cl.add(t, 'active');
+          if (!build) {
+            continue;
+          }
+          const host = t.dataset.host ?? this.blank;
+          if (host === this.blank) {
+            refresh();
+          } else if (host.startsWith(this.protocal)) {
+            this.intFN(host);
+          } else {
+            this.custom(host);
+            // MUList.host = host;
+            // MUList.build();
+          }
+        }
+      }
+      /** @param { HTMLElement } tab */
+      close(tab) {
+        for (const t of normalizeTarget(tab, false)) {
+          const host = t.dataset.host;
+          if (cache.has(host)) {
+            cache.delete(host);
+          }
+          if (dom.cl.has(t, 'active')) {
+            refresh();
+          }
+          const sibling = t.previousElementSibling ?? t.nextElementSibling;
+          if (sibling) {
+            if (sibling.dataset.command !== 'new-tab') {
+              this.active(sibling);
+            }
+          }
+          if (this.Tab.has(host)) {
+            this.Tab.delete(host);
+          }
+          t.remove();
+        }
+      }
+      create(host = undefined) {
+        if (typeof host === 'string') {
+          if (host.startsWith(this.protocal) && this.hasTab(host)) {
+            this.active(this.Tab.get(host));
+            return;
+          }
+          const content = normalizeTarget(this.storeTab(host)).filter(
+            (t) => host === t.dataset.host
+          );
+          if (!isEmpty(content)) {
+            return;
+          }
+        }
+        const tab = make('mujs-tab', '', {
+          dataset: {
+            command: 'switch-tab'
+          },
+          style: `order: ${this.el.head.childElementCount};`
+        });
+        const tabClose = make('mu-js', '', {
+          dataset: {
+            command: 'close-tab'
+          },
+          title: i18n$('close'),
+          textContent: 'X'
+        });
+        const tabHost = make('mujs-host');
+        tab.append(tabHost, tabClose);
+        this.el.head.append(tab);
+        this.active(tab, false);
+        this.cache(host, tab);
+        if (isNull(host)) {
+          refresh();
+          urlBar.placeholder = i18n$('newTab');
+          tab.dataset.host = this.blank;
+          tabHost.title = i18n$('newTab');
+          tabHost.textContent = i18n$('newTab');
+        } else if (host.startsWith(this.protocal)) {
+          const type = host.match(this.protoReg)[1];
+          tab.dataset.host = host || cHost;
+          tabHost.title = type || tab.dataset.host;
+          tabHost.textContent = tabHost.title;
+          this.intFN(host);
+        } else {
+          tab.dataset.host = host || cHost;
+          tabHost.title = host || cHost;
+          tabHost.textContent = tabHost.title;
+        }
+        return tab;
+      }
+    }
+    this.tab = new Tabs(this.toolbar);
+    this.tab.create(this.host);
+
+    const tabbody = this.tabbody;
+    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+    const comparer = (idx, asc) => (a, b) =>
+      ((v1, v2) =>
+        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
+          ? v1 - v2
+          : v1.toString().localeCompare(v2))(
+        getCellValue(asc ? a : b, idx),
+        getCellValue(asc ? b : a, idx)
+      );
+    for (const th of this.tabhead.rows[0].cells) {
+      if (dom.text(th) === i18n$('install')) continue;
+      dom.cl.add(th, 'mujs-pointer');
+      ael(th, 'click', () => {
+        /** [Stack Overflow Reference](https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407) */
+        Array.from(tabbody.querySelectorAll('tr'))
+          .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (this.asc = !this.asc)))
+          .forEach((tr) => tabbody.appendChild(tr));
+      });
+    }
+  }
+  init() {
+    try {
+      // #region Elements
+      this.mainframe = make('mu-js', 'mainframe', {
+        style: `opacity: ${this.opacityMin};`
+      });
+      this.countframe = make('mujs-column');
+      this.mainbtn = make('count-frame', 'mainbtn', {
+        textContent: '0'
+      });
+      this.urlBar = make('input', 'mujs-url-bar', {
+        autocomplete: 'off',
+        spellcheck: false,
+        type: 'text',
+        placeholder: i18n$('search_placeholder')
+      });
+      this.rateContainer = make('mujs-column', 'rate-container');
+      this.footer = make('mujs-row', 'mujs-footer');
+      this.tabbody = make('tbody');
+      this.promptElem = make('mujs-row', 'mujs-prompt');
+      this.toolbar = make('mujs-toolbar');
+      this.table = make('table');
+      this.tabhead = make('thead');
+      this.header = make('mujs-header');
+      this.tbody = make('mujs-body');
+      this.cfgpage = make('mujs-row', 'mujs-cfg hidden');
+      this.btnframe = make('mujs-column', 'btn-frame');
+      this.exBtn = make('mujs-column', 'mujs-sty-flex hidden');
+      this.fsearch = make('mujs-btn', 'hidden');
+      this.exportCFG = make('mujs-btn', 'mujs-export', {
+        textContent: i18n$('export_config'),
+        dataset: {
+          command: 'export-cfg'
+        }
+      });
+      this.importCFG = make('mujs-btn', 'mujs-import', {
+        textContent: i18n$('import_config'),
+        dataset: {
+          command: 'import-cfg'
+        }
+      });
+      this.exportTheme = make('mujs-btn', 'mujs-export', {
+        textContent: i18n$('export_theme'),
+        dataset: {
+          command: 'export-theme'
+        }
+      });
+      this.importTheme = make('mujs-btn', 'mujs-import', {
+        textContent: i18n$('import_theme'),
+        dataset: {
+          command: 'import-theme'
+        }
+      });
+      this.btnHandles = make('mujs-column', 'btn-handles');
+      this.btnHide = make('mujs-btn', 'hide-list', {
+        title: i18n$('min'),
+        innerHTML: iconSVG.load('hide'),
+        dataset: {
+          command: 'hide-list'
+        }
+      });
+      this.btnfullscreen = make('mujs-btn', 'fullscreen', {
+        title: i18n$('max'),
+        innerHTML: iconSVG.load('fullscreen'),
+        dataset: {
+          command: 'fullscreen'
+        }
+      });
+      this.main = make('mujs-main', 'hidden');
+      this.urlContainer = make('mujs-url');
+      this.closebtn = make('mujs-btn', 'close', {
+        title: i18n$('close'),
+        innerHTML: iconSVG.load('close'),
+        dataset: {
+          command: 'close'
+        }
+      });
+      this.btncfg = make('mujs-btn', 'settings hidden', {
+        title: 'Settings',
+        innerHTML: iconSVG.load('cfg'),
+        dataset: {
+          command: 'settings'
+        }
+      });
+      this.btnhome = make('mujs-btn', 'github hidden', {
+        title: `GitHub (v${
+          $info.script.version.includes('.') || $info.script.version.includes('Book')
+            ? $info.script.version
+            : $info.script.version.slice(0, 5)
+        })`,
+        innerHTML: iconSVG.load('gh'),
+        dataset: {
+          command: 'open-tab',
+          webpage: $info.script.namespace
+        }
+      });
+      this.btnissue = make('mujs-btn', 'issue hidden', {
+        innerHTML: iconSVG.load('issue'),
+        title: i18n$('issue'),
+        dataset: {
+          command: 'open-tab',
+          webpage: $info.script.bugs ?? 'https://github.com/magicoflolis/Userscript-Plus/issues'
+        }
+      });
+      this.btngreasy = make('mujs-btn', 'greasy hidden', {
+        title: 'Greasy Fork',
+        innerHTML: iconSVG.load('gf'),
+        dataset: {
+          command: 'open-tab',
+          webpage: 'https://greasyfork.org/scripts/421603'
+        }
+      });
+      this.btnnav = make('mujs-btn', 'nav', {
+        title: 'Navigation',
+        innerHTML: iconSVG.load('nav'),
+        dataset: {
+          command: 'navigation'
+        }
+      });
+      const makeTHead = (rows) => {
+        const tr = make('tr');
+        for (const r of normalizeTarget(rows)) {
+          const tparent = make('th', r.class ?? '', r);
+          tr.append(tparent);
+        }
+        this.tabhead.append(tr);
+        this.table.append(this.tabhead, this.tabbody);
+      };
+      makeTHead([
+        {
+          class: 'mujs-header-name',
+          textContent: i18n$('name')
+        },
+        {
+          textContent: i18n$('createdby')
+        },
+        {
+          textContent: i18n$('daily_installs')
+        },
+        {
+          textContent: i18n$('updated')
+        },
+        {
+          textContent: i18n$('install')
+        }
+      ]);
+      // #endregion
+
+      this.btnHandles.append(this.btnHide, this.btnfullscreen, this.closebtn);
+      this.btnframe.append(this.btnhome, this.btngreasy, this.btnissue, this.btncfg, this.btnnav);
+      this.toolbar.append(this.btnHandles);
+      this.urlContainer.append(this.urlBar);
+      this.header.append(this.urlContainer, this.rateContainer, this.countframe, this.btnframe);
+      this.tbody.append(this.table, this.cfgpage);
+      this.main.append(this.toolbar, this.header, this.tbody, this.footer, this.promptElem);
+      this.mainframe.append(this.mainbtn);
+      this.exBtn.append(this.importCFG, this.importTheme, this.exportCFG, this.exportTheme);
+      this.header.append(this.exBtn);
+      this.root.append(this.mainframe, this.main);
+
+      return true;
+    } catch (ex) {
+      err(ex);
+    }
+    return false;
   }
   remove() {
     memory.store.clear();
@@ -1144,7 +1532,6 @@ class initContainer {
   /**
    * @template { string } S
    * @param { S } str
-   * @returns { S }
    */
   getHost(str = '') {
     return str.split('.').splice(-2).join('.');
@@ -1152,14 +1539,13 @@ class initContainer {
   /**
    * @template { string } S
    * @param { S } str
-   * @returns { S }
    */
   getDomain(str = '') {
-    return str.split('.').at(-2) ?? 'about:blank';
+    return str.split('.').at(-2) ?? BLANK_PAGE;
   }
   renderTheme(theme) {
     theme = theme || cfg.theme;
-    if (theme === defcfg.theme) {
+    if (theme === DEFAULT_CONFIG.theme) {
       return;
     }
     const sty = this.root.style;
@@ -1176,311 +1562,113 @@ class initContainer {
       sty.setProperty(str, v);
     }
   }
+  makePrompt(txt, dataset = {}, usePrompt = true) {
+    if (qs('.prompt', this.promptElem)) {
+      for (const elem of qsA('.prompt', this.promptElem)) {
+        if (elem.dataset.prompt) {
+          elem.remove();
+        }
+      }
+    }
+    const el = make('mu-js', 'prompt', {
+      dataset: {
+        prompt: txt
+      }
+    });
+    const elHead = make('mu-js', 'prompt-head', {
+      innerHTML: `${iconSVG.load('refresh')} ${txt}`
+    });
+    el.append(elHead);
+    if (usePrompt) {
+      const elPrompt = make('mu-js', 'prompt-body', { dataset });
+      const elYes = make('mujs-btn', 'prompt-confirm', {
+        innerHTML: 'Confirm',
+        dataset: {
+          command: 'prompt-confirm'
+        }
+      });
+      const elNo = make('mujs-btn', 'prompt-deny', {
+        innerHTML: 'Deny',
+        dataset: {
+          command: 'prompt-deny'
+        }
+      });
+      elPrompt.append(elYes, elNo);
+      el.append(elPrompt);
+    }
+    this.promptElem.append(el);
+  }
+  makeError(...ex) {
+    const safe = safeSelf();
+    const error = make('mu-js', 'error');
+    let str = '';
+    for (const e of ex) {
+      str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message} ${e.stack ?? ''}`}\n`;
+      if (isObj(e)) {
+        if (e.notify) {
+          dom.cl.add(this.mainframe, 'error');
+        }
+      }
+    }
+    error.appendChild(safe.createTextNode(str));
+    this.footer.append(error);
+  }
+  showError(...ex) {
+    err(...ex);
+    this.makeError(...ex);
+  }
+  updateCounter(count, engine) {
+    this.counters[engine.name] += count;
+    this.counters.total += count;
+    this.updateCounters();
+  }
+  updateCounters() {
+    for (const [k, v] of Object.entries(this.counters)) {
+      if (k === 'total') {
+        continue;
+      }
+      if (qs(`count-frame[data-counter="${k}"]`, this.countframe)) {
+        dom.text(qs(`count-frame[data-counter="${k}"]`, this.countframe), v);
+      }
+    }
+    dom.text(this.mainbtn, this.counters.total);
+  }
+  refresh() {
+    this.urlBar.placeholder = i18n$('newTab');
+    this.counters.total = 0;
+    for (const engine of cfg.engines) {
+      this.counters[engine.name] = 0;
+    }
+    this.updateCounters();
+    dom.prop([this.tabbody, this.rateContainer, this.footer], 'innerHTML', '');
+  }
 }
-const container = new initContainer();
+const container = new Container();
 // #endregion
 // #region Primary Function
 function primaryFN() {
   try {
-    const mouseTimeout = new container.Timeout();
-    const frameTimeout = new container.Timeout();
-
-    const urlBar = make('input', 'mujs-url-bar', {
-      autocomplete: 'off',
-      spellcheck: false,
-      type: 'text',
-      placeholder: i18n$('search_placeholder')
-    });
-    const mainbtn = make('count-frame', 'mainbtn', {
-      textContent: '0'
-    });
-    const rateContainer = make('mujs-column', 'rate-container');
-    const promptElem = make('mujs-row', 'mujs-prompt');
-    const footer = make('mujs-row', 'mujs-footer');
-    const tabbody = make('tbody');
-    const toolbar = make('mujs-toolbar');
-    const table = make('table');
-    const tabhead = make('thead');
-    const header = make('mujs-header');
-    const tbody = make('mujs-body');
-    const cfgpage = make('mujs-row', 'mujs-cfg hidden');
-    const countframe = make('mujs-column');
-    const btnframe = make('mujs-column', 'btn-frame');
-    const exBtn = make('mujs-column', 'mujs-sty-flex hidden');
-    const fsearch = make('mujs-btn', 'hidden');
-    const exportCFG = make('mujs-btn', 'mujs-export', {
-      textContent: i18n$('export_config'),
-      dataset: {
-        command: 'export-cfg'
-      }
-    });
-    const importCFG = make('mujs-btn', 'mujs-import', {
-      textContent: i18n$('import_config'),
-      dataset: {
-        command: 'import-cfg'
-      }
-    });
-    const exportTheme = make('mujs-btn', 'mujs-export', {
-      textContent: i18n$('export_theme'),
-      dataset: {
-        command: 'export-theme'
-      }
-    });
-    const importTheme = make('mujs-btn', 'mujs-import', {
-      textContent: i18n$('import_theme'),
-      dataset: {
-        command: 'import-theme'
-      }
-    });
-    const btnHandles = make('mujs-column', 'btn-handles');
-    const btnHide = make('mujs-btn', 'hide-list', {
-      title: i18n$('min'),
-      innerHTML: iconSVG.load('hide'),
-      dataset: {
-        command: 'hide-list'
-      }
-    });
-    const btnfullscreen = make('mujs-btn', 'fullscreen', {
-      title: i18n$('max'),
-      innerHTML: iconSVG.load('fullscreen'),
-      dataset: {
-        command: 'fullscreen'
-      }
-    });
-    const main = make('mujs-main', 'hidden');
-    const urlContainer = make('mujs-url');
-    const closebtn = make('mujs-btn', 'close', {
-      title: i18n$('close'),
-      innerHTML: iconSVG.load('close'),
-      dataset: {
-        command: 'close'
-      }
-    });
-    const btncfg = make('mujs-btn', 'settings hidden', {
-      title: 'Settings',
-      innerHTML: iconSVG.load('cfg'),
-      dataset: {
-        command: 'settings'
-      }
-    });
-    const btnhome = make('mujs-btn', 'github hidden', {
-      title: `GitHub (v${
-        $info.script.version.includes('.') || $info.script.version.includes('Book')
-          ? $info.script.version
-          : $info.script.version.slice(0, 5)
-      })`,
-      innerHTML: iconSVG.load('gh'),
-      dataset: {
-        command: 'open-tab',
-        webpage: $info.script.namespace
-      }
-    });
-    const btnissue = make('mujs-btn', 'issue hidden', {
-      innerHTML: iconSVG.load('issue'),
-      title: i18n$('issue'),
-      dataset: {
-        command: 'open-tab',
-        webpage: $info.script.bugs
-      }
-    });
-    const btngreasy = make('mujs-btn', 'greasy hidden', {
-      title: 'Greasy Fork',
-      innerHTML: iconSVG.load('gf'),
-      dataset: {
-        command: 'open-tab',
-        webpage: 'https://greasyfork.org/scripts/421603'
-      }
-    });
-    const btnnav = make('mujs-btn', 'nav', {
-      title: 'Navigation',
-      innerHTML: iconSVG.load('nav'),
-      dataset: {
-        command: 'navigation'
-      }
-    });
-    const mainframe = make('mu-js', 'mainframe', {
-      style: `opacity: ${container.opacityMin};`
-    });
-    btnHandles.append(btnHide, btnfullscreen, closebtn);
-    btnframe.append(btnhome, btngreasy, btnissue, btncfg, btnnav);
-    toolbar.append(btnHandles);
-    urlContainer.append(urlBar);
-    header.append(urlContainer, rateContainer, countframe, btnframe);
-    tbody.append(table, cfgpage);
-    main.append(toolbar, header, tbody, footer, promptElem);
-    mainframe.append(mainbtn);
-    exBtn.append(importCFG, importTheme, exportCFG, exportTheme);
-    header.append(exBtn);
-    container.root.append(mainframe, main);
-    for (const engine of cfg.engines) {
-      container.counters[engine.name] = 0;
-      if (!engine.enabled) {
-        continue;
-      }
-      const counter = make('count-frame', '', {
-        dataset: {
-          counter: engine.name
-        },
-        title: engine.url,
-        textContent: '0'
-      });
-      countframe.append(counter);
-    }
-    class Tabs {
-      constructor() {
-        this.Tab = new Map();
-        this.blank = 'about:blank';
-        this.protocal = 'mujs:';
-        this.protoReg = new RegExp(`${this.protocal}(.+)`);
-        this.el = {
-          add: make('mujs-addtab', '', {
-            textContent: '+',
-            dataset: {
-              command: 'new-tab'
-            }
-          }),
-          head: make('mujs-tabs')
-        };
-        this.el.head.append(this.el.add);
-        toolbar.append(this.el.head);
-      }
-      hasTab(...params) {
-        for (const p of params) {
-          if (!this.Tab.has(p)) {
-            return false;
-          }
-          const content = normalizeTarget(this.Tab.get(p)).filter((t) => p === t.dataset.host);
-          if (isBlank(content)) {
-            return false;
-          }
-        }
-        return true;
-      }
-      storeTab(host) {
-        const h = host ?? this.blank;
-        if (!this.Tab.has(h)) {
-          this.Tab.set(h, new Set());
-        }
-        return this.Tab.get(h);
-      }
-      cache(host, ...tabs) {
-        const h = host ?? this.blank;
-        const tabCache = this.storeTab(h);
-        for (const t of normalizeTarget(tabs)) {
-          if (tabCache.has(t)) {
-            continue;
-          }
-          tabCache.add(t);
-        }
-        this.Tab.set(h, tabCache);
-        return tabCache;
-      }
-      mujs(host) {
-        if (!host.startsWith(this.protocal)) {
-          return;
-        }
-        const type = host.match(this.protoReg)[1];
-        if (type === 'settings') {
-          dom.cl.remove([cfgpage, exBtn], 'hidden');
-          dom.cl.add(table, 'hidden');
-          if (!container.supported) {
-            dom.attr(container.frame, 'style', 'height: 100%;');
-          }
-        }
-      }
-      active(tab, build = true) {
-        for (const t of normalizeTarget(tab, false)) {
-          dom.cl.add([cfgpage, exBtn], 'hidden');
-          dom.cl.remove(table, 'hidden');
-          dom.cl.remove(qsA('mujs-tab', this.el.head), 'active');
-          dom.cl.add(t, 'active');
-          if (!build) {
-            continue;
-          }
-          const host = t.dataset.host ?? this.blank;
-          if (host === this.blank) {
-            MUJS.refresh();
-          } else if (host.startsWith(this.protocal)) {
-            this.mujs(host);
-          } else {
-            buildlist(host);
-          }
-        }
-      }
-      /** @param { HTMLElement } tab */
-      close(tab) {
-        for (const t of normalizeTarget(tab, false)) {
-          const host = t.dataset.host;
-          if (container.cache.has(host)) {
-            container.cache.delete(host);
-          }
-          if (dom.cl.has(t, 'active')) {
-            MUJS.refresh();
-          }
-          const sibling = t.previousElementSibling ?? t.nextElementSibling;
-          if (sibling) {
-            if (sibling.dataset.command !== 'new-tab') {
-              this.active(sibling);
-            }
-          }
-          if (this.Tab.has(host)) {
-            this.Tab.delete(host);
-          }
-          t.remove();
-        }
-      }
-      create(host = undefined) {
-        if (typeof host === 'string') {
-          if (host.startsWith(this.protocal) && this.hasTab(host)) {
-            this.active(this.Tab.get(host));
-            return;
-          }
-          const content = normalizeTarget(this.storeTab(host)).filter(
-            (t) => host === t.dataset.host
-          );
-          if (!isEmpty(content)) {
-            return;
-          }
-        }
-        const tab = make('mujs-tab', '', {
-          dataset: {
-            command: 'switch-tab'
-          },
-          style: `order: ${this.el.head.childElementCount};`
-        });
-        const tabClose = make('mu-js', '', {
-          dataset: {
-            command: 'close-tab'
-          },
-          title: i18n$('close'),
-          textContent: 'X'
-        });
-        const tabHost = make('mujs-host');
-        tab.append(tabHost, tabClose);
-        this.el.head.append(tab);
-        this.active(tab, false);
-        this.cache(host, tab);
-        if (isNull(host)) {
-          MUJS.refresh();
-          urlBar.placeholder = i18n$('newTab');
-          tab.dataset.host = this.blank;
-          tabHost.title = i18n$('newTab');
-          tabHost.textContent = i18n$('newTab');
-        } else if (host.startsWith(this.protocal)) {
-          const type = host.match(this.protoReg)[1];
-          tab.dataset.host = host || container.host;
-          tabHost.title = type || tab.dataset.host;
-          tabHost.textContent = tabHost.title;
-          this.mujs(host);
-        } else {
-          tab.dataset.host = host || container.host;
-          tabHost.title = host || container.host;
-          tabHost.textContent = tabHost.title;
-        }
-        return tab;
-      }
-    }
-    const tab = new Tabs();
+    const {
+      mainframe,
+      urlBar,
+      rateContainer,
+      footer,
+      tabbody,
+      toolbar,
+      tabhead,
+      cfgpage,
+      fsearch,
+      btnfullscreen,
+      main,
+      btncfg,
+      btnhome,
+      btnissue,
+      btngreasy,
+      tab,
+      updateCounter,
+      showError
+    } = container;
+    const frameTimeout = container.timeouts.frame;
     const cfgMap = memory.store.get('cfg');
     const rebuildCfg = () => {
       for (const engine of cfg.engines) {
@@ -1510,10 +1698,11 @@ function primaryFN() {
       container.renderTheme(cfg.theme);
     };
     const doInstallProcess = async (installLink) => {
-      if (isFN(winLocation.assign)) {
-        winLocation.assign(installLink.href);
+      const locObj = window.top.location;
+      if (isFN(locObj.assign)) {
+        locObj.assign(installLink.href);
       } else {
-        winLocation.href = installLink.href;
+        locObj.href = installLink.href;
       }
       installLink.remove();
       await init();
@@ -1539,11 +1728,11 @@ function primaryFN() {
         if (cmd === 'install-script' && dataset.userjs) {
           let installCode = dataset.userjs;
           if (!prmpt && dataset.userjs.endsWith('.user.css')) {
-            MUJS.makePrompt('Install as user style?', dataset);
+            container.makePrompt(i18n$('prmpt_css'), dataset);
             return;
           } else if (prmpt !== prmptChoice) {
             installCode = dataset.userjs.replace(/\.user\.css$/, '.user.js');
-          };
+          }
           const dlBtn = make('a', '', {
             onclick(evt) {
               evt.preventDefault();
@@ -1610,23 +1799,25 @@ function primaryFN() {
           dom.cl.remove(mainframe, 'hidden');
           timeoutFrame();
         } else if (cmd === 'save') {
-          if (!isNull(ghMsg)) {
-            ghMsg = null;
-            container.rebuild = true;
-            dom.prop(rateContainer, 'innerHTML', '');
-          }
+          // if (!isNull(ghMsg)) {
+          //   ghMsg = null;
+          //   container.rebuild = true;
+          //   dom.prop(rateContainer, 'innerHTML', '');
+          // }
+          container.rebuild = true;
+          dom.prop(rateContainer, 'innerHTML', '');
           if (!dom.prop(target, 'disabled')) {
             container.save();
             sleazyRedirect();
             if (container.rebuild) {
               container.cache.clear();
-              buildlist();
+              MUList.build();
             }
             container.unsaved = false;
             container.rebuild = false;
           }
         } else if (cmd === 'reset') {
-          cfg = defcfg;
+          cfg = DEFAULT_CONFIG;
           dom.cl.remove(mainframe, 'error');
           if (qs('.error', footer)) {
             for (const elem of qsA('.error', footer)) {
@@ -1638,7 +1829,7 @@ function primaryFN() {
           rebuildCfg();
         } else if (cmd === 'settings') {
           if (container.unsaved) {
-            MUJS.showError('Unsaved changes');
+            showError('Unsaved changes');
           }
           tab.create('mujs:settings');
           container.rebuild = false;
@@ -1653,7 +1844,8 @@ function primaryFN() {
             return;
           }
           const dataUserJS = container.userjsCache.get(+dataset.userjs);
-          const txt = await reqCode(dataUserJS);
+          const r = await dataUserJS._mujs.code.request();
+          const txt = r.data;
           if (typeof txt !== 'string') {
             return;
           }
@@ -1674,25 +1866,48 @@ function primaryFN() {
             return;
           }
           const dataUserJS = container.userjsCache.get(+dataset.userjs);
-          const txt = await reqCode(dataUserJS);
+          const r = await dataUserJS._mujs.code.request();
+          const txt = r.data;
           if (typeof txt !== 'string') {
             return;
           }
-          codeArea.value = txt;
+          const code_obj = new ParseUserJS(txt);
+          codeArea.value = code_obj.get_code_block();
           dom.cl.remove(codeArea, 'hidden');
-
-          const apTo = (name, elem) => {
-            if (isEmpty(dataUserJS[name])) {
+          const apTo = (name, elem, root) => {
+            const n = dataUserJS._mujs.code[name];
+            if (isEmpty(n)) {
               const el = make('mujs-a', '', {
                 textContent: i18n$('listing_none')
               });
               elem.append(el);
-              if (name === 'antifeatures') {
-                dom.cl.add(elem, 'hidden');
-              }
-            } else {
-              for (const c of dataUserJS[name]) {
-                if (isObj(c)) {
+              return;
+            };
+            dom.prop(elem, 'innerHTML', '');
+            dom.cl.remove(root, 'hidden');
+            for (const c of n) {
+              if (typeof c === 'string' && c.startsWith('http')) {
+                const el = make('mujs-a', '', {
+                  textContent: c,
+                  dataset: {
+                    command: 'open-tab',
+                    webpage: c
+                  }
+                });
+                elem.append(el);
+              } else if (isObj(c)) {
+                if (name === 'resource') {
+                  for (const [k, v] of Object.entries(c)) {
+                    const el = make('mujs-a', '', {
+                      textContent: k ?? 'ERROR'
+                    });
+                    if (v.startsWith('http')) {
+                      el.dataset.command = 'open-tab';
+                      el.dataset.webpage = v;
+                    }
+                    elem.append(el);
+                  }
+                } else {
                   const el = make('mujs-a', '', {
                     textContent: c.text
                   });
@@ -1701,39 +1916,19 @@ function primaryFN() {
                     el.dataset.webpage = `https://${c.text}`;
                   }
                   elem.append(el);
-                } else {
-                  const el = make('mujs-a', '', {
-                    textContent: c
-                  });
-                  elem.append(el);
                 }
-              }
-              if (name === 'antifeatures') {
-                dom.cl.remove(elem, 'hidden');
+              } else {
+                const el = make('mujs-a', '', {
+                  textContent: c
+                });
+                elem.append(el);
               }
             }
           };
-          const matchElem = qs(
-            '[data-type="match-urls"] > .mujs-grants',
-            target.parentElement.parentElement
-          );
-          const grantElem = qs(
-            '[data-type="grants"] > .mujs-grants',
-            target.parentElement.parentElement
-          );
-          const afElem = qs(
-            '[data-type="antifeatures"] > .mujs-grants',
-            target.parentElement.parentElement
-          );
-          const sizeElem = qs(
-            '[data-type="size"] > .mujs-grants',
-            target.parentElement.parentElement
-          );
-          dom.prop([matchElem, grantElem, afElem, sizeElem], 'innerHTML', '');
-          apTo('code_match', matchElem);
-          apTo('code_grant', grantElem);
-          apTo('antifeatures', afElem);
-          apTo('code_size', sizeElem);
+          const m = qsA('mujs-column[data-el="matches"]', target.parentElement.parentElement);
+          for (const e of normalizeTarget(m)) {
+            apTo(e.dataset.type, qs('.mujs-grants', e), e);
+          }
         } else if (/export-/.test(cmd)) {
           const str = JSON.stringify(cmd === 'export-cfg' ? cfg : cfg.theme, null, ' ');
           const bytes = new TextEncoder().encode(str);
@@ -1768,7 +1963,7 @@ function primaryFN() {
                       container.save();
                       sleazyRedirect();
                       container.cache.clear();
-                      buildlist();
+                      MUList.build();
                       container.unsaved = false;
                       container.rebuild = false;
                     } else {
@@ -1779,12 +1974,12 @@ function primaryFN() {
                     inpJSON.remove();
                   };
                   reader.onerror = () => {
-                    MUJS.showError(reader.error);
+                    showError(reader.error);
                     inpJSON.remove();
                   };
                 });
               } catch (ex) {
-                MUJS.showError(ex);
+                showError(ex);
                 inpJSON.remove();
               }
             }
@@ -1793,7 +1988,7 @@ function primaryFN() {
           inpJSON.click();
         }
       } catch (ex) {
-        MUJS.showError(ex);
+        showError(ex);
       }
     });
     ael(main, 'auxclick', (evt) => {
@@ -1817,10 +2012,10 @@ function primaryFN() {
       const fade = async (target, type) => {
         if (type === 'mouseenter') {
           frameTimeout.clear(...frameTimeout.ids);
-          mouseTimeout.clear(...mouseTimeout.ids);
+          container.timeouts.mouse.clear(...container.timeouts.mouse.ids);
           target.style.opacity = container.opacityMax;
         } else if (type === 'mouseleave') {
-          await mouseTimeout.set(cfg.time);
+          await container.timeouts.mouse.set(cfg.time);
           target.style.opacity = container.opacityMin;
         }
       };
@@ -1833,107 +2028,367 @@ function primaryFN() {
       }
     }
     // #endregion
-    const ContainerHandler = class {
-      constructor() {
-        this.showError = this.showError.bind(this);
+    const META_START_COMMENT = '// ==UserScript==';
+    const META_END_COMMENT = '// ==/UserScript==';
+    const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
+    const APPLIES_TO_ALL_PATTERNS = [
+      'http://*',
+      'https://*',
+      'http://*/*',
+      'https://*/*',
+      'http*://*',
+      'http*://*/*',
+      '*',
+      '*://*',
+      '*://*/*',
+      'http*'
+    ];
+    class ParseUserJS {
+      /**
+       * @type { string }
+       */
+      code;
+      /**
+       * @type { string }
+       */
+      data_meta_block;
+      /**
+       * @type { string }
+       */
+      data_code_block;
+      /**
+       * @type { { [meta: string]: any } }
+       */
+      data_meta;
+      /**
+       * @type { string[] }
+       */
+      data_names;
+      constructor(code) {
+        this.code = code;
+        this.get_all();
       }
-
-      checkBlacklist(str) {
-        if (container.checkBlacklist(str)) {
-          this.showError(`Blacklisted "${str}"`);
-          timeoutFrame();
-          return true;
+      get_all() {
+        this.get_meta_block();
+        this.get_code_block();
+        this.parse_meta();
+        this.calculate_applies_to_names();
+      }
+      get_meta_block() {
+        if (isEmpty(this.code)) {
+          return null;
+        }
+        if (this.data_meta_block) {
+          return this.data_meta_block;
+        }
+        const start_block = this.code.indexOf(META_START_COMMENT);
+        if (isNull(start_block)) {
+          return null;
+        }
+        const end_block = this.code.indexOf(META_END_COMMENT, start_block);
+        if (isNull(end_block)) {
+          return null;
+        }
+        const meta_block = this.code.substring(start_block + META_START_COMMENT.length, end_block);
+        this.data_meta_block = meta_block;
+        return meta_block;
+      }
+      get_code_block() {
+        if (isEmpty(this.code)) {
+          return null;
+        }
+        if (this.data_code_block) {
+          return this.data_code_block;
+        }
+        const start_block = this.code.indexOf(META_START_COMMENT);
+        if (isNull(start_block)) {
+          return null;
+        }
+        const end_block = this.code.indexOf(META_END_COMMENT, start_block);
+        if (isNull(end_block)) {
+          return null;
+        }
+        const code_block = this.code.substring(
+          end_block + META_END_COMMENT.length,
+          this.code.length
+        );
+        const lines = [];
+        for (const l of code_block.split('\n')) {
+          if (isEmpty(l)) {
+            continue;
+          }
+          lines.push(l);
+        }
+        const clean_code = lines.join('\n');
+        this.data_code_block = clean_code;
+        return clean_code;
+      }
+      parse_meta() {
+        if (isEmpty(this.code)) {
+          return null;
+        }
+        if (this.data_meta) {
+          return this.data_meta;
+        }
+        const meta = {};
+        const meta_block = this.get_meta_block();
+        const meta_block_map = new Map();
+        for (const meta_line of meta_block.split('\n')) {
+          const meta_match = meta_line.match(/\/\/\s+@([a-zA-Z:-]+)\s+(.*)/);
+          if (isNull(meta_match)) {
+            continue;
+          }
+          const key = meta_match[1].trim();
+          const value = meta_match[2].trim();
+          if (!meta_block_map.has(key)) {
+            meta_block_map.set(key, []);
+          }
+          const meta_map = meta_block_map.get(key);
+          meta_map.push(value);
+          meta_block_map.set(key, meta_map);
+        }
+        for (const [key, value] of meta_block_map) {
+          if (value.length > 1) {
+            meta[key] = value;
+          } else {
+            meta[key] = value[0];
+          }
+        }
+        this.data_meta = meta;
+        return this.data_meta;
+      }
+      /**
+       * @returns { string[] }
+       */
+      calculate_applies_to_names() {
+        if (isEmpty(this.code)) {
+          return null;
+        }
+        if (this.data_names) {
+          return this.data_names;
+        }
+        const meta = this.parse_meta();
+        let patterns = [];
+        for (const [k, v] of Object.entries(meta)) {
+          if (/include|match/.test(k)) {
+            if (Array.isArray(v)) {
+              patterns = patterns.concat(v);
+            } else {
+              patterns = patterns.concat([v]);
+            }
+          }
+        }
+        if (isEmpty(patterns)) {
+          return [];
+        }
+        if (this.intersect(patterns, APPLIES_TO_ALL_PATTERNS)) {
+          return [];
+        }
+        const name_set = new Set();
+        const addObj = (obj) => {
+          if (name_set.has(obj)) {
+            return;
+          }
+          name_set.add(obj);
+        };
+        for (let p of patterns) {
+          try {
+            const original_pattern = p;
+            let pre_wildcards = [];
+            if (p.match(/^\/(.*)\/$/)) {
+              pre_wildcards = [p];
+            } else {
+              let m = p.match(/^\*(https?:.*)/i);
+              if (!isNull(m)) {
+                p = m[1];
+              }
+              p = p
+                .replace(/^\*:/i, 'http:')
+                .replace(/^\*\/\//i, 'http://')
+                .replace(/^http\*:/i, 'http:')
+                .replace(/^(https?):([^/])/i, '$1://$2');
+              m = p.match(/^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i);
+              if (!isNull(m)) {
+                p = m[1] + m[2];
+              }
+              m = p.match(/^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i);
+              if (!isNull(m)) {
+                p = `http://${m[1]}`;
+              }
+              m = p.match(/^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i);
+              if (!isNull(m)) {
+                p = `http://${m[1]}`;
+              }
+              m = p.match(/^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/);
+              if (!isNull(m)) {
+                if (m[2].match(/A([0-9]+\.){2,}z/)) {
+                  p = `${m[1]}tld${m[3]}`;
+                  pre_wildcards = [p.split('*')[0]];
+                } else {
+                  pre_wildcards = [p];
+                }
+              } else {
+                pre_wildcards = [p];
+              }
+            }
+            for (const pre_wildcard of pre_wildcards) {
+              try {
+                const urlObj = new URL(pre_wildcard);
+                const { host } = urlObj;
+                if (isNull(host)) {
+                  addObj({ text: original_pattern, domain: false, tld_extra: false });
+                } else if (!host.includes('.') && host.includes('*')) {
+                  addObj({ text: original_pattern, domain: false, tld_extra: false });
+                } else if (host.endsWith('.tld')) {
+                  for (let i = 0; i < TLD_EXPANSION.length; i++) {
+                    const tld = TLD_EXPANSION[i];
+                    addObj({
+                      text: host.replace(/tld$/i, tld),
+                      domain: true,
+                      tld_extra: i != 0
+                    });
+                  }
+                } else if (host.endsWith('.')) {
+                  addObj({
+                    text: host.slice(0, -1),
+                    domain: true,
+                    tld_extra: false
+                  });
+                } else {
+                  addObj({
+                    text: host,
+                    domain: true,
+                    tld_extra: false
+                  });
+                }
+                // eslint-disable-next-line no-unused-vars
+              } catch (ex) {
+                addObj({ text: original_pattern, domain: false, tld_extra: false });
+              }
+            }
+          } catch (ex) {
+            err(ex);
+          }
+        }
+        const arr = [...name_set];
+        this.data_names = arr;
+        return this.data_names;
+      }
+      intersect(a = [], b = []) {
+        for (const v of a) {
+          if (b.includes(v)) {
+            return true;
+          }
+        }
+        for (const v of b) {
+          if (a.includes(v)) {
+            return true;
+          }
         }
         return false;
       }
-
-      updateCounter(count, engine) {
-        container.counters[engine.name] += count;
-        container.counters.total += count;
-        this.updateCounters();
-      }
-
-      updateCounters() {
-        for (const [k, v] of Object.entries(container.counters)) {
-          if (k === 'total') {
-            continue;
+    }
+    const mergeTemplate = (obj = {}) => {
+      const template = {
+        id: 0,
+        bad_ratings: 0,
+        good_ratings: 0,
+        ok_ratings: 0,
+        daily_installs: 0,
+        total_installs: 0,
+        name: 'NOT FOUND',
+        description: 'NOT FOUND',
+        version: '0.0.0',
+        url: BLANK_PAGE,
+        code_url: BLANK_PAGE,
+        created_at: Date.now(),
+        code_updated_at: Date.now(),
+        users: [
+          {
+            name: '',
+            url: ''
           }
-          if (qs(`count-frame[data-counter="${k}"]`, countframe)) {
-            dom.text(qs(`count-frame[data-counter="${k}"]`, countframe), v);
-          }
-        }
-        dom.text(mainbtn, container.counters.total);
+        ]
+      };
+      for (const key in template) {
+        if (hasOwn(obj, key)) continue;
+        obj[key] = template[key];
       }
-
-      makePrompt(txt, dataset = {}, usePrompt = true) {
-        if (qs('.prompt', promptElem)) {
-          for (const elem of qsA('.prompt', promptElem)) {
-            if (elem.dataset.prompt) {
-              elem.remove();
-            }
-          }
-        }
-        const el = make('mu-js', 'prompt', {
-          dataset: {
-            prompt: txt
-          }
-        });
-        const elHead = make('mu-js', 'prompt-head', {
-          innerHTML: `${iconSVG.load('refresh')} ${txt}`
-        });
-        el.append(elHead);
-        if (usePrompt) {
-          const elPrompt = make('mu-js', 'prompt-body', { dataset });
-          const elYes = make('mujs-btn', 'prompt-confirm', {
-            innerHTML: 'Confirm',
-            dataset: {
-              command: 'prompt-confirm'
-            }
-          });
-          const elNo = make('mujs-btn', 'prompt-deny', {
-            innerHTML: 'Deny',
-            dataset: {
-              command: 'prompt-deny'
-            }
-          });
-          elPrompt.append(elYes, elNo);
-          el.append(elPrompt);
-        }
-        promptElem.append(el);
-      }
-
-      makeError(...ex) {
-        const safe = safeSelf();
-        const error = make('mu-js', 'error');
-        let str = '';
-        for (const e of ex) {
-          str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message} ${e.stack ?? ''}`}\n`;
-          if (isObj(e)) {
-            if (e.notify) {
-              dom.cl.add(mainframe, 'error');
-            }
-          }
-        }
-        error.appendChild(safe.createTextNode(str));
-        footer.append(error);
-      }
-
-      showError(...ex) {
-        err(...ex);
-        this.makeError(...ex);
-      }
-
-      refresh() {
-        urlBar.placeholder = i18n$('newTab');
-        container.counters.total = 0;
-        for (const engine of cfg.engines) {
-          container.counters[engine.name] = 0;
-        }
-        this.updateCounters();
-        dom.prop([tabbody, rateContainer, footer], 'innerHTML', '');
-      }
+      return obj;
     };
-    const MUJS = new ContainerHandler();
+    const mkList = (txt = '', obj = {}) => {
+      if (!obj.root || !obj.type) {
+        return;
+      }
+      const { root, type } = obj;
+      const appliesTo = make('mu-js', 'mujs-list', {
+        textContent: `${txt}: `
+      });
+      const applyList = make('mu-js', 'mujs-grants');
+      const ujsURLs = make('mujs-column', 'mujs-list', {
+        dataset: {
+          el: 'matches',
+          type
+        }
+      });
+      ujsURLs.append(appliesTo, applyList);
+      root.append(ujsURLs);
+
+      const list = obj.list ?? [];
+      if (isEmpty(list)) {
+        const elem = make('mujs-a', '', {
+          textContent: i18n$('listing_none')
+        });
+        applyList.append(elem);
+        dom.cl.add(ujsURLs, 'hidden');
+        // if (type === 'antifeatures') {
+        //   dom.cl.add(ujsURLs, 'hidden');
+        // }
+        return;
+      }
+      for (const c of list) {
+        if (typeof c === 'string' && c.startsWith('http')) {
+          const elem = make('mujs-a', '', {
+            textContent: c,
+            dataset: {
+              command: 'open-tab',
+              webpage: c
+            }
+          });
+          applyList.append(elem);
+        } else if (isObj(c)) {
+          if (type === 'resource') {
+            for (const [k, v] of Object.entries(c)) {
+              const elem = make('mujs-a', '', {
+                textContent: k ?? 'ERROR'
+              });
+              if (v.startsWith('http')) {
+                elem.dataset.command = 'open-tab';
+                elem.dataset.webpage = v;
+              }
+              applyList.append(elem);
+            }
+          } else {
+            const elem = make('mujs-a', '', {
+              textContent: c.text
+            });
+            if (c.domain) {
+              elem.dataset.command = 'open-tab';
+              elem.dataset.webpage = `https://${c.text}`;
+            }
+            applyList.append(elem);
+          }
+        } else {
+          const elem = make('mujs-a', '', {
+            textContent: c
+          });
+          applyList.append(elem);
+        }
+      }
+      // if (type === 'antifeatures') {
+      //   dom.cl.remove(ujsURLs, 'hidden');
+      // }
+    };
     const timeoutFrame = async (time) => {
       time = time ?? cfg.time;
       frameTimeout.clear(...frameTimeout.ids);
@@ -1948,320 +2403,13 @@ function primaryFN() {
       container.remove();
       return frameTimeout.clear(...frameTimeout.ids);
     };
-    /**
-     * @param { string } code
-     */
-    const get_meta_block = (code) => {
-      if (isEmpty(code)) {
-        return null;
-      }
-      const start_block = code.indexOf(META_START_COMMENT);
-      if (isNull(start_block)) {
-        return null;
-      }
-      const end_block = code.indexOf(META_END_COMMENT, start_block);
-      if (isNull(end_block)) {
-        return null;
-      }
-      return code.substring(start_block + META_START_COMMENT.length, end_block);
-    };
-    /**
-     * @param { string } code
-     */
-    const parse_meta = (code) => {
-      if (isEmpty(code)) {
-        return null;
-      }
-      const meta = {};
-      const meta_block = get_meta_block(code);
-      const meta_block_map = new Map();
-      for (const meta_line of meta_block.split('\n')) {
-        const meta_match = meta_line.match(/\/\/\s+@([a-zA-Z:-]+)\s+(.*)/);
-        if (isNull(meta_match)) {
-          continue;
-        }
-        const key = meta_match[1].trim();
-        const value = meta_match[2].trim();
-        if (!meta_block_map.has(key)) {
-          meta_block_map.set(key, []);
-        }
-        const meta_map = meta_block_map.get(key);
-        meta_map.push(value);
-        meta_block_map.set(key, meta_map);
-      }
-      for (const [key, value] of meta_block_map) {
-        if (value.length > 1) {
-          meta[key] = value;
-        } else {
-          meta[key] = value[0];
-        }
-      }
-      return meta;
-    };
-    /**
-     * @template { string } S
-     * @param { S } code
-     * @returns { S[] }
-     */
-    const calculate_applies_to_names = (code) => {
-      if (isEmpty(code)) {
-        return null;
-      }
-      const meta = parse_meta(code);
-      let patterns = [];
-      for (const [k, v] of Object.entries(meta)) {
-        if (/include|match/.test(k)) {
-          if (Array.isArray(v)) {
-            patterns = patterns.concat(v);
-          } else {
-            patterns = patterns.concat([v]);
-          }
-        }
-      }
-      if (isEmpty(patterns)) {
-        return [];
-      }
-      if (intersect(patterns, APPLIES_TO_ALL_PATTERNS)) {
-        return [];
-      }
-      const name_set = new Set();
-      const addObj = (obj) => {
-        if (name_set.has(obj)) {
-          return;
-        }
-        name_set.add(obj);
-      };
-      for (let p of patterns) {
-        try {
-          const original_pattern = p;
-          let pre_wildcards = [];
-          if (p.match(/^\/(.*)\/$/)) {
-            pre_wildcards = [p];
-          } else {
-            let m = p.match(/^\*(https?:.*)/i);
-            if (!isNull(m)) {
-              p = m[1];
-            }
-            p = p
-              .replace(/^\*:/i, 'http:')
-              .replace(/^\*\/\//i, 'http://')
-              .replace(/^http\*:/i, 'http:')
-              .replace(/^(https?):([^/])/i, '$1://$2');
-            m = p.match(/^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i);
-            if (!isNull(m)) {
-              p = m[1] + m[2];
-            }
-            m = p.match(/^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i);
-            if (!isNull(m)) {
-              p = `http://${m[1]}`;
-            }
-            m = p.match(/^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i);
-            if (!isNull(m)) {
-              p = `http://${m[1]}`;
-            }
-            m = p.match(/^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/);
-            if (!isNull(m)) {
-              if (m[2].match(/A([0-9]+\.){2,}z/)) {
-                p = `${m[1]}tld${m[3]}`;
-                pre_wildcards = [p.split('*')[0]];
-              } else {
-                pre_wildcards = [p];
-              }
-            } else {
-              pre_wildcards = [p];
-            }
-          }
-          for (const pre_wildcard of pre_wildcards) {
-            try {
-              const urlObj = new URL(pre_wildcard);
-              const { host } = urlObj;
-              if (isNull(host)) {
-                addObj({ text: original_pattern, domain: false, tld_extra: false });
-              } else if (!host.includes('.') && host.includes('*')) {
-                addObj({ text: original_pattern, domain: false, tld_extra: false });
-              } else if (host.endsWith('.tld')) {
-                for (let i = 0; i < TLD_EXPANSION.length; i++) {
-                  const tld = TLD_EXPANSION[i];
-                  addObj({
-                    text: host.replace(/tld$/i, tld),
-                    domain: true,
-                    tld_extra: i != 0
-                  });
-                }
-              } else if (host.endsWith('.')) {
-                addObj({
-                  text: host.slice(0, -1),
-                  domain: true,
-                  tld_extra: false
-                });
-              } else {
-                addObj({
-                  text: host,
-                  domain: true,
-                  tld_extra: false
-                });
-              }
-              // eslint-disable-next-line no-unused-vars
-            } catch (ex) {
-              addObj({ text: original_pattern, domain: false, tld_extra: false });
-            }
-          }
-        } catch (ex) {
-          err(ex);
-        }
-      }
-      return [...name_set];
-    };
-    const reqCode = async (obj = {}, translate = false) => {
-      if (obj.code_data) {
-        return obj.code_data;
-      }
-      /** @type { string } */
-      const code = await Network.req(obj.code_url, 'GET', 'text').catch(MUJS.showError);
-      if (typeof code !== 'string') {
-        return;
-      }
-      Object.assign(obj, {
-        code_data: code,
-        code_meta: {},
-        code_size: [Network.format(code.length)],
-        code_match: [],
-        code_grant: [],
-        antifeatures: []
-      });
-      const grantSet = new Set();
-      const afSet = new Set();
-      const meta = parse_meta(code);
-      const applies_to_names = calculate_applies_to_names(code);
-
-      if (translate) {
-        for (const lng of language.cache) {
-          if (meta[`name:${lng}`]) {
-            Object.assign(obj, {
-              name: meta[`name:${lng}`],
-              translated: true
-            });
-          }
-          if (meta[`description:${lng}`]) {
-            Object.assign(obj, {
-              description: meta[`description:${lng}`],
-              translated: true
-            });
-          }
-        }
-      }
-
-      for (const [key, value] of Object.entries(meta)) {
-        if (/grant/.test(key)) {
-          for (const v of normalizeTarget(value, false)) {
-            if (grantSet.has(v)) {
-              continue;
-            }
-            grantSet.add(v);
-          }
-        } else if (/antifeature/.test(key)) {
-          for (const v of normalizeTarget(value, false)) {
-            if (afSet.has(v)) {
-              continue;
-            }
-            afSet.add(v);
-          }
-        }
-      }
-      Object.assign(obj, {
-        code_meta: meta,
-        code_match: applies_to_names,
-        code_grant: [...grantSet],
-        antifeatures: [...afSet]
-      });
-      return code;
-    };
-    const template = {
-      id: 0,
-      bad_ratings: 0,
-      good_ratings: 0,
-      ok_ratings: 0,
-      daily_installs: 0,
-      total_installs: 0,
-      name: 'NOT FOUND',
-      description: 'NOT FOUND',
-      version: '0.0.0',
-      url: 'about:blank',
-      code_url: 'about:blank',
-      created_at: Date.now(),
-      code_updated_at: Date.now(),
-      users: [
-        {
-          name: '',
-          url: ''
-        }
-      ]
-    };
-    const mergeTemplate = (obj = {}) => {
-      for (const key in template) {
-        if (hasOwn(obj, key)) continue;
-        obj[key] = template[key];
-      }
-      return obj;
-    };
-    const mkList = (txt = '', obj = {}) => {
-      if (!obj.root || !obj.type) {
-        return;
-      }
-      const { root, type } = obj;
-      const list = obj.list ?? [];
-      const appliesTo = make('mu-js', 'mujs-list', {
-        textContent: `${txt}: `
-      });
-      const applyList = make('mu-js', 'mujs-grants');
-      const ujsURLs = make('mujs-column', 'mujs-list', {
-        dataset: {
-          el: 'matches',
-          type
-        }
-      });
-      ujsURLs.append(appliesTo, applyList);
-      root.append(ujsURLs);
-      if (isEmpty(list)) {
-        const elem = make('mujs-a', '', {
-          textContent: i18n$('listing_none')
-        });
-        applyList.append(elem);
-        if (type === 'antifeatures') {
-          dom.cl.add(ujsURLs, 'hidden');
-        }
-        return;
-      }
-      for (const c of list) {
-        if (isObj(c)) {
-          const elem = make('mujs-a', '', {
-            textContent: c.text
-          });
-          if (c.domain) {
-            elem.dataset.command = 'open-tab';
-            elem.dataset.webpage = `https://${c.text}`;
-          }
-          applyList.append(elem);
-        } else {
-          const elem = make('mujs-a', '', {
-            textContent: c
-          });
-          applyList.append(elem);
-        }
-      }
-      if (type === 'antifeatures') {
-        dom.cl.remove(ujsURLs, 'hidden');
-      }
-    };
-    const toLocaleDate = (str = '') => {
-      return new Intl.DateTimeFormat(navigator.language).format(new Date(str));
-    };
     // #region Create UserJS
+    /**
+     * @param { import("../typings/types.d.ts").GSForkQuery } ujs
+     * @param { string } engine
+     */
     const createjs = (ujs, engine) => {
-      for (const key in template) {
-        if (hasOwn(ujs, key)) continue;
-        ujs[key] = template[key];
-      }
+      ujs = mergeTemplate(ujs);
       // Lets not add this UserJS to the list
       if (ujs.id === 421603) {
         return;
@@ -2413,299 +2561,458 @@ function primaryFN() {
       ratings.append(fratings, fgood, fok, fbad);
       jsInfo.append(ftotal, ratings, fver, fcreated);
       mkList(i18n$('code_size'), {
-        list: ujs.code_size,
+        list: ujs._mujs.code.code_size,
         type: 'size',
         root: jsInfo
       });
 
       jsInfoB.append(flicense);
       mkList(i18n$('antifeatures'), {
-        list: ujs.antifeatures,
+        list: ujs._mujs.code.antifeatures,
         type: 'antifeatures',
         root: jsInfoB
       });
       mkList(i18n$('applies_to'), {
-        list: ujs.code_match,
-        type: 'match-urls',
+        list: ujs._mujs.code.match,
+        type: 'match',
         root: jsInfoB
       });
       mkList('@grant', {
-        list: ujs.code_grant,
-        type: 'grants',
+        list: ujs._mujs.code.grant,
+        type: 'grant',
+        root: jsInfoB
+      });
+      mkList('@require', {
+        list: ujs._mujs.code.meta?.require,
+        type: 'require',
+        root: jsInfoB
+      });
+      const script_resources = ujs._mujs.code.meta?.resource;
+      mkList('@resource', {
+        list: isNull(script_resources) ? [] : [script_resources],
+        type: 'resource',
         root: jsInfoB
       });
       fmore.append(jsInfo, jsInfoB);
       fBtns.append(scriptDownload, loadCode);
       fname.append(ftitle, fdesc, fmore, fBtns, codeArea);
 
-      if (ujs.code_data) {
-        codeArea.value = ujs.code_data;
+      const code_data = ujs._mujs.code.data;
+      if (code_data) {
+        const code_obj = new ParseUserJS(code_data);
+        codeArea.value = code_obj.get_code_block();
       }
 
       for (const e of [fname, uframe, fdaily, fupdated, eframe]) {
         tr.append(e);
       }
       tabbody.append(tr);
+      ujs._mujs.root = tr;
+
+      return tr;
     };
     // #endregion
-    //#region Build List
-    const buildlist = async (host = undefined) => {
-      try {
+    // #region Build List
+    class List {
+      engines;
+      cache;
+      intHost;
+      constructor(host = undefined) {
         if (isEmpty(host)) {
           host = container.host;
         }
-        if (MUJS.checkBlacklist(host)) {
-          return;
-        }
-        if (!isNull(ghMsg)) {
-          const txt = make('mujs-row', 'legacy-config', {
-            textContent: ghMsg
-          });
-          rateContainer.append(txt);
-          return;
-        }
-        MUJS.refresh();
-        if (!container.cache.has(host)) {
+        this.engines = cfg.engines;
+        this.cache = container.cache.get(host);
+        this.host = host;
+      }
+
+      set host(hostname) {
+        this.intHost = hostname;
+
+        if (!container.cache.has(hostname)) {
           const engineTemplate = {};
           for (const engine of cfg.engines) {
             engineTemplate[engine.name] = [];
           }
-          container.cache.set(host, engineTemplate);
+          container.cache.set(hostname, engineTemplate);
         }
+        if (container.checkBlacklist(hostname)) {
+          showError(`Blacklisted "${hostname}"`);
+          timeoutFrame();
+          this.blacklisted = true;
+        } else {
+          this.blacklisted = false;
+        }
+
         const isSupported = (name) => {
           for (const [k, v] of Object.entries(engineUnsupported)) {
             if (k !== name) {
               continue;
             }
-            if (v.includes(host)) {
+            if (v.includes(hostname)) {
               return false;
             }
           }
           return true;
         };
-        const engines = cfg.engines.filter((e) => e.enabled && isSupported(e.name));
-        // Fully hide when on a unsupported site.
-        if (isEmpty(engines)) {
-          container.opacityMin = '0';
-          mainframe.style.opacity = container.opacityMin;
-          return;
-        }
-        const cache = container.cache.get(host);
-        const customRecords = [];
+        this.engines = cfg.engines.filter((e) => e.enabled && isSupported(e.name));
+        this.cache = container.cache.get(hostname);
+        // if (!isNull(ghMsg)) {
+        //   const txt = make('mujs-row', 'legacy-config', {
+        //     textContent: ghMsg
+        //   });
+        //   rateContainer.append(txt);
+        //   return;
+        // }
+      }
 
-        info('Building list', { cache, MUJS, engines });
+      get host() {
+        return this.intHost;
+      }
 
-        const initUserJS = async (ujs, engine) => {
-          if (cfg.codePreview && !ujs.code_data) {
-            await reqCode(ujs);
+      async build() {
+        try {
+          container.refresh();
+          if (this.blacklisted) {
+            return;
           }
-          createjs(ujs, engine);
-        };
-        const arr = [];
-        for (const engine of engines) {
-          const cEngine = cache[`${engine.name}`];
-          if (!isEmpty(cEngine)) {
-            for (const ujs of cEngine) {
-              createjs(ujs, engine.name);
-            }
-            MUJS.updateCounter(cEngine.length, engine);
-            continue;
+          if (isEmpty(this.engines)) {
+            container.opacityMin = '0';
+            mainframe.style.opacity = container.opacityMin;
+            return;
           }
-          /**
-           * @param { import("../typings/UserJS.d.ts").GSFork } dataQ
-           */
-          const forkFN = async (dataQ) => {
-            if (!dataQ) {
-              MUJS.showError('Invalid data received from the server, check internet connection');
-              return;
-            }
-            const dq = Array.isArray(dataQ) ? dataQ : Array.isArray(dataQ.query) ? dataQ.query : [];
-            const data = dq.filter((d) => !d.deleted);
-            if (isBlank(data)) {
-              return;
-            }
-            const hideData = [];
-            /**
-             * @param {import("../typings/UserJS.d.ts").GSForkQuery} d
-             * @returns {boolean}
-             */
-            const inUserLanguage = (d) => {
-              const dlocal = d.locale.split('-')[0] ?? d.locale;
-              if (language.cache.includes(dlocal)) {
-                return true;
+          info(' Building list', { cache: this.cache, engines: this.engines });
+          const customRecords = [];
+          const arr = [];
+          for (const engine of this.engines) {
+            const cEngine = this.cache[`${engine.name}`];
+            if (!isEmpty(cEngine)) {
+              for (const ujs of cEngine) {
+                tabbody.append(ujs._mujs.root);
               }
-              hideData.push(d);
-              return false;
+              updateCounter(cEngine.length, engine);
+              continue;
+            }
+            const host = this.host;
+            const _mujs = (d) => {
+              const obj = {
+                ...d,
+                _mujs: {
+                  root: {},
+                  info: {
+                    engine,
+                    host
+                  },
+                  code: {
+                    antifeatures: [],
+                    grant: [],
+                    match: [],
+                    meta: {},
+                    request: async function (translate = false) {
+                      if (this.data) {
+                        return this;
+                      }
+                      this.data = '';
+                      /** @type { string } */
+                      const code = await Network.req(d.code_url, 'GET', 'text').catch(showError);
+                      if (typeof code !== 'string') {
+                        return this;
+                      }
+                      Object.assign(this, {
+                        data: code,
+                        code_size: [Network.format(code.length)]
+                      });
+                      const grantSet = new Set();
+                      const afSet = new Set();
+                      const code_obj = new ParseUserJS(code);
+                      const meta = code_obj.parse_meta();
+                      const applies_to_names = code_obj.calculate_applies_to_names();
+
+                      if (translate) {
+                        for (const lng of language.cache) {
+                          if (meta[`name:${lng}`]) {
+                            Object.assign(obj, {
+                              name: meta[`name:${lng}`]
+                            });
+                            this.translated = true;
+                          }
+                          if (meta[`description:${lng}`]) {
+                            Object.assign(obj, {
+                              description: meta[`description:${lng}`]
+                            });
+                            this.translated = true;
+                          }
+                        }
+                      }
+
+                      for (const [key, value] of Object.entries(meta)) {
+                        if (/grant/.test(key)) {
+                          for (const v of normalizeTarget(value, false)) {
+                            if (grantSet.has(v)) {
+                              continue;
+                            }
+                            grantSet.add(v);
+                          }
+                        } else if (/antifeature/.test(key)) {
+                          for (const v of normalizeTarget(value, false)) {
+                            if (afSet.has(v)) {
+                              continue;
+                            }
+                            afSet.add(v);
+                          }
+                        }
+                      }
+                      if (typeof meta.require === 'string') {
+                        const s = meta.require;
+                        meta.require = [s];
+                      }
+                      if (meta.resource) {
+                        const obj = {}
+                        if (typeof meta.resource === 'string') {
+                          const reg = /(.+)\s+(.+)/.exec(meta.resource);
+                          if (reg) {
+                            obj[reg[1].trim()] = reg[2]
+                          }
+                        } else {
+                          for (const r of meta.resource) {
+                            const reg = /(.+)\s+(http.+)/.exec(r);
+                            if (reg) {
+                              obj[reg[1].trim()] = reg[2]
+                            }
+                          }
+                        }
+                        meta.resource = obj;
+                      }
+                      Object.assign(this, {
+                        meta,
+                        match: applies_to_names,
+                        grant: [...grantSet],
+                        antifeatures: [...afSet]
+                      });
+
+                      return this;
+                    }
+                  }
+                }
+              };
+              return obj;
             };
-            const filterLang = data.filter((d) => {
-              if (cfg.filterlang && !inUserLanguage(d)) {
-                return false;
-              }
-              return true;
-            });
-            let finalList = filterLang;
-            const hds = [];
-            for (const ujs of hideData) {
-              await reqCode(ujs, true);
-              if (ujs.translated) {
-                hds.push(ujs);
-              }
-            }
-            finalList = [...new Set([...hds, ...filterLang])];
-
-            for (const ujs of finalList) {
-              initUserJS(ujs, engine.name);
-            }
-            cache[engine.name].push(...finalList);
-            MUJS.updateCounter(finalList.length, engine);
-          };
-          /**
-           * @param {Document} htmlDocument
-           */
-          const customFN = async (htmlDocument) => {
-            try {
-              if (!htmlDocument) {
-                MUJS.showError('Invalid data received from the server, TODO fix this');
+            /**
+             * @param { import("../typings/types.d.ts").GSFork } dataQ
+             */
+            const forkFN = async (dataQ) => {
+              if (!dataQ) {
+                showError('Invalid data received from the server, check internet connection');
                 return;
               }
-              const selected = htmlDocument.documentElement;
-              if (/openuserjs/gi.test(engine.name)) {
-                for (const i of qsA('.col-sm-8 .tr-link', selected)) {
-                  while (isNull(qs('.script-version', i))) {
-                    await new Promise((resolve) => requestAnimationFrame(resolve));
+              /**
+               * @type { import("../typings/types.d.ts").GSForkQuery[] }
+               */
+              const dq = Array.isArray(dataQ)
+                ? dataQ
+                : Array.isArray(dataQ.query)
+                  ? dataQ.query
+                  : [];
+              const dataA = dq.filter((d) => !d.deleted);
+              if (isBlank(dataA)) {
+                return;
+              }
+              const data = dataA.map(_mujs);
+              const otherLng = [];
+              /**
+               * @param {import("../typings/types.d.ts").GSForkQuery} d
+               * @returns {boolean}
+               */
+              const inUserLanguage = (d) => {
+                const dlocal = d.locale.split('-')[0] ?? d.locale;
+                if (language.cache.includes(dlocal)) {
+                  return true;
+                }
+                otherLng.push(d);
+                return false;
+              };
+              const filterLang = data.filter((d) => {
+                if (cfg.filterlang && !inUserLanguage(d)) {
+                  return false;
+                }
+                return true;
+              });
+              let finalList = filterLang;
+              const hds = [];
+              for (const ujs of otherLng) {
+                const c = await ujs._mujs.code.request(true);
+                if (c.translated) {
+                  hds.push(ujs);
+                }
+              }
+              finalList = [...new Set([...hds, ...filterLang])];
+
+              for (const ujs of finalList) {
+                if (cfg.codePreview && !ujs._mujs.code.data) {
+                  await ujs._mujs.code.request();
+                }
+                createjs(ujs, engine.name);
+              }
+              this.cache[engine.name].push(...finalList);
+              updateCounter(finalList.length, engine);
+            };
+            /**
+             * @param {Document} htmlDocument
+             */
+            const customFN = async (htmlDocument) => {
+              try {
+                if (!htmlDocument) {
+                  showError('Invalid data received from the server, TODO fix this');
+                  return;
+                }
+                const selected = htmlDocument.documentElement;
+                if (/openuserjs/gi.test(engine.name)) {
+                  for (const i of qsA('.col-sm-8 .tr-link', selected)) {
+                    while (isNull(qs('.script-version', i))) {
+                      await new Promise((resolve) => requestAnimationFrame(resolve));
+                    }
+                    const fixurl = dom
+                      .prop(qs('.tr-link-a', i), 'href')
+                      .replace(
+                        new RegExp(document.location.origin, 'gi'),
+                        'https://openuserjs.org'
+                      );
+                    const ujs = mergeTemplate(
+                      _mujs({
+                        name: dom.text(qs('.tr-link-a', i)),
+                        description: dom.text(qs('p', i)),
+                        version: dom.text(qs('.script-version', i)),
+                        url: fixurl,
+                        code_url: `${fixurl.replace(/\/scripts/gi, '/install')}.user.js`,
+                        total_installs: dom.text(qs('td:nth-child(2) p', i)),
+                        created_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
+                        code_updated_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
+                        users: [
+                          {
+                            name: dom.text(qs('.inline-block a', i)),
+                            url: dom.prop(qs('.inline-block a', i), 'href')
+                          }
+                        ]
+                      })
+                    );
+                    if (cfg.codePreview && !ujs._mujs.code.data) {
+                      await ujs._mujs.code.request();
+                    }
+                    createjs(ujs, engine.name);
+                    customRecords.push(ujs);
                   }
-                  const fixurl = dom
-                    .prop(qs('.tr-link-a', i), 'href')
-                    .replace(new RegExp(document.location.origin, 'gi'), 'https://openuserjs.org');
-                  const ujs = mergeTemplate({
-                    name: dom.text(qs('.tr-link-a', i)),
-                    description: dom.text(qs('p', i)),
-                    version: dom.text(qs('.script-version', i)),
-                    url: fixurl,
-                    code_url: `${fixurl.replace(/\/scripts/gi, '/install')}.user.js`,
-                    total_installs: dom.text(qs('td:nth-child(2) p', i)),
-                    created_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
-                    code_updated_at: dom.attr(qs('td:nth-child(4) time', i), 'datetime'),
-                    users: [
-                      {
-                        name: dom.text(qs('.inline-block a', i)),
-                        url: dom.prop(qs('.inline-block a', i), 'href')
-                      }
-                    ]
-                  });
-                  if (cfg.codePreview && !ujs.code_data) {
-                    await reqCode(ujs);
+                }
+                this.cache[engine.name].push(...customRecords);
+                updateCounter(customRecords.length, engine);
+              } catch (ex) {
+                showError(ex);
+              }
+            };
+            const gitFN = async (data) => {
+              try {
+                if (isBlank(data.items)) {
+                  showError('Invalid data received from the server, TODO fix this');
+                  return;
+                }
+                for (const r of data.items) {
+                  const ujs = mergeTemplate(
+                    _mujs({
+                      name: r.name,
+                      description: isEmpty(r.repository.description)
+                        ? i18n$('no_license')
+                        : r.repository.description,
+                      url: r.html_url,
+                      code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
+                      code_updated_at: r.commit || Date.now(),
+                      total_installs: r.score,
+                      users: [
+                        {
+                          name: r.repository.owner.login,
+                          url: r.repository.owner.html_url
+                        }
+                      ]
+                    })
+                  );
+                  if (cfg.codePreview && !ujs._mujs.code.data) {
+                    await ujs._mujs.code.request();
                   }
                   createjs(ujs, engine.name);
                   customRecords.push(ujs);
                 }
+                this.cache[engine.name].push(...customRecords);
+                updateCounter(data.items.length, engine);
+              } catch (ex) {
+                showError(ex);
               }
-              cache[engine.name].push(...customRecords);
-              MUJS.updateCounter(customRecords.length, engine);
-            } catch (ex) {
-              MUJS.showError(ex);
-            }
-          };
-          const gitFN = async (data) => {
-            try {
-              if (isBlank(data.items)) {
-                MUJS.showError('Invalid data received from the server, TODO fix this');
-                return;
+            };
+            let netFN;
+            if (engine.name.includes('fork')) {
+              netFN = Network.req(`${engine.url}/scripts/by-site/${this.host}.json?language=all`)
+                .then(forkFN)
+                .catch(showError);
+            } else if (/github/gi.test(engine.name)) {
+              if (isEmpty(engine.token)) {
+                showError(`"${engine.name}" requires a token to use`);
+                continue;
               }
-              for (const r of data.items) {
-                const ujs = mergeTemplate({
-                  name: r.name,
-                  description: isEmpty(r.repository.description)
-                    ? i18n$('no_license')
-                    : r.repository.description,
-                  url: r.html_url,
-                  code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
-                  code_updated_at: r.commit || Date.now(),
-                  total_installs: r.score,
-                  users: [
-                    {
-                      name: r.repository.owner.login,
-                      url: r.repository.owner.html_url
-                    }
-                  ]
-                });
-                if (cfg.codePreview && !ujs.code_data) {
-                  await reqCode(ujs);
-                }
-                createjs(ujs, engine.name);
-                customRecords.push(ujs);
-              }
-              cache[engine.name].push(...customRecords);
-              MUJS.updateCounter(data.items.length, engine);
-            } catch (ex) {
-              MUJS.showError(ex);
-            }
-          };
-          let netFN;
-          if (engine.name.includes('fork')) {
-            netFN = Network.req(`${engine.url}/scripts/by-site/${host}.json?language=all`)
-              .then(forkFN)
-              .catch(MUJS.showError);
-          } else if (/github/gi.test(engine.name)) {
-            if (isEmpty(engine.token)) {
-              MUJS.showError(`"${engine.name}" requires a token to use`);
-              continue;
-            }
-            netFN = Network.req(
-              `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
-              'GET',
-              'json',
-              {
-                headers: {
-                  Accept: 'application/vnd.github+json',
-                  Authorization: `Bearer ${engine.token}`,
-                  'X-GitHub-Api-Version': '2022-11-28'
-                }
-              }
-            )
-              .then(gitFN)
-              .then(() => {
-                Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
+              netFN = Network.req(
+                `${engine.url}"// ==UserScript=="+${this.host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
+                'GET',
+                'json',
+                {
                   headers: {
                     Accept: 'application/vnd.github+json',
                     Authorization: `Bearer ${engine.token}`,
                     'X-GitHub-Api-Version': '2022-11-28'
                   }
-                })
-                  .then((data) => {
-                    for (const [key, value] of Object.entries(data.resources.code_search)) {
-                      const txt = make('mujs-row', 'rate-info', {
-                        textContent: `${key.toUpperCase()}: ${value}`
-                      });
-                      rateContainer.append(txt);
+                }
+              )
+                .then(gitFN)
+                .then(() => {
+                  Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
+                    headers: {
+                      Accept: 'application/vnd.github+json',
+                      Authorization: `Bearer ${engine.token}`,
+                      'X-GitHub-Api-Version': '2022-11-28'
                     }
                   })
-                  .catch(MUJS.showError);
-              })
-              .catch(MUJS.showError);
-          } else {
-            netFN = Network.req(`${engine.url}${host}`, 'GET', 'document')
-              .then(customFN)
-              .catch((error) => {
-                MUJS.showError(`Engine: "${engine.name}"`, error);
-              });
+                    .then((data) => {
+                      for (const [key, value] of Object.entries(data.resources.code_search)) {
+                        const txt = make('mujs-row', 'rate-info', {
+                          textContent: `${key.toUpperCase()}: ${value}`
+                        });
+                        rateContainer.append(txt);
+                      }
+                    })
+                    .catch(showError);
+                })
+                .catch(showError);
+            } else {
+              netFN = Network.req(`${engine.url}${this.host}`, 'GET', 'document')
+                .then(customFN)
+                .catch((error) => {
+                  showError(`Engine: "${engine.name}"`, error);
+                });
+            }
+            if (netFN) {
+              arr.push(netFN);
+            }
           }
-          if (netFN) {
-            arr.push(netFN);
-          }
+
+          urlBar.placeholder = i18n$('search_placeholder');
+          urlBar.value = '';
+          Promise.allSettled(arr).then(() => {
+            tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
+            tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
+          });
+        } catch (ex) {
+          showError(ex);
         }
-        urlBar.placeholder = i18n$('search_placeholder');
-        urlBar.value = '';
-        Promise.allSettled(arr).then(() => {
-          tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
-          tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
-        });
-      } catch (ex) {
-        MUJS.showError(ex);
       }
-    };
-    //#endregion
-    //#region Make Config
+    }
+    const MUList = new List();
+    // #endregion
+    // #region Make Config
     const makecfg = () => {
       const makerow = (desc, type = null, nm, attrs = {}) => {
         desc = desc ?? i18n$('no_license');
@@ -2809,9 +3116,10 @@ function primaryFN() {
         onchange(evt) {
           container.unsaved = true;
           container.rebuild = true;
-          if (isNull(ghMsg)) {
-            ghAPI.token = evt.target.value;
-          }
+          ghAPI.token = evt.target.value;
+          // if (isNull(ghMsg)) {
+          //   ghAPI.token = evt.target.value;
+          // }
         }
       });
       ghToken.dataset.engine = 'github-token';
@@ -2919,7 +3227,11 @@ function primaryFN() {
       cbtn.append(resetbtn, savebtn);
       cfgpage.append(blacklist, theme, cbtn);
     };
-    //#endregion
+    // #endregion
+    container.tab.custom = (host) => {
+      MUList.host = host;
+      MUList.build();
+    };
     ael(mainframe, 'mouseenter', (evt) => {
       evt.preventDefault();
       evt.stopPropagation();
@@ -2972,8 +3284,10 @@ function primaryFN() {
         if (v.description && v.description.match(reg)) {
           finds.add(elem);
         }
-        if (v.code_data) {
-          const meta = parse_meta(v.code_data);
+        const code_data = v._mujs.code.data;
+        if (code_data) {
+          const code_obj = new ParseUserJS(code_data);
+          const meta = code_obj.parse_meta(code_data);
           for (const key of Object.keys(meta)) {
             if (/name|desc/i.test(key) && key.match(reg)) {
               finds.add(elem);
@@ -2990,7 +3304,7 @@ function primaryFN() {
       if (urlBar.placeholder === i18n$('newTab') && qs('mujs-tab.active', toolbar)) {
         const tabElem = qs('mujs-tab.active', toolbar);
         const tabHost = qs('mujs-host', tabElem);
-        if (val.startsWith('mujs:')) {
+        if (val.startsWith(tab.protocal)) {
           tab.close(tabElem);
           if (tab.hasTab(val)) {
             tab.active(tab.Tab.get(val));
@@ -3002,73 +3316,25 @@ function primaryFN() {
           tabElem.dataset.host = val;
           tabHost.title = '<All Sites>';
           tabHost.textContent = '<All Sites>';
-          buildlist(val);
+          MUList.host = val;
+          MUList.build();
           return;
         }
         const value = container.getHost(val);
-        if (MUJS.checkBlacklist(value)) {
-          MUJS.showError(`Host blacklisted "${value}"`);
+        if (container.checkBlacklist(value)) {
+          showError(`Blacklisted "${value}"`);
           return;
         }
         tabElem.dataset.host = value;
         tabHost.title = value;
         tabHost.textContent = value;
-        buildlist(value);
+        MUList.host = value;
+        MUList.build();
         return;
       }
     });
-    container.renderTheme(cfg.theme);
-
-    const makeTHead = (rows) => {
-      const tr = make('tr');
-      for (const r of normalizeTarget(rows)) {
-        const tparent = make('th', r.class ?? '', r);
-        tr.append(tparent);
-      }
-      tabhead.append(tr);
-      table.append(tabhead, tabbody);
-    };
-    makeTHead([
-      {
-        class: 'mujs-header-name',
-        textContent: i18n$('name')
-      },
-      {
-        textContent: i18n$('createdby')
-      },
-      {
-        textContent: i18n$('daily_installs')
-      },
-      {
-        textContent: i18n$('updated')
-      },
-      {
-        textContent: i18n$('install')
-      }
-    ]);
-
-    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
-    const comparer = (idx, asc) => (a, b) =>
-      ((v1, v2) =>
-        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
-          ? v1 - v2
-          : v1.toString().localeCompare(v2))(
-        getCellValue(asc ? a : b, idx),
-        getCellValue(asc ? b : a, idx)
-      );
-    for (const th of tabhead.rows[0].cells) {
-      if (dom.text(th) === i18n$('install')) continue;
-      dom.cl.add(th, 'mujs-pointer');
-      ael(th, 'click', () => {
-        /** [Stack Overflow Reference](https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript/53880407#53880407) */
-        Array.from(tabbody.querySelectorAll('tr'))
-          .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (this.asc = !this.asc)))
-          .forEach((tr) => tabbody.appendChild(tr));
-      });
-    }
     makecfg();
-    tab.create(container.host);
-    buildlist().then(timeoutFrame);
+    MUList.build().then(timeoutFrame);
     dbg('Container', container);
   } catch (ex) {
     err(ex);
@@ -3091,10 +3357,11 @@ const loadDOM = (onDomReady) => {
     once: true
   });
 };
+
 const init = async () => {
-  const stored = await StorageSystem.getValue('Config', defcfg);
+  const stored = await StorageSystem.getValue('Config', DEFAULT_CONFIG);
   cfg = {
-    ...defcfg,
+    ...DEFAULT_CONFIG,
     ...stored
   };
   info('Config:', cfg);
@@ -3113,10 +3380,10 @@ const init = async () => {
       }
       sleazyRedirect();
       container.inject(primaryFN, doc);
-      Command.register('Inject Userscript+', () => {
+      Command.register(i18n$('userjs_inject'), () => {
         container.inject(primaryFN, doc);
       });
-      Command.register('Close Userscript+', () => {
+      Command.register(i18n$('userjs_close'), () => {
         container.remove();
       });
     } catch (ex) {

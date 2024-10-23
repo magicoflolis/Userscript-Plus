@@ -130,5 +130,14 @@
   },
   "code_size": {
     "message": "代码 尺寸"
+  },
+  "prmpt_css": {
+    "message": "作為使用者樣式安裝？"
+  },
+  "userjs_inject": {
+    "message": "注入用戶腳本+"
+  },
+  "userjs_close": {
+    "message": "關閉用戶腳本+"
   }
 }

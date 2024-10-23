@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html class="webext-page" lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-    <title>UserJS - Popup</title>
-    <link rel="stylesheet" type="text/css" href="css/magicuserjs.css" />
-    <link rel="stylesheet" type="text/css" href="css/web-ext.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <title>Magic UserJS+</title> -->
+     <title data-i18n="extName"></title>
+    <link rel="stylesheet" href="css/magicuserjs.css" />
+    <link rel="stylesheet" href="css/web-ext.css" />
+    <link rel="shortcut icon" type="image/png" href="img/icon_64.png">
   </head>
 
   <body class="webext-page">
@@ -58,12 +59,9 @@
               autocomplete="off"
               spellcheck="false"
               type="text"
-              placeholder="_" /></mujs-url
+              placeholder="search_placeholder" /></mujs-url
           ><mujs-column class="rate-container"></mujs-column
-          ><mujs-column
-            ><count-frame data-counter="greasyfork" title="https://greasyfork.org"
-              >6</count-frame
-            ></mujs-column
+          ><mujs-column class="counter-container"></mujs-column
           ><mujs-column class="btn-frame"
             ><mujs-btn
               class="github hidden"
@@ -138,8 +136,7 @@
     </mujs-root>
     <script src="js/mu.js"></script>
     <script src="js/mu-hermes.js"></script>
-    <script src="js/mu-common.js"></script>
     <script src="js/popup.js" type="module"></script>
-    <script src="js/settings.js" type="module"></script>
+    <!-- <script src="js/settings.js" type="module"></script> -->
   </body>
 </html>

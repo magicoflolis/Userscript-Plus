@@ -130,5 +130,14 @@
   },
   "code_size": {
     "message": "Код Размер"
+  },
+  "prmpt_css": {
+    "message": "Установить как UserStyle?"
+  },
+  "userjs_inject": {
+    "message": "Вставить Userscript+"
+  },
+  "userjs_close": {
+    "message": "Закрыть Userscript+"
   }
 }

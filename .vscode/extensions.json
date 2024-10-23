@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "mrmlnc.vscode-autoprefixer",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "mrmlnc.vscode-scss",
+    "adpyke.vscode-userscript"
+  ]
+}

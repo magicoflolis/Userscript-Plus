@@ -347,7 +347,8 @@ mujs-main {
     align-items: center;
     justify-content: center;
 
-    svg {
+    svg,
+    img {
       width: 14px;
       height: 14px;
       background: transparent;
@@ -693,6 +694,10 @@ mujs-body {
 
       svg {
         fill: currentColor;
+      }
+
+      svg,
+      img {
         width: 14px;
         height: 14px;
         background: transparent;
@@ -962,6 +967,10 @@ mujs-btn {
 
   svg {
     fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
+  }
+
+  svg,
+  img {
     width: 14px;
     height: 14px;
   }

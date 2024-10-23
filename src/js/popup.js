@@ -1,10 +1,17 @@
 'use strict';
 import { err, log, info } from './logger.js';
+import { i18n$ } from './i18n.js';
 import { dom, normalizeTarget, qs, qsA } from './querySelector.js';
+import { reqCode, parse_meta } from './request-code.js';
+import { ael, make, isBlank, isNull, isEmpty, isObj, isString, hasOwn, openInTab } from './util.js';
+import { XMap } from './XMap.js';
+
+/**
+ * @type { import("../typings/types").config }
+ */
 let cfg = {};
 
-const { hermes, ael, make, isBlank, isNull, isEmpty, isObj, reqCode, parse_meta } = userjs;
-const hasOwn = Object.hasOwn || Object.prototype.hasOwnProperty.call;
+const { hermes } = userjs;
 
 // Lets highlight me :)
 const authorID = 166061;
@@ -19,84 +26,10 @@ const goodUserJS = [
   'https://github.com/jesus2099/konami-command/raw/master/INSTALL-USER-SCRIPT.user.js',
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js'
 ];
-class Memorize {
-  constructor() {
-    /** @type { Map<string, Map<string, any>> } */
-    this.cache = new Map();
-  }
-  /**
-   * @template { string } S
-   * @param { ...S } maps
-   * @returns { S | S[] }
-   */
-  create(...maps) {
-    const resp = [];
-    for (const key of maps) {
-      if (this.cache.has(key)) {
-        return this.cache.get(key);
-      }
-      this.cache.set(key, new Map());
-      resp.push(this.cache.get(key));
-    }
-    return resp.length >= 2 ? resp : resp[0];
-  }
-}
-const memory = new Memorize();
-const memorized = memory.cache;
-memory.create('cfg', 'container', 'userjs');
-
 const iconSVG = {
-  cfg: {
-    viewBox: '0 0 24 24',
-    html: '<g><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7848 0.449982C13.8239 0.449982 14.7167 1.16546 14.9122 2.15495L14.9991 2.59495C15.3408 4.32442 17.1859 5.35722 18.9016 4.7794L19.3383 4.63233C20.3199 4.30175 21.4054 4.69358 21.9249 5.56605L22.7097 6.88386C23.2293 7.75636 23.0365 8.86366 22.2504 9.52253L21.9008 9.81555C20.5267 10.9672 20.5267 13.0328 21.9008 14.1844L22.2504 14.4774C23.0365 15.1363 23.2293 16.2436 22.7097 17.1161L21.925 18.4339C21.4054 19.3064 20.3199 19.6982 19.3382 19.3676L18.9017 19.2205C17.1859 18.6426 15.3408 19.6754 14.9991 21.405L14.9122 21.845C14.7167 22.8345 13.8239 23.55 12.7848 23.55H11.2152C10.1761 23.55 9.28331 22.8345 9.08781 21.8451L9.00082 21.4048C8.65909 19.6754 6.81395 18.6426 5.09822 19.2205L4.66179 19.3675C3.68016 19.6982 2.59465 19.3063 2.07505 18.4338L1.2903 17.1161C0.770719 16.2436 0.963446 15.1363 1.74956 14.4774L2.09922 14.1844C3.47324 13.0327 3.47324 10.9672 2.09922 9.8156L1.74956 9.52254C0.963446 8.86366 0.77072 7.75638 1.2903 6.8839L2.07508 5.56608C2.59466 4.69359 3.68014 4.30176 4.66176 4.63236L5.09831 4.77939C6.81401 5.35722 8.65909 4.32449 9.00082 2.59506L9.0878 2.15487C9.28331 1.16542 10.176 0.449982 11.2152 0.449982H12.7848ZM12 15.3C13.8225 15.3 15.3 13.8225 15.3 12C15.3 10.1774 13.8225 8.69998 12 8.69998C10.1774 8.69998 8.69997 10.1774 8.69997 12C8.69997 13.8225 10.1774 15.3 12 15.3Z" fill="currentColor"></path></g>'
-  },
-  close: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M4.70718 2.58574C4.31666 2.19522 3.68349 2.19522 3.29297 2.58574L2.58586 3.29285C2.19534 3.68337 2.19534 4.31654 2.58586 4.70706L9.87877 12L2.5859 19.2928C2.19537 19.6834 2.19537 20.3165 2.5859 20.7071L3.293 21.4142C3.68353 21.8047 4.31669 21.8047 4.70722 21.4142L12.0001 14.1213L19.293 21.4142C19.6835 21.8047 20.3167 21.8047 20.7072 21.4142L21.4143 20.7071C21.8048 20.3165 21.8048 19.6834 21.4143 19.2928L14.1214 12L21.4143 4.70706C21.8048 4.31654 21.8048 3.68337 21.4143 3.29285L20.7072 2.58574C20.3167 2.19522 19.6835 2.19522 19.293 2.58574L12.0001 9.87865L4.70718 2.58574Z" fill="currentColor"></path></g>'
-  },
-  filter: {
-    viewBox: '0 0 24 24',
-    html: '<g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M4.22657 2C2.50087 2 1.58526 4.03892 2.73175 5.32873L8.99972 12.3802V19C8.99972 19.3788 9.21373 19.725 9.55251 19.8944L13.5525 21.8944C13.8625 22.0494 14.2306 22.0329 14.5255 21.8507C14.8203 21.6684 14.9997 21.3466 14.9997 21V12.3802L21.2677 5.32873C22.4142 4.03893 21.4986 2 19.7729 2H4.22657Z" fill="currentColor"/></g>'
-  },
-  fsClose: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M7 9.5C8.38071 9.5 9.5 8.38071 9.5 7V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H7.5C6.94772 1.5 6.5 1.94772 6.5 2.5V6.5H2.5C1.94772 6.5 1.5 6.94772 1.5 7.5V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H7Z" fill="currentColor"></path> <path d="M17 9.5C15.6193 9.5 14.5 8.38071 14.5 7V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H16.5C17.0523 1.5 17.5 1.94772 17.5 2.5V6.5H21.5C22.0523 6.5 22.5 6.94772 22.5 7.5V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H17Z" fill="currentColor"></path> <path d="M17 14.5C15.6193 14.5 14.5 15.6193 14.5 17V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H16.5C17.0523 22.5 17.5 22.0523 17.5 21.5V17.5H21.5C22.0523 17.5 22.5 17.0523 22.5 16.5V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H17Z" fill="currentColor"></path> <path d="M9.5 17C9.5 15.6193 8.38071 14.5 7 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V16.5C1.5 17.0523 1.94772 17.5 2.5 17.5H6.5V21.5C6.5 22.0523 6.94772 22.5 7.5 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V17Z" fill="currentColor"></path></g>'
-  },
-  fsOpen: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M4 1.5C2.61929 1.5 1.5 2.61929 1.5 4V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H3.5C4.05228 9.5 4.5 9.05228 4.5 8.5V4.5H8.5C9.05228 4.5 9.5 4.05228 9.5 3.5V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H4Z" fill="currentColor"></path> <path d="M20 1.5C21.3807 1.5 22.5 2.61929 22.5 4V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H20.5C19.9477 9.5 19.5 9.05228 19.5 8.5V4.5H15.5C14.9477 4.5 14.5 4.05228 14.5 3.5V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H20Z" fill="currentColor"></path> <path d="M20 22.5C21.3807 22.5 22.5 21.3807 22.5 20V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H20.5C19.9477 14.5 19.5 14.9477 19.5 15.5V19.5H15.5C14.9477 19.5 14.5 19.9477 14.5 20.5V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H20Z" fill="currentColor"></path> <path d="M1.5 20C1.5 21.3807 2.61929 22.5 4 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V20.5C9.5 19.9477 9.05228 19.5 8.5 19.5H4.5V15.5C4.5 14.9477 4.05228 14.5 3.5 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V20Z" fill="currentColor"></path></g>'
-  },
-  fullscreen: {
-    viewBox: '0 0 96 96',
-    html: '<g><path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/><path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/><path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/><path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/></g>'
-  },
-  gf: {
-    viewBox: '0 0 510.4 510.4',
-    html: '<g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g>'
-  },
-  gh: {
-    viewBox: '0 0 16 16',
-    html: '<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>'
-  },
-  hide: {
-    viewBox: '0 0 24 24',
-    html: '<g> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5L21 10.5C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="currentColor"></path></g>'
-  },
   install: {
     viewBox: '0 0 16 16',
     html: '<g><path d="M8.75 1.75a.75.75 0 00-1.5 0v6.59L5.3 6.24a.75.75 0 10-1.1 1.02L7.45 10.76a.78.78 0 00.038.038.748.748 0 001.063-.037l3.25-3.5a.75.75 0 10-1.1-1.02l-1.95 2.1V1.75z"/><path d="M1.75 9a.75.75 0 01.75.75v3c0 .414.336.75.75.75h9.5a.75.75 0 00.75-.75v-3a.75.75 0 011.5 0v3A2.25 2.25 0 0112.75 15h-9.5A2.25 2.25 0 011 12.75v-3A.75.75 0 011.75 9z"/></g>'
-  },
-  issue: {
-    viewBox: '0 0 24 24',
-    html: '<path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/>'
-  },
-  nav: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M2 5.5C2 4.94772 2.44772 4.5 3 4.5H21C21.5523 4.5 22 4.94772 22 5.5V6.5C22 7.05228 21.5523 7.5 21 7.5H3C2.44772 7.5 2 7.05228 2 6.5V5.5Z" fill="currentColor"></path> <path d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5H21C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="currentColor"></path><path d="M3 16.5C2.44772 16.5 2 16.9477 2 17.5V18.5C2 19.0523 2.44772 19.5 3 19.5H21C21.5523 19.5 22 19.0523 22 18.5V17.5C22 16.9477 21.5523 16.5 21 16.5H3Z" fill="currentColor"></path></g>'
-  },
-  plus: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M13.5 3C13.5 2.44772 13.0523 2 12.5 2H11.5C10.9477 2 10.5 2.44772 10.5 3V10.5H3C2.44772 10.5 2 10.9477 2 11.5V12.5C2 13.0523 2.44772 13.5 3 13.5H10.5V21C10.5 21.5523 10.9477 22 11.5 22H12.5C13.0523 22 13.5 21.5523 13.5 21V13.5H21C21.5523 13.5 22 13.0523 22 12.5V11.5C22 10.9477 21.5523 10.5 21 10.5H13.5V3Z" fill="currentColor"/></g>'
   },
   search: {
     viewBox: '0 0 24 24',
@@ -113,6 +46,18 @@ const iconSVG = {
     fill: 'currentColor',
     html: '<path d="M981.314663 554.296783a681.276879 681.276879 0 0 1-46.986468 152.746388q-105.706098 230.734238-360.983096 242.19829a593.06288 593.06288 0 0 1-228.689008-33.853939v-1.022615l-31.808709 79.979258a55.759429 55.759429 0 0 1-20.506122 22.551352 40.043451 40.043451 0 0 1-21.04434 5.382184 51.076928 51.076928 0 0 1-19.483507-5.382184 95.210839 95.210839 0 0 1-13.347817-7.158305 52.314831 52.314831 0 0 1-5.382184-4.628679L71.671707 731.908862a57.427906 57.427906 0 0 1-7.158305-21.528737 46.932646 46.932646 0 0 1 1.022615-17.438277 35.952991 35.952991 0 0 1 7.158305-13.347816 74.435608 74.435608 0 0 1 10.279972-10.279972 60.495751 60.495751 0 0 1 11.248765-7.373593 50.431066 50.431066 0 0 1 8.18092-3.606063 6.189512 6.189512 0 0 0 3.067845-1.776121l281.003839-74.866183a91.497132 91.497132 0 0 1 35.899168-2.583448 122.337047 122.337047 0 0 1 22.174599 6.404799 21.528737 21.528737 0 0 1 12.325202 12.325202 76.157907 76.157907 0 0 1 4.628679 14.854829 47.63233 47.63233 0 0 1 0 14.370431 55.167388 55.167388 0 0 1-2.04523 10.764369 10.764368 10.764368 0 0 0-1.022615 3.606063l-32.831324 79.979258a677.50935 677.50935 0 0 0 164.264262 39.505232q77.395809 7.696523 131.809692-3.606063a358.507291 358.507291 0 0 0 101.023598-36.921784 381.27393 381.27393 0 0 0 73.951211-50.753997 352.64071 352.64071 0 0 0 48.708767-55.382676 410.391547 410.391547 0 0 0 26.910921-41.550462c3.767529-7.481236 6.673908-13.616926 8.719139-18.460892zM40.885614 449.667121a685.69027 685.69027 0 0 1 63.563595-176.427998q118.0313-212.273346 374.330913-207.160271a571.803252 571.803252 0 0 1 207.160271 39.989629l33.853939-78.956643A75.619688 75.619688 0 0 1 735.187378 9.189165a37.67529 37.67529 0 0 1 15.393047-8.234742 42.303968 42.303968 0 0 1 14.854829-0.538219 47.578509 47.578509 0 0 1 13.347817 3.606064 102.907362 102.907362 0 0 1 11.302586 6.13569 49.569917 49.569917 0 0 1 6.673909 4.628678l3.067845 3.067845 154.84544 276.913379a81.970666 81.970666 0 0 1 6.13569 22.712817 46.986468 46.986468 0 0 1-1.022615 17.438277 32.293105 32.293105 0 0 1-7.696523 13.347817 69.322533 69.322533 0 0 1-10.764369 9.741753 92.142994 92.142994 0 0 1-11.302587 6.673909l-8.18092 4.09046a7.104483 7.104483 0 0 1-3.067845 1.022615l-283.049068 67.546412a112.003254 112.003254 0 0 1-46.125319-1.022615c-11.571696-3.390776-19.160576-8.019454-22.551352-13.832214a41.173709 41.173709 0 0 1-5.382184-21.04434 97.256069 97.256069 0 0 1 1.291724-17.438277 24.381295 24.381295 0 0 1 3.067845-8.234742L600.632773 296.81309a663.730958 663.730958 0 0 0-164.102797-43.057474q-77.987849-9.203535-131.809692 0a348.227319 348.227319 0 0 0-101.292707 33.853938 368.571976 368.571976 0 0 0-75.350579 49.246986 383.31916 383.31916 0 0 0-50.269601 54.360061 408.507783 408.507783 0 0 0-28.740863 41.012244A113.025869 113.025869 0 0 0 40.885614 449.667121z m0 0" fill="#ffffff" p-id="2275"></path>'
   },
+  // get(type, container) {
+  //   return new Promise((resolve) => {
+  //     const img = new Image();
+  //     img.src = webext.runtime.getURL(`/img/${type}.svg`);
+  //     img.onload = () => {
+  //       if (container) {
+  //         container.appendChild(img);
+  //       }
+  //       resolve(img);
+  //     }
+  //   })
+  // },
   load(type, container) {
     const xmlns = 'http://www.w3.org/2000/svg';
     const svgElem = document.createElementNS(xmlns, 'svg');
@@ -122,7 +67,7 @@ const iconSVG = {
       }
       svgElem.setAttributeNS(null, k, v);
     }
-    if (typeof iconSVG[type].html === 'string') {
+    if (isString(iconSVG[type].html)) {
       svgElem.innerHTML = iconSVG[type].html;
     }
     if (container) {
@@ -132,14 +77,10 @@ const iconSVG = {
     return svgElem.outerHTML;
   }
 };
-const i18n$ = (txt) => webext.i18n.getMessage(txt);
 
 const main = qs('mujs-main');
-const cfgpage = qs('.mujs-cfg');
-// const tbody = qs('.mujs-body');
+const cfgpage = qs('form');
 const footer = qs('.mujs-footer');
-const gfcounter = qs('count-frame[data-counter="gsfork"]');
-const sfcounter = qs('count-frame[data-counter="custom"]');
 const rateContainer = qs('.rate-container');
 
 const table = qs('table');
@@ -147,13 +88,11 @@ const tabbody = qs('tbody');
 const tabhead = qs('thead');
 
 const urlBar = qs('.mujs-url-bar');
-urlBar.placeholder = i18n$('search_placeholder');
 const btncfg = qs('mujs-btn.settings');
 const btngreasy = qs('mujs-btn.greasy');
 const btnissue = qs('mujs-btn.issue');
 const btnhome = qs('mujs-btn.github');
 
-// const header = qs('mujs-header');
 const toolbar = qs('mujs-toolbar');
 
 const promptElem = make('mujs-row', 'mujs-prompt');
@@ -209,7 +148,7 @@ const renderTheme = (theme) => {
     sty.setProperty(str, v);
   }
 };
-const cfgMap = memorized.get('cfg');
+const cfgMap = new XMap();
 const rebuildCfg = () => {
   for (const engine of cfg.engines) {
     if (cfgMap.has(engine.name)) {
@@ -244,20 +183,26 @@ const ContainerHandler = class {
   constructor() {
     this.showError = this.showError.bind(this);
     // this.cleanup = this.cleanup.bind(this);
+    this.setHost(window.top.document.location.href);
+    this.cache = new XMap();
+    this.userjsCache = new XMap();
+    this.unsaved = false;
+    this.isBlacklisted = false;
+    this.rebuild = false;
+
+    this.counters = {
+      total: 0
+    };
+  }
+
+  setHost(link) {
     try {
-      this.webpage = new URL(window.top.document.location.href);
+      this.webpage = new URL(link);
     } catch (ex) {
       err(ex, { cause: 'ContainerHandler' });
       this.webpage = window.location;
     }
     this.host = getHost(this.webpage.hostname);
-    this.cache = memorized.get('container');
-    this.userjsCache = memorized.get('userjs');
-    this.unsaved = false;
-    this.isBlacklisted = false;
-    this.rebuild = false;
-    this.forkCount = 0;
-    this.customCount = 0;
   }
 
   checkBlacklist(str) {
@@ -285,22 +230,25 @@ const ContainerHandler = class {
     return blacklisted;
   }
 
-  addCustomCnt(cnt) {
-    this.customCount += cnt;
-    this.updateCounters();
-  }
-
-  addForkCnt(cnt) {
-    this.forkCount += cnt;
+  updateCounter(count, engine) {
+    this.counters[engine.name] += count;
+    this.counters.total += count;
     this.updateCounters();
   }
 
   updateCounters() {
-    dom.text(sfcounter, this.customCount);
-    dom.text(gfcounter, this.forkCount);
+    for (const [k, v] of Object.entries(this.counters)) {
+      if (k === 'total') {
+        continue;
+      }
+      if (qs(`count-frame[data-counter="${k}"]`)) {
+        dom.text(qs(`count-frame[data-counter="${k}"]`), v);
+      }
+    }
     webext.browserAction.setBadgeText({
-      text: `${this.forkCount + this.customCount}`
+      text: `${this.counters.total}`
     });
+    document.title = `Magic UserJS+ (${this.counters.total})`;
   }
 
   makePrompt(txt, dataset = {}, usePrompt = true) {
@@ -351,7 +299,7 @@ const ContainerHandler = class {
     const error = make('mu-js', 'error');
     let str = '';
     for (const e of ex) {
-      str += `${typeof e === 'string' ? e : `${e.message} ${e.stack}`}\n`;
+      str += `${isString(e) ? e : `${e.message} ${e.stack}`}\n`;
     }
     error.appendChild(document.createTextNode(str));
     footer.append(error);
@@ -359,8 +307,10 @@ const ContainerHandler = class {
 
   refresh() {
     urlBar.placeholder = i18n$('newTab');
-    this.forkCount = 0;
-    this.customCount = 0;
+    this.counters.total = 0;
+    for (const engine of cfg.engines) {
+      this.counters[engine.name] = 0;
+    }
     this.updateCounters();
     dom.prop([tabbody, rateContainer, footer], 'innerHTML', '');
   }
@@ -369,7 +319,7 @@ const MUJS = new ContainerHandler();
 
 class Tabs {
   constructor() {
-    this.Tab = new Map();
+    this.Tab = new XMap();
     this.blank = 'about:blank';
     this.protocal = 'mujs:';
     this.protoReg = new RegExp(`${this.protocal}(.+)`);
@@ -424,9 +374,7 @@ class Tabs {
     if (type === 'settings') {
       dom.cl.remove([cfgpage], 'hidden');
       dom.cl.add(table, 'hidden');
-      // if (!MUJS.supported) {
-      //   dom.attr(MUJS.frame, 'style', 'height: 100%;');
-      // }
+      urlBar.placeholder = i18n$('search_placeholder');
     }
   }
   active(tab, build = true) {
@@ -471,7 +419,7 @@ class Tabs {
     }
   }
   create(host = undefined) {
-    if (typeof host === 'string') {
+    if (isString(host)) {
       if (host.startsWith(this.protocal) && this.hasTab(host)) {
         this.active(this.Tab.get(host));
         return;
@@ -501,7 +449,7 @@ class Tabs {
     this.cache(host, tab);
     if (isNull(host)) {
       MUJS.refresh();
-      urlBar.placeholder = i18n$('newTab');
+      // urlBar.placeholder = i18n$('newTab');
       tab.dataset.host = this.blank;
       tabHost.title = i18n$('newTab');
       tabHost.textContent = i18n$('newTab');
@@ -520,8 +468,6 @@ class Tabs {
   }
 }
 const tab = new Tabs();
-
-// const ntHead = qs('mujs-tabs');
 
 const template = {
   id: 0,
@@ -684,8 +630,10 @@ const createjs = (ujs, engine) => {
       command: 'list-description'
     }
   });
+  const sIcon = ujs.code_url.endsWith('.user.css') ? '🧾' : ujs.code_url.endsWith('.user.js') ? '🐵' : '💾';
   const scriptInstall = make('mu-jsbtn', 'install', {
-    innerHTML: `${iconSVG.load('install')} ${i18n$('install')}`,
+    // innerHTML: `${iconSVG.load('install')} ${i18n$('install')}`,
+    innerHTML: `${sIcon} ${i18n$('install')}`,
     title: `${i18n$('install')} "${ujs.name}"`,
     dataset: {
       command: 'install-script',
@@ -784,17 +732,10 @@ const createjs = (ujs, engine) => {
   tabbody.append(tr);
 };
 // #endregion
-const doInstallProcess = async (installLink) => {
-  const jsStr = `
-  var evt = document.createEvent('MouseEvents');
-  evt.initEvent('click', true, true);
-  var link = document.createElement('a');
-  link.href = '${installLink}';
-  link.dispatchEvent(evt);
-  link.remove();
-  `;
-  webext.tabs.executeScript(null, { code: jsStr }).catch((ex) => {
-    MUJS.showError(ex);
+const doInstallProcess = (installLink) => {
+  const queryOptions = { active: true, currentWindow: true };
+  webext.tabs.query(queryOptions, (tabs) => {
+    webext.tabs.update(tabs[0].id, { url: installLink });
   });
 };
 ael(main, 'click', async (evt) => {
@@ -817,14 +758,14 @@ ael(main, 'click', async (evt) => {
     if (cmd === 'install-script' && dataset.userjs) {
       let installCode = dataset.userjs;
       if (!prmpt && dataset.userjs.endsWith('.user.css')) {
-        MUJS.makePrompt('Install as user style?', dataset);
+        MUJS.makePrompt(i18n$('prmpt_css'), dataset);
         return;
       } else if (prmpt !== prmptChoice) {
         installCode = dataset.userjs.replace(/\.user\.css$/, '.user.js');
       }
       doInstallProcess(installCode);
     } else if (cmd === 'open-tab' && dataset.webpage) {
-      userjs.openInTab(dataset.webpage);
+      openInTab(dataset.webpage);
     } else if (cmd === 'navigation') {
       if (dom.cl.has(btngreasy, 'hidden')) {
         dom.cl.remove([btncfg, btngreasy, btnhome, btnissue], 'hidden');
@@ -877,22 +818,11 @@ ael(main, 'click', async (evt) => {
         MUJS.showError('Unsaved changes');
       }
       tab.create('mujs:settings');
-      // if (dom.cl.has(cfgpage, 'hidden')) {
-      //   dom.cl.remove(cfgpage, 'hidden');
-      //   dom.cl.add(table, 'hidden');
-      // } else {
-      //   dom.cl.add(cfgpage, 'hidden');
-      //   dom.cl.remove(table, 'hidden');
-      // }
       MUJS.rebuild = false;
     } else if (cmd === 'new-tab') {
-      // newTab();
       tab.create();
     } else if (cmd === 'switch-tab') {
       tab.active(target);
-      // dom.cl.add(cfgpage, 'hidden');
-      // dom.cl.remove(table, 'hidden');
-      // activeTab(target);
     } else if (cmd === 'close-tab' && target.parentElement) {
       tab.close(target.parentElement);
     } else if (cmd === 'download-userjs') {
@@ -1156,51 +1086,317 @@ async function buildlist(host = undefined) {
     if (MUJS.checkBlacklist(host)) {
       return;
     }
-    tab.create(host);
-    // if (!qs(`mujs-tab[data-host="${host}"]`, ntHead)) {
-    //   tab.create(host);
-    // }
+    if (!qs(`mujs-tab[data-host="${host}"]`)) {
+      tab.create(host);
+    }
     MUJS.refresh();
-    const data = await webext.runtime.sendMessage({
-      location: host
+    webext.runtime.sendMessage(
+      {
+        location: host
+      },
+      (data) => {
+        if (isEmpty(data)) {
+          return;
+        }
+        for (const tabData of data) {
+          const { engine, host } = tabData;
+          if (!qs(`mujs-tab[data-host="${host}"]`)) {
+            tab.create(host);
+          }
+          for (const ujs of tabData.data) {
+            createjs(ujs, engine.name);
+          }
+          MUJS.updateCounter(tabData.data.length, engine);
+        }
+        urlBar.placeholder = i18n$('search_placeholder');
+        urlBar.value = '';
+      }
+    );
+  } catch (ex) {
+    err(ex);
+  }
+}
+
+//#region Make Config
+const makecfg = () => {
+  const exBtn = make('mu-js', 'mujs-sty-flex');
+  const exportCFG = make('mujs-btn', 'mujs-export', {
+    textContent: i18n$('export_config'),
+    dataset: {
+      command: 'export-cfg'
+    }
+  });
+  const importCFG = make('mujs-btn', 'mujs-import', {
+    textContent: i18n$('import_config'),
+    dataset: {
+      command: 'import-cfg'
+    }
+  });
+  const exportTheme = make('mujs-btn', 'mujs-export', {
+    textContent: i18n$('export_theme'),
+    dataset: {
+      command: 'export-theme'
+    }
+  });
+  const importTheme = make('mujs-btn', 'mujs-import', {
+    textContent: i18n$('import_theme'),
+    dataset: {
+      command: 'import-theme'
+    }
+  });
+  exBtn.append(importCFG, importTheme, exportCFG, exportTheme);
+  cfgpage.append(exBtn);
+
+  const makerow = (desc, type = null, nm, attrs = {}) => {
+    desc = desc ?? i18n$('no_license');
+    nm = nm ?? i18n$('no_license');
+    const sec = make('mujs-section', 'mujs-cfg-section', {
+      style: nm === 'cache' ? 'display: none;' : ''
     });
-    primaryFN(data);
+    const lb = make('label');
+    const divDesc = make('mu-js', 'mujs-cfg-desc', {
+      textContent: desc
+    });
+    lb.append(divDesc);
+    sec.append(lb);
+    cfgpage.append(sec);
+    if (isNull(type)) {
+      return lb;
+    }
+    const inp = make('input', 'mujs-cfg-input', {
+      type,
+      dataset: {
+        name: nm
+      },
+      ...attrs
+    });
+    if (!cfgMap.has(nm)) {
+      cfgMap.set(nm, inp);
+    }
+    if (type === 'checkbox') {
+      const inlab = make('mu-js', 'mujs-inlab');
+      const la = make('label', '', {
+        onclick() {
+          inp.dispatchEvent(new MouseEvent('click'));
+        }
+      });
+      inlab.append(inp, la);
+      lb.append(inlab);
+      if (nm.includes('-')) {
+        return inp;
+      }
+      if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
+        for (const i of cfg.engines) {
+          if (i.name !== nm) continue;
+          inp.checked = i.enabled;
+          inp.dataset.engine = i.name;
+          ael(inp, 'change', (evt) => {
+            // MUJS.unsaved = true;
+            // MUJS.rebuild = true;
+            i.enabled = evt.target.checked;
+            hermes.send('Save', {
+              prop: 'engines',
+              value: cfg.engines
+            });
+          });
+        }
+      } else {
+        inp.checked = cfg[nm];
+        ael(inp, 'change', (evt) => {
+          // MUJS.unsaved = true;
+          // if (/filterlang/i.test(nm)) {
+          //   MUJS.rebuild = true;
+          // }
+          cfg[nm] = evt.target.checked;
+          hermes.send('Save', {
+            prop: nm,
+            value: cfg[nm]
+          });
+        });
+      }
+    } else {
+      lb.append(inp);
+    }
+    return inp;
+  };
+  makerow(i18n$('redirect'), 'checkbox', 'sleazyredirect');
+  makerow(i18n$('filter'), 'checkbox', 'filterlang');
+  makerow(i18n$('preview_code'), 'checkbox', 'codePreview');
+  for (const inp of [
+    makerow('Recommend author', 'checkbox', 'recommend-author'),
+    makerow('Recommend scripts', 'checkbox', 'recommend-others')
+  ]) {
+    const nm = inp.dataset.name === 'recommend-author' ? 'author' : 'others';
+    inp.checked = cfg.recommend[nm];
+    ael(inp, 'change', (evt) => {
+      // MUJS.unsaved = true;
+      cfg.recommend[nm] = evt.target.checked;
+      hermes.send('Save', {
+        prop: 'recommend',
+        value: cfg.recommend
+      });
+    });
+  }
+  makerow('Greasy Fork', 'checkbox', 'greasyfork');
+  makerow('Sleazy Fork', 'checkbox', 'sleazyfork');
+  makerow('Open UserJS', 'checkbox', 'openuserjs');
+  makerow('GitHub API', 'checkbox', 'github');
+  const ghAPI = cfg.engines.find((c) => c.name === 'github');
+  const ghToken = makerow('GitHub API (Token)', 'text', 'github', {
+    defaultValue: '',
+    value: ghAPI.token ?? '',
+    placeholder: 'Paste Access Token',
+    onchange(evt) {
+      MUJS.unsaved = true;
+      MUJS.rebuild = true;
+      ghAPI.token = evt.target.value;
+      hermes.send('Save', {
+        prop: 'engines',
+        value: cfg.engines
+      });
+    }
+  });
+  ghToken.dataset.engine = 'github-token';
+  cfgMap.set('github-token', ghToken);
+
+  const cbtn = make('mu-js', 'mujs-sty-flex');
+  const savebtn = make('mujs-btn', 'save', {
+    textContent: i18n$('save'),
+    dataset: {
+      command: 'save'
+    },
+    disabled: false
+  });
+  const resetbtn = make('mujs-btn', 'reset', {
+    textContent: i18n$('reset'),
+    dataset: {
+      command: 'reset'
+    }
+  });
+  const blacklist = make('textarea', '', {
+    dataset: {
+      name: 'blacklist'
+    },
+    rows: '10',
+    autocomplete: false,
+    spellcheck: false,
+    wrap: 'soft',
+    value: JSON.stringify(cfg.blacklist, null, ' '),
+    oninput(evt) {
+      let isvalid = true;
+      try {
+        cfg.blacklist = JSON.parse(evt.target.value);
+        isvalid = true;
+      } catch (ex) {
+        err(ex);
+        isvalid = false;
+      } finally {
+        if (isvalid) {
+          dom.cl.remove(evt.target, 'mujs-invalid');
+          dom.prop(savebtn, 'disabled', false);
+        } else {
+          dom.cl.add(evt.target, 'mujs-invalid');
+          dom.prop(savebtn, 'disabled', true);
+        }
+      }
+    }
+  });
+  const theme = make('textarea', '', {
+    dataset: {
+      name: 'theme'
+    },
+    rows: '10',
+    autocomplete: false,
+    spellcheck: false,
+    wrap: 'soft',
+    value: JSON.stringify(cfg.theme, null, ' '),
+    oninput(evt) {
+      let isvalid = true;
+      try {
+        cfg.theme = JSON.parse(evt.target.value);
+        isvalid = true;
+        renderTheme(JSON.parse(evt.target.value));
+      } catch (ex) {
+        err(ex);
+        isvalid = false;
+      } finally {
+        if (isvalid) {
+          dom.cl.remove(evt.target, 'mujs-invalid');
+          dom.prop(savebtn, 'disabled', false);
+        } else {
+          dom.cl.add(evt.target, 'mujs-invalid');
+          dom.prop(savebtn, 'disabled', true);
+        }
+      }
+    }
+  });
+  cfgMap.set('blacklist', blacklist);
+  cfgMap.set('theme', theme);
+  cbtn.append(resetbtn, savebtn);
+  cfgpage.append(blacklist, theme, cbtn);
+};
+//#endregion
+
+const locSearch = location.search;
+
+const p = hermes.getPort();
+p.onMessage.addListener((root = {}) => {
+  const m = root.msg;
+  if (root.channel === 'Config' && isEmpty(cfg)) {
+    cfg = m.cfg || cfg;
+    for (const engine of cfg.engines) {
+      MUJS.counters[engine.name] = 0;
+      if (!engine.enabled) {
+        continue;
+      }
+      const counter = make('count-frame', '', {
+        dataset: {
+          counter: engine.name
+        },
+        title: engine.url,
+        textContent: '0'
+      });
+      qs('.counter-container').append(counter);
+    }
+    makecfg();
+    if (/mujs=/.test(locSearch)) {
+      if (/settings/.test(locSearch)) {
+        tab.create('mujs:settings');
+      }
+    }
+  }
+});
+
+function primaryFN(data) {
+  try {
+    if (isEmpty(data)) {
+      tab.create();
+      return;
+    }
+    for (const tabData of data) {
+      const { engine, host } = tabData;
+      if (MUJS.checkBlacklist(host)) {
+        continue;
+      }
+      if (!qs(`mujs-tab[data-host="${host}"]`)) {
+        tab.create(host);
+        if (tabData.link) {
+          MUJS.setHost(tabData.link);
+        }
+      }
+      if (tabData.data) {
+        for (const ujs of tabData.data) {
+          createjs(ujs, engine.name);
+        }
+        MUJS.updateCounter(tabData.data.length, engine);
+      }
+    }
     urlBar.placeholder = i18n$('search_placeholder');
     urlBar.value = '';
   } catch (ex) {
     err(ex);
   }
 }
-
-function primaryFN(data) {
-  try {
-    if (isEmpty(data)) {
-      return;
-    }
-    for (const tabData of data) {
-      const { engine, host } = tabData;
-      tab.create(host);
-      // if (!qs(`mujs-tab[data-host="${host}"]`, ntHead)) {
-      //   tab.create(host);
-      // }
-      if (engine.name.includes('fork')) {
-        MUJS.addForkCnt(tabData.data.length);
-      } else {
-        MUJS.addCustomCnt(tabData.data.length);
-      }
-      for (const ujs of tabData.data) {
-        createjs(ujs, engine.name);
-      }
-    }
-  } catch (ex) {
-    err(ex);
-  }
+if (!/mujs=/.test(locSearch)) {
+  webext.runtime.sendMessage({}, primaryFN);
 }
-
-hermes.getPort().onMessage.addListener((root = {}) => {
-  const m = root.msg;
-  if (root.channel === 'Config' && isEmpty(cfg)) {
-    cfg = m.cfg || cfg;
-  }
-});
-webext.runtime.sendMessage({}).then(primaryFN);

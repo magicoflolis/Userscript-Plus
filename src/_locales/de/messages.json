@@ -130,5 +130,14 @@
   },
   "code_size": {
     "message": "Code Größe"
+  },
+  "prmpt_css": {
+    "message": "Als UserStyle installieren?"
+  },
+  "userjs_inject": {
+    "message": "Userscript+ einfügen"
+  },
+  "userjs_close": {
+    "message": "Userscript+ schließen"
   }
 }

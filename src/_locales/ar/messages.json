@@ -130,5 +130,14 @@
   },
   "code_size": {
     "message": "حجم الرمز"
+  },
+  "prmpt_css": {
+    "message": "التثبيت كأسلوب المستخدم؟"
+  },
+  "userjs_inject": {
+    "message": "حقن Userscript+"
+  },
+  "userjs_close": {
+    "message": "إغلاق Userscript+"
   }
 }

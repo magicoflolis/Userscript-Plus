@@ -2,14 +2,14 @@
   "name": "userscript-plus",
   "description": "Finds available userscripts for the current webpage.",
   "author": "Magic <magicoflolis@tuta.io>",
-  "version": "5.0.0",
+  "version": "5.0.2",
   "license": "MIT",
   "homepage": "https://github.com/magicoflolis/Userscript-Plus",
   "bugs": {
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues"
   },
   "userJS": {
-    "version": "6.7.3",
+    "version": "6.8.0",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "description": "Finds available userscripts for the current webpage.",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues",
@@ -25,10 +25,17 @@
           "mainCSS": "./build/css/magicuserjs.css"
         }
       },
-      "watchDirs": [
-        "./src/UserJS/",
-        "./src/sass/"
-      ],
+      "watch": {
+        "files": [
+          "main.js",
+          "header.js",
+          "magicuserjs.css"
+        ],
+        "dirs": [
+          "src/UserJS",
+          "build/css"
+        ]
+      },
       "paths": {
         "dev": {
           "fileName": "magic-userjs.dev",
@@ -86,11 +93,11 @@
   },
   "type": "module",
   "scripts": {
-    "dev:UserJS": "concurrently \"pnpm run dev:Webserver\" \"sass --no-source-map -s compressed -w ./src/sass:./build/css\" \"node ./tools/userscript.js\"",
-    "dev:FF": "concurrently \"sass --embed-sources -s compressed -w ./src/sass:./build/firefox/css\" \"pnpm run webpack:FF\"",
-    "dev:Cr": "concurrently \"sass --embed-sources -s compressed -w ./src/sass:./build/chrome/css\" \"pnpm run webpack:Cr\"",
+    "dev:UserJS": "concurrently \"pnpm run dev:Webserver\" \"sass --no-source-map -s expanded -w ./src/sass:./build/css\" \"node ./tools/userscript.js\"",
+    "dev:FF": "concurrently \"sass --embed-sources -s expanded -w ./src/sass:./build/firefox/css\" \"pnpm run webpack:FF\"",
+    "dev:Cr": "concurrently \"sass --embed-sources -s expanded -w ./src/sass:./build/chrome/css\" \"pnpm run webpack:Cr\"",
     "dev:Webserver": "http-server ./web-server -p 9090 -s --no-dotfiles -c-1",
-    "pub:UserJS": "concurrently \"sass --no-source-map -s compressed ./src/sass:./build/css\" \"node -r dotenv/config ./tools/userscript.js dotenv_config_path=./dist/.env\"",
+    "pub:UserJS": "concurrently \"sass --no-source-map -s expanded ./src/sass:./build/css\" \"node -r dotenv/config ./tools/userscript.js dotenv_config_path=./dist/.env\"",
     "pub:FF": "webpack --mode production --config=tools/webpack.config.js --env brws=firefox",
     "pub:Cr": "webpack --mode production --config=tools/webpack.config.js --env brws=chrome",
     "webpack:Cr": "webpack --progress --mode development --config=tools/webpack.config.js --env brws=chrome",
@@ -99,32 +106,33 @@
   },
   "devDependencies": {
     "@swc/cli": "^0.4.0",
-    "@swc/core": "^1.7.26",
-    "@types/chrome": "0.0.277",
+    "@swc/core": "^1.7.39",
+    "@types/chrome": "0.0.279",
     "@types/firefox-webext-browser": "120.0.4",
     "@types/greasemonkey": "4.0.7",
-    "@types/node": "^22.7.4",
+    "@types/node": "^22.7.8",
     "@types/tampermonkey": "^5.0.3",
-    "@violentmonkey/types": "0.1.7",
-    "browserslist": "^4.24.0",
+    "@types/webpack": "^5.28.5",
+    "@violentmonkey/types": "0.1.9",
+    "browserslist": "^4.24.2",
     "concurrently": "^9.0.1",
     "copy-webpack-plugin": "^12.0.2",
     "crx3": "^1.1.3",
     "css-loader": "^7.1.2",
     "dotenv": "^16.4.5",
-    "eslint": "^9.12.0",
+    "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
-    "globals": "^15.10.0",
+    "globals": "^15.11.0",
     "http-server": "^14.1.1",
     "mini-css-extract-plugin": "^2.9.1",
-    "node-watch": "^0.7.4",
     "path-browserify": "^1.0.1",
     "prettier": "^3.3.3",
-    "sass": "^1.79.4",
+    "sass-embedded": "^1.80.3",
     "sass-loader": "^16.0.2",
     "swc-loader": "^0.2.6",
     "terser-webpack-plugin": "^5.3.10",
-    "typescript": "^5.6.2",
+    "typescript": "^5.6.3",
+    "watchpack": "^2.4.2",
     "web-ext": "^8.3.0",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
@@ -148,8 +156,11 @@
     "sourceDir": "./build/firefox/",
     "artifactsDir": "./build"
   },
+  "browserslist": [
+    "defaults"
+  ],
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@8.15.5+sha256.4b4efa12490e5055d59b9b9fc9438b7d581a6b7af3b5675eb5c5f447cee1a589"
+  "packageManager": "pnpm@9.12.1+sha512.e5a7e52a4183a02d5931057f7a0dbff9d5e9ce3161e33fa68ae392125b79282a8a8a470a51dfc8a0ed86221442eb2fb57019b0990ed24fab519bf0e1bc5ccfc4"
 }

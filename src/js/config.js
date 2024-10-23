@@ -1,15 +1,16 @@
 'use strict';
+
 const storage = webext.storage;
 const Config = {
   configLocalListeners: [],
   configSyncListeners: [],
   syncDefaults: {
-    cache: true,
+    // cache: true,
     codePreview: false,
-    autoexpand: false,
+    // autoexpand: false,
     filterlang: false,
     sleazyredirect: false,
-    time: 10000,
+    // time: 10000,
     blacklist: [
       {
         enabled: true,
@@ -84,7 +85,8 @@ const Config = {
       'position-top': '',
       'position-bottom': '',
       'position-left': '',
-      'position-right': ''
+      'position-right': '',
+      'font-family': ''
     },
     recommend: {
       author: true,
@@ -92,6 +94,9 @@ const Config = {
     }
   },
   cachedSyncConfig: {},
+  /**
+   * @type { import("../typings/types").config }
+   */
   cachedLocalStorage: {},
   resetToDefault
 };
@@ -197,6 +202,7 @@ function resetToDefault() {
   storage.sync.set({
     ...Config.syncDefaults
   });
+  return Config;
 }
 
 setupConfig();

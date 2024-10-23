@@ -1,9 +1,9 @@
 /* eslint-disable prefer-const, no-unused-vars */
 'use strict';
 
-/** @type { import("../typings/WebExt.d.ts").webext } */
+/** @type { import("./mu.d.ts").webext } */
 let webext = (self.webext = typeof browser == 'undefined' ? chrome : browser);
-/** @type { import("../typings/WebExt.d.ts").userjs } */
+/** @type { import("./mu.d.ts").userjs } */
 let userjs = (self.userjs = {});
 
 /** Skip text/plain documents */

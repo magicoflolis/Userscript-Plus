@@ -41,6 +41,12 @@ const fileToJSON = async (filePath, encoding = 'utf-8') => {
   return JSON.parse(testAccess);
 };
 export default async (env, args) => {
+  if (!env) {
+    throw new Error('--env flag required')
+  }
+  if (!env.brws) {
+    throw new Error('--env brws=<Web Browser> flag required')
+  }
   const brws = env.brws;
   const webExtDir = `build/${brws}`;
   const webExtSrc = 'src';
@@ -93,10 +99,14 @@ export default async (env, args) => {
       ]
     })
   ];
-  const commonConfig = {
+  /**
+   * @type { import('@types/webpack').Configuration }
+   */
+  const Config = {
     context: file(webExtSrc),
     entry: {
-      start: './js/start.js'
+      // start: './js/start.js'
+      mu: './js/mu.js'
     },
     output: {
       path: file(`${webExtDir}/js`),
@@ -136,7 +146,10 @@ export default async (env, args) => {
       hints: false
     }
   };
-  const productionConfig = {
+  /**
+   * @type { import('@types/webpack').Configuration }
+   */
+  const Production = {
     mode: 'production',
     optimization: {
       minimize: true,
@@ -153,7 +166,10 @@ export default async (env, args) => {
       ]
     }
   };
-  const developmentConfig = {
+  /**
+   * @type { import('@types/webpack').Configuration }
+   */
+  const Development = {
     mode: 'development',
     devtool: 'source-map',
     optimization: {
@@ -166,9 +182,9 @@ export default async (env, args) => {
   };
   switch (args.mode) {
     case 'development':
-      return merge(commonConfig, developmentConfig);
+      return merge(Config, Development);
     case 'production':
-      return merge(commonConfig, productionConfig);
+      return merge(Config, Production);
     default:
       throw new Error('No matching configuration was found!');
   }

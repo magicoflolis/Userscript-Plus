@@ -9,7 +9,7 @@ const userJSGlobals = {
   languageList: 'readonly',
   translations: 'readonly',
   userjs: 'writable',
-  ...globals.es2021,
+  ...globals.es2023,
   ...globals.browser,
   ...globals.greasemonkey
 };
@@ -19,7 +19,7 @@ const webextGlobals = {
   webext: 'readonly',
   brws: 'readonly',
   userjs: 'writable',
-  ...globals.es2021,
+  ...globals.es2023,
   ...globals.browser,
   ...globals.webextensions
 };

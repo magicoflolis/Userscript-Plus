@@ -57,10 +57,7 @@ const SafeAnimationFrame = class {
   }
 };
 /**
- * Object is typeof `Element`
- * @template O
- * @param { O } obj
- * @returns { boolean }
+ * @type { import("../typings/types").isElem }
  */
 const isElem = (obj) => {
   /** @type { string } */
@@ -68,11 +65,7 @@ const isElem = (obj) => {
   return s.includes('Element');
 };
 /**
- * @template T
- * @param { T } target
- * @param { boolean } toQuery
- * @param { Element | Document | undefined } root
- * @returns { T[] }
+ * @type { import("../typings/types").normalizeTarget }
  */
 const normalizeTarget = (target, toQuery = true, root) => {
   if (Object.is(target, null) || Object.is(target, undefined)) {
@@ -90,7 +83,14 @@ const normalizeTarget = (target, toQuery = true, root) => {
   return Array.from(target);
 };
 
+/**
+ * @param { string } selector
+ * @param { (this: EventTarget, event: Event) => void } callback
+ */
 const makeEventHandler = (selector, callback) => {
+  /**
+   * @param { Event } event
+   */
   return function (event) {
     const dispatcher = event.currentTarget;
     if (
@@ -108,6 +108,12 @@ const makeEventHandler = (selector, callback) => {
 };
 
 class dom {
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } attr
+   * @param value
+   */
   static attr(target, attr, value = undefined) {
     for (const elem of normalizeTarget(target)) {
       if (value === undefined) {
@@ -121,10 +127,17 @@ class dom {
     }
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   */
   static clone(target) {
     return normalizeTarget(target)[0].cloneNode(true);
   }
 
+  /**
+   * @param { string } a
+   */
   static create(a) {
     if (typeof a === 'string') {
       return document.createElement(a);
@@ -135,7 +148,7 @@ class dom {
    * @template { HTMLElement } T
    * @param { T } target
    * @param { string } prop
-   * @param { * } [value=undefined]
+   * @param value
    * @returns { keyof T | void }
    */
   static prop(target, prop, value = undefined) {
@@ -147,6 +160,11 @@ class dom {
     }
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } [text]
+   */
   static text(target, text) {
     const targets = normalizeTarget(target);
     if (text === undefined) {
@@ -157,6 +175,10 @@ class dom {
     }
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   */
   static remove(target) {
     for (const elem of normalizeTarget(target)) {
       elem.remove();
@@ -166,6 +188,15 @@ class dom {
   // target, type, callback, [options]
   // target, type, subtarget, callback, [options]
 
+  /**
+   * @template { HTMLElement } T
+   * @template { keyof HTMLElementEventMap } K
+   * @param { T } target
+   * @param { K } type
+   * @param subtarget
+   * @param { (this: E, ev: HTMLElementEventMap[K]) => any } callback
+   * @param { AddEventListenerOptions | boolean } options
+   */
   static on(target, type, subtarget, callback, options) {
     if (typeof subtarget === 'function') {
       options = callback;
@@ -189,6 +220,14 @@ class dom {
     }
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @template { keyof HTMLElementEventMap } K
+   * @param { T } target
+   * @param { K } type
+   * @param { (this: E, ev: HTMLElementEventMap[K]) => any } callback
+   * @param { AddEventListenerOptions | boolean } options
+   */
   static off(target, type, callback, options) {
     if (typeof callback !== 'function') {
       return;
@@ -203,6 +242,10 @@ class dom {
     }
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   */
   static click(target) {
     for (const elem of normalizeTarget(target)) {
       elem.dispatchEvent(new MouseEvent('click'));
@@ -211,6 +254,11 @@ class dom {
 }
 
 dom.cl = class {
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string | string[] } name
+   */
   static add(target, name) {
     if (Array.isArray(name)) {
       for (const elem of normalizeTarget(target)) {
@@ -223,6 +271,11 @@ dom.cl = class {
     }
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string | string[] } name
+   */
   static remove(target, name) {
     if (Array.isArray(name)) {
       for (const elem of normalizeTarget(target)) {
@@ -235,6 +288,12 @@ dom.cl = class {
     }
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } name
+   * @param { boolean } [state]
+   */
   static toggle(target, name, state) {
     let r;
     for (const elem of normalizeTarget(target)) {
@@ -243,6 +302,11 @@ dom.cl = class {
     return r;
   }
 
+  /**
+   * @template { HTMLElement } T
+   * @param { T } target
+   * @param { string } name
+   */
   static has(target, name) {
     for (const elem of normalizeTarget(target)) {
       if (elem.classList.contains(name)) {
@@ -256,7 +320,7 @@ dom.cl = class {
 /******************************************************************************/
 
 /**
- * @type { import("../typings/UserJS.d.ts").qsA }
+ * @type { import("../typings/types").qsA }
  */
 const qsA = (selectors, root) => {
   try {
@@ -267,7 +331,7 @@ const qsA = (selectors, root) => {
   return [];
 };
 /**
- * @type { import("../typings/UserJS.d.ts").qs }
+ * @type { import("../typings/types").qs }
  */
 const qs = (selector, root) => {
   try {
@@ -277,12 +341,9 @@ const qs = (selector, root) => {
   }
   return null;
 };
+
 /**
- * Prefix for `document.querySelector()` w/ Promise
- * @template { Element } E
- * @param { string } selector - Element for query selection
- * @param { E } root - Root selector Element
- * @returns { Promise<E | null> }
+ * @type { import("../typings/WebExt").query }
  */
 const query = async (selector, root) => {
   let el = null;

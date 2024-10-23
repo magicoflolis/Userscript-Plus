@@ -1,10 +1,10 @@
 'use strict';
 
-//#region Console
+// #region Console
 const dbg = (...msg) => {
   const dt = new Date();
   console.debug(
-    '[%cUserJS%c] %cDBG',
+    '[%cMagic Userscript+%c] %cDBG',
     'color: rgb(29, 155, 240);',
     '',
     'color: rgb(255, 212, 0);',
@@ -14,26 +14,21 @@ const dbg = (...msg) => {
 };
 const err = (...msg) => {
   console.error(
-    '[%cUserJS%c] %cERROR',
+    '[%cMagic Userscript+%c] %cERROR',
     'color: rgb(29, 155, 240);',
     '',
     'color: rgb(249, 24, 128);',
     ...msg
   );
-  let alertBrowser = false;
   for (const ex of msg) {
-    if (typeof ex === 'object' && 'cause' in ex) {
-      alertBrowser = true;
-      break;
+    if (typeof ex === 'object' && 'cause' in ex && typeof alert !== 'undefined') {
+      alert(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
     }
-  }
-  if (/Mobile|Tablet/.test(navigator.userAgent) || alertBrowser) {
-    alert(...msg);
   }
 };
 const info = (...msg) => {
   console.info(
-    '[%cUserJS%c] %cINF',
+    '[%cMagic Userscript+%c] %cINF',
     'color: rgb(29, 155, 240);',
     '',
     'color: rgb(0, 186, 124);',
@@ -42,13 +37,13 @@ const info = (...msg) => {
 };
 const log = (...msg) => {
   console.log(
-    '[%cUserJS%c] %cLOG',
+    '[%cMagic Userscript+%c] %cLOG',
     'color: rgb(29, 155, 240);',
     '',
     'color: rgb(219, 160, 73);',
     ...msg
   );
 };
-//#endregion
+// #endregion
 
 export { dbg, err, info, log };
