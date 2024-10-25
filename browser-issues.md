@@ -5,20 +5,8 @@
 [Submit a New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
 - [Currently known issues by Web Browser](#currently-known-issues-by-web-browser)
-  - [Google Chrome](#google-chrome)
-  - [Cromite](#cromite)
   - [Kiwi Browser](#kiwi-browser)
-  - [Microsoft Edge](#microsoft-edge)
-  - [Mozilla Firefox](#mozilla-firefox)
   - [Opera](#opera)
-
-## Google Chrome
-
-- N/A
-
-## Cromite
-
-- N/A
 
 ## Kiwi Browser
 
@@ -26,14 +14,6 @@
 
 - Userscript version does not have access to Privileged APIs (`GM_*` or `GM.*`)
   - Recommended to install using a userscript manager!
-
-## Microsoft Edge
-
-- N/A
-
-## Mozilla Firefox
-
-- N/A
 
 ## Opera
 

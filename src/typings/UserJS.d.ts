@@ -130,7 +130,7 @@ export interface Container {
   cache: Map<string, {
     [engine: string]: GSForkQuery[];
   }>;
-  userjsCache: Map<any, any>;
+  userjsCache: Map<number, GSForkQuery[]>;
   root: HTMLElement;
   unsaved: boolean;
   isBlacklisted: boolean;

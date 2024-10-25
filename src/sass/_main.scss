@@ -823,6 +823,26 @@ mujs-body {
       background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
     }
 
+    input[type='text']::-webkit-input-placeholder {
+      color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+    }
+
+    input[type='text']::-moz-placeholder {
+      color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+    }
+
+    input[type='text']:-ms-input-placeholder {
+      color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+    }
+
+    input[type='text']::-ms-input-placeholder {
+      color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+    }
+
+    input[type='text']::placeholder {
+      color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+    }
+
     >label {
       display: flex;
       justify-content: space-between;
@@ -834,25 +854,33 @@ mujs-body {
         border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
       }
 
-      input[type='text']::-webkit-input-placeholder {
-        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      }
+      // input[type='text']::-webkit-input-placeholder {
+      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      // }
 
-      input[type='text']::-moz-placeholder {
-        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      }
+      // input[type='text']::-moz-placeholder {
+      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      // }
 
-      input[type='text']:-ms-input-placeholder {
-        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      }
+      // input[type='text']:-ms-input-placeholder {
+      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      // }
 
-      input[type='text']::-ms-input-placeholder {
-        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      }
+      // input[type='text']::-ms-input-placeholder {
+      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      // }
 
-      input[type='text']::placeholder {
-        color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      }
+      // input[type='text']::placeholder {
+      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+      // }
+    }
+    >input {
+      width: 100%;
+      width: -moz-available;
+      width: -webkit-fill-available;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
     }
   }
 

@@ -2,20 +2,6 @@
 (() => {
 'use strict';
 /******************************************************************************/
-/**
- * Uncompressed locales + compiler
- *
- * [_locales](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales)
- *
- * [languageLoader.js](https://github.com/magicoflolis/Userscript-Plus/blob/master/tools/languageLoader.js)
- */
-const translations = [[languageList]];
-/**
- * To compile this CSS `pnpm run build:Sass`
- *
- * [Uncompiled Cascading Style Sheet](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass)
- */
-const main_css = `[[mainCSS]]`;
 const inIframe = () => {
   try {
     return window.self !== window.top;
@@ -43,6 +29,20 @@ if (
 if (!(typeof userjs === 'object' && userjs.UserJS)) {
   return;
 }
+/**
+ * Uncompressed locales + compiler
+ *
+ * [_locales](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales)
+ *
+ * [languageLoader.js](https://github.com/magicoflolis/Userscript-Plus/blob/master/tools/languageLoader.js)
+ */
+const translations = [[languageList]];
+/**
+ * To compile this CSS `pnpm run build:Sass`
+ *
+ * [Uncompiled Cascading Style Sheet](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/sass)
+ */
+const main_css = `[[mainCSS]]`;
 /******************************************************************************/
 [[code]]
 })();

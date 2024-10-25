@@ -7,7 +7,6 @@
 			"tests/*": true
   },
   "explorer.excludeGitIgnore": true,
-  "eslint.experimental.useFlatConfig": true,
 	"search.exclude": {
       "**/build/**": true,
       "**/dist/**": true,

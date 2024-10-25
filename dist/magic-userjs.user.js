@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      6.8.0
+// @version      7.0.0
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -62,6 +62,33 @@
 (() => {
 'use strict';
 /******************************************************************************/
+const inIframe = () => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+}
+if (inIframe()) {
+  return;
+}
+let userjs = self.userjs;
+/**
+ * Skip text/plain documents, based on uBlock Origin `vapi.js` file
+ *
+ * [Source Code](https://github.com/gorhill/uBlock/blob/master/platform/common/vapi.js)
+ */
+if (
+  (document instanceof Document ||
+    (document instanceof XMLDocument && document.createElement('div') instanceof HTMLDivElement)) &&
+  /^image\/|^text\/plain/.test(document.contentType || '') === false &&
+  (self.userjs instanceof Object === false || userjs.UserJS !== true)
+) {
+  userjs = self.userjs = { UserJS: true };
+}
+if (!(typeof userjs === 'object' && userjs.UserJS)) {
+  return;
+}
 /**
  * Uncompressed locales + compiler
  *
@@ -1310,6 +1337,21 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
 .mujs-cfg mujs-section:nth-child(odd) {
   background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
 }
+.mujs-cfg mujs-section input[type=text]::-webkit-input-placeholder {
+  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+}
+.mujs-cfg mujs-section input[type=text]::-moz-placeholder {
+  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+}
+.mujs-cfg mujs-section input[type=text]:-ms-input-placeholder {
+  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+}
+.mujs-cfg mujs-section input[type=text]::-ms-input-placeholder {
+  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+}
+.mujs-cfg mujs-section input[type=text]::placeholder {
+  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+}
 .mujs-cfg mujs-section > label {
   display: flex;
   justify-content: space-between;
@@ -1320,20 +1362,13 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
   border-radius: 4px;
   border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
-.mujs-cfg mujs-section > label input[type=text]::-webkit-input-placeholder {
-  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-}
-.mujs-cfg mujs-section > label input[type=text]::-moz-placeholder {
-  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-}
-.mujs-cfg mujs-section > label input[type=text]:-ms-input-placeholder {
-  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-}
-.mujs-cfg mujs-section > label input[type=text]::-ms-input-placeholder {
-  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-}
-.mujs-cfg mujs-section > label input[type=text]::placeholder {
-  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+.mujs-cfg mujs-section > input {
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
 .mujs-cfg .mujs-inlab {
   position: relative;
@@ -1455,33 +1490,6 @@ mujs-btn {
   cursor: pointer !important;
 }
 `;
-const inIframe = () => {
-  try {
-    return window.self !== window.top;
-  } catch (e) {
-    return true;
-  }
-}
-if (inIframe()) {
-  return;
-}
-let userjs = self.userjs;
-/**
- * Skip text/plain documents, based on uBlock Origin `vapi.js` file
- *
- * [Source Code](https://github.com/gorhill/uBlock/blob/master/platform/common/vapi.js)
- */
-if (
-  (document instanceof Document ||
-    (document instanceof XMLDocument && document.createElement('div') instanceof HTMLDivElement)) &&
-  /^image\/|^text\/plain/.test(document.contentType || '') === false &&
-  (self.userjs instanceof Object === false || userjs.UserJS !== true)
-) {
-  userjs = self.userjs = { UserJS: true };
-}
-if (!(typeof userjs === 'object' && userjs.UserJS)) {
-  return;
-}
 /******************************************************************************/
 // #region Console
 const dbg = (...msg) => {
@@ -1568,6 +1576,10 @@ const goodUserJS = [
   'https://github.com/jesus2099/konami-command/raw/master/INSTALL-USER-SCRIPT.user.js',
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js'
 ];
+// Remove UserJS from banned accounts
+const badUserJS = [
+  478597, // Authors have been banned from GreasyFork
+];
 // Unsupport webpages for each engine
 const engineUnsupported = {
   greasyfork: ['pornhub.com'],
@@ -1618,23 +1630,23 @@ const DEFAULT_CONFIG = {
     {
       enabled: true,
       name: 'greasyfork',
-      url: 'https://greasyfork.org'
+      query: encodeURIComponent('https://greasyfork.org/scripts/by-site/{host}.json?language=all'),
     },
     {
       enabled: false,
       name: 'sleazyfork',
-      url: 'https://sleazyfork.org'
+      query: encodeURIComponent('https://sleazyfork.org/scripts/by-site/{host}.json?language=all'),
     },
     {
       enabled: false,
       name: 'openuserjs',
-      url: 'https://openuserjs.org/?q='
+      query: encodeURIComponent('https://openuserjs.org/?q={host}'),
     },
     {
       enabled: false,
       name: 'github',
-      url: 'https://api.github.com/search/code?q=',
-      token: ''
+      token: '',
+      query: encodeURIComponent('https://api.github.com/search/code?q="// ==UserScript=="+{host}+ "// ==/UserScript=="+in:file+language:js&per_page=30')
     }
   ],
   theme: {
@@ -1666,11 +1678,12 @@ const DEFAULT_CONFIG = {
     others: true
   }
 };
-class LanguageHandler {
-  current;
-  cache;
+//#region i18n
+class i18nHandler {
   constructor() {
-    this.current = (navigator.language ?? 'en').split('-')[0] ?? 'en';
+    /**
+     * @type { string[] }
+     */
     this.cache = [];
 
     const languages = navigator.languages ?? [];
@@ -1681,32 +1694,61 @@ class LanguageHandler {
       }
     }
 
-    if (!this.cache.includes(this.current)) {
-      this.cache.push(this.current);
+    const current = navigator.language.split('-')[0] ?? 'en';
+    if (!this.cache.includes(current)) {
+      this.cache.push(current);
     }
   }
-}
-const language = new LanguageHandler();
-const i18n$ = (...args) => {
-  const list = translations[cfg.language] ?? translations[language.current] ?? translations['en'];
-  const arr = [];
-  for (const arg of args) {
-    arr.push(list[arg]);
+  toDate(str = '') {
+    return new Intl.DateTimeFormat(navigator.language).format(new Date(str));
   }
-  return arr.length !== 1 ? arr : arr[0];
-};
-const toLocaleDate = (str = '') => {
-  return new Intl.DateTimeFormat(navigator.language).format(new Date(str));
-};
+  toNumber(number) {
+    return new Intl.NumberFormat(navigator.language).format(number);
+  }
+  i18n$(...keys) {
+    const current = navigator.language.split('-')[0] ?? 'en';
+    const list = translations[cfg.language] ?? translations[current];
+    const arr = [];
+    for (const key of keys) {
+      arr.push(list[key]);
+    }
+    return arr.length !== 1 ? arr : arr[0];
+  }
+}
+const language = new i18nHandler();
+const { i18n$ } = language;
+//#endregion
 // #region Utilities
+/**
+ * @type { import("../typings/types.d.ts").qs }
+ */
+const qs = (selector, root) => {
+  try {
+    return (root || document).querySelector(selector);
+  } catch (ex) {
+    err(ex);
+  }
+  return null;
+};
+/**
+ * @type { import("../typings/types.d.ts").qsA }
+ */
+const qsA = (selectors, root) => {
+  try {
+    return (root || document).querySelectorAll(selectors);
+  } catch (ex) {
+    err(ex);
+  }
+  return [];
+};
 /**
  * @type { import("../typings/types.d.ts").hasOwn }
  */
-const hasOwn = (obj, prop) => {
+const hasOwn = (o, v) => {
   if (typeof Object.hasOwn !== 'undefined') {
-    return Object.hasOwn(obj, prop);
+    return Object.hasOwn(o, v);
   }
-  return Object.prototype.hasOwnProperty.call(obj, prop);
+  return Object.prototype.hasOwnProperty.call(o, v);
 };
 /**
  * @type { import("../typings/types.d.ts").objToStr }
@@ -1718,13 +1760,14 @@ const objToStr = (obj) => {
  * @type { import("../typings/types.d.ts").strToURL }
  */
 const strToURL = (str) => {
+  const WIN_LOCATION = window.location ?? BLANK_PAGE;
   try {
-    str = str ?? window.location ?? BLANK_PAGE;
+    str = str ?? WIN_LOCATION;
     return objToStr(str).includes('URL') ? str : new URL(str);
   } catch (ex) {
     err({ cause: 'strToURL', message: ex.message });
   }
-  return window.location;
+  return WIN_LOCATION;
 };
 /**
  * @type { import("../typings/types.d.ts").isRegExp }
@@ -1969,6 +2012,10 @@ class Memorize {
      * @type {Map<string, Map<string, any>>}
      */
     this.store = new Map();
+    /**
+     * @type { { [key: string]: Map<string, any>; userjs: Map<number, import("../typings/types.d.ts").GSForkQuery> } }
+     */
+    this.maps = {};
     this.create('cfg', 'container', 'userjs');
   }
   /**
@@ -1982,7 +2029,9 @@ class Memorize {
       if (this.store.has(key)) {
         return this.store.get(key);
       }
-      this.store.set(key, new Map());
+      const m = new Map();
+      this.store.set(key, m);
+      this.maps[key] = m;
       resp.push(this.store.get(key));
     }
     return resp.length >= 2 ? resp : resp[0];
@@ -2316,28 +2365,6 @@ const Network = {
     return txt.replaceAll(/\W/g, '');
   }
 };
-/**
- * @type { import("../typings/types.d.ts").qs }
- */
-const qs = (selector, root) => {
-  try {
-    return (root || document).querySelector(selector);
-  } catch (ex) {
-    err(ex);
-  }
-  return null;
-};
-/**
- * @type { import("../typings/types.d.ts").qsA }
- */
-const qsA = (selectors, root) => {
-  try {
-    return (root || document).querySelectorAll(selectors);
-  } catch (ex) {
-    err(ex);
-  }
-  return [];
-};
 const sleazyRedirect = () => {
   const locObj = window.top.location;
   const { hostname } = locObj;
@@ -2440,8 +2467,8 @@ class Container {
       });
       this.ready = true;
     }
-    this.cache = memory.store.get('container');
-    this.userjsCache = memory.store.get('userjs');
+    this.cache = memory.maps.container;
+    this.userjsCache = memory.maps.userjs;
     this.root = make('mujs-root');
     this.unsaved = false;
     this.isBlacklisted = false;
@@ -2532,7 +2559,7 @@ class Container {
           dataset: {
             counter: engine.name
           },
-          title: engine.url,
+          title: engine.query ? decodeURIComponent(engine.query) : engine.url,
           textContent: '0'
         });
         this.countframe.append(counter);
@@ -3125,6 +3152,8 @@ class Container {
       this.counters[engine.name] = 0;
     }
     this.updateCounters();
+    dom.cl.remove(qsA('tr[data-engine]', this.tabbody), 'hidden');
+    dom.cl.remove(qsA('mujs-section[data-name]', this.cfgpage), 'hidden');
     dom.prop([this.tabbody, this.rateContainer, this.footer], 'innerHTML', '');
   }
 }
@@ -3150,11 +3179,12 @@ function primaryFN() {
       btnissue,
       btngreasy,
       tab,
+      userjsCache,
       updateCounter,
       showError
     } = container;
     const frameTimeout = container.timeouts.frame;
-    const cfgMap = memory.store.get('cfg');
+    const cfgMap = memory.maps.cfg;
     const rebuildCfg = () => {
       for (const engine of cfg.engines) {
         if (cfgMap.has(engine.name)) {
@@ -3329,15 +3359,24 @@ function primaryFN() {
             return;
           }
           const dataUserJS = container.userjsCache.get(+dataset.userjs);
-          const r = await dataUserJS._mujs.code.request();
+          let installCode = dataUserJS.code_url;
+          if (!prmpt && dataUserJS.code_url.endsWith('.user.css')) {
+            container.makePrompt('Download as UserStyle?', dataset);
+            return;
+          } else if (prmpt !== prmptChoice) {
+            installCode = dataUserJS.code_url.replace(/\.user\.css$/, '.user.js');
+          }
+          const r = await dataUserJS._mujs.code.request(false, installCode);
           const txt = r.data;
           if (typeof txt !== 'string') {
             return;
           }
+          const userjsName = dataset.userjsName ?? dataset.userjs;
+          const userjsExt = prmpt !== prmptChoice ? '.user.js' : '.user.css';
           const makeUserJS = new Blob([txt], { type: 'text/plain' });
           const dlBtn = make('a', 'mujs_Downloader');
           dlBtn.href = URL.createObjectURL(makeUserJS);
-          dlBtn.download = `${dataset.userjsName ?? dataset.userjs}.user.js`;
+          dlBtn.download = `${userjsName}${userjsExt}`;
           dlBtn.click();
           URL.revokeObjectURL(dlBtn.href);
           dlBtn.remove();
@@ -3367,7 +3406,7 @@ function primaryFN() {
               });
               elem.append(el);
               return;
-            };
+            }
             dom.prop(elem, 'innerHTML', '');
             dom.cl.remove(root, 'hidden');
             for (const c of n) {
@@ -3788,10 +3827,13 @@ function primaryFN() {
         code_url: BLANK_PAGE,
         created_at: Date.now(),
         code_updated_at: Date.now(),
+        locale: 'NOT FOUND',
+        deleted: false,
         users: [
           {
-            name: '',
-            url: ''
+            id: 0,
+            name: 'NOT FOUND',
+            url: BLANK_PAGE
           }
         ]
       };
@@ -3826,9 +3868,6 @@ function primaryFN() {
         });
         applyList.append(elem);
         dom.cl.add(ujsURLs, 'hidden');
-        // if (type === 'antifeatures') {
-        //   dom.cl.add(ujsURLs, 'hidden');
-        // }
         return;
       }
       for (const c of list) {
@@ -3870,9 +3909,6 @@ function primaryFN() {
           applyList.append(elem);
         }
       }
-      // if (type === 'antifeatures') {
-      //   dom.cl.remove(ujsURLs, 'hidden');
-      // }
     };
     const timeoutFrame = async (time) => {
       time = time ?? cfg.time;
@@ -3899,6 +3935,9 @@ function primaryFN() {
       if (ujs.id === 421603) {
         return;
       }
+      if (badUserJS.includes(ujs.id) || badUserJS.includes(ujs.url)) {
+        return;
+      }
       if (!container.userjsCache.has(ujs.id)) {
         container.userjsCache.set(ujs.id, ujs);
       }
@@ -3908,7 +3947,7 @@ function primaryFN() {
         textContent: ujs.daily_installs
       });
       const fupdated = make('td', 'mujs-list', {
-        textContent: toLocaleDate(ujs.code_updated_at)
+        textContent: language.toDate(ujs.code_updated_at)
       });
       const fname = make('td', 'mujs-name');
       const fmore = make('mujs-column', 'mujs-list hidden', {
@@ -3932,7 +3971,7 @@ function primaryFN() {
         textContent: `${i18n$('version_number')}: ${ujs.version}`
       });
       const fcreated = make('mu-js', 'mujs-list', {
-        textContent: `${i18n$('created_date')}: ${toLocaleDate(ujs.created_at)}`
+        textContent: `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`
       });
       const flicense = make('mu-js', 'mujs-list', {
         title: ujs.license ?? i18n$('no_license'),
@@ -3941,7 +3980,7 @@ function primaryFN() {
           'text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: fit-content; max-width: 20em;'
       });
       const ftotal = make('mu-js', 'mujs-list', {
-        textContent: `${i18n$('total_installs')}: ${ujs.total_installs}`
+        textContent: `${i18n$('total_installs')}: ${language.toNumber(ujs.total_installs)}`
       });
       const fratings = make('mu-js', 'mujs-list', {
         title: i18n$('ratings'),
@@ -4169,16 +4208,18 @@ function primaryFN() {
           info(' Building list', { cache: this.cache, engines: this.engines });
           const customRecords = [];
           const arr = [];
+          const host = this.host;
           for (const engine of this.engines) {
             const cEngine = this.cache[`${engine.name}`];
             if (!isEmpty(cEngine)) {
               for (const ujs of cEngine) {
-                tabbody.append(ujs._mujs.root);
+                if (isElem(ujs._mujs.root)) {
+                  tabbody.append(ujs._mujs.root);
+                }
               }
               updateCounter(cEngine.length, engine);
               continue;
             }
-            const host = this.host;
             const _mujs = (d) => {
               const obj = {
                 ...d,
@@ -4193,13 +4234,15 @@ function primaryFN() {
                     grant: [],
                     match: [],
                     meta: {},
-                    request: async function (translate = false) {
+                    request: async function (translate = false, code_url) {
                       if (this.data) {
                         return this;
                       }
                       this.data = '';
                       /** @type { string } */
-                      const code = await Network.req(d.code_url, 'GET', 'text').catch(showError);
+                      const code = await Network.req(code_url ?? d.code_url, 'GET', 'text').catch(
+                        showError
+                      );
                       if (typeof code !== 'string') {
                         return this;
                       }
@@ -4252,17 +4295,17 @@ function primaryFN() {
                         meta.require = [s];
                       }
                       if (meta.resource) {
-                        const obj = {}
+                        const obj = {};
                         if (typeof meta.resource === 'string') {
                           const reg = /(.+)\s+(.+)/.exec(meta.resource);
                           if (reg) {
-                            obj[reg[1].trim()] = reg[2]
+                            obj[reg[1].trim()] = reg[2];
                           }
                         } else {
                           for (const r of meta.resource) {
                             const reg = /(.+)\s+(http.+)/.exec(r);
                             if (reg) {
-                              obj[reg[1].trim()] = reg[2]
+                              obj[reg[1].trim()] = reg[2];
                             }
                           }
                         }
@@ -4281,6 +4324,12 @@ function primaryFN() {
                 }
               };
               return obj;
+            };
+            const toQuery = (fallback) => {
+              if (engine.query) {
+                return decodeURIComponent(engine.query).replace(/\{host\}/g, host);
+              }
+              return fallback;
             };
             /**
              * @param { import("../typings/types.d.ts").GSFork } dataQ
@@ -4344,7 +4393,7 @@ function primaryFN() {
             /**
              * @param {Document} htmlDocument
              */
-            const customFN = async (htmlDocument) => {
+            const openuserjs = async (htmlDocument) => {
               try {
                 if (!htmlDocument) {
                   showError('Invalid data received from the server, TODO fix this');
@@ -4431,17 +4480,13 @@ function primaryFN() {
               }
             };
             let netFN;
-            if (engine.name.includes('fork')) {
-              netFN = Network.req(`${engine.url}/scripts/by-site/${this.host}.json?language=all`)
-                .then(forkFN)
-                .catch(showError);
-            } else if (/github/gi.test(engine.name)) {
+            if (/github/gi.test(engine.name)) {
               if (isEmpty(engine.token)) {
                 showError(`"${engine.name}" requires a token to use`);
                 continue;
               }
               netFN = Network.req(
-                `${engine.url}"// ==UserScript=="+${this.host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
+                toQuery(`${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`),
                 'GET',
                 'json',
                 {
@@ -4472,12 +4517,16 @@ function primaryFN() {
                     .catch(showError);
                 })
                 .catch(showError);
-            } else {
-              netFN = Network.req(`${engine.url}${this.host}`, 'GET', 'document')
-                .then(customFN)
+            } else if (/openuserjs/gi.test(engine.name)) {
+              netFN = Network.req(toQuery(`${engine.url}${host}`), 'GET', 'document')
+                .then(openuserjs)
                 .catch((error) => {
                   showError(`Engine: "${engine.name}"`, error);
                 });
+            } else {
+              netFN = Network.req(toQuery(`${engine.url}/scripts/by-site/${host}.json?language=all`))
+              .then(forkFN)
+              .catch(showError);
             }
             if (netFN) {
               arr.push(netFN);
@@ -4502,9 +4551,13 @@ function primaryFN() {
       const makerow = (desc, type = null, nm, attrs = {}) => {
         desc = desc ?? i18n$('no_license');
         nm = nm ?? i18n$('no_license');
-        const sec = make('mujs-section', 'mujs-cfg-section');
+        const sec = make('mujs-section', '', {
+          dataset: {
+            name: nm
+          }
+        });
         const lb = make('label');
-        const divDesc = make('mu-js', 'mujs-cfg-desc', {
+        const divDesc = make('mu-js', '', {
           textContent: desc
         });
         lb.append(divDesc);
@@ -4513,7 +4566,7 @@ function primaryFN() {
         if (isNull(type)) {
           return lb;
         }
-        const inp = make('input', 'mujs-cfg-input', {
+        const inp = make('input', '', {
           type,
           dataset: {
             name: nm
@@ -4536,16 +4589,59 @@ function primaryFN() {
             return inp;
           }
           if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
-            for (const i of cfg.engines) {
-              if (i.name !== nm) continue;
-              inp.checked = i.enabled;
-              inp.dataset.engine = i.name;
+            for (const engine of cfg.engines) {
+              if (engine.name !== nm) continue;
+              inp.checked = engine.enabled;
+              inp.dataset.engine = engine.name;
               ael(inp, 'change', (evt) => {
                 container.unsaved = true;
                 container.rebuild = true;
-                i.enabled = evt.target.checked;
+                engine.enabled = evt.target.checked;
               });
+
+              if (engine.query) {
+                const d = DEFAULT_CONFIG.engines.find(e => e.name === engine.name);
+                const urlInp = make('input', '', {
+                  type: 'text',
+                  defaultValue: '',
+                  value: decodeURIComponent(engine.query) ?? '',
+                  placeholder: decodeURIComponent(d.query) ?? '',
+                  dataset: {
+                    name: nm,
+                    engine: engine.name
+                  },
+                  onchange(evt) {
+                    container.unsaved = true;
+                    container.rebuild = true;
+                    try {
+                      engine.query = encodeURIComponent(new URL(evt.target.value).toString());
+                    } catch (ex) {
+                      err(ex);
+                    }
+                  }
+                });
+                sec.append(urlInp);
+              }
+              if (engine.name === 'github') {
+                const ghToken = make('input', '', {
+                  type: 'text',
+                  defaultValue: '',
+                  value: engine.token ?? '',
+                  placeholder: 'Paste Access Token',
+                  dataset: {
+                    engine: 'github-token'
+                  },
+                  onchange(evt) {
+                    container.unsaved = true;
+                    container.rebuild = true;
+                    engine.token = evt.target.value;
+                  }
+                });
+                sec.append(ghToken);
+                cfgMap.set('github-token', ghToken);
+              }
             }
+
           } else {
             inp.checked = cfg[nm];
             ael(inp, 'change', (evt) => {
@@ -4593,22 +4689,22 @@ function primaryFN() {
       makerow('Sleazy Fork', 'checkbox', 'sleazyfork');
       makerow('Open UserJS', 'checkbox', 'openuserjs');
       makerow('GitHub API', 'checkbox', 'github');
-      const ghAPI = cfg.engines.find((c) => c.name === 'github');
-      const ghToken = makerow('GitHub API (Token)', 'text', 'github', {
-        defaultValue: '',
-        value: ghAPI.token ?? '',
-        placeholder: 'Paste Access Token',
-        onchange(evt) {
-          container.unsaved = true;
-          container.rebuild = true;
-          ghAPI.token = evt.target.value;
-          // if (isNull(ghMsg)) {
-          //   ghAPI.token = evt.target.value;
-          // }
-        }
-      });
-      ghToken.dataset.engine = 'github-token';
-      cfgMap.set('github-token', ghToken);
+      // const ghAPI = cfg.engines.find((c) => c.name === 'github');
+      // const ghToken = makerow('GitHub API (Token)', 'text', 'github', {
+      //   defaultValue: '',
+      //   value: ghAPI.token ?? '',
+      //   placeholder: 'Paste Access Token',
+      //   onchange(evt) {
+      //     container.unsaved = true;
+      //     container.rebuild = true;
+      //     ghAPI.token = evt.target.value;
+      //     // if (isNull(ghMsg)) {
+      //     //   ghAPI.token = evt.target.value;
+      //     // }
+      //   }
+      // });
+      // ghToken.dataset.engine = 'github-token';
+      // cfgMap.set('github-token', ghToken);
       makerow(`${i18n$('dtime')} (ms)`, 'number', 'time', {
         defaultValue: 10000,
         value: cfg.time,
@@ -4747,35 +4843,135 @@ function primaryFN() {
       if (urlBar.placeholder === i18n$('newTab')) {
         return;
       }
+      /**
+       * @type { string }
+       */
       const val = evt.target.value;
       if (isEmpty(val)) {
         dom.cl.remove(qsA('tr[data-engine]', tabbody), 'hidden');
+        dom.cl.remove(qsA('mujs-section[data-name]', cfgpage), 'hidden');
         return;
       }
-      const reg = new RegExp(val, 'gi');
       const finds = new Set();
-      const userjsCache = container.userjsCache;
-      for (const [k, v] of userjsCache) {
-        const elem = qs(`tr[data-script-id="${k}"]`, tabbody);
-        if (!elem) {
-          continue;
+      if (!dom.cl.has(cfgpage, 'hidden')) {
+        const reg = new RegExp(val, 'gi');
+        for (const elem of qsA('mujs-section[data-name]', cfgpage)) {
+          if (!elem) {
+            continue;
+          }
+          if (finds.has(elem)) {
+            continue;
+          }
+          if (elem.dataset.name.match(reg)) {
+            finds.add(elem);
+          }
         }
-        if (finds.has(elem)) {
-          continue;
+        dom.cl.add(qsA('mujs-section[data-name]', cfgpage), 'hidden');
+        dom.cl.remove([...finds], 'hidden');
+        return;
+      }
+      /**
+       * @param {RegExpMatchArray} regExp
+       * @param {keyof import("../typings/types.d.ts").GSForkQuery} key
+       */
+      const ezQuery = (regExp, key) => {
+        const q_value = val.replace(regExp, '');
+        const reg = new RegExp(q_value, 'gi');
+        for (const v of userjsCache.values()) {
+          const elem = v._mujs.root;
+          if (!elem) {
+            continue;
+          }
+          if (finds.has(elem)) {
+            continue;
+          }
+          let k = v[key];
+          if (typeof k === 'number') {
+            k = `${v[key]}`;
+          }
+          if (k && k.match(reg)) {
+            finds.add(elem);
+          }
         }
-        if (v.name && v.name.match(reg)) {
-          finds.add(elem);
+      };
+      if (val.match(/^(code_url|url):/)) {
+        ezQuery(/^(code_url|url):/, 'code_url');
+      } else if (val.match(/^(author|users?):/)) {
+        const q_value = val.replace(/^(author|users?):/, '');
+        const reg = new RegExp(q_value, 'gi');
+        for (const v of userjsCache.values()) {
+          const elem = v._mujs.root;
+          if (!elem) {
+            continue;
+          }
+          if (finds.has(elem)) {
+            continue;
+          }
+          if (v.users) {
+            for (const user of v.users) {
+              for (const value of Object.values(user)) {
+                if (typeof value === 'string' && value.match(reg)) {
+                  finds.add(elem);
+                } else if (typeof value === 'number' && `${value}`.match(reg)) {
+                  finds.add(elem);
+                }
+              }
+            }
+          }
         }
-        if (v.description && v.description.match(reg)) {
-          finds.add(elem);
+      } else if (val.match(/^(locale|i18n):/)) {
+        ezQuery(/^(locale|i18n):/, 'locale');
+      } else if (val.match(/^id:/)) {
+        ezQuery(/^id:/, 'id');
+      } else if (val.match(/^license:/)) {
+        ezQuery(/^license:/, 'license');
+      } else if (val.match(/^name:/)) {
+        ezQuery(/^name:/, 'name');
+      } else if (val.match(/^description:/)) {
+        ezQuery(/^description:/, 'description');
+      } else if (val.match(/^(search_engine|engine):/)) {
+        const q_value = val.replace(/^(search_engine|engine):/, '');
+        const reg = new RegExp(q_value, 'gi');
+        for (const v of userjsCache.values()) {
+          const elem = v._mujs.root;
+          if (!elem) {
+            continue;
+          }
+          if (finds.has(elem)) {
+            continue;
+          }
+          if (v._mujs.info.engine) {
+            for (const value of Object.values(v._mujs.info.engine)) {
+              if (typeof value === 'string' && value.match(reg)) {
+                finds.add(elem);
+              }
+            }
+          }
         }
-        const code_data = v._mujs.code.data;
-        if (code_data) {
-          const code_obj = new ParseUserJS(code_data);
-          const meta = code_obj.parse_meta(code_data);
-          for (const key of Object.keys(meta)) {
-            if (/name|desc/i.test(key) && key.match(reg)) {
-              finds.add(elem);
+      } else {
+        const reg = new RegExp(val, 'gi');
+        for (const v of userjsCache.values()) {
+          const elem = v._mujs.root;
+          if (!elem) {
+            continue;
+          }
+          if (finds.has(elem)) {
+            continue;
+          }
+          if (v.name && v.name.match(reg)) {
+            finds.add(elem);
+          }
+          if (v.description && v.description.match(reg)) {
+            finds.add(elem);
+          }
+          const code_data = v._mujs.code.data;
+          if (code_data) {
+            const code_obj = new ParseUserJS(code_data);
+            const meta = code_obj.parse_meta(code_data);
+            for (const key of Object.keys(meta)) {
+              if (/name|desc/i.test(key) && key.match(reg)) {
+                finds.add(elem);
+              }
             }
           }
         }
