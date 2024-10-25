@@ -16,7 +16,7 @@
 
 Finds available UserScripts for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
 
-[Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
+[Changelog (UserScript)](https://github.com/magicoflolis/Userscript-Plus/blob/master/CHANGELOG.user.md)
 
 [List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
 
