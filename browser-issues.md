@@ -1,10 +1,10 @@
-# Currently known issues by Web Browser
+# Known issues by Web Browser
 
 > Last updated: 5/2/2024
 
 [Submit a New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
-- [Currently known issues by Web Browser](#currently-known-issues-by-web-browser)
+- [Known issues by Web Browser](#known-issues-by-web-browser)
   - [Kiwi Browser](#kiwi-browser)
   - [Opera](#opera)
 
@@ -13,7 +13,7 @@
 **Installed using (from .zip/.crx/.user.js):**
 
 - Userscript version does not have access to Privileged APIs (`GM_*` or `GM.*`)
-  - Recommended to install using a userscript manager!
+  - Recommended to install using a user script manager _[Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/)_
 
 ## Opera
 

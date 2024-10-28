@@ -1,4 +1,30 @@
-# Magic Userscript+
+[![Badge License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/blob/master/LICENSE)
+[![Badge Issues](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/issues)
+[![Badge Greasy Fork](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
+[![Badge Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
+[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://greasyfork.org/scripts/421603)
+[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
+
+---
+
+<h1 align="center">
+<sub>
+<img src="https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/9aa3abea2e6d5caadf051edc9790657da91a1358/src/img/greasyfork.svg" height="38" width="38">
+</sub>
+Magic Userscript+
+</h1>
+
+*A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus)*
+
+Finds available UserScripts for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
+
+[UserScript Changelog](https://github.com/magicoflolis/Userscript-Plus/blob/master/CHANGELOG.user.md)
+
+[List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
+
+## **Download**
+
+**UserScript:**
 
 > [!IMPORTANT]
 > If the current webpage is set to block resources through CSP
@@ -7,49 +33,33 @@
 >
 > [https://developer.mozilla.org/docs/Web/HTTP/CSP](https://developer.mozilla.org/docs/Web/HTTP/CSP)
 
-[![GitHub License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/blob/master/LICENSE)
-[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/issues)
-[![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
-[![GitHub Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
-
-*A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus)*
-
-Finds available UserScripts for the current webpage, the power of [Greasy Fork](https://greasyfork.org) on the go!
-
-[Changelog (UserScript)](https://github.com/magicoflolis/Userscript-Plus/blob/master/CHANGELOG.user.md)
-
-[List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
-
-## **Download**
-
-**UserScript:**
-
-[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://greasyfork.org/scripts/421603)
-[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
+* [Greasy Fork](https://greasyfork.org/scripts/421603)
+* [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - outdated
+* [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
 
 **Web Extension:**
 
-| Version | Install | Alternative | Notes |
-|:----------:|:----------:|:----------:|:----------:|
-| Chrome/Edge/Opera | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest) | *N/A* | Work in progress |
-| Firefox | [GitHub](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest) | [Add-on Store](https://addons.mozilla.org/firefox/addon/userscript-plus/) | Work in progress |
+*Firefox:*
+
+* [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/userscript-plus/)
+* [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
+
+Available for desktop and Android versions.
+
+*Chromium:*
+
+* ~~[Chrome Web Store](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)~~
+* [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
+
+Userscript+ should be compatible with any Chromium-based browser
 
 **(Not Recommended) Bookmarklet:**
 
-Save this URL as a bookmark, clicking it will cause the userscript version to inject itself into the current webpage.
+Save this URL as a bookmark, clicking it will cause the **UserScript version** to inject itself into the current webpage.
 
 ```JS
 javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/magic-userjs.user.js'].map(s=>document.body.appendChild(document.createElement('script')).src=s)})();
 ```
-
----
-
-| Demos |
-|:----------:|
-|![Using Tabs](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/using-tabs.gif)|
-|![Installing UserScript](https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/install-userscript.gif)|
-
----
 
 ## Features
 
@@ -79,7 +89,14 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 * Maximize, minimize, or exit the UserScript list
 * Change the position of floating counter
-* Separate config with every host
+* Separate config for every host
+
+## Previews
+
+<p>
+  <img src="https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/using-tabs.gif">
+  <img src="https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/master/assets/install-userscript.gif">
+</p>
 
 ## FAQ / Troubleshooting
 
@@ -112,7 +129,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * This error *can* be caused when no UserJS could be found in enabled search engines
 * If there are known UserJS to exist in enabled search engines, enable `Filter out other languages`
 
-## View UserScript Logs
+## View Console Logs
 
 * Open your web browsers Inspect Element and navigate to it's Console
 * Locate the following **[UserJS] < message >** ( you can filter your Console by entering **UserJS** or **[** )
