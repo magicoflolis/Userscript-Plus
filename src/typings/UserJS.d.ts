@@ -2,22 +2,42 @@
 // import '@types/tampermonkey';
 import '@violentmonkey/types';
 import { type GSForkQuery } from './types';
+import './scheduler';
 
-/**
- * Some sites will alter or remove document functions
- * To get around this we bind them to the `userjs` object
- *
- * This method is based on uBlock Origin `scriptlets.js` file
- *
- * [Source Code](https://github.com/gorhill/uBlock/blob/master/assets/resources/scriptlets.js)
- */
-export declare function safeSelf(): {
+export interface safeHandles {
+  // trustedTypes: {
+  //   createPolicy(): void;
+  // };
   XMLHttpRequest: typeof XMLHttpRequest;
   createElement: typeof document.createElement;
   createElementNS: typeof document.createElementNS;
   createTextNode: typeof document.createTextNode;
   setTimeout: typeof setTimeout;
   clearTimeout: typeof clearTimeout;
+  navigator: typeof navigator;
+  /** Taken from [scheduler-polyfill](https://github.com/GoogleChromeLabs/scheduler-polyfill) */
+  scheduler: typeof scheduler;
+}
+
+/**
+ * Some sites will alter or remove document functions
+ * To get around this we bind them to the `userjs` object
+ *
+ * This method is based on uBlock Origin [scriptlets.js](https://github.com/gorhill/uBlock/blob/master/assets/resources/scriptlets.js)
+ */
+export declare function safeSelf(): {
+  // trustedTypes: {
+  //   createPolicy(): void;
+  // };
+  XMLHttpRequest: typeof XMLHttpRequest;
+  createElement: typeof document.createElement;
+  createElementNS: typeof document.createElementNS;
+  createTextNode: typeof document.createTextNode;
+  setTimeout: typeof setTimeout;
+  clearTimeout: typeof clearTimeout;
+  navigator: typeof navigator;
+  /** Taken from [scheduler-polyfill](https://github.com/GoogleChromeLabs/scheduler-polyfill) */
+  scheduler: typeof scheduler;
 };
 
 export declare function loadCSS(css: string, name: string): HTMLStyleElement | undefined;

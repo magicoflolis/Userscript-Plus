@@ -110,7 +110,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 * Try again on another webpage [[Test Page](https://youtube.com)]
 * Default timeout is 10000ms before the count disappears
-* If issue persists, see [View UserScript Logs](#view-userscript-logs) or submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
+* If issue persists, see [View Console Logs](#view-console-logs) or submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
 **(UserScript) Error occurred while injecting Container:**
 

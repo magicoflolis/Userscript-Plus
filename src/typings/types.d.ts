@@ -176,8 +176,6 @@ export type config = {
   };
 };
 
-export declare function hasOwn(o: object, p: PropertyKey): boolean;
-
 export declare function objToStr<O>(obj: O): string;
 
 export declare function strToURL<S extends string | URL>(str: S): URL;
