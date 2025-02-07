@@ -125,6 +125,20 @@ function safeSelf() {
   return userjs.safeSelf;
 }
 
+let trusedPolicy = false;
+function setTrust() {
+  if (trusedPolicy) {
+    return;
+  }
+  if (window.trustedTypes && window.trustedTypes.createPolicy) {
+    window.trustedTypes.createPolicy('default', {
+      createHTML: (string) => string
+    });
+    trusedPolicy = true;
+  }
+}
+setTrust();
+
 const BLANK_PAGE = 'about:blank';
 // Lets highlight me :)
 const authorID = 166061;
@@ -3623,12 +3637,7 @@ const init = async () => {
       if (doc === null) {
         throw new Error('"doc" is null, reload the webpage or use a different one', { cause: 'loadDOM' });
       }
-      if (window.trustedTypes && window.trustedTypes.createPolicy) {
-        window.trustedTypes.createPolicy('default', {
-          createHTML: (string) => string
-        });
-      }
-
+      setTrust();
       sleazyRedirect();
       container.inject(primaryFN, doc);
 

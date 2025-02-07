@@ -1,4 +1,10 @@
-# What's New (v7.1.0)
+# Changelog
+
+## v7.1.1
+
+* Fixed "Error When Opening YouTube" https://github.com/magicoflolis/Userscript-Plus/issues/63
+
+## v7.1.0
 
 * Implemented [Task Scheduling API](https://developer.mozilla.org/en-US/docs/Web/API/Prioritized_Task_Scheduling_API)
   * Limited availability, see [Browser compatibility](https://developer.mozilla.org/en-US/docs/Web/API/Scheduler#browser_compatibility)
@@ -6,12 +12,12 @@
 * Improved error handling
 * _Be sure to look in your console if the UserScript stops working for some reason!_
 
-## Known Issues
+**Known Issues:**
 
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
 * SVG elements don't load on every webpage, _can be blocked by the page._
 
-## TODO
+**TODO:**
 
 * Add [GreasyFork Bullshit Filter](https://greasyfork.org/scripts/12179) into list
 * Merge https://github.com/magicoflolis/Userscript-Plus/pull/59
@@ -20,7 +26,7 @@
 
 ---
 
-# What's New (v7.0.0)
+## v7.0.0
 
 * Ability to change the URL of each engine
   * **Please reset your config if updating!**
@@ -38,12 +44,12 @@
   * `search_engine:` or `engine:`
 * UI ajustments
 
-## Known Issues
+**Known Issues:**
 
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
 * SVG elements don't load on every webpage, _can be blocked by the page._
 
-## TODO
+**TODO:**
 
 * Add sorting to the following: "Total installs", "Ratings", "Created date"
 * Improve design of blacklist section

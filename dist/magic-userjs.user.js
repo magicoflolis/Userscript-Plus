@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.1.0
+// @version      7.1.1
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -1617,6 +1617,20 @@ function safeSelf() {
   userjs.safeSelf = safe;
   return userjs.safeSelf;
 }
+
+let trusedPolicy = false;
+function setTrust() {
+  if (trusedPolicy) {
+    return;
+  }
+  if (window.trustedTypes && window.trustedTypes.createPolicy) {
+    window.trustedTypes.createPolicy('default', {
+      createHTML: (string) => string
+    });
+    trusedPolicy = true;
+  }
+}
+setTrust();
 
 const BLANK_PAGE = 'about:blank';
 // Lets highlight me :)
@@ -5116,12 +5130,7 @@ const init = async () => {
       if (doc === null) {
         throw new Error('"doc" is null, reload the webpage or use a different one', { cause: 'loadDOM' });
       }
-      if (window.trustedTypes && window.trustedTypes.createPolicy) {
-        window.trustedTypes.createPolicy('default', {
-          createHTML: (string) => string
-        });
-      }
-
+      setTrust();
       sleazyRedirect();
       container.inject(primaryFN, doc);
 
