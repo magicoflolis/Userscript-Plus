@@ -1,6 +1,6 @@
 # Changelog
 
-## v7.1.2
+## v7.2.0
 
 * New config "Inject on load", when disabled prevents this script from injecting the menu automatically.
   * You can still inject the menu through the context menu in your UserScript manager.
@@ -11,6 +11,7 @@
 * Improved design of theme section.
 * Improved design of blacklist section, adding new pages to the list is still incomplete.
 * Changed "Sync with GM" to "Sync with UserScript Manager".
+* Make it so translated UserScripts are a different color in the list.
 * CSS adjustments.
 
 **Known Issues:**
