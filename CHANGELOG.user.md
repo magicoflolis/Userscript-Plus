@@ -1,5 +1,28 @@
 # Changelog
 
+## v7.3.0
+
+* Re-organized config list.
+* Added [GreasyFork Bullshit Filter](https://greasyfork.org/scripts/12179) into list.
+  * You can enable it under "List Filters" in the config.
+  * You can also do `filter:` in the search bar to quickly filter the list.
+    * Full list [here](https://github.com/magicoflolis/Userscript-Plus/tree/master/wiki/README.md)
+    * Example: `filter:ascii` => filters out non-ASCII scripts
+
+**Known Issues:**
+
+* "Filter out other languages" may not filter _every_ userscript that is not in your language.
+* SVG elements don't load on every webpage, _can be blocked by the page, external script, or extensions._
+
+**TODO:**
+
+* Finish translations.
+* Finish blacklist section.
+* Merge https://github.com/magicoflolis/Userscript-Plus/pull/59
+* Add sorting to the following: "Total installs", "Ratings", "Created date"
+
+---
+
 ## v7.2.0
 
 * New config "Inject on load", when disabled prevents this script from injecting the menu automatically.
@@ -11,7 +34,7 @@
 * Improved design of theme section.
 * Improved design of blacklist section, adding new pages to the list is still incomplete.
 * Changed "Sync with GM" to "Sync with UserScript Manager".
-* Make it so translated UserScripts are a different color in the list.
+* Made it so translated UserScripts are a different color in the list.
 * CSS adjustments.
 
 **Known Issues:**

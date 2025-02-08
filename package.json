@@ -9,7 +9,7 @@
     "url": "https://github.com/magicoflolis/Userscript-Plus/issues"
   },
   "userJS": {
-    "version": "7.2.0",
+    "version": "7.3.0",
     "name": "Magic Userscript+ : Show Site All UserJS",
     "description": "Finds available userscripts for the current webpage.",
     "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues",

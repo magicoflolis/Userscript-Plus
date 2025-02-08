@@ -27,7 +27,7 @@ Finds available UserScripts for the current webpage, the power of [Greasy Fork](
 **UserScript:**
 
 > [!IMPORTANT]
-> The UserScript only works on `HTTPS`([https://example.com](https://example.com))
+> The UserScript only works on `HTTPS` sites! ([https://example.com](https://example.com))
 
 * [Greasy Fork](https://greasyfork.org/scripts/421603)
 * [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - outdated

@@ -168,6 +168,7 @@ export type config = {
     'position-left': string;
     'position-right': string;
     'font-family': string;
+    // [key: string ]: string;
   };
   /**
    * Highlight UserScripts recommended by the author or UserScripts created by the author
@@ -175,6 +176,34 @@ export type config = {
   recommend: {
     author: boolean;
     others: boolean;
+  };
+  filters: {
+    [name: string ]: {
+      enabled: boolean;
+      name: string;
+      flag?: string;
+      regExp: string;
+    };
+    // 'Non-ASCII': {
+    //   enabled: boolean;
+    //   regExp: string;
+    // };
+    // 'Non-Latin': {
+    //   enabled: boolean;
+    //   regExp: string;
+    // };
+    // Games: {
+    //   enabled: boolean;
+    //   regExp: string;
+    // };
+    // 'Social Networks': {
+    //   enabled: boolean;
+    //   regExp: string;
+    // };
+    // Clutter: {
+    //   enabled: boolean;
+    //   regExp: string;
+    // };
   };
 };
 

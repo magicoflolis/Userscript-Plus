@@ -20,12 +20,6 @@ const err = (...msg) => {
   );
   const a = typeof alert !== 'undefined' && alert;
   for (const ex of msg) {
-    // typeof ex === 'object' && 'cause' in ex && typeof alert !== 'undefined'
-    // const isE = Object.prototype.toString.call(ex).includes('Error');
-    // if (isE && 'cause' in ex && a) {
-    //   a(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
-    // }
-    // const isO = Object.prototype.toString.call(ex).includes('Object');
     if (typeof ex === 'object' && 'cause' in ex && a) {
       a(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
     }
@@ -155,12 +149,33 @@ const authorID = 166061;
  * Some UserJS I personally enjoy - `https://greasyfork.org/scripts/{{id}}`
  */
 const goodUserJS = [
+  394820,
+  438684,
+  4870,
+  394420,
+  25068,
+  483444,
+  1682,
+  22587,
+  789,
+  28497,
+  386908,
+  24204,
+  404443,
+  4336,
+  368183,
+  393396,
+  473830,
   12179,
   423001,
   376510,
   23840,
   40525,
   6456,
+  'https://openuserjs.org/install/Patabugen/Always_Remember_Me.user.js',
+  'https://openuserjs.org/install/nokeya/Direct_links_out.user.js',
+  'https://github.com/jijirae/y2monkey/raw/main/y2monkey.user.js',
+  'https://github.com/jijirae/r2monkey/raw/main/r2monkey.user.js',
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/Manga_OnlineViewer.user.js',
   'https://github.com/jesus2099/konami-command/raw/master/INSTALL-USER-SCRIPT.user.js',
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js'
@@ -180,9 +195,6 @@ const getUAData = () => {
   if (userjs.isMobile !== undefined) {
     return userjs.isMobile;
   }
-  // if (typeof userjs.isMobile !== 'undefined') {
-  //   return userjs.isMobile;
-  // }
   try {
     const { navigator } = safeSelf();
     if (navigator) {
@@ -279,6 +291,39 @@ const DEFAULT_CONFIG = {
   recommend: {
     author: true,
     others: true
+  },
+  filters: {
+    ASCII: {
+      enabled: false,
+      name: 'Non-ASCII',
+      regExp: '[^\\x00-\\x7F\\s]+'
+    },
+    Latin: {
+      enabled: false,
+      name: 'Non-Latin',
+      regExp: '[^\\u0000-\\u024F\\u2000-\\u214F\\s]+'
+    },
+    Games: {
+      enabled: false,
+      name: 'Games',
+      flag: 'iu',
+      regExp:
+        'Aimbot|AntiGame|Agar|agar\\.io|alis\\.io|angel\\.io|ExtencionRipXChetoMalo|AposBot|DFxLite|ZTx-Lite|AposFeedingBot|AposLoader|Balz|Blah Blah|Orc Clan Script|Astro\\s*Empires|^\\s*Attack|^\\s*Battle|BiteFight|Blood\\s*Wars|Bloble|Bonk|Bots|Bots4|Brawler|\\bBvS\\b|Business\\s*Tycoon|Castle\\s*Age|City\\s*Ville|chopcoin\\.io|Comunio|Conquer\\s*Club|CosmoPulse|cursors\\.io|Dark\\s*Orbit|Dead\\s*Frontier|Diep\\.io|\\bDOA\\b|doblons\\.io|DotD|Dossergame|Dragons\\s*of\\s*Atlantis|driftin\\.io|Dugout|\\bDS[a-z]+\\n|elites\\.io|Empire\\s*Board|eRep(ublik)?|Epicmafia|Epic.*War|ExoPlanet|Falcon Tools|Feuerwache|Farming|FarmVille|Fightinfo|Frontier\\s*Ville|Ghost\\s*Trapper|Gladiatus|Goalline|Gondal|gota\\.io|Grepolis|Hobopolis|\\bhwm(\\b|_)|Ikariam|\\bIT2\\b|Jellyneo|Kapi\\s*Hospital|Kings\\s*Age|Kingdoms?\\s*of|knastv(o|oe)gel|Knight\\s*Fight|\\b(Power)?KoC(Atta?ck)?\\b|\\bKOL\\b|Kongregate|Krunker|Last\\s*Emperor|Legends?\\s*of|Light\\s*Rising|lite\\.ext\\.io|Lockerz|\\bLoU\\b|Mafia\\s*(Wars|Mofo)|Menelgame|Mob\\s*Wars|Mouse\\s*Hunt|Molehill\\s*Empire|MooMoo|MyFreeFarm|narwhale\\.io|Neopets|NeoQuest|Nemexia|\\bOGame\\b|Ogar(io)?|Pardus|Pennergame|Pigskin\\s*Empire|PlayerScripts|pokeradar\\.io|Popmundo|Po?we?r\\s*(Bot|Tools)|PsicoTSI|Ravenwood|Schulterglatze|Skribbl|slither\\.io|slitherplus\\.io|slitheriogameplay|SpaceWars|splix\\.io|Survivio|\\bSW_[a-z]+\\n|\\bSnP\\b|The\\s*Crims|The\\s*West|torto\\.io|Travian|Treasure\\s*Isl(and|e)|Tribal\\s*Wars|TW.?PRO|Vampire\\s*Wars|vertix\\.io|War\\s*of\\s*Ninja|World\\s*of\\s*Tanks|West\\s*Wars|wings\\.io|\\bWoD\\b|World\\s*of\\s*Dungeons|wtf\\s*battles|Wurzelimperium|Yohoho|Zombs'
+    },
+    SocialNetworks: {
+      enabled: false,
+      name: 'Social Networks',
+      flag: 'iu',
+      regExp:
+        'Face\\s*book|Google(\\+| Plus)|\\bHabbo|Kaskus|\\bLepra|Leprosorium|MySpace|meinVZ|odnoklassniki|Одноклассники|Orkut|sch(ue|ü)ler(VZ|\\.cc)?|studiVZ|Unfriend|Valenth|VK|vkontakte|ВКонтакте|Qzone|Twitter|TweetDeck'
+    },
+    Clutter: {
+      enabled: false,
+      name: 'Clutter',
+      flag: 'iu',
+      regExp:
+        "^\\s*(.{1,3})\\1+\\n|^\\s*(.+?)\\n+\\2\\n*$|^\\s*.{1,5}\\n|do\\s*n('|o)?t (install|download)|nicht installieren|(just )?(\\ban? |\\b)test(ing|s|\\d|\\b)|^\\s*.{0,4}test.{0,4}\\n|\\ntest(ing)?\\s*|^\\s*(\\{@|Smolka|Hacks)|\\[\\d{4,5}\\]|free\\s*download|theme|(night|dark) ?(mode)?"
+    }
   }
 };
 //#region i18n
@@ -1112,7 +1157,7 @@ class Container {
       mouse: new Timeout()
     };
 
-    this.injFN = () => {}
+    this.injFN = () => {};
 
     window.addEventListener('beforeunload', this.remove);
   }
@@ -1816,9 +1861,6 @@ function primaryFN() {
         }
       }
       // dom.prop(cfgMap.get('blacklist'), 'value', JSON.stringify(cfg.blacklist, null, ' '));
-      // for (const [k, v] of Object.entries(cfg.blacklist)) {
-      //   dom.prop(cfgMap.get(k), 'value', v);
-      // }
       for (const [k, v] of Object.entries(cfg.theme)) {
         dom.prop(cfgMap.get(k), 'value', v);
       }
@@ -2098,16 +2140,10 @@ function primaryFN() {
                         container.cache.clear();
                         if (config.autofetch) {
                           respHandles.build();
-                        };
+                        }
                         container.unsaved = false;
                         container.rebuild = false;
                       });
-                      // container.save();
-                      // sleazyRedirect();
-                      // container.cache.clear();
-                      // MUList.build();
-                      // container.unsaved = false;
-                      // container.rebuild = false;
                     } else {
                       log(`Imported theme: { ${file.name} }`, result);
                       cfg.theme = result;
@@ -2770,6 +2806,39 @@ function primaryFN() {
       return tr;
     };
     // #endregion
+    const loadFilters = () => {
+      const resp = [];
+      for (const v of Object.values(cfg.filters)) {
+        if (!v.enabled) {
+          continue;
+        }
+        resp.push(new RegExp(v.regExp, v.flag));
+      }
+      return {
+        regExp: resp,
+        get(name) {
+          for (const v of Object.values(cfg.filters)) {
+            if (v.name === name) {
+              return new RegExp(v.regExp, v.flag)
+            };
+          }
+          // return resp.find(r => r.name === name);
+        },
+        match({ name, users }) {
+          if (isBlank(resp)) {
+            return true;
+          }
+          const strArr = [{ name }, ...users];
+          for (const r of resp) {
+            const v = strArr.find((o) => o.name.match(r));
+            if (v) {
+              return false;
+            }
+          }
+          return true;
+        }
+      };
+    };
     // #region List
     class List {
       engines;
@@ -2836,6 +2905,7 @@ function primaryFN() {
           const customRecords = [];
           const host = this.host;
           const arr = [];
+          const bsFilter = loadFilters();
 
           for (const engine of this.engines) {
             const cEngine = this.cache[`${engine.name}`];
@@ -2848,9 +2918,6 @@ function primaryFN() {
               updateCounter(cEngine.length, engine);
               continue;
             }
-            // if (!cfg.autofetch) {
-            //   continue;
-            // }
             const respError = (error) => {
               if (!error.cause) error.cause = engine.name;
               if (error.message.startsWith('429')) {
@@ -2986,7 +3053,10 @@ function primaryFN() {
                 : Array.isArray(dataQ.query)
                   ? dataQ.query
                   : [];
-              const dataA = dq.filter(Boolean).filter((d) => !d.deleted);
+              const dataA = dq
+                .filter(Boolean)
+                .filter((d) => !d.deleted)
+                .filter(bsFilter.match);
               if (isBlank(dataA)) {
                 return;
               }
@@ -3068,6 +3138,9 @@ function primaryFN() {
                         ]
                       })
                     );
+                    if (bsFilter.match(ujs)) {
+                      continue;
+                    }
                     if (cfg.codePreview && !ujs._mujs.code.data) {
                       await ujs._mujs.code.request();
                     }
@@ -3106,6 +3179,9 @@ function primaryFN() {
                       ]
                     })
                   );
+                  if (bsFilter.match(ujs)) {
+                    continue;
+                  }
                   if (cfg.codePreview && !ujs._mujs.code.data) {
                     await ujs._mujs.code.request();
                   }
@@ -3188,6 +3264,20 @@ function primaryFN() {
     // #endregion
     // #region Make Config
     const makecfg = () => {
+      const cbtn = make('mu-js', 'mujs-sty-flex');
+      const savebtn = make('mujs-btn', 'save', {
+        textContent: i18n$('save'),
+        dataset: {
+          command: 'save'
+        },
+        disabled: false
+      });
+      const resetbtn = make('mujs-btn', 'reset', {
+        textContent: i18n$('reset'),
+        dataset: {
+          command: 'reset'
+        }
+      });
       const makesection = (name, tag) => {
         tag = tag ?? i18n$('no_license');
         name = name ?? i18n$('no_license');
@@ -3220,11 +3310,23 @@ function primaryFN() {
             }
           }
         });
+
         lb.append(divDesc);
         sec.append(lb);
         cfgpage.append(sec);
         return sec;
       };
+
+      const sections = {
+        general: makesection('General', 'general'),
+        load: makesection('Automation', 'load'),
+        list: makesection('List', 'list'),
+        filters: makesection('List Filters', 'filters'),
+        blacklist: makesection('Blacklist (WIP)', 'blacklist'),
+        // engine: makesection('Search Engine', 'engine'),
+        theme: makesection('Theme Colors', 'theme')
+      };
+
       const makerow = (desc, type = null, nm, attrs = {}) => {
         desc = desc ?? i18n$('no_license');
         nm = nm ?? i18n$('no_license');
@@ -3266,8 +3368,8 @@ function primaryFN() {
             return inp;
           }
           if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
-            for (const engine of cfg.engines) {
-              if (engine.name !== nm) continue;
+            const engine = cfg.engines.find((engine) => engine.name === nm);
+            if (engine) {
               inp.checked = engine.enabled;
               inp.dataset.engine = engine.name;
               ael(inp, 'change', (evt) => {
@@ -3333,41 +3435,79 @@ function primaryFN() {
         }
         return inp;
       };
-      if (isGM) {
-        makerow(i18n$('userjs_sync'), 'checkbox', 'cache');
-        makerow(i18n$('userjs_autoinject'), 'checkbox', 'autoinject');
-      }
-      makerow(i18n$('auto_fetch'), 'checkbox', 'autofetch');
-      makerow(i18n$('userjs_fullscreen'), 'checkbox', 'autoexpand', {
-        onchange(e) {
-          if (e.target.checked) {
-            dom.cl.add([btnfullscreen, main], 'expanded');
-            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
-          } else {
-            dom.cl.remove([btnfullscreen, main], 'expanded');
-            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsOpen'));
+      const mkSection = (text, value, type = 'checkbox', tag = 'general', attrs = {}) => {
+        cfgMap.set(text, value);
+        const lb = make('label', 'sub-section hidden', {
+          textContent: text,
+          dataset: {
+            [tag]: text
           }
-        }
-      });
-      makerow(i18n$('redirect'), 'checkbox', 'sleazyredirect');
-      makerow(i18n$('filter'), 'checkbox', 'filterlang');
-      makerow(i18n$('preview_code'), 'checkbox', 'codePreview');
-      for (const inp of [
-        makerow('Recommend author', 'checkbox', 'recommend-author'),
-        makerow('Recommend scripts', 'checkbox', 'recommend-others')
-      ]) {
-        const nm = inp.dataset.name === 'recommend-author' ? 'author' : 'others';
-        inp.checked = cfg.recommend[nm];
-        ael(inp, 'change', (evt) => {
-          container.unsaved = true;
-          cfg.recommend[nm] = evt.target.checked;
         });
+        const inp = make('input', '', {
+          type,
+          dataset: {
+            [tag]: text
+          },
+          ...attrs
+        });
+
+        if (sections[tag]) {
+          sections[tag].append(lb);
+        }
+
+        if (type === 'checkbox') {
+          const inlab = make('mu-js', 'mujs-inlab');
+          const la = make('label', '', {
+            onclick() {
+              inp.dispatchEvent(new MouseEvent('click'));
+            }
+          });
+          inlab.append(inp, la);
+          lb.append(inlab);
+
+          const nm = /^(\w+)-(.+)/.exec(value);
+          if (nm) {
+            if (nm[1] === 'filters') {
+              inp.checked = cfg[nm[1]][nm[2]].enabled;
+            } else {
+              inp.checked = cfg[nm[1]][nm[2]];
+            }
+          } else {
+            inp.checked = cfg[value];
+          }
+          ael(inp, 'change', (evt) => {
+            container.unsaved = true;
+            if (/filterlang/i.test(value)) {
+              container.rebuild = true;
+            }
+            if (nm) {
+              if (nm[1] === 'filters') {
+                cfg[nm[1]][nm[2]].enabled = evt.target.checked;
+              } else {
+                cfg[nm[1]][nm[2]] = evt.target.checked;
+              }
+            } else {
+              cfg[value] = evt.target.checked;
+            }
+          });
+        } else {
+          if (type === 'text') {
+            inp.defaultValue = '';
+            inp.value = value ?? '';
+            inp.placeholder = value ?? '';
+          }
+
+          lb.append(inp);
+        }
+
+        return lb;
+      };
+      if (isGM) {
+        mkSection(i18n$('userjs_sync'), 'cache');
+        mkSection(i18n$('userjs_autoinject'), 'autoinject', 'checkbox', 'load');
       }
-      makerow('Greasy Fork', 'checkbox', 'greasyfork');
-      makerow('Sleazy Fork', 'checkbox', 'sleazyfork');
-      makerow('Open UserJS', 'checkbox', 'openuserjs');
-      makerow('GitHub API', 'checkbox', 'github');
-      makerow(`${i18n$('dtime')} (ms)`, 'number', 'time', {
+      mkSection(i18n$('redirect'), 'sleazyredirect');
+      mkSection(`${i18n$('dtime')} (ms)`, 'time', 'number', 'general', {
         defaultValue: 10000,
         value: cfg.time,
         min: 0,
@@ -3394,54 +3534,35 @@ function primaryFN() {
           }
         }
       });
-      const cbtn = make('mu-js', 'mujs-sty-flex');
-      const savebtn = make('mujs-btn', 'save', {
-        textContent: i18n$('save'),
-        dataset: {
-          command: 'save'
-        },
-        disabled: false
-      });
-      const resetbtn = make('mujs-btn', 'reset', {
-        textContent: i18n$('reset'),
-        dataset: {
-          command: 'reset'
+
+      mkSection(i18n$('auto_fetch'), 'autofetch', 'checkbox', 'load');
+      mkSection(i18n$('userjs_fullscreen'), 'autoexpand', 'checkbox', 'load', {
+        onchange(e) {
+          if (e.target.checked) {
+            dom.cl.add([btnfullscreen, main], 'expanded');
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
+          } else {
+            dom.cl.remove([btnfullscreen, main], 'expanded');
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsOpen'));
+          }
         }
       });
-      // const blacklist = make('textarea', '', {
-      //   dataset: {
-      //     name: 'blacklist'
-      //   },
-      //   rows: '10',
-      //   autocomplete: false,
-      //   spellcheck: false,
-      //   wrap: 'soft',
-      //   value: JSON.stringify(cfg.blacklist, null, ' '),
-      //   oninput(evt) {
-      //     let isvalid = true;
-      //     try {
-      //       cfg.blacklist = JSON.parse(evt.target.value);
-      //       isvalid = true;
-      //     } catch (ex) {
-      //       err(ex);
-      //       isvalid = false;
-      //     } finally {
-      //       if (isvalid) {
-      //         dom.cl.remove(evt.target, 'mujs-invalid');
-      //         dom.prop(savebtn, 'disabled', false);
-      //       } else {
-      //         dom.cl.add(evt.target, 'mujs-invalid');
-      //         dom.prop(savebtn, 'disabled', true);
-      //       }
-      //     }
-      //   }
-      // });
-      // cfgMap.set('blacklist', blacklist);
-      cbtn.append(resetbtn, savebtn);
 
-      const themeSec = makesection('Theme Colors', 'theme');
+      mkSection(i18n$('filter'), 'filterlang', 'checkbox', 'list');
+      mkSection(i18n$('preview_code'), 'codePreview', 'checkbox', 'list');
+      mkSection('Recommend author', 'recommend-author', 'checkbox', 'list');
+      mkSection('Recommend scripts', 'recommend-others', 'checkbox', 'list');
+
+      for (const [k, v] of Object.entries(cfg.filters)) {
+        mkSection(v.name, `filters-${k}`, 'checkbox', 'filters');
+      }
+
+      makerow('Greasy Fork', 'checkbox', 'greasyfork');
+      makerow('Sleazy Fork', 'checkbox', 'sleazyfork');
+      makerow('Open UserJS', 'checkbox', 'openuserjs');
+      makerow('GitHub API', 'checkbox', 'github');
+
       for (const [k, v] of Object.entries(cfg.theme)) {
-        cfgMap.set(k, v);
         const lb = make('label', 'hidden', {
           textContent: k,
           dataset: {
@@ -3465,7 +3586,6 @@ function primaryFN() {
               const prop = sty.getPropertyValue(str);
               if (isEmpty(val)) {
                 cfg.theme[k] = DEFAULT_CONFIG.theme[k];
-                cfgMap.set(k, DEFAULT_CONFIG.theme[k]);
                 sty.removeProperty(str);
                 return;
               }
@@ -3475,7 +3595,6 @@ function primaryFN() {
               sty.removeProperty(str);
               sty.setProperty(str, val);
               cfg.theme[k] = val;
-              cfgMap.set(k, val);
             } catch (ex) {
               err(ex);
               isvalid = false;
@@ -3490,11 +3609,11 @@ function primaryFN() {
             }
           }
         });
+        cfgMap.set(k, inp);
         lb.append(inp);
-        themeSec.append(lb);
+        sections.theme.append(lb);
       }
 
-      const listSec = makesection('Blacklist (WIP)', 'blacklist');
       const createList = (key, v = '', disabled = false, type = 'String') => {
         let txt = key;
         if (typeof key === 'string') {
@@ -3503,7 +3622,7 @@ function primaryFN() {
             const s = key.substring(7);
             txt = `Built-in "${s}"`;
             v = builtinList[s];
-          };
+          }
         } else {
           if (!key.enabled) {
             return;
@@ -3539,9 +3658,6 @@ function primaryFN() {
               if (isEmpty(val)) {
                 return;
               }
-              // if (isRegExp(val)) {
-              //   v = val.toString();
-              // };
               isvalid = true;
             } catch (ex) {
               err(ex);
@@ -3577,12 +3693,41 @@ function primaryFN() {
               textContent: selV
             });
             selType.append(o);
-          };
+          }
         }
         selType.value = type;
         lb.append(inp, selType);
-        listSec.append(lb);
+        sections.blacklist.append(lb);
       };
+      // const blacklist = make('textarea', '', {
+      //   dataset: {
+      //     name: 'blacklist'
+      //   },
+      //   rows: '10',
+      //   autocomplete: false,
+      //   spellcheck: false,
+      //   wrap: 'soft',
+      //   value: JSON.stringify(cfg.blacklist, null, ' '),
+      //   oninput(evt) {
+      //     let isvalid = true;
+      //     try {
+      //       cfg.blacklist = JSON.parse(evt.target.value);
+      //       isvalid = true;
+      //     } catch (ex) {
+      //       err(ex);
+      //       isvalid = false;
+      //     } finally {
+      //       if (isvalid) {
+      //         dom.cl.remove(evt.target, 'mujs-invalid');
+      //         dom.prop(savebtn, 'disabled', false);
+      //       } else {
+      //         dom.cl.add(evt.target, 'mujs-invalid');
+      //         dom.prop(savebtn, 'disabled', true);
+      //       }
+      //     }
+      //   }
+      // });
+      // cfgMap.set('blacklist', blacklist);
       // const addList = make('mujs-add', '', {
       //   textContent: '+',
       //   dataset: {
@@ -3619,17 +3764,13 @@ function primaryFN() {
         createList(key);
       }
 
+      cbtn.append(resetbtn, savebtn);
       cfgpage.append(cbtn);
-      // cfgpage.append(blacklist, theme, cbtn);
     };
     // #endregion
     container.tab.custom = (host) => {
       MUList.host = host;
       respHandles.build();
-      // if (cfg.autofetch) {
-      //   respHandles.build();
-      // }
-      // MUList.build();
     };
     ael(mainframe, 'mouseenter', (evt) => {
       evt.preventDefault();
@@ -3766,6 +3907,54 @@ function primaryFN() {
             }
           }
         }
+      } else if (val.match(/^filter:/)) {
+        const parts = /^\w+:(.+)/.exec(val);
+        if (parts) {
+          const bsFilter = loadFilters();
+          const p = parts[1].trim().toLocaleLowerCase();
+          for (const [key, value] of Object.entries(cfg.filters)) {
+            const k = key.trim().toLocaleLowerCase();
+            const v = value.name.trim().toLocaleLowerCase();
+            if (p.includes(k) || p.includes(v)) {
+              const reg = bsFilter.get(value.name);
+              if (reg) {
+                [...userjsCache.values()].filter(({ name, users, _mujs }) => {
+                  const elem = _mujs.root;
+                  if (!isElem(elem)) {
+                    return false;
+                  }
+                  if (finds.has(elem)) {
+                    return false;
+                  }
+                  const strArr = [{ name }, ...users];
+                  const v = strArr.find((o) => o.name.match(reg));
+                  if (v) {
+                    return false;
+                  }
+                  finds.add(elem);
+                  return true;
+                });
+              }
+            }
+          }
+        }
+      } else if (val.match(/^recommend:/)) {
+        for (const v of userjsCache.values()) {
+          const elem = v._mujs.root;
+          if (!isElem(elem)) {
+            continue;
+          }
+          if (finds.has(elem)) {
+            continue;
+          }
+          if (v.users.find(u => u.id === authorID)) {
+            finds.add(elem);
+          } else if (goodUserJS.includes(v.url)) {
+            finds.add(elem);
+          } else if (goodUserJS.includes(v.id)) {
+            finds.add(elem);
+          }
+        }
       } else {
         const reg = new RegExp(val, 'gi');
         for (const v of userjsCache.values()) {
@@ -3817,10 +4006,6 @@ function primaryFN() {
           tabHost.textContent = '<All Sites>';
           MUList.host = val;
           respHandles.build();
-          // if (cfg.autofetch) {
-          //   respHandles.build();
-          // }
-          // MUList.build();
           return;
         }
         const value = container.getHost(val);
@@ -3833,10 +4018,6 @@ function primaryFN() {
         tabHost.textContent = value;
         MUList.host = value;
         respHandles.build();
-        // if (cfg.autofetch) {
-        //   respHandles.build();
-        // }
-        // MUList.build();
         return;
       }
     });
