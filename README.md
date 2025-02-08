@@ -27,11 +27,7 @@ Finds available UserScripts for the current webpage, the power of [Greasy Fork](
 **UserScript:**
 
 > [!IMPORTANT]
-> If the current webpage is set to block resources through CSP
->
-> It will cause the UserScript not work for that webpage!
->
-> [https://developer.mozilla.org/docs/Web/HTTP/CSP](https://developer.mozilla.org/docs/Web/HTTP/CSP)
+> The UserScript only works on `HTTPS`([https://example.com](https://example.com))
 
 * [Greasy Fork](https://greasyfork.org/scripts/421603)
 * [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - outdated
@@ -44,14 +40,14 @@ Finds available UserScripts for the current webpage, the power of [Greasy Fork](
 * [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/userscript-plus/)
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
 
-Available for desktop and Android versions.
+Works for desktop and mobile versions.
 
 *Chromium:*
 
 * ~~[Chrome Web Store](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)~~
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
 
-Userscript+ should be compatible with any Chromium-based browser
+Magic Userscript+ should be compatible with any Chromium-based browser
 
 **(Not Recommended) Bookmarklet:**
 
@@ -65,7 +61,11 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 
 * Designed for mobile and desktop devices
 * Support multiple languages - date formats will match your current language
-* Query UserScripts from [Greasy Fork](https://greasyfork.org), [Sleazy Fork](https://sleazyfork.org), [Open UserJS](https://openuserjs.org), [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript==") ( requires a [Personal Access Token](https://github.com/settings/tokens), the token does not require any permissions )
+* Query UserScripts from:
+  * [Greasy Fork](https://greasyfork.org)
+  * [Sleazy Fork](https://sleazyfork.org)
+  * [Open UserJS](https://openuserjs.org) ( limited availability, will read `Too many requests...` if limit is reached )
+  * [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript==") ( requires [Personal Access Token](https://github.com/settings/tokens), no permissions are required )
 * Customize the theme
 * Import / export config and theme
 * Search for UserScripts

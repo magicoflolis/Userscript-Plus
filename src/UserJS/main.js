@@ -125,19 +125,28 @@ function safeSelf() {
   return userjs.safeSelf;
 }
 
-let trusedPolicy = false;
-function setTrust() {
-  if (trusedPolicy) {
-    return;
+const trustedTypes = {
+  policy: false,
+  init() {
+    if (this.policy) {
+      return this.policy;
+    }
+    this.policy = true;
+    try {
+      // Native implementation exists
+      if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        window.trustedTypes.createPolicy('default', {
+          createHTML: (string) => string
+        });
+      }
+    } catch (ex) {
+      ex.cause = 'trustedTypes.init()';
+      err(ex);
+    }
+    return this.policy;
   }
-  if (window.trustedTypes && window.trustedTypes.createPolicy) {
-    window.trustedTypes.createPolicy('default', {
-      createHTML: (string) => string
-    });
-    trusedPolicy = true;
-  }
-}
-setTrust();
+};
+trustedTypes.init();
 
 const BLANK_PAGE = 'about:blank';
 // Lets highlight me :)
@@ -209,6 +218,8 @@ const builtinList = {
  * @type { import("../typings/types.d.ts").config }
  */
 const DEFAULT_CONFIG = {
+  autofetch: true,
+  autoinject: true,
   cache: true,
   codePreview: false,
   autoexpand: false,
@@ -1101,6 +1112,8 @@ class Container {
       mouse: new Timeout()
     };
 
+    this.injFN = () => {}
+
     window.addEventListener('beforeunload', this.remove);
   }
   /**
@@ -1126,6 +1139,9 @@ class Container {
     try {
       doc.documentElement.appendChild(this.frame);
       if (this.injected) {
+        if (isFN(this.injFN.build)) {
+          this.injFN.build();
+        }
         return;
       }
       this.shadowRoot.append(this.root);
@@ -1135,7 +1151,7 @@ class Container {
       this.injected = true;
       this.initFn();
       if (this.elementsReady && isFN(callback)) {
-        callback.call(this, this.shadowRoot);
+        this.injFN = callback.call(this, this.shadowRoot);
       }
     } catch (ex) {
       err(ex);
@@ -1252,8 +1268,6 @@ class Container {
             this.intFN(host);
           } else {
             this.custom(host);
-            // MUList.host = host;
-            // MUList.build();
           }
         }
       }
@@ -1529,7 +1543,7 @@ class Container {
   async save() {
     this.unsaved = false;
     await StorageSystem.setValue('Config', cfg);
-    info('Saved:', cfg);
+    info('Saved config:', cfg);
     return cfg;
   }
   /**
@@ -1703,17 +1717,17 @@ class Container {
   }
   showError(...ex) {
     err(...ex);
-    const { createTextNode } = safeSelf();
     const error = make('mu-js', 'error');
     let str = '';
     for (const e of ex) {
-      str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message} ${e.stack ?? ''}`}\n`;
+      str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message}${e.stack ? ` ${e.stack}` : ''}`}\n`;
       if (isObj(e)) {
         if (e.notify) {
           dom.cl.add(this.mainframe, 'error');
         }
       }
     }
+    const { createTextNode } = safeSelf();
     error.appendChild(createTextNode(str));
     this.footer.append(error);
   }
@@ -1750,6 +1764,9 @@ const container = new Container();
 // #endregion
 // #region Primary Function
 function primaryFN() {
+  const respHandles = {
+    build: async () => {}
+  };
   try {
     const { scheduler } = safeSelf();
     const {
@@ -1798,8 +1815,13 @@ function primaryFN() {
           }
         }
       }
-      dom.prop(cfgMap.get('blacklist'), 'value', JSON.stringify(cfg.blacklist, null, ' '));
-      dom.prop(cfgMap.get('theme'), 'value', JSON.stringify(cfg.theme, null, ' '));
+      // dom.prop(cfgMap.get('blacklist'), 'value', JSON.stringify(cfg.blacklist, null, ' '));
+      // for (const [k, v] of Object.entries(cfg.blacklist)) {
+      //   dom.prop(cfgMap.get(k), 'value', v);
+      // }
+      for (const [k, v] of Object.entries(cfg.theme)) {
+        dom.prop(cfgMap.get(k), 'value', v);
+      }
       container.renderTheme(cfg.theme);
     };
     const doInstallProcess = async (installLink) => {
@@ -1907,11 +1929,13 @@ function primaryFN() {
           container.rebuild = true;
           dom.prop(rateContainer, 'innerHTML', '');
           if (!dom.prop(target, 'disabled')) {
-            container.save();
+            const config = await container.save();
             sleazyRedirect();
             if (container.rebuild) {
               container.cache.clear();
-              MUList.build();
+              if (config.autofetch) {
+                respHandles.build();
+              }
             }
             container.unsaved = false;
             container.rebuild = false;
@@ -2069,12 +2093,21 @@ function primaryFN() {
                       container.unsaved = true;
                       container.rebuild = true;
                       rebuildCfg();
-                      container.save();
-                      sleazyRedirect();
-                      container.cache.clear();
-                      MUList.build();
-                      container.unsaved = false;
-                      container.rebuild = false;
+                      container.save().then((config) => {
+                        sleazyRedirect();
+                        container.cache.clear();
+                        if (config.autofetch) {
+                          respHandles.build();
+                        };
+                        container.unsaved = false;
+                        container.rebuild = false;
+                      });
+                      // container.save();
+                      // sleazyRedirect();
+                      // container.cache.clear();
+                      // MUList.build();
+                      // container.unsaved = false;
+                      // container.rebuild = false;
                     } else {
                       log(`Imported theme: { ${file.name} }`, result);
                       cfg.theme = result;
@@ -2724,6 +2757,10 @@ function primaryFN() {
         codeArea.value = code_obj.get_code_block();
       }
 
+      if (ujs._mujs.code?.translated) {
+        tr.classList.add('translated');
+      }
+
       for (const e of [fname, uframe, fdaily, fupdated, eframe]) {
         tr.append(e);
       }
@@ -2811,7 +2848,11 @@ function primaryFN() {
               updateCounter(cEngine.length, engine);
               continue;
             }
+            // if (!cfg.autofetch) {
+            //   continue;
+            // }
             const respError = (error) => {
+              if (!error.cause) error.cause = engine.name;
               if (error.message.startsWith('429')) {
                 showError(`Engine: "${engine.name}" Too many requests...`);
                 return;
@@ -3147,6 +3188,43 @@ function primaryFN() {
     // #endregion
     // #region Make Config
     const makecfg = () => {
+      const makesection = (name, tag) => {
+        tag = tag ?? i18n$('no_license');
+        name = name ?? i18n$('no_license');
+        const sec = make('mujs-section', '', {
+          dataset: {
+            name: tag
+          }
+        });
+        const lb = make('label', '', {
+          dataset: {
+            command: tag
+          }
+        });
+        const divDesc = make('mu-js', '', {
+          textContent: name
+        });
+        ael(sec, 'click', (evt) => {
+          /** @type { HTMLElement } */
+          const target = evt.target.closest('[data-command]');
+          if (!target) {
+            return;
+          }
+          const cmd = target.dataset.command;
+          if (cmd === tag) {
+            const a = qsA(`label[data-${tag}]`, sec);
+            if (dom.cl.has(a, 'hidden')) {
+              dom.cl.remove(a, 'hidden');
+            } else {
+              dom.cl.add(a, 'hidden');
+            }
+          }
+        });
+        lb.append(divDesc);
+        sec.append(lb);
+        cfgpage.append(sec);
+        return sec;
+      };
       const makerow = (desc, type = null, nm, attrs = {}) => {
         desc = desc ?? i18n$('no_license');
         nm = nm ?? i18n$('no_license');
@@ -3256,8 +3334,10 @@ function primaryFN() {
         return inp;
       };
       if (isGM) {
-        makerow('Sync with GM', 'checkbox', 'cache');
+        makerow(i18n$('userjs_sync'), 'checkbox', 'cache');
+        makerow(i18n$('userjs_autoinject'), 'checkbox', 'autoinject');
       }
+      makerow(i18n$('auto_fetch'), 'checkbox', 'autofetch');
       makerow(i18n$('userjs_fullscreen'), 'checkbox', 'autoexpand', {
         onchange(e) {
           if (e.target.checked) {
@@ -3328,72 +3408,228 @@ function primaryFN() {
           command: 'reset'
         }
       });
-      const blacklist = make('textarea', '', {
-        dataset: {
-          name: 'blacklist'
-        },
-        rows: '10',
-        autocomplete: false,
-        spellcheck: false,
-        wrap: 'soft',
-        value: JSON.stringify(cfg.blacklist, null, ' '),
-        oninput(evt) {
-          let isvalid = true;
-          try {
-            cfg.blacklist = JSON.parse(evt.target.value);
-            isvalid = true;
-          } catch (ex) {
-            err(ex);
-            isvalid = false;
-          } finally {
-            if (isvalid) {
-              dom.cl.remove(evt.target, 'mujs-invalid');
-              dom.prop(savebtn, 'disabled', false);
-            } else {
-              dom.cl.add(evt.target, 'mujs-invalid');
-              dom.prop(savebtn, 'disabled', true);
-            }
-          }
-        }
-      });
-      const theme = make('textarea', '', {
-        dataset: {
-          name: 'theme'
-        },
-        rows: '10',
-        autocomplete: false,
-        spellcheck: false,
-        wrap: 'soft',
-        value: JSON.stringify(cfg.theme, null, ' '),
-        oninput(evt) {
-          let isvalid = true;
-          try {
-            cfg.theme = JSON.parse(evt.target.value);
-            container.renderTheme(JSON.parse(evt.target.value));
-            isvalid = true;
-          } catch (ex) {
-            err(ex);
-            isvalid = false;
-          } finally {
-            if (isvalid) {
-              dom.cl.remove(evt.target, 'mujs-invalid');
-              dom.prop(savebtn, 'disabled', false);
-            } else {
-              dom.cl.add(evt.target, 'mujs-invalid');
-              dom.prop(savebtn, 'disabled', true);
-            }
-          }
-        }
-      });
-      cfgMap.set('blacklist', blacklist);
-      cfgMap.set('theme', theme);
+      // const blacklist = make('textarea', '', {
+      //   dataset: {
+      //     name: 'blacklist'
+      //   },
+      //   rows: '10',
+      //   autocomplete: false,
+      //   spellcheck: false,
+      //   wrap: 'soft',
+      //   value: JSON.stringify(cfg.blacklist, null, ' '),
+      //   oninput(evt) {
+      //     let isvalid = true;
+      //     try {
+      //       cfg.blacklist = JSON.parse(evt.target.value);
+      //       isvalid = true;
+      //     } catch (ex) {
+      //       err(ex);
+      //       isvalid = false;
+      //     } finally {
+      //       if (isvalid) {
+      //         dom.cl.remove(evt.target, 'mujs-invalid');
+      //         dom.prop(savebtn, 'disabled', false);
+      //       } else {
+      //         dom.cl.add(evt.target, 'mujs-invalid');
+      //         dom.prop(savebtn, 'disabled', true);
+      //       }
+      //     }
+      //   }
+      // });
+      // cfgMap.set('blacklist', blacklist);
       cbtn.append(resetbtn, savebtn);
-      cfgpage.append(blacklist, theme, cbtn);
+
+      const themeSec = makesection('Theme Colors', 'theme');
+      for (const [k, v] of Object.entries(cfg.theme)) {
+        cfgMap.set(k, v);
+        const lb = make('label', 'hidden', {
+          textContent: k,
+          dataset: {
+            theme: k
+          }
+        });
+        const inp = make('input', '', {
+          type: 'text',
+          defaultValue: '',
+          value: v ?? '',
+          placeholder: v ?? '',
+          dataset: {
+            theme: k
+          },
+          onchange(evt) {
+            let isvalid = true;
+            try {
+              const val = evt.target.value;
+              const sty = container.root.style;
+              const str = `--mujs-${k}`;
+              const prop = sty.getPropertyValue(str);
+              if (isEmpty(val)) {
+                cfg.theme[k] = DEFAULT_CONFIG.theme[k];
+                cfgMap.set(k, DEFAULT_CONFIG.theme[k]);
+                sty.removeProperty(str);
+                return;
+              }
+              if (prop === val) {
+                return;
+              }
+              sty.removeProperty(str);
+              sty.setProperty(str, val);
+              cfg.theme[k] = val;
+              cfgMap.set(k, val);
+            } catch (ex) {
+              err(ex);
+              isvalid = false;
+            } finally {
+              if (isvalid) {
+                dom.cl.remove(evt.target, 'mujs-invalid');
+                dom.prop(savebtn, 'disabled', false);
+              } else {
+                dom.cl.add(evt.target, 'mujs-invalid');
+                dom.prop(savebtn, 'disabled', true);
+              }
+            }
+          }
+        });
+        lb.append(inp);
+        themeSec.append(lb);
+      }
+
+      const listSec = makesection('Blacklist (WIP)', 'blacklist');
+      const createList = (key, v = '', disabled = false, type = 'String') => {
+        let txt = key;
+        if (typeof key === 'string') {
+          if (key.startsWith('userjs-')) {
+            disabled = true;
+            const s = key.substring(7);
+            txt = `Built-in "${s}"`;
+            v = builtinList[s];
+          };
+        } else {
+          if (!key.enabled) {
+            return;
+          }
+        }
+
+        if (isRegExp(v)) {
+          v = v.toString();
+          type = 'RegExp';
+        } else {
+          v = JSON.stringify(v);
+          type = 'Object';
+        }
+
+        const lb = make('label', 'hidden', {
+          textContent: txt,
+          dataset: {
+            blacklist: key
+          }
+        });
+        const inp = make('input', '', {
+          type: 'text',
+          defaultValue: '',
+          value: v ?? '',
+          placeholder: v ?? '',
+          dataset: {
+            blacklist: key
+          },
+          onchange(evt) {
+            let isvalid = true;
+            try {
+              const val = evt.target.value;
+              if (isEmpty(val)) {
+                return;
+              }
+              // if (isRegExp(val)) {
+              //   v = val.toString();
+              // };
+              isvalid = true;
+            } catch (ex) {
+              err(ex);
+              isvalid = false;
+            } finally {
+              if (isvalid) {
+                dom.cl.remove(evt.target, 'mujs-invalid');
+                dom.prop(savebtn, 'disabled', false);
+              } else {
+                dom.cl.add(evt.target, 'mujs-invalid');
+                dom.prop(savebtn, 'disabled', true);
+              }
+            }
+          }
+        });
+        const selType = make('select', '', {
+          disabled,
+          dataset: {
+            blacklist: key
+          }
+        });
+        if (disabled) {
+          inp.readOnly = true;
+          const o = make('option', '', {
+            value: type,
+            textContent: type
+          });
+          selType.append(o);
+        } else {
+          for (const selV of ['String', 'RegExp', 'Object']) {
+            const o = make('option', '', {
+              value: selV,
+              textContent: selV
+            });
+            selType.append(o);
+          };
+        }
+        selType.value = type;
+        lb.append(inp, selType);
+        listSec.append(lb);
+      };
+      // const addList = make('mujs-add', '', {
+      //   textContent: '+',
+      //   dataset: {
+      //     command: 'new-list'
+      //   }
+      // });
+      // const n = make('input', '', {
+      //   type: 'text',
+      //   defaultValue: '',
+      //   value: '',
+      //   placeholder: 'Name',
+      // });
+      // const inpValue = make('input', '', {
+      //   type: 'text',
+      //   defaultValue: '',
+      //   value: '',
+      //   placeholder: 'Value',
+      // });
+      // const label = make('label', 'new-list hidden', {
+      //   dataset: {
+      //     blacklist: 'new-list'
+      //   }
+      // });
+      // label.append(n, inpValue, addList);
+      // listSec.append(label);
+      // ael(addList, 'click', () => {
+      //   if (isEmpty(n.value) || isEmpty(inpValue.value)) {
+      //     return
+      //   };
+      //   createList(n.value, n.value, inpValue.value);
+      // });
+
+      for (const key of cfg.blacklist) {
+        createList(key);
+      }
+
+      cfgpage.append(cbtn);
+      // cfgpage.append(blacklist, theme, cbtn);
     };
     // #endregion
     container.tab.custom = (host) => {
       MUList.host = host;
-      MUList.build();
+      respHandles.build();
+      // if (cfg.autofetch) {
+      //   respHandles.build();
+      // }
+      // MUList.build();
     };
     ael(mainframe, 'mouseenter', (evt) => {
       evt.preventDefault();
@@ -3580,7 +3816,11 @@ function primaryFN() {
           tabHost.title = '<All Sites>';
           tabHost.textContent = '<All Sites>';
           MUList.host = val;
-          MUList.build();
+          respHandles.build();
+          // if (cfg.autofetch) {
+          //   respHandles.build();
+          // }
+          // MUList.build();
           return;
         }
         const value = container.getHost(val);
@@ -3592,17 +3832,30 @@ function primaryFN() {
         tabHost.title = value;
         tabHost.textContent = value;
         MUList.host = value;
-        MUList.build();
+        respHandles.build();
+        // if (cfg.autofetch) {
+        //   respHandles.build();
+        // }
+        // MUList.build();
         return;
       }
     });
-    scheduler.postTask(makecfg, { priority: 'user-visible' });
-    scheduler.postTask(MUList.build, { priority: 'background' }).then(timeoutFrame);
+    scheduler.postTask(makecfg, { priority: 'background' });
+
+    respHandles.build = async () => {
+      const time = await scheduler.postTask(MUList.build, { priority: 'background' });
+      return timeoutFrame(time);
+    };
+
+    if (cfg.autofetch) {
+      respHandles.build();
+    }
     dbg('Container', container);
   } catch (ex) {
     err(ex);
     container.remove();
   }
+  return respHandles;
 }
 // #endregion
 /**
@@ -3632,14 +3885,19 @@ const init = async () => {
   loadDOM((doc) => {
     try {
       if (window.location === null) {
-        throw new Error('"window.location" is null, reload the webpage or use a different one', { cause: 'loadDOM' });
+        throw new Error('"window.location" is null, reload the webpage or use a different one', {
+          cause: 'loadDOM'
+        });
       }
       if (doc === null) {
-        throw new Error('"doc" is null, reload the webpage or use a different one', { cause: 'loadDOM' });
+        throw new Error('"doc" is null, reload the webpage or use a different one', {
+          cause: 'loadDOM'
+        });
       }
-      setTrust();
+      trustedTypes.init();
       sleazyRedirect();
-      container.inject(primaryFN, doc);
+
+      if (cfg.autoinject) container.inject(primaryFN, doc);
 
       Command.register(i18n$('userjs_inject'), () => {
         container.inject(primaryFN, doc);

@@ -139,5 +139,14 @@
   },
   "userjs_close": {
     "message": "Fermer Userscript+"
+  },
+  "userjs_sync": {
+    "message": "Sync with UserScript Manager"
+  },
+  "userjs_autoinject": {
+    "message": "Inject on load"
+  },
+  "auto_fetch": {
+    "message": "Fetch on load"
   }
 }

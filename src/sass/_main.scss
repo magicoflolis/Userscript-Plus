@@ -672,6 +672,27 @@ mujs-body {
         }
       }
 
+      &.translated:not([data-good], [data-author]) {
+        mujs-a {
+          color: hsl(249, 56%, 65%);
+
+          &:hover {
+            color: hsl(249, 56%, 85%);
+          }
+        }
+
+        mu-jsbtn {
+          color: hsl(215, 47%, 85%);
+          background: hsl(249, 56%, 65%);
+          border-color: hsl(249, 56%, 65%);
+
+          &:hover {
+            background: hsl(249, 56%, 65%);
+            border-color: hsl(249, 56%, 65%);
+          }
+        }
+      }
+
       .mujs-ratings {
         &[data-el="good"] {
           border-color: hsl(120, 50%, 40%);
@@ -823,6 +844,19 @@ mujs-body {
       background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
     }
 
+    &[data-name='theme'],
+    &[data-name='blacklist'] {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      gap: 0.25em;
+
+      // mujs-add {
+      //   order: 999999999999;
+      //   font-size: 20px;
+      // }
+    }
+
     input[type='text']::-webkit-input-placeholder {
       color: var(--mujs-placeholder, hsl(81, 56%, 54%));
     }
@@ -844,8 +878,32 @@ mujs-body {
     }
 
     >label {
-      display: flex;
-      justify-content: space-between;
+
+      // [data-theme]
+      &:not([data-blacklist]) {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      // &[data-theme],
+      &[data-blacklist] {
+        display: grid;
+        grid-auto-flow: column;
+        &:not(.new-list) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      &.new-list {
+        order: 999999999999;
+
+        mujs-add {
+          font-size: 20px;
+        }
+      }
+
+      // display: flex;
+      // justify-content: space-between;
 
       input:not([type='checkbox']) {
         font-size: 14px;
@@ -874,6 +932,7 @@ mujs-body {
       //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
       // }
     }
+
     >input {
       width: 100%;
       width: -moz-available;
@@ -1019,7 +1078,7 @@ mu-jsbtn {
 mujs-a,
 mu-jsbtn,
 .mujs-pointer,
-.mujs-cfg mujs-section *:not(input[type='password'], input[type='text'], input[type='number']),
+.mujs-cfg mujs-section *:not(input[type='password'], input[type='text'], input[type='number'], [data-theme], [data-blacklist]),
 .mainbtn,
 .mainframe,
 mujs-btn {

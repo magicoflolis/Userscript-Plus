@@ -100,6 +100,8 @@ export type UserJSEngine = {
 };
 
 export type config = {
+  autofetch: boolean;
+  autoinject: boolean;
   /**
    * Sync config with UserScript manager
    */

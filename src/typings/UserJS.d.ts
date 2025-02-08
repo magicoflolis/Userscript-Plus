@@ -25,20 +25,7 @@ export interface safeHandles {
  *
  * This method is based on uBlock Origin [scriptlets.js](https://github.com/gorhill/uBlock/blob/master/assets/resources/scriptlets.js)
  */
-export declare function safeSelf(): {
-  // trustedTypes: {
-  //   createPolicy(): void;
-  // };
-  XMLHttpRequest: typeof XMLHttpRequest;
-  createElement: typeof document.createElement;
-  createElementNS: typeof document.createElementNS;
-  createTextNode: typeof document.createTextNode;
-  setTimeout: typeof setTimeout;
-  clearTimeout: typeof clearTimeout;
-  navigator: typeof navigator;
-  /** Taken from [scheduler-polyfill](https://github.com/GoogleChromeLabs/scheduler-polyfill) */
-  scheduler: typeof scheduler;
-};
+export declare function safeSelf(): safeHandles;
 
 export declare function loadCSS(css: string, name: string): HTMLStyleElement | undefined;
 
