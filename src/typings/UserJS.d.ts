@@ -19,6 +19,75 @@ export interface safeHandles {
   scheduler: typeof scheduler;
 }
 
+export interface Translations {
+  createdby: string;
+  name: string;
+  daily_installs: string;
+  close: string;
+  filterA: string;
+  max: string;
+  min: string;
+  search: string;
+  search_placeholder: string;
+  install: string;
+  issue: string;
+  version_number: string;
+  updated: string;
+  total_installs: string;
+  ratings: string;
+  good: string;
+  ok: string;
+  bad: string;
+  created_date: string;
+  redirect: string;
+  filter: string;
+  dtime: string;
+  save: string;
+  reset: string;
+  preview_code: string;
+  saveFile: string;
+  newTab: string;
+  applies_to: string;
+  license: string;
+  no_license: string;
+  antifeatures: string;
+  userjs_fullscreen: string;
+  listing_none: string;
+  export_config: string;
+  export_theme: string;
+  import_config: string;
+  import_theme: string;
+  code_size: string;
+  prmpt_css: string;
+  userjs_inject: string;
+  userjs_close: string;
+  userjs_sync: string;
+  userjs_autoinject: string;
+  auto_fetch: string;
+}
+
+export interface LanguageTranslations {
+  ar: Translations;
+  de: Translations;
+  en: Translations;
+  en_GB: Translations;
+  es: Translations;
+  fr: Translations;
+  ja: Translations;
+  nl: Translations;
+  pl: Translations;
+  ru: Translations;
+  zh: Translations;
+  zh_CN: Translations;
+  zh_TW: Translations;
+}
+
+// export declare const translations: LanguageTranslations;
+
+export declare function i18n$<K extends keyof Translations>(
+  key: string
+): Translations[K] | 'Unknown';
+
 /**
  * Some sites will alter or remove document functions
  * To get around this we bind them to the `userjs` object
@@ -56,6 +125,7 @@ export declare function getGMInfo(): typeof GM_info;
 
 export interface StorageSystem {
   prefix: string;
+  events: Set<Function | number>;
   /**
    * Alias of `window.localStorage.getItem`
    */
@@ -72,6 +142,10 @@ export interface StorageSystem {
    * Alias of `window.localStorage.removeItem`
    */
   remove<K extends string>(key: K): void;
+
+  addListener<T>(name: string, callback: VMScriptGMValueChangeCallback<T>): number | void;
+
+  attach(): void;
 
   /**
    * Set value - Saves key to either GM managed storage or `window.localStorage`
@@ -134,18 +208,17 @@ export interface Container {
   shadowRoot?: ShadowRoot | HTMLElement;
   supported: boolean;
   frame: HTMLElement | HTMLIFrameElement;
-  cache: Map<string, {
-    [engine: string]: GSForkQuery[];
-  }>;
+  cache: Map<
+    string,
+    {
+      [engine: string]: GSForkQuery[];
+    }
+  >;
   userjsCache: Map<number, GSForkQuery[]>;
   root: HTMLElement;
   unsaved: boolean;
   isBlacklisted: boolean;
   rebuild: boolean;
-  counters: {
-    total: number;
-    [engine: string]: number;
-  };
   opacityMin: string;
   opacityMax: string;
   Timeout: new () => Timeout;

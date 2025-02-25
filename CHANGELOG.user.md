@@ -1,5 +1,34 @@
 # Changelog
 
+## v7.4.0
+
+* Merged https://github.com/magicoflolis/Userscript-Plus/pull/59
+* Added `githubusercontent.com` to `@connect`.
+* Added `autoSort` to config.
+* Added sorting to the following: "Total installs", "Ratings", "Created date".
+  * Still in the early stages, but functional
+* Reworked counter system.
+* Tweaked cache system.
+  * Reduced how often the script will cache something.
+* Cleaned up code.
+* Fixed minor issues.
+
+**Known Issues:**
+
+* Enabling a engine requires the page to be reloaded, while disabling a engine does not.
+  * This is caused by the cache system.
+* "Filter out other languages" may not filter _every_ userscript that is not in your language.
+* SVG elements don't load on every webpage, _can be blocked by the page, external script, or extensions._
+
+**TODO:**
+
+* Finish translations.
+* Finish blacklist section.
+* Finish config section.
+* Merge https://github.com/magicoflolis/Userscript-Plus/pull/64
+
+---
+
 ## v7.3.0
 
 * Re-organized config list.

@@ -119,29 +119,6 @@ function safeSelf() {
   return userjs.safeSelf;
 }
 
-const trustedTypes = {
-  policy: false,
-  init() {
-    if (this.policy) {
-      return this.policy;
-    }
-    this.policy = true;
-    try {
-      // Native implementation exists
-      if (window.trustedTypes && window.trustedTypes.createPolicy) {
-        window.trustedTypes.createPolicy('default', {
-          createHTML: (string) => string
-        });
-      }
-    } catch (ex) {
-      ex.cause = 'trustedTypes.init()';
-      err(ex);
-    }
-    return this.policy;
-  }
-};
-trustedTypes.init();
-
 const BLANK_PAGE = 'about:blank';
 // Lets highlight me :)
 const authorID = 166061;
@@ -149,6 +126,7 @@ const authorID = 166061;
  * Some UserJS I personally enjoy - `https://greasyfork.org/scripts/{{id}}`
  */
 const goodUserJS = [
+  33005,
   394820,
   438684,
   4870,
@@ -180,11 +158,9 @@ const goodUserJS = [
   'https://github.com/jesus2099/konami-command/raw/master/INSTALL-USER-SCRIPT.user.js',
   'https://github.com/TagoDR/MangaOnlineViewer/raw/master/dist/Manga_OnlineViewer_Adult.user.js'
 ];
-/**
- * Remove UserJS from banned accounts
- */
+/** Remove UserJS from banned accounts */
 const badUserJS = [478597];
-// Unsupport webpages for each engine
+/** Unsupport host for search engines */
 const engineUnsupported = {
   greasyfork: ['pornhub.com'],
   sleazyfork: ['pornhub.com'],
@@ -226,12 +202,15 @@ const builtinList = {
     pathname: '/hentai/.+/read/page/.+'
   }
 };
+// #region DEFAULT_CONFIG
 /**
  * @type { import("../typings/types.d.ts").config }
  */
 const DEFAULT_CONFIG = {
   autofetch: true,
   autoinject: true,
+  autoSort: 'daily_installs',
+  clearTabCache: true,
   cache: true,
   codePreview: false,
   autoexpand: false,
@@ -326,48 +305,46 @@ const DEFAULT_CONFIG = {
     }
   }
 };
-//#region i18n
+// #endregion
+// #region i18n
 class i18nHandler {
   constructor() {
-    /** @type { string[] } */
-    this.cache = [];
-
-    const { navigator } = safeSelf();
-    const { languages } = navigator;
-    for (const nlang of languages) {
-      const lg = nlang.split('-')[0];
-      if (this.cache.indexOf(lg) === -1) {
-        this.cache.push(lg);
-      }
+    if (userjs.pool !== undefined) {
+      return userjs.pool;
     }
-
-    const current = navigator.language.split('-')[0] ?? 'en';
-    if (!this.cache.includes(current)) {
-      this.cache.push(current);
+    userjs.pool = new Map();
+    for (const [k, v] of Object.entries(translations)) {
+      if (!userjs.pool.has(k)) userjs.pool.set(k, v);
     }
   }
+  /**
+   * @param {string | Date | number} str
+   */
   toDate(str = '') {
     const { navigator } = safeSelf();
-    return new Intl.DateTimeFormat(navigator.language).format(new Date(str));
+    return new Intl.DateTimeFormat(navigator.language).format(
+      typeof str === 'string' ? new Date(str) : str
+    );
   }
+  /**
+   * @param {number | bigint} number
+   */
   toNumber(number) {
     const { navigator } = safeSelf();
     return new Intl.NumberFormat(navigator.language).format(number);
   }
-  i18n$(...keys) {
+  /**
+   * @type { import("../typings/UserJS.d.ts").i18n$ }
+   */
+  i18n$(key) {
     const { navigator } = safeSelf();
     const current = navigator.language.split('-')[0] ?? 'en';
-    const list = translations[cfg.language] ?? translations[current];
-    const arr = [];
-    for (const key of keys) {
-      arr.push(list[key]);
-    }
-    return arr.length !== 1 ? arr : arr[0];
+    return userjs.pool.get(current)?.[key] ?? 'Unknown';
   }
 }
 const language = new i18nHandler();
 const { i18n$ } = language;
-//#endregion
+// #endregion
 // #region Utilities
 const union = (...arr) => [...new Set(arr.flat())];
 /**
@@ -396,20 +373,6 @@ const qsA = (selectors, root) => {
  * @type { import("../typings/types.d.ts").objToStr }
  */
 const objToStr = (obj) => Object.prototype.toString.call(obj);
-/**
- * @type { import("../typings/types.d.ts").strToURL }
- */
-const strToURL = (str) => {
-  const WIN_LOCATION = window.location ?? BLANK_PAGE;
-  try {
-    str = str ?? WIN_LOCATION;
-    return objToStr(str).includes('URL') ? str : new URL(str);
-  } catch (ex) {
-    ex.cause = 'strToURL';
-    err(ex);
-  }
-  return WIN_LOCATION;
-};
 /**
  * @type { import("../typings/types.d.ts").isRegExp }
  */
@@ -495,6 +458,7 @@ const ael = (el, type, listener, options = {}) => {
       elem.addEventListener(type, listener, options);
     }
   } catch (ex) {
+    ex.cause = 'ael';
     err(ex);
   }
 };
@@ -610,26 +574,12 @@ const dom = {
   },
   cl: {
     add(target, token) {
-      if (Array.isArray(token)) {
-        for (const elem of normalizeTarget(target)) {
-          elem.classList.add(...token);
-        }
-      } else {
-        for (const elem of normalizeTarget(target)) {
-          elem.classList.add(token);
-        }
-      }
+      token = Array.isArray(token) ? token : [token];
+      return normalizeTarget(target).some((elem) => elem.classList.add(...token));
     },
     remove(target, token) {
-      if (Array.isArray(token)) {
-        for (const elem of normalizeTarget(target)) {
-          elem.classList.remove(...token);
-        }
-      } else {
-        for (const elem of normalizeTarget(target)) {
-          elem.classList.remove(token);
-        }
-      }
+      token = Array.isArray(token) ? token : [token];
+      return normalizeTarget(target).some((elem) => elem.classList.remove(...token));
     },
     toggle(target, token, force) {
       let r;
@@ -639,12 +589,7 @@ const dom = {
       return r;
     },
     has(target, token) {
-      for (const elem of normalizeTarget(target)) {
-        if (elem.classList.contains(token)) {
-          return true;
-        }
-      }
-      return false;
+      return normalizeTarget(target).some((elem) => elem.classList.contains(token));
     }
   }
 };
@@ -761,6 +706,7 @@ const iconSVG = {
     try {
       if (typeof iconSVG[type].html === 'string') {
         svgElem.innerHTML = iconSVG[type].html;
+        dom.attr(svgElem, 'id', `mujs_${type ?? 'Unknown'}`);
       }
       // eslint-disable-next-line no-unused-vars
     } catch (ex) {
@@ -779,6 +725,7 @@ const iconSVG = {
  */
 const StorageSystem = {
   prefix: 'MUJS',
+  events: new Set(),
   getItem(key) {
     return window.localStorage.getItem(key);
   },
@@ -791,8 +738,47 @@ const StorageSystem = {
   remove(key) {
     window.localStorage.removeItem(key);
   },
+  addListener(name, callback) {
+    if (isGM) {
+      let GMType;
+      if (isFN(GM.addValueChangeListener)) {
+        GMType = GM.addValueChangeListener(name, callback);
+      } else if (isFN(GM_addValueChangeListener)) {
+        GMType = GM_addValueChangeListener(name, callback);
+      }
+      if (GMType) {
+        return this.events.add(GMType) && GMType;
+      }
+    }
+    return (
+      this.events.add(callback) &&
+      window.addEventListener('storage', (evt) => {
+        const { key, oldValue, newValue } = evt;
+        if (key === name) callback(key, oldValue, newValue, false);
+      })
+    );
+  },
+  attach() {
+    window.addEventListener('beforeunload', () => {
+      for (const e of this.events) {
+        if (isGM && typeof e === 'number' && !Number.isNaN(e)) {
+          if (isFN(GM.removeValueChangeListener)) {
+            GM.removeValueChangeListener(e);
+          } else if (isFN(GM_addValueChangeListener)) {
+            GM_removeValueChangeListener(e);
+          }
+        } else {
+          window.removeEventListener('storage', e);
+        }
+        this.events.delete(e);
+      }
+    });
+  },
   async setValue(key, v) {
-    v = typeof v === 'string' ? v : JSON.stringify(v ?? {});
+    if (!v) {
+      return;
+    }
+    v = typeof v === 'string' ? v : JSON.stringify(v);
     if (isGM) {
       if (isFN(GM.setValue)) {
         await GM.setValue(key, v);
@@ -861,9 +847,6 @@ const Network = {
       method,
       ...data
     };
-    if (params.hermes) {
-      delete params.hermes;
-    }
     if (isGM && !useFetch) {
       if (params.credentials) {
         Object.assign(params, {
@@ -914,8 +897,8 @@ const Network = {
             } else if (responseType.match(/clone/)) {
               resolve(check('clone'));
             } else if (responseType.match(/document/)) {
-              const domParser = new DOMParser();
               const respTxt = check('text');
+              const domParser = new DOMParser();
               if (respTxt instanceof Promise) {
                 respTxt.then((txt) => {
                   const doc = domParser.parseFromString(txt, 'text/html');
@@ -1011,33 +994,45 @@ const Network = {
     return txt.replaceAll(/\W/g, '');
   }
 };
-const sleazyRedirect = () => {
-  const locObj = window.top.location;
-  const { hostname } = locObj;
-  const gfSite = /greasyfork\.org/.test(hostname);
-  if (!gfSite && cfg.sleazyredirect) {
-    return;
-  }
-  const otherSite = gfSite ? 'sleazyfork' : 'greasyfork';
-  if (!qs('span.sign-in-link')) {
-    return;
-  }
-  if (!/scripts\/\d+/.test(locObj.href)) {
-    return;
-  }
-  if (
-    !qs('#script-info') &&
-    (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a'))
-  ) {
-    const str = locObj.href.replace(
-      /\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/,
-      '//$1' + otherSite + '.org'
-    );
-    info(`Redirecting to "${str}"`);
-    if (isFN(locObj.assign)) {
-      locObj.assign(str);
-    } else {
-      locObj.href = str;
+const Counter = {
+  cnt: {
+    total: {
+      count: 0
+    }
+  },
+  set(engine) {
+    if (!this.cnt[engine.name]) {
+      const counter = make('count-frame', engine.enabled ? '' : 'hidden', {
+        dataset: {
+          counter: engine.name
+        },
+        title: engine.query ? decodeURIComponent(engine.query) : engine.url,
+        textContent: '0'
+      });
+      this.cnt[engine.name] = {
+        root: counter,
+        count: 0
+      };
+      return counter;
+    }
+    return this.cnt[engine.name].root;
+  },
+  update(count, engine) {
+    this.cnt[engine.name].count += count;
+    this.cnt.total.count += count;
+    this.updateAll();
+  },
+  updateAll() {
+    for (const v of Object.values(this.cnt)) dom.text(v.root, v.count);
+  },
+  reset() {
+    for (const [k, v] of Object.entries(this.cnt)) {
+      dom.text(v.root, 0);
+      v.count = 0;
+      const engine = cfg.engines.find((engine) => k === engine.name);
+      if (engine) {
+        dom.cl[engine.enabled ? 'remove' : 'add'](v.root, 'hidden');
+      }
     }
   }
 };
@@ -1060,17 +1055,16 @@ class Container {
   unsaved;
   isBlacklisted;
   rebuild;
-  counters;
   opacityMin;
   opacityMax;
   constructor(url) {
     this.remove = this.remove.bind(this);
     this.refresh = this.refresh.bind(this);
-    this.updateCounter = this.updateCounter.bind(this);
-    this.updateCounters = this.updateCounters.bind(this);
     this.showError = this.showError.bind(this);
+    this.toArr = this.toArr.bind(this);
+    this.toElem = this.toElem.bind(this);
 
-    this.webpage = strToURL(url);
+    this.webpage = this.strToURL(url);
     this.host = this.getHost(this.webpage.host);
     this.domain = this.getDomain(this.webpage.host);
     this.ready = false;
@@ -1078,7 +1072,7 @@ class Container {
     this.shadowRoot = undefined;
     this.supported = isFN(make('main-userjs').attachShadow);
     this.frame = this.supported
-      ? make('main-userjs', '', {
+      ? make('main-userjs', {
           dataset: {
             insertedBy: $info.script.name,
             role: 'primary-container'
@@ -1108,9 +1102,9 @@ class Container {
         });
     if (this.supported) {
       this.shadowRoot = this.frame.attachShadow({
-        mode: 'open',
-        clonable: false,
-        delegatesfocus: false
+        mode: 'closed'
+        // clonable: false,
+        // delegatesfocus: false
       });
       this.ready = true;
     }
@@ -1120,9 +1114,6 @@ class Container {
     this.unsaved = false;
     this.isBlacklisted = false;
     this.rebuild = false;
-    this.counters = {
-      total: 0
-    };
     this.opacityMin = '0.15';
     this.opacityMax = '1';
     this.elementsReady = this.init();
@@ -1206,41 +1197,24 @@ class Container {
   initFn() {
     this.renderTheme(cfg.theme);
 
-    for (const engine of cfg.engines) {
-      if (engine.enabled) {
-        const counter = make('count-frame', '', {
-          dataset: {
-            counter: engine.name
-          },
-          title: engine.query ? decodeURIComponent(engine.query) : engine.url,
-          textContent: '0'
-        });
-        this.countframe.append(counter);
-      }
-      this.counters[engine.name] = 0;
-    }
-
-    const cfgpage = this.cfgpage;
-    const table = this.table;
-    const exBtn = this.exBtn;
-    const supported = this.supported;
-    const frame = this.frame;
-    const refresh = this.refresh;
-    const cache = this.cache;
-    const cHost = this.host;
-    const urlBar = this.urlBar;
+    Counter.cnt.total.root = this.mainbtn;
+    for (const engine of cfg.engines) this.countframe.append(Counter.set(engine));
+    const { cfgpage, table, exBtn, supported, frame, refresh, cache, urlBar, host } = this;
 
     class Tabs {
       /**
        * @param { HTMLElement } root
        */
       constructor(root) {
-        this.Tab = new Map();
+        /**
+         * @type { Set<HTMLElement> }
+         */
+        this.pool = new Set();
         this.blank = BLANK_PAGE;
         this.protocal = 'mujs:';
-        this.protoReg = new RegExp(`${this.protocal}(.+)`);
+        this.protoReg = new RegExp(`${this.protocal}(.+)`, 'i');
         this.el = {
-          add: make('mujs-addtab', '', {
+          add: make('mujs-addtab', {
             textContent: '+',
             dataset: {
               command: 'new-tab'
@@ -1253,43 +1227,23 @@ class Container {
         this.el.root.append(this.el.head);
         this.custom = () => {};
       }
-      hasTab(...params) {
-        for (const p of params) {
-          if (!this.Tab.has(p)) {
-            return false;
-          }
-          const content = normalizeTarget(this.Tab.get(p)).filter((t) => p === t.dataset.host);
-          if (isBlank(content)) {
-            return false;
-          }
-        }
-        return true;
+      /**
+       * @param {string} hostname
+       */
+      getTab(hostname) {
+        return [...this.pool].find(({ dataset }) => hostname === dataset.host);
       }
-      storeTab(host) {
-        const h = host ?? this.blank;
-        if (!this.Tab.has(h)) {
-          this.Tab.set(h, new Set());
-        }
-        return this.Tab.get(h);
+      getActive() {
+        return [...this.pool].find((tab) => tab.classList.contains('active'));
       }
-      cache(host, ...tabs) {
-        const h = host ?? this.blank;
-        const tabCache = this.storeTab(h);
-        for (const t of normalizeTarget(tabs)) {
-          if (tabCache.has(t)) {
-            continue;
-          }
-          tabCache.add(t);
-        }
-        this.Tab.set(h, tabCache);
-        return tabCache;
-      }
-      intFN(host) {
-        if (!host.startsWith(this.protocal)) {
+      /**
+       * @param {string} hostname
+       */
+      intFN(hostname) {
+        if (!hostname.startsWith(this.protocal)) {
           return;
         }
-        const type = host.match(this.protoReg)[1];
-        if (type === 'settings') {
+        if (hostname.match(this.protoReg)[1] === 'settings') {
           dom.cl.remove([cfgpage, exBtn], 'hidden');
           dom.cl.add(table, 'hidden');
           if (!supported) {
@@ -1297,67 +1251,60 @@ class Container {
           }
         }
       }
+      /**
+       * @param {HTMLElement} tab
+       * @param {boolean} [build]
+       */
       active(tab, build = true) {
-        for (const t of normalizeTarget(tab, false)) {
-          dom.cl.add([cfgpage, exBtn], 'hidden');
-          dom.cl.remove(table, 'hidden');
-          dom.cl.remove(qsA('mujs-tab', this.el.head), 'active');
-          dom.cl.add(t, 'active');
-          if (!build) {
-            continue;
-          }
-          const host = t.dataset.host ?? this.blank;
-          if (host === this.blank) {
-            refresh();
-          } else if (host.startsWith(this.protocal)) {
-            this.intFN(host);
-          } else {
-            this.custom(host);
-          }
+        if (!this.pool.has(tab)) this.pool.add(tab);
+        dom.cl.add([cfgpage, exBtn], 'hidden');
+        dom.cl.remove(table, 'hidden');
+        dom.cl.remove([...this.pool], 'active');
+        dom.cl.add(tab, 'active');
+        if (!build) {
+          return;
+        }
+        const host = tab.dataset.host ?? this.blank;
+        if (host === this.blank) {
+          refresh();
+        } else if (host.startsWith(this.protocal)) {
+          this.intFN(host);
+        } else {
+          this.custom(host);
         }
       }
       /** @param { HTMLElement } tab */
       close(tab) {
-        for (const t of normalizeTarget(tab, false)) {
-          const host = t.dataset.host;
-          if (cache.has(host)) {
-            cache.delete(host);
+        if (this.pool.has(tab)) this.pool.delete(tab);
+        const host = tab.dataset.host;
+        if (cfg.clearTabCache && cache.has(host)) cache.delete(host);
+        if (tab.classList.contains('active')) refresh();
+        const sibling = tab.nextElementSibling ?? tab.previousElementSibling;
+        if (sibling) {
+          if (sibling.dataset.command !== 'new-tab') {
+            this.active(sibling);
           }
-          if (dom.cl.has(t, 'active')) {
-            refresh();
-          }
-          const sibling = t.previousElementSibling ?? t.nextElementSibling;
-          if (sibling) {
-            if (sibling.dataset.command !== 'new-tab') {
-              this.active(sibling);
-            }
-          }
-          if (this.Tab.has(host)) {
-            this.Tab.delete(host);
-          }
-          t.remove();
         }
+        tab.remove();
       }
-      create(host = undefined) {
-        if (typeof host === 'string') {
-          if (host.startsWith(this.protocal) && this.hasTab(host)) {
-            this.active(this.Tab.get(host));
-            return;
-          }
-          const content = normalizeTarget(this.storeTab(host)).filter(
-            (t) => host === t.dataset.host
-          );
-          if (!isEmpty(content)) {
+      /**
+       * @param {string} [hostname]
+       */
+      create(hostname = undefined) {
+        if (typeof hostname === 'string') {
+          const createdTab = this.getTab(hostname);
+          if (this.protoReg.test(hostname) && createdTab) {
+            this.active(createdTab);
             return;
           }
         }
-        const tab = make('mujs-tab', '', {
+        const tab = make('mujs-tab', {
           dataset: {
             command: 'switch-tab'
           },
           style: `order: ${this.el.head.childElementCount};`
         });
-        const tabClose = make('mu-js', '', {
+        const tabClose = make('mu-js', {
           dataset: {
             command: 'close-tab'
           },
@@ -1368,29 +1315,28 @@ class Container {
         tab.append(tabHost, tabClose);
         this.el.head.append(tab);
         this.active(tab, false);
-        this.cache(host, tab);
-        if (isNull(host)) {
+        if (isNull(hostname)) {
           refresh();
           urlBar.placeholder = i18n$('newTab');
           tab.dataset.host = this.blank;
           tabHost.title = i18n$('newTab');
           tabHost.textContent = i18n$('newTab');
-        } else if (host.startsWith(this.protocal)) {
-          const type = host.match(this.protoReg)[1];
-          tab.dataset.host = host || cHost;
+        } else if (hostname.startsWith(this.protocal)) {
+          const type = hostname.match(this.protoReg)[1];
+          tab.dataset.host = hostname || host;
           tabHost.title = type || tab.dataset.host;
           tabHost.textContent = tabHost.title;
-          this.intFN(host);
+          this.intFN(hostname);
         } else {
-          tab.dataset.host = host || cHost;
-          tabHost.title = host || cHost;
+          tab.dataset.host = hostname || host;
+          tabHost.title = hostname || host;
           tabHost.textContent = tabHost.title;
         }
         return tab;
       }
     }
     this.tab = new Tabs(this.toolbar);
-    this.tab.create(this.host);
+    this.tab.create(host);
 
     const tabbody = this.tabbody;
     const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
@@ -1532,9 +1478,9 @@ class Container {
           command: 'navigation'
         }
       });
-      const makeTHead = (rows) => {
+      const makeTHead = (rows = []) => {
         const tr = make('tr');
-        for (const r of normalizeTarget(rows)) {
+        for (const r of rows) {
           const tparent = make('th', r.class ?? '', r);
           tr.append(tparent);
         }
@@ -1589,6 +1535,7 @@ class Container {
     this.unsaved = false;
     await StorageSystem.setValue('Config', cfg);
     info('Saved config:', cfg);
+    this.redirect();
     return cfg;
   }
   /**
@@ -1628,7 +1575,7 @@ class Container {
           return sty;
         }
       }
-      const sty = make('style', '', {
+      const sty = make('style', {
         textContent: css,
         dataset: {
           insertedBy: $info.script.name,
@@ -1682,7 +1629,7 @@ class Container {
     return this.isBlacklisted;
   }
   getInfo(url) {
-    const webpage = strToURL(url || this.webpage);
+    const webpage = this.strToURL(url || this.webpage);
     const host = this.getHost(webpage.host);
     const domain = this.getDomain(webpage.host);
     return {
@@ -1760,6 +1707,10 @@ class Container {
     }
     this.promptElem.append(el);
   }
+  /**
+   * @template {string | Error} E
+   * @param {...E} ex
+   */
   showError(...ex) {
     err(...ex);
     const error = make('mu-js', 'error');
@@ -1776,33 +1727,73 @@ class Container {
     error.appendChild(createTextNode(str));
     this.footer.append(error);
   }
-  updateCounter(count, engine) {
-    this.counters[engine.name] += count;
-    this.counters.total += count;
-    this.updateCounters();
+  toArr() {
+    return Array.from(this.userjsCache.values()).filter(({ _mujs }) => {
+      return isElem(_mujs.root) && _mujs.info.engine.enabled;
+    });
   }
-  updateCounters() {
-    for (const [k, v] of Object.entries(this.counters)) {
-      if (k === 'total') {
-        continue;
-      }
-      const c = qs(`count-frame[data-counter="${k}"]`, this.countframe);
-      if (c) {
-        dom.text(c, v);
-      }
-    }
-    dom.text(this.mainbtn, this.counters.total);
+  toElem() {
+    return this.toArr().map(({ _mujs }) => {
+      return _mujs.root;
+    });
   }
   refresh() {
     this.urlBar.placeholder = i18n$('newTab');
-    this.counters.total = 0;
-    for (const engine of cfg.engines) {
-      this.counters[engine.name] = 0;
-    }
-    this.updateCounters();
-    dom.cl.remove(qsA('tr[data-engine]', this.tabbody), 'hidden');
+    Counter.reset();
+    dom.cl.remove(this.toElem(), 'hidden');
     dom.cl.remove(qsA('mujs-section[data-name]', this.cfgpage), 'hidden');
     dom.prop([this.tabbody, this.rateContainer, this.footer], 'innerHTML', '');
+  }
+  /**
+   * @template {string | URL} S
+   * @param {S} str
+   * @returns {URL}
+   */
+  strToURL(str) {
+    const WIN_LOCATION = window.location ?? BLANK_PAGE;
+    try {
+      str = str ?? WIN_LOCATION;
+      return objToStr(str).includes('URL') ? str : new URL(str);
+    } catch (ex) {
+      ex.cause = 'strToURL';
+      this.showError(ex);
+    }
+    return WIN_LOCATION;
+  }
+  /**
+   * Redirects sleazyfork userscripts from greasyfork.org to sleazyfork.org
+   *
+   * Taken from: https://greasyfork.org/scripts/23840
+   */
+  redirect() {
+    const locObj = window.top.location;
+    const { hostname } = locObj;
+    const gfSite = /greasyfork\.org/.test(hostname);
+    if (!gfSite && cfg.sleazyredirect) {
+      return;
+    }
+    const otherSite = gfSite ? 'sleazyfork' : 'greasyfork';
+    if (!qs('span.sign-in-link')) {
+      return;
+    }
+    if (!/scripts\/\d+/.test(locObj.href)) {
+      return;
+    }
+    if (
+      !qs('#script-info') &&
+      (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a'))
+    ) {
+      const str = locObj.href.replace(
+        /\/\/([^.]+\.)?(greasyfork|sleazyfork)\.org/,
+        '//$1' + otherSite + '.org'
+      );
+      info(`Redirecting to "${str}"`);
+      if (isFN(locObj.assign)) {
+        locObj.assign(str);
+      } else {
+        locObj.href = str;
+      }
+    }
   }
 }
 const container = new Container();
@@ -1820,8 +1811,6 @@ function primaryFN() {
       rateContainer,
       footer,
       tabbody,
-      toolbar,
-      tabhead,
       cfgpage,
       fsearch,
       btnfullscreen,
@@ -1831,8 +1820,6 @@ function primaryFN() {
       btnissue,
       btngreasy,
       tab,
-      userjsCache,
-      updateCounter,
       showError
     } = container;
     const frameTimeout = container.timeouts.frame;
@@ -1902,7 +1889,7 @@ function primaryFN() {
           } else if (prmpt !== prmptChoice) {
             installCode = dataset.userjs.replace(/\.user\.css$/, '.user.js');
           }
-          const dlBtn = make('a', '', {
+          const dlBtn = make('a', {
             onclick(evt) {
               evt.preventDefault();
               doInstallProcess(evt.target);
@@ -1972,7 +1959,6 @@ function primaryFN() {
           dom.prop(rateContainer, 'innerHTML', '');
           if (!dom.prop(target, 'disabled')) {
             const config = await container.save();
-            sleazyRedirect();
             if (container.rebuild) {
               container.cache.clear();
               if (config.autofetch) {
@@ -2052,7 +2038,7 @@ function primaryFN() {
           const apTo = (name, elem, root) => {
             const n = dataUserJS._mujs.code[name];
             if (isEmpty(n)) {
-              const el = make('mujs-a', '', {
+              const el = make('mujs-a', {
                 textContent: i18n$('listing_none')
               });
               elem.append(el);
@@ -2062,7 +2048,7 @@ function primaryFN() {
             dom.cl.remove(root, 'hidden');
             for (const c of n) {
               if (typeof c === 'string' && c.startsWith('http')) {
-                const el = make('mujs-a', '', {
+                const el = make('mujs-a', {
                   textContent: c,
                   dataset: {
                     command: 'open-tab',
@@ -2073,7 +2059,7 @@ function primaryFN() {
               } else if (isObj(c)) {
                 if (name === 'resource') {
                   for (const [k, v] of Object.entries(c)) {
-                    const el = make('mujs-a', '', {
+                    const el = make('mujs-a', {
                       textContent: k ?? 'ERROR'
                     });
                     if (v.startsWith('http')) {
@@ -2083,7 +2069,7 @@ function primaryFN() {
                     elem.append(el);
                   }
                 } else {
-                  const el = make('mujs-a', '', {
+                  const el = make('mujs-a', {
                     textContent: c.text
                   });
                   if (c.domain) {
@@ -2093,15 +2079,17 @@ function primaryFN() {
                   elem.append(el);
                 }
               } else {
-                const el = make('mujs-a', '', {
+                const el = make('mujs-a', {
                   textContent: c
                 });
                 elem.append(el);
               }
             }
           };
-          const m = qsA('mujs-column[data-el="matches"]', target.parentElement.parentElement);
-          for (const e of normalizeTarget(m)) {
+          for (const e of qsA(
+            'mujs-column[data-el="matches"]',
+            target.parentElement.parentElement
+          )) {
             apTo(e.dataset.type, qs('.mujs-grants', e), e);
           }
         } else if (/export-/.test(cmd)) {
@@ -2136,7 +2124,6 @@ function primaryFN() {
                       container.rebuild = true;
                       rebuildCfg();
                       container.save().then((config) => {
-                        sleazyRedirect();
                         container.cache.clear();
                         if (config.autofetch) {
                           respHandles.build();
@@ -2469,42 +2456,23 @@ function primaryFN() {
       //   return [...new Set(a)].filter((v) => arr.every((b) => b.includes(v)));
       // }
     }
-    const mergeTemplate = (obj = {}) => {
-      const template = {
-        id: 0,
-        bad_ratings: 0,
-        good_ratings: 0,
-        ok_ratings: 0,
-        daily_installs: 0,
-        total_installs: 0,
-        name: 'NOT FOUND',
-        description: 'NOT FOUND',
-        version: '0.0.0',
-        url: BLANK_PAGE,
-        code_url: BLANK_PAGE,
-        created_at: Date.now(),
-        code_updated_at: Date.now(),
-        locale: 'NOT FOUND',
-        deleted: false,
-        users: [
-          {
-            id: 0,
-            name: 'NOT FOUND',
-            url: BLANK_PAGE
-          }
-        ]
-      };
-      /** @type {ObjectConstructor["hasOwn"]} */
-      const hasOwn =
-        Object.hasOwn ||
-        function hasOwn(it, key) {
-          return Object.prototype.hasOwnProperty.call(it, key);
-        };
-      for (const key in template) {
-        if (hasOwn(obj, key)) continue;
-        obj[key] = template[key];
-      }
-      return obj;
+    const template = {
+      id: 0,
+      bad_ratings: 0,
+      good_ratings: 0,
+      ok_ratings: 0,
+      daily_installs: 0,
+      total_installs: 0,
+      name: 'NOT FOUND',
+      description: 'NOT FOUND',
+      version: '0.0.0',
+      url: BLANK_PAGE,
+      code_url: BLANK_PAGE,
+      created_at: Date.now(),
+      code_updated_at: Date.now(),
+      locale: 'NOT FOUND',
+      deleted: false,
+      users: []
     };
     const mkList = (txt = '', obj = {}) => {
       if (!obj.root || !obj.type) {
@@ -2526,7 +2494,7 @@ function primaryFN() {
 
       const list = obj.list ?? [];
       if (isEmpty(list)) {
-        const elem = make('mujs-a', '', {
+        const elem = make('mujs-a', {
           textContent: i18n$('listing_none')
         });
         applyList.append(elem);
@@ -2535,7 +2503,7 @@ function primaryFN() {
       }
       for (const c of list) {
         if (typeof c === 'string' && c.startsWith('http')) {
-          const elem = make('mujs-a', '', {
+          const elem = make('mujs-a', {
             textContent: c,
             dataset: {
               command: 'open-tab',
@@ -2546,7 +2514,7 @@ function primaryFN() {
         } else if (isObj(c)) {
           if (type === 'resource') {
             for (const [k, v] of Object.entries(c)) {
-              const elem = make('mujs-a', '', {
+              const elem = make('mujs-a', {
                 textContent: k ?? 'ERROR'
               });
               if (v.startsWith('http')) {
@@ -2556,7 +2524,7 @@ function primaryFN() {
               applyList.append(elem);
             }
           } else {
-            const elem = make('mujs-a', '', {
+            const elem = make('mujs-a', {
               textContent: c.text
             });
             if (c.domain) {
@@ -2566,7 +2534,7 @@ function primaryFN() {
             applyList.append(elem);
           }
         } else {
-          const elem = make('mujs-a', '', {
+          const elem = make('mujs-a', {
             textContent: c
           });
           applyList.append(elem);
@@ -2596,7 +2564,6 @@ function primaryFN() {
      * @param { string } engine
      */
     const createjs = (ujs, engine) => {
-      ujs = mergeTemplate(ujs);
       // Lets not add this UserJS to the list
       if (ujs.id === 421603) {
         return;
@@ -2688,7 +2655,7 @@ function primaryFN() {
           userjs: ujs.code_url
         }
       });
-      const scriptDownload = make('mu-jsbtn', '', {
+      const scriptDownload = make('mu-jsbtn', {
         innerHTML: `${iconSVG.load('install')} ${i18n$('saveFile')}`,
         dataset: {
           command: 'download-userjs',
@@ -2710,7 +2677,7 @@ function primaryFN() {
         spellcheck: false,
         wrap: 'soft'
       });
-      const loadCode = make('mu-jsbtn', '', {
+      const loadCode = make('mu-jsbtn', {
         innerHTML: `${iconSVG.load('search')} ${i18n$('preview_code')}`,
         dataset: {
           command: 'load-userjs',
@@ -2730,7 +2697,7 @@ function primaryFN() {
         }
       }
       for (const u of ujs.users) {
-        const user = make('mujs-a', '', {
+        const user = make('mujs-a', {
           innerHTML: u.name,
           title: u.url,
           dataset: {
@@ -2793,63 +2760,73 @@ function primaryFN() {
         codeArea.value = code_obj.get_code_block();
       }
 
-      if (ujs._mujs.code?.translated) {
-        tr.classList.add('translated');
-      }
+      if (ujs._mujs.code?.translated) tr.classList.add('translated');
 
-      for (const e of [fname, uframe, fdaily, fupdated, eframe]) {
-        tr.append(e);
-      }
-      tabbody.append(tr);
+      for (const e of [fname, uframe, fdaily, fupdated, eframe]) tr.append(e);
       ujs._mujs.root = tr;
 
       return tr;
     };
     // #endregion
     const loadFilters = () => {
-      const resp = [];
-      for (const v of Object.values(cfg.filters)) {
-        if (!v.enabled) {
-          continue;
-        }
-        resp.push(new RegExp(v.regExp, v.flag));
-      }
-      return {
-        regExp: resp,
-        get(name) {
-          for (const v of Object.values(cfg.filters)) {
-            if (v.name === name) {
-              return new RegExp(v.regExp, v.flag)
-            };
-          }
-          // return resp.find(r => r.name === name);
+      /** @type {Map<string, import("../typings/types.d.ts").Filters >} */
+      const pool = new Map();
+      const handles = {
+        pool,
+        enabled() {
+          return [...pool.values()].filter((o) => o.enabled);
         },
-        match({ name, users }) {
-          if (isBlank(resp)) {
-            return true;
+        refresh() {
+          if (!Object.is(pool.size, 0)) pool.clear();
+          for (const [key, value] of Object.entries(cfg.filters)) {
+            if (!pool.has(key))
+              pool.set(key, {
+                ...value,
+                reg: new RegExp(value.regExp, value.flag),
+                keyReg: new RegExp(key.trim().toLocaleLowerCase(), 'gi'),
+                valueReg: new RegExp(value.name.trim().toLocaleLowerCase(), 'gi')
+              });
           }
-          const strArr = [{ name }, ...users];
-          for (const r of resp) {
-            const v = strArr.find((o) => o.name.match(r));
-            if (v) {
-              return false;
-            }
+          return this;
+        },
+        get(str) {
+          return [...pool.values()].find((v) => v.keyReg.test(str) || v.valueReg.test(str));
+        },
+        /**
+         * @param { import("../typings/types.d.ts").GSForkQuery } param0
+         */
+        match({ name, users }) {
+          const p = handles.enabled();
+          if (Object.is(p.length, 0)) return true;
+          for (const v of p) {
+            if ([{ name }, ...users].find((o) => o.name.match(v.reg))) return false;
           }
           return true;
         }
       };
+      for (const [key, value] of Object.entries(cfg.filters)) {
+        if (!pool.has(key))
+          pool.set(key, {
+            ...value,
+            reg: new RegExp(value.regExp, value.flag),
+            keyReg: new RegExp(key.trim().toLocaleLowerCase(), 'gi'),
+            valueReg: new RegExp(value.name.trim().toLocaleLowerCase(), 'gi')
+          });
+      }
+      return handles.refresh();
     };
     // #region List
     class List {
       engines;
-      cache;
       intHost;
-      constructor(host = undefined) {
+      constructor(hostname = undefined) {
         this.build = this.build.bind(this);
-        if (isEmpty(host)) host = container.host;
+        this.toArr = this.toArr.bind(this);
+        this.groupBy = this.groupBy.bind(this);
+        this.sortRecords = this.sortRecords.bind(this);
+        if (isEmpty(hostname)) hostname = container.host;
         this.engines = cfg.engines;
-        this.cache = container.cache.get(host);
-        this.host = host;
+        this.host = hostname;
       }
 
       set host(hostname) {
@@ -2862,27 +2839,24 @@ function primaryFN() {
           }
           container.cache.set(hostname, engineTemplate);
         }
-        if (container.checkBlacklist(hostname)) {
+        this.blacklisted = container.checkBlacklist(hostname);
+        if (this.blacklisted) {
           showError(`Blacklisted "${hostname}"`);
           timeoutFrame();
-          this.blacklisted = true;
-        } else {
-          this.blacklisted = false;
         }
 
-        const isSupported = (name) => {
-          for (const [k, v] of Object.entries(engineUnsupported)) {
-            if (k !== name) {
-              continue;
-            }
-            if (v.includes(hostname)) {
-              return false;
-            }
+        this.engines = cfg.engines.filter((e) => {
+          if (!e.enabled) {
+            return false;
+          }
+          const v = engineUnsupported[e.name] ?? [];
+          if (v.includes(hostname)) {
+            showError(`Engine: "${e.name}" unsupported on "${hostname}"`);
+            timeoutFrame();
+            return false;
           }
           return true;
-        };
-        this.engines = cfg.engines.filter((e) => e.enabled && isSupported(e.name));
-        this.cache = container.cache.get(hostname);
+        });
       }
 
       get host() {
@@ -2893,235 +2867,228 @@ function primaryFN() {
       build() {
         try {
           container.refresh();
-          if (this.blacklisted) {
-            return;
-          }
-          if (isEmpty(this.engines)) {
+          const { blacklisted, engines, host, toArr } = this;
+          if (blacklisted || isEmpty(engines)) {
             container.opacityMin = '0';
             mainframe.style.opacity = container.opacityMin;
             return;
           }
-          info(' Building list', { cache: this.cache, engines: this.engines });
-          const customRecords = [];
-          const host = this.host;
-          const arr = [];
+          const fetchRecords = [];
           const bsFilter = loadFilters();
+          const hostCache = toArr();
 
-          for (const engine of this.engines) {
-            const cEngine = this.cache[`${engine.name}`];
-            if (!isEmpty(cEngine)) {
-              for (const ujs of cEngine) {
-                if (isElem(ujs._mujs.root)) {
-                  tabbody.append(ujs._mujs.root);
+          info('Building list', { hostCache, engines });
+
+          if (isBlank(hostCache)) {
+            for (const engine of engines) {
+              info(`Fetching from "${engine.name}" for "${host}"`);
+              const respError = (error) => {
+                if (!error.cause) error.cause = engine.name;
+                if (error.message.startsWith('429')) {
+                  showError(`Engine: "${engine.name}" Too many requests...`);
+                  return;
                 }
-              }
-              updateCounter(cEngine.length, engine);
-              continue;
-            }
-            const respError = (error) => {
-              if (!error.cause) error.cause = engine.name;
-              if (error.message.startsWith('429')) {
-                showError(`Engine: "${engine.name}" Too many requests...`);
-                return;
-              }
-              showError(`Engine: "${engine.name}"`, error.message);
-            };
-            const _mujs = (d) => {
-              const obj = {
-                ...d,
-                _mujs: {
-                  root: {},
-                  info: {
-                    engine,
-                    host
-                  },
-                  code: {
-                    antifeatures: [],
-                    grant: [],
-                    match: [],
-                    meta: {},
-                    request: async function (translate = false, code_url) {
-                      if (this.data) {
-                        return this;
-                      }
-                      this.data = '';
-                      /** @type { string } */
-                      const code = await Network.req(code_url ?? d.code_url, 'GET', 'text').catch(
-                        showError
-                      );
-                      if (typeof code !== 'string') {
-                        return this;
-                      }
-                      Object.assign(this, {
-                        data: code,
-                        code_size: [Network.format(code.length)]
-                      });
-                      const grantSet = new Set();
-                      const afSet = new Set();
-                      const code_obj = new ParseUserJS(code);
-                      const meta = code_obj.parse_meta();
-                      const applies_to_names = code_obj.calculate_applies_to_names();
+                showError(`Engine: "${engine.name}"`, error.message);
+              };
+              const _mujs = (d) => {
+                const obj = {
+                  ...template,
+                  ...d,
+                  _mujs: {
+                    root: {},
+                    info: {
+                      engine,
+                      host
+                    },
+                    code: {
+                      antifeatures: [],
+                      grant: [],
+                      match: [],
+                      meta: {},
+                      request: async function (translate = false, code_url) {
+                        if (this.data) {
+                          return this;
+                        }
+                        this.data = '';
+                        /** @type { string } */
+                        const code = await Network.req(code_url ?? d.code_url, 'GET', 'text').catch(
+                          showError
+                        );
+                        if (typeof code !== 'string') {
+                          return this;
+                        }
+                        Object.assign(this, {
+                          data: code,
+                          code_size: [Network.format(code.length)]
+                        });
+                        const grantSet = new Set();
+                        const afSet = new Set();
+                        const code_obj = new ParseUserJS(code);
+                        const meta = code_obj.parse_meta();
+                        const applies_to_names = code_obj.calculate_applies_to_names();
 
-                      if (translate) {
-                        for (const lng of language.cache) {
-                          if (meta[`name:${lng}`]) {
-                            Object.assign(obj, {
-                              name: meta[`name:${lng}`]
-                            });
-                            this.translated = true;
-                          }
-                          if (meta[`description:${lng}`]) {
-                            Object.assign(obj, {
-                              description: meta[`description:${lng}`]
-                            });
-                            this.translated = true;
+                        if (translate) {
+                          for (const k of userjs.pool.keys()) {
+                            if (meta[`name:${k}`]) {
+                              Object.assign(obj, {
+                                name: meta[`name:${k}`]
+                              });
+                              this.translated = true;
+                            }
+                            if (meta[`description:${k}`]) {
+                              Object.assign(obj, {
+                                description: meta[`description:${k}`]
+                              });
+                              this.translated = true;
+                            }
                           }
                         }
-                      }
 
-                      for (const [key, value] of Object.entries(meta)) {
-                        if (/grant/.test(key)) {
-                          for (const v of normalizeTarget(value, false)) {
-                            if (grantSet.has(v)) {
-                              continue;
+                        for (const [key, value] of Object.entries(meta)) {
+                          if (/grant/.test(key)) {
+                            for (const v of normalizeTarget(value, false)) {
+                              if (grantSet.has(v)) {
+                                continue;
+                              }
+                              grantSet.add(v);
                             }
-                            grantSet.add(v);
-                          }
-                        } else if (/antifeature/.test(key)) {
-                          for (const v of normalizeTarget(value, false)) {
-                            if (afSet.has(v)) {
-                              continue;
+                          } else if (/antifeature/.test(key)) {
+                            for (const v of normalizeTarget(value, false)) {
+                              if (afSet.has(v)) {
+                                continue;
+                              }
+                              afSet.add(v);
                             }
-                            afSet.add(v);
                           }
                         }
-                      }
-                      if (typeof meta.require === 'string') {
-                        const s = meta.require;
-                        meta.require = [s];
-                      }
-                      if (meta.resource) {
-                        const obj = {};
-                        if (typeof meta.resource === 'string') {
-                          const reg = /(.+)\s+(.+)/.exec(meta.resource);
-                          if (reg) {
-                            obj[reg[1].trim()] = reg[2];
-                          }
-                        } else {
-                          for (const r of meta.resource) {
-                            const reg = /(.+)\s+(http.+)/.exec(r);
+                        if (typeof meta.require === 'string') {
+                          const s = meta.require;
+                          meta.require = [s];
+                        }
+                        if (meta.resource) {
+                          const obj = {};
+                          if (typeof meta.resource === 'string') {
+                            const reg = /(.+)\s+(.+)/.exec(meta.resource);
                             if (reg) {
                               obj[reg[1].trim()] = reg[2];
                             }
+                          } else {
+                            for (const r of meta.resource) {
+                              const reg = /(.+)\s+(http.+)/.exec(r);
+                              if (reg) {
+                                obj[reg[1].trim()] = reg[2];
+                              }
+                            }
                           }
+                          meta.resource = obj;
                         }
-                        meta.resource = obj;
-                      }
-                      Object.assign(this, {
-                        meta,
-                        match: applies_to_names,
-                        grant: [...grantSet],
-                        antifeatures: [...afSet]
-                      });
+                        Object.assign(this, {
+                          meta,
+                          match: applies_to_names,
+                          grant: [...grantSet],
+                          antifeatures: [...afSet]
+                        });
 
-                      return this;
+                        return this;
+                      }
                     }
                   }
-                }
+                };
+                return obj;
               };
-              return obj;
-            };
-            const toQuery = (fallback) => {
-              if (engine.query) {
-                return decodeURIComponent(engine.query).replace(/\{host\}/g, host);
-              }
-              return fallback;
-            };
-            /**
-             * @param { import("../typings/types.d.ts").GSFork } dataQ
-             */
-            const forkFN = async (dataQ) => {
-              if (!dataQ) {
-                showError('Invalid data received from the server, check internet connection');
-                return;
-              }
               /**
-               * @type { import("../typings/types.d.ts").GSForkQuery[] }
+               * Prior to UserScript v7.0.0
+               * @template {string} F
+               * @param {F} fallback
+               * @returns {F}
                */
-              const dq = Array.isArray(dataQ)
-                ? dataQ
-                : Array.isArray(dataQ.query)
-                  ? dataQ.query
-                  : [];
-              const dataA = dq
-                .filter(Boolean)
-                .filter((d) => !d.deleted)
-                .filter(bsFilter.match);
-              if (isBlank(dataA)) {
-                return;
-              }
-              const data = dataA.map(_mujs);
-              const otherLng = [];
-              /**
-               * @param {import("../typings/types.d.ts").GSForkQuery} d
-               * @returns {boolean}
-               */
-              const inUserLanguage = (d) => {
-                const dlocal = d.locale.split('-')[0] ?? d.locale;
-                if (language.cache.includes(dlocal)) {
-                  return true;
+              const toQuery = (fallback) => {
+                if (engine.query) {
+                  return decodeURIComponent(engine.query).replace(/\{host\}/g, host);
                 }
-                otherLng.push(d);
-                return false;
+                return fallback;
               };
-              const filterLang = data.filter((d) => {
-                if (cfg.filterlang && !inUserLanguage(d)) {
-                  return false;
-                }
-                return true;
-              });
-              let finalList = filterLang;
-              const hds = [];
-              for (const ujs of otherLng) {
-                const c = await ujs._mujs.code.request(true);
-                if (c.translated) {
-                  hds.push(ujs);
-                }
-              }
-              finalList = union(hds, filterLang);
-
-              for (const ujs of finalList) {
-                if (cfg.codePreview && !ujs._mujs.code.data) {
-                  await ujs._mujs.code.request();
-                }
-                createjs(ujs, engine.name);
-              }
-              this.cache[engine.name].push(...finalList);
-              updateCounter(finalList.length, engine);
-            };
-            /**
-             * @param {Document} htmlDocument
-             */
-            const openuserjs = async (htmlDocument) => {
-              try {
-                if (!htmlDocument) {
-                  showError('Invalid data received from the server, TODO fix this');
+              /**
+               * @param { import("../typings/types.d.ts").GSFork } dataQ
+               */
+              const forkFN = async (dataQ) => {
+                if (!dataQ) {
+                  showError('Invalid data received from the server, check internet connection');
                   return;
                 }
-                const selected = htmlDocument.documentElement;
-                if (/openuserjs/gi.test(engine.name)) {
-                  for (const i of qsA('.col-sm-8 .tr-link', selected)) {
-                    while (isNull(qs('.script-version', i))) {
-                      await new Promise((resolve) => requestAnimationFrame(resolve));
-                    }
-                    const fixurl = dom
-                      .prop(qs('.tr-link-a', i), 'href')
-                      .replace(
-                        new RegExp(document.location.origin, 'gi'),
-                        'https://openuserjs.org'
-                      );
-                    const ujs = mergeTemplate(
-                      _mujs({
+                /**
+                 * @type { import("../typings/types.d.ts").GSForkQuery[] }
+                 */
+                const dq = Array.isArray(dataQ)
+                  ? dataQ
+                  : Array.isArray(dataQ.query)
+                    ? dataQ.query
+                    : [];
+                const dataA = dq
+                  .filter(Boolean)
+                  .filter((d) => !d.deleted)
+                  .filter(bsFilter.match);
+                if (isBlank(dataA)) {
+                  return;
+                }
+                const data = dataA.map(_mujs);
+                const otherLng = [];
+                /**
+                 * @param {import("../typings/types.d.ts").GSForkQuery} d
+                 * @returns {boolean}
+                 */
+                const inUserLanguage = (d) => {
+                  if (userjs.pool.has(d.locale.split('-')[0] ?? d.locale)) {
+                    return true;
+                  }
+                  otherLng.push(d);
+                  return false;
+                };
+                const filterLang = data.filter((d) => {
+                  if (cfg.filterlang && !inUserLanguage(d)) {
+                    return false;
+                  }
+                  return true;
+                });
+                let finalList = filterLang;
+                const hds = [];
+                for (const ujs of otherLng) {
+                  const c = await ujs._mujs.code.request(true);
+                  if (c.translated) {
+                    hds.push(ujs);
+                  }
+                }
+                finalList = union(hds, filterLang);
+
+                for (const ujs of finalList) {
+                  if (cfg.codePreview && !ujs._mujs.code.data) {
+                    await ujs._mujs.code.request();
+                  }
+                  createjs(ujs, engine.name);
+                }
+              };
+              /**
+               * @param {Document} htmlDocument
+               */
+              const openuserjs = async (htmlDocument) => {
+                try {
+                  if (!htmlDocument) {
+                    showError('Invalid data received from the server, TODO fix this');
+                    return;
+                  }
+                  const selected = htmlDocument.documentElement;
+                  if (/openuserjs/gi.test(engine.name)) {
+                    for (const i of qsA('.col-sm-8 .tr-link', selected)) {
+                      while (isNull(qs('.script-version', i))) {
+                        await new Promise((resolve) => requestAnimationFrame(resolve));
+                      }
+                      const fixurl = dom
+                        .prop(qs('.tr-link-a', i), 'href')
+                        .replace(
+                          new RegExp(document.location.origin, 'gi'),
+                          'https://openuserjs.org'
+                        );
+                      const ujs = _mujs({
                         name: dom.text(qs('.tr-link-a', i)),
                         description: dom.text(qs('p', i)),
                         version: dom.text(qs('.script-version', i)),
@@ -3136,33 +3103,28 @@ function primaryFN() {
                             url: dom.prop(qs('.inline-block a', i), 'href')
                           }
                         ]
-                      })
-                    );
-                    if (bsFilter.match(ujs)) {
-                      continue;
+                      });
+                      if (bsFilter.match(ujs)) {
+                        continue;
+                      }
+                      if (cfg.codePreview && !ujs._mujs.code.data) {
+                        await ujs._mujs.code.request();
+                      }
+                      createjs(ujs, engine.name);
                     }
-                    if (cfg.codePreview && !ujs._mujs.code.data) {
-                      await ujs._mujs.code.request();
-                    }
-                    createjs(ujs, engine.name);
-                    customRecords.push(ujs);
                   }
+                } catch (ex) {
+                  showError(ex);
                 }
-                this.cache[engine.name].push(...customRecords);
-                updateCounter(customRecords.length, engine);
-              } catch (ex) {
-                showError(ex);
-              }
-            };
-            const gitFN = async (data) => {
-              try {
-                if (isBlank(data.items)) {
-                  showError('Invalid data received from the server, TODO fix this');
-                  return;
-                }
-                for (const r of data.items) {
-                  const ujs = mergeTemplate(
-                    _mujs({
+              };
+              const gitFN = async (data) => {
+                try {
+                  if (isBlank(data.items)) {
+                    showError('Invalid data received from the server, TODO fix this');
+                    return;
+                  }
+                  for (const r of data.items) {
+                    const ujs = _mujs({
                       name: r.name,
                       description: isEmpty(r.repository.description)
                         ? i18n$('no_license')
@@ -3177,86 +3139,117 @@ function primaryFN() {
                           url: r.repository.owner.html_url
                         }
                       ]
-                    })
-                  );
-                  if (bsFilter.match(ujs)) {
-                    continue;
+                    });
+                    if (bsFilter.match(ujs)) {
+                      continue;
+                    }
+                    if (cfg.codePreview && !ujs._mujs.code.data) {
+                      await ujs._mujs.code.request();
+                    }
+                    createjs(ujs, engine.name);
                   }
-                  if (cfg.codePreview && !ujs._mujs.code.data) {
-                    await ujs._mujs.code.request();
-                  }
-                  createjs(ujs, engine.name);
-                  customRecords.push(ujs);
+                } catch (ex) {
+                  showError(ex);
                 }
-                this.cache[engine.name].push(...customRecords);
-                updateCounter(data.items.length, engine);
-              } catch (ex) {
-                showError(ex);
-              }
-            };
-            let netFN;
-            if (/github/gi.test(engine.name)) {
-              if (isEmpty(engine.token)) {
-                showError(`"${engine.name}" requires a token to use`);
-                continue;
-              }
-              netFN = Network.req(
-                toQuery(
-                  `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`
-                ),
-                'GET',
-                'json',
-                {
-                  headers: {
-                    Accept: 'application/vnd.github+json',
-                    Authorization: `Bearer ${engine.token}`,
-                    'X-GitHub-Api-Version': '2022-11-28'
-                  }
+              };
+              let netFN;
+              if (/github/gi.test(engine.name)) {
+                if (isEmpty(engine.token)) {
+                  showError(`"${engine.name}" requires a token to use`);
+                  continue;
                 }
-              )
-                .then(gitFN)
-                .then(() => {
-                  Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
+                netFN = Network.req(
+                  toQuery(
+                    `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`
+                  ),
+                  'GET',
+                  'json',
+                  {
                     headers: {
                       Accept: 'application/vnd.github+json',
                       Authorization: `Bearer ${engine.token}`,
                       'X-GitHub-Api-Version': '2022-11-28'
                     }
-                  })
-                    .then((data) => {
-                      for (const [key, value] of Object.entries(data.resources.code_search)) {
-                        const txt = make('mujs-row', 'rate-info', {
-                          textContent: `${key.toUpperCase()}: ${value}`
-                        });
-                        rateContainer.append(txt);
+                  }
+                )
+                  .then(gitFN)
+                  .then(() => {
+                    Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
+                      headers: {
+                        Accept: 'application/vnd.github+json',
+                        Authorization: `Bearer ${engine.token}`,
+                        'X-GitHub-Api-Version': '2022-11-28'
                       }
                     })
-                    .catch(respError);
-                });
-            } else if (/openuserjs/gi.test(engine.name)) {
-              netFN = Network.req(toQuery(`${engine.url}${host}`), 'GET', 'document').then(
-                openuserjs
-              );
-            } else {
-              netFN = Network.req(
-                toQuery(`${engine.url}/scripts/by-site/${host}.json?language=all`)
-              ).then(forkFN);
+                      .then((data) => {
+                        for (const [key, value] of Object.entries(data.resources.code_search)) {
+                          const txt = make('mujs-row', 'rate-info', {
+                            textContent: `${key.toUpperCase()}: ${value}`
+                          });
+                          rateContainer.append(txt);
+                        }
+                      })
+                      .catch(respError);
+                  });
+              } else if (/openuserjs/gi.test(engine.name)) {
+                netFN = Network.req(toQuery(`${engine.url}${host}`), 'GET', 'document').then(
+                  openuserjs
+                );
+              } else {
+                netFN = Network.req(
+                  toQuery(`${engine.url}/scripts/by-site/${host}.json?language=all`)
+                ).then(forkFN);
+              }
+              if (netFN) {
+                fetchRecords.push(netFN.catch(respError));
+              }
             }
-            if (netFN) {
-              arr.push(netFN.catch(respError));
-            }
+          } else {
+            for (const ujs of hostCache) tabbody.append(ujs._mujs.root);
           }
 
           urlBar.placeholder = i18n$('search_placeholder');
           urlBar.value = '';
 
-          Promise.allSettled(arr).then(() => {
-            tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
-            tabhead.rows[0].cells[2].dispatchEvent(new MouseEvent('click'));
-          });
+          if (isBlank(fetchRecords)) {
+            this.sortRecords();
+            return;
+          }
+          Promise.allSettled(fetchRecords).then(this.sortRecords).catch(showError);
         } catch (ex) {
           showError(ex);
         }
+      }
+
+      sortRecords() {
+        const arr = this.toArr();
+        for (const ujs of arr.flat().sort((a, b) => {
+          const sortType = cfg.autoSort ?? 'daily_installs';
+          return b[sortType] - a[sortType];
+        })) {
+          if (isElem(ujs._mujs.root)) tabbody.append(ujs._mujs.root);
+        }
+        for (const [name, value] of Object.entries(this.groupBy(arr)))
+          Counter.update(value.length, { name });
+      }
+
+      toArr() {
+        const h = this.intHost;
+        return container.toArr().filter(({ _mujs }) => _mujs.info.host === h);
+      }
+
+      groupBy(arr) {
+        const callback = ({ _mujs }) => _mujs.info.engine.name;
+        if (isFN(Object.groupBy)) {
+          return Object.groupBy(arr, callback);
+        }
+        /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
+        return arr.reduce((acc = {}, ...args) => {
+          const key = callback(...args);
+          acc[key] ??= [];
+          acc[key].push(args[0]);
+          return acc;
+        }, {});
       }
       // #endregion
     }
@@ -3281,17 +3274,17 @@ function primaryFN() {
       const makesection = (name, tag) => {
         tag = tag ?? i18n$('no_license');
         name = name ?? i18n$('no_license');
-        const sec = make('mujs-section', '', {
+        const sec = make('mujs-section', {
           dataset: {
             name: tag
           }
         });
-        const lb = make('label', '', {
+        const lb = make('label', {
           dataset: {
             command: tag
           }
         });
-        const divDesc = make('mu-js', '', {
+        const divDesc = make('mu-js', {
           textContent: name
         });
         ael(sec, 'click', (evt) => {
@@ -3330,13 +3323,13 @@ function primaryFN() {
       const makerow = (desc, type = null, nm, attrs = {}) => {
         desc = desc ?? i18n$('no_license');
         nm = nm ?? i18n$('no_license');
-        const sec = make('mujs-section', '', {
+        const sec = make('mujs-section', {
           dataset: {
             name: nm
           }
         });
         const lb = make('label');
-        const divDesc = make('mu-js', '', {
+        const divDesc = make('mu-js', {
           textContent: desc
         });
         lb.append(divDesc);
@@ -3345,7 +3338,7 @@ function primaryFN() {
         if (isNull(type)) {
           return lb;
         }
-        const inp = make('input', '', {
+        const inp = make('input', {
           type,
           dataset: {
             name: nm
@@ -3357,7 +3350,7 @@ function primaryFN() {
         }
         if (type === 'checkbox') {
           const inlab = make('mu-js', 'mujs-inlab');
-          const la = make('label', '', {
+          const la = make('label', {
             onclick() {
               inp.dispatchEvent(new MouseEvent('click'));
             }
@@ -3380,7 +3373,7 @@ function primaryFN() {
 
               if (engine.query) {
                 const d = DEFAULT_CONFIG.engines.find((e) => e.name === engine.name);
-                const urlInp = make('input', '', {
+                const urlInp = make('input', {
                   type: 'text',
                   defaultValue: '',
                   value: decodeURIComponent(engine.query) ?? '',
@@ -3402,7 +3395,7 @@ function primaryFN() {
                 sec.append(urlInp);
               }
               if (engine.name === 'github') {
-                const ghToken = make('input', '', {
+                const ghToken = make('input', {
                   type: 'text',
                   defaultValue: '',
                   value: engine.token ?? '',
@@ -3443,7 +3436,29 @@ function primaryFN() {
             [tag]: text
           }
         });
-        const inp = make('input', '', {
+        if (type === 'select') {
+          const inp = make('select', {
+            dataset: {
+              [tag]: text
+            },
+            ...attrs
+          });
+          for (const selV of Object.keys(template)) {
+            if (selV === 'deleted' || selV === 'users') continue;
+            const o = make('option', {
+              value: selV,
+              textContent: selV
+            });
+            inp.append(o);
+          }
+          inp.value = cfg[value];
+          lb.append(inp);
+          if (sections[tag]) {
+            sections[tag].append(lb);
+          }
+          return lb;
+        }
+        const inp = make('input', {
           type,
           dataset: {
             [tag]: text
@@ -3457,7 +3472,7 @@ function primaryFN() {
 
         if (type === 'checkbox') {
           const inlab = make('mu-js', 'mujs-inlab');
-          const la = make('label', '', {
+          const la = make('label', {
             onclick() {
               inp.dispatchEvent(new MouseEvent('click'));
             }
@@ -3547,7 +3562,9 @@ function primaryFN() {
           }
         }
       });
+      mkSection('Clear on Tab close', 'clearTabCache', 'checkbox', 'load');
 
+      mkSection('Default Sort', 'autoSort', 'select', 'list');
       mkSection(i18n$('filter'), 'filterlang', 'checkbox', 'list');
       mkSection(i18n$('preview_code'), 'codePreview', 'checkbox', 'list');
       mkSection('Recommend author', 'recommend-author', 'checkbox', 'list');
@@ -3569,7 +3586,7 @@ function primaryFN() {
             theme: k
           }
         });
-        const inp = make('input', '', {
+        const inp = make('input', {
           type: 'text',
           defaultValue: '',
           value: v ?? '',
@@ -3643,7 +3660,7 @@ function primaryFN() {
             blacklist: key
           }
         });
-        const inp = make('input', '', {
+        const inp = make('input', {
           type: 'text',
           defaultValue: '',
           value: v ?? '',
@@ -3673,7 +3690,7 @@ function primaryFN() {
             }
           }
         });
-        const selType = make('select', '', {
+        const selType = make('select', {
           disabled,
           dataset: {
             blacklist: key
@@ -3681,14 +3698,14 @@ function primaryFN() {
         });
         if (disabled) {
           inp.readOnly = true;
-          const o = make('option', '', {
+          const o = make('option', {
             value: type,
             textContent: type
           });
           selType.append(o);
         } else {
           for (const selV of ['String', 'RegExp', 'Object']) {
-            const o = make('option', '', {
+            const o = make('option', {
               value: selV,
               textContent: selV
             });
@@ -3699,7 +3716,7 @@ function primaryFN() {
         lb.append(inp, selType);
         sections.blacklist.append(lb);
       };
-      // const blacklist = make('textarea', '', {
+      // const blacklist = make('textarea', {
       //   dataset: {
       //     name: 'blacklist'
       //   },
@@ -3728,19 +3745,19 @@ function primaryFN() {
       //   }
       // });
       // cfgMap.set('blacklist', blacklist);
-      // const addList = make('mujs-add', '', {
+      // const addList = make('mujs-add', {
       //   textContent: '+',
       //   dataset: {
       //     command: 'new-list'
       //   }
       // });
-      // const n = make('input', '', {
+      // const n = make('input', {
       //   type: 'text',
       //   defaultValue: '',
       //   value: '',
       //   placeholder: 'Name',
       // });
-      // const inpValue = make('input', '', {
+      // const inpValue = make('input', {
       //   type: 'text',
       //   defaultValue: '',
       //   value: '',
@@ -3806,15 +3823,16 @@ function primaryFN() {
        * @type { string }
        */
       const val = evt.target.value;
+      const section = qsA('mujs-section[data-name]', cfgpage);
       if (isEmpty(val)) {
-        dom.cl.remove(qsA('tr[data-engine]', tabbody), 'hidden');
-        dom.cl.remove(qsA('mujs-section[data-name]', cfgpage), 'hidden');
+        dom.cl.remove(container.toElem(), 'hidden');
+        dom.cl.remove(section, 'hidden');
         return;
       }
       const finds = new Set();
       if (!dom.cl.has(cfgpage, 'hidden')) {
         const reg = new RegExp(val, 'gi');
-        for (const elem of qsA('mujs-section[data-name]', cfgpage)) {
+        for (const elem of section) {
           if (!isElem(elem)) {
             continue;
           }
@@ -3825,10 +3843,13 @@ function primaryFN() {
             finds.add(elem);
           }
         }
-        dom.cl.add(qsA('mujs-section[data-name]', cfgpage), 'hidden');
+        dom.cl.add(section, 'hidden');
         dom.cl.remove([...finds], 'hidden');
         return;
       }
+      const cacheValues = container.toArr().filter(({ _mujs }) => {
+        return !finds.has(_mujs.root);
+      });
       /**
        * @param {RegExpMatchArray} regExp
        * @param {keyof import("../typings/types.d.ts").GSForkQuery} key
@@ -3836,43 +3857,29 @@ function primaryFN() {
       const ezQuery = (regExp, key) => {
         const q_value = val.replace(regExp, '');
         const reg = new RegExp(q_value, 'gi');
-        for (const v of userjsCache.values()) {
-          const elem = v._mujs.root;
-          if (!isElem(elem)) {
-            continue;
-          }
-          if (finds.has(elem)) {
-            continue;
-          }
+        for (const v of cacheValues) {
           let k = v[key];
           if (typeof k === 'number') {
             k = `${v[key]}`;
           }
           if (k && k.match(reg)) {
-            finds.add(elem);
+            finds.add(v._mujs.root);
           }
         }
       };
       if (val.match(/^(code_url|url):/)) {
         ezQuery(/^(code_url|url):/, 'code_url');
       } else if (val.match(/^(author|users?):/)) {
-        const q_value = val.replace(/^(author|users?):/, '');
-        const reg = new RegExp(q_value, 'gi');
-        for (const v of userjsCache.values()) {
-          const elem = v._mujs.root;
-          if (!isElem(elem)) {
-            continue;
-          }
-          if (finds.has(elem)) {
-            continue;
-          }
-          if (v.users) {
+        const parts = /^[\w_]+:(.+)/.exec(val);
+        if (parts) {
+          const reg = new RegExp(parts[1], 'gi');
+          for (const v of cacheValues.filter((v) => !isEmpty(v.users))) {
             for (const user of v.users) {
               for (const value of Object.values(user)) {
                 if (typeof value === 'string' && value.match(reg)) {
-                  finds.add(elem);
+                  finds.add(v._mujs.root);
                 } else if (typeof value === 'number' && `${value}`.match(reg)) {
-                  finds.add(elem);
+                  finds.add(v._mujs.root);
                 }
               }
             }
@@ -3889,96 +3896,52 @@ function primaryFN() {
       } else if (val.match(/^description:/)) {
         ezQuery(/^description:/, 'description');
       } else if (val.match(/^(search_engine|engine):/)) {
-        const q_value = val.replace(/^(search_engine|engine):/, '');
-        const reg = new RegExp(q_value, 'gi');
-        for (const v of userjsCache.values()) {
-          const elem = v._mujs.root;
-          if (!isElem(elem)) {
-            continue;
-          }
-          if (finds.has(elem)) {
-            continue;
-          }
-          if (v._mujs.info.engine) {
-            for (const value of Object.values(v._mujs.info.engine)) {
-              if (typeof value === 'string' && value.match(reg)) {
-                finds.add(elem);
-              }
+        const parts = /^[\w_]+:(\w+)/.exec(val);
+        if (parts) {
+          const reg = new RegExp(parts[1], 'gi');
+          for (const { _mujs } of cacheValues) {
+            if (!_mujs.info.engine.name.match(reg)) {
+              continue;
             }
+            finds.add(_mujs.root);
           }
         }
       } else if (val.match(/^filter:/)) {
         const parts = /^\w+:(.+)/.exec(val);
         if (parts) {
           const bsFilter = loadFilters();
-          const p = parts[1].trim().toLocaleLowerCase();
-          for (const [key, value] of Object.entries(cfg.filters)) {
-            const k = key.trim().toLocaleLowerCase();
-            const v = value.name.trim().toLocaleLowerCase();
-            if (p.includes(k) || p.includes(v)) {
-              const reg = bsFilter.get(value.name);
-              if (reg) {
-                [...userjsCache.values()].filter(({ name, users, _mujs }) => {
-                  const elem = _mujs.root;
-                  if (!isElem(elem)) {
-                    return false;
-                  }
-                  if (finds.has(elem)) {
-                    return false;
-                  }
-                  const strArr = [{ name }, ...users];
-                  const v = strArr.find((o) => o.name.match(reg));
-                  if (v) {
-                    return false;
-                  }
-                  finds.add(elem);
-                  return true;
-                });
+          const filterType = bsFilter.get(parts[1].trim().toLocaleLowerCase());
+          if (filterType) {
+            const { reg } = filterType;
+            for (const { name, users, _mujs } of cacheValues) {
+              if ([{ name }, ...users].find((o) => o.name.match(reg))) {
+                continue;
               }
+              finds.add(_mujs.root);
             }
           }
         }
       } else if (val.match(/^recommend:/)) {
-        for (const v of userjsCache.values()) {
-          const elem = v._mujs.root;
-          if (!isElem(elem)) {
-            continue;
-          }
-          if (finds.has(elem)) {
-            continue;
-          }
-          if (v.users.find(u => u.id === authorID)) {
-            finds.add(elem);
-          } else if (goodUserJS.includes(v.url)) {
-            finds.add(elem);
-          } else if (goodUserJS.includes(v.id)) {
-            finds.add(elem);
+        for (const { url, id, users, _mujs } of cacheValues) {
+          if (
+            users.find((u) => u.id === authorID) ||
+            goodUserJS.includes(url) ||
+            goodUserJS.includes(id)
+          ) {
+            finds.add(_mujs.root);
           }
         }
       } else {
         const reg = new RegExp(val, 'gi');
-        for (const v of userjsCache.values()) {
-          const elem = v._mujs.root;
-          if (!isElem(elem)) {
-            continue;
-          }
-          if (finds.has(elem)) {
-            continue;
-          }
-          if (v.name && v.name.match(reg)) {
-            finds.add(elem);
-          }
-          if (v.description && v.description.match(reg)) {
-            finds.add(elem);
-          }
+        for (const v of cacheValues) {
+          if (v.name && v.name.match(reg)) finds.add(v._mujs.root);
+          if (v.description && v.description.match(reg)) finds.add(v._mujs.root);
           const code_data = v._mujs.code.data;
           if (code_data) {
             const code_obj = new ParseUserJS(code_data);
             const meta = code_obj.parse_meta(code_data);
             for (const key of Object.keys(meta)) {
-              if (/name|desc/i.test(key) && key.match(reg)) {
-                finds.add(elem);
-              }
+              if (/name|desc/i.test(key) && key.match(reg)) finds.add(v._mujs.root);
             }
           }
         }
@@ -3989,16 +3952,19 @@ function primaryFN() {
     ael(urlBar, 'change', (evt) => {
       evt.preventDefault();
       const val = evt.target.value;
-      if (urlBar.placeholder === i18n$('newTab') && qs('mujs-tab.active', toolbar)) {
-        const tabElem = qs('mujs-tab.active', toolbar);
-        const tabHost = qs('mujs-host', tabElem);
-        if (val.startsWith(tab.protocal)) {
+      const tabElem = tab.getActive();
+      if (urlBar.placeholder === i18n$('newTab') && tabElem) {
+        const tabHost = tabElem.firstElementChild;
+        if (tab.protoReg.test(val)) {
+          const createdTab = tab.getTab(val);
           tab.close(tabElem);
-          if (tab.hasTab(val)) {
-            tab.active(tab.Tab.get(val));
+          if (createdTab) {
+            tab.active(createdTab);
           } else {
             tab.create(val);
           }
+          evt.target.placeholder = i18n$('search_placeholder');
+          evt.target.value = '';
           return;
         } else if (val === '*') {
           tabElem.dataset.host = val;
@@ -4018,7 +3984,6 @@ function primaryFN() {
         tabHost.textContent = value;
         MUList.host = value;
         respHandles.build();
-        return;
       }
     });
     scheduler.postTask(makecfg, { priority: 'background' });
@@ -4044,20 +4009,19 @@ function primaryFN() {
  * @param { (this: F, doc: Document) => * } onDomReady
  */
 const loadDOM = (onDomReady) => {
-  if (!isFN(onDomReady)) {
-    return;
+  if (isFN(onDomReady)) {
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      onDomReady(document);
+    } else {
+      document.addEventListener('DOMContentLoaded', (evt) => onDomReady(evt.target), {
+        once: true
+      });
+    }
   }
-  if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    onDomReady(document);
-    return;
-  }
-  document.addEventListener('DOMContentLoaded', (evt) => onDomReady(evt.target), {
-    once: true
-  });
 };
 
-const init = async () => {
-  const stored = await StorageSystem.getValue('Config', DEFAULT_CONFIG);
+const init = async (prefix = 'Config') => {
+  const stored = await StorageSystem.getValue(prefix, DEFAULT_CONFIG);
   cfg = {
     ...DEFAULT_CONFIG,
     ...stored
@@ -4075,8 +4039,7 @@ const init = async () => {
           cause: 'loadDOM'
         });
       }
-      trustedTypes.init();
-      sleazyRedirect();
+      container.redirect();
 
       if (cfg.autoinject) container.inject(primaryFN, doc);
 

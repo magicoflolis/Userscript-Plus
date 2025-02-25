@@ -99,11 +99,38 @@ export type UserJSEngine = {
   query?: string;
 };
 
+export interface FilterLayout {
+  enabled: boolean;
+  name: string;
+  flag?: string;
+  regExp: string;
+}
+
+export interface Filters extends FilterLayout {
+  reg: RegExp;
+  keyReg: RegExp;
+  valueReg: RegExp;
+}
+
 export type config = {
+  /**
+   * List sorting on load
+   */
+  autoSort: string;
+  /**
+   * Fetch from engines on load
+   */
   autofetch: boolean;
+  /**
+   * Inject list on load
+   */
   autoinject: boolean;
   /**
-   * Sync config with UserScript manager
+   * Clear cache on tab close
+   */
+  clearTabCache: boolean;
+  /**
+   * `UserScript:` Sync config with UserScript manager
    */
   cache?: boolean;
   /**
@@ -111,7 +138,7 @@ export type config = {
    */
   codePreview: boolean;
   /**
-   * Fullscreen list on load
+   * `UserScript:` Fullscreen list on load
    */
   autoexpand?: boolean;
   /**
@@ -123,7 +150,7 @@ export type config = {
    */
   sleazyredirect: boolean;
   /**
-   * Miliseconds before list closes
+   * `UserScript:` Miliseconds before list closes
    */
   time?: number;
   /**
@@ -177,39 +204,19 @@ export type config = {
     author: boolean;
     others: boolean;
   };
+  /**
+   * Taken from https://greasyfork.org/scripts/12179
+   */
   filters: {
-    [name: string ]: {
-      enabled: boolean;
-      name: string;
-      flag?: string;
-      regExp: string;
-    };
-    // 'Non-ASCII': {
-    //   enabled: boolean;
-    //   regExp: string;
-    // };
-    // 'Non-Latin': {
-    //   enabled: boolean;
-    //   regExp: string;
-    // };
-    // Games: {
-    //   enabled: boolean;
-    //   regExp: string;
-    // };
-    // 'Social Networks': {
-    //   enabled: boolean;
-    //   regExp: string;
-    // };
-    // Clutter: {
-    //   enabled: boolean;
-    //   regExp: string;
-    // };
+    ASCII: FilterLayout;
+    Latin: FilterLayout;
+    Games: FilterLayout;
+    SocialNetworks: FilterLayout;
+    Clutter: FilterLayout;
   };
 };
 
 export declare function objToStr<O>(obj: O): string;
-
-export declare function strToURL<S extends string | URL>(str: S): URL;
 
 /**
  * Object is typeof `RegExp`
@@ -251,9 +258,14 @@ export declare function isEmpty<O>(obj: O): boolean;
  */
 export declare function normalizeTarget<T>(
   target: T,
-  toQuery: boolean,
-  root: Element | Document
+  toQuery?: boolean,
+  root?: Document | Element
 ): T[];
+// export declare function normalizeTarget<T>(
+//   target: T,
+//   toQuery?: boolean,
+//   root?: Document | Element
+// ): T[];
 
 export declare function halt(evt: Event): void;
 
@@ -311,7 +323,7 @@ declare global {
 export declare function ael<E extends HTMLElement, K extends keyof HTMLElementEventMap>(
   el: E,
   type: K,
-  listener: (this: E, ev: HTMLElementEventMap[K]) => any,
+  listener: EventListenerOrEventListenerObject,
   options?: AddEventListenerOptions | boolean
 ): void;
 
@@ -350,9 +362,11 @@ export declare function make<
   A extends keyof HTMLElementTagNameMap[K]
 >(
   tagName: K,
-  cname?: string,
+  cname?: string | {
+    [key in A]: Record<string, unknown>;
+  },
   attrs?: {
-    [key in A]: unknown;
+    [key in A]: Record<string, unknown>;
   }
 ): HTMLElementTagNameMap[K];
 
@@ -374,8 +388,8 @@ export interface dom {
   ): V | undefined;
   text<T extends HTMLElement, V extends unknown>(target: T, text?: V): string | null | undefined;
   cl: {
-    add<T extends HTMLElement>(target: T, token: string | string[]): void;
-    remove<T extends HTMLElement>(target: T, token: string | string[]): void;
+    add<T extends HTMLElement>(target: T, token: string | string[]): boolean;
+    remove<T extends HTMLElement>(target: T, token: string | string[]): boolean;
     toggle<T extends HTMLElement>(target: T, token: string | string[], force?: boolean): boolean;
     has<T extends HTMLElement>(target: T, token: string | string[]): boolean;
   };

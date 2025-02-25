@@ -29,6 +29,15 @@ if (
 if (!(typeof userjs === 'object' && userjs.UserJS)) {
   return;
 }
+const createPolicy = () => {
+  // Native implementation exists
+  if (window.trustedTypes && window.trustedTypes.createPolicy) {
+    window.trustedTypes.createPolicy('default', {
+      createHTML: (string) => string
+    });
+  }
+};
+createPolicy();
 /**
  * Uncompressed locales + compiler
  *

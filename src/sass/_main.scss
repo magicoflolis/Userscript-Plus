@@ -889,6 +889,7 @@ mujs-body {
       &[data-blacklist] {
         display: grid;
         grid-auto-flow: column;
+
         &:not(.new-list) {
           grid-template-columns: repeat(2, 1fr);
         }
