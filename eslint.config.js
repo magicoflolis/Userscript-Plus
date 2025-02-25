@@ -1,5 +1,5 @@
-import js from '@eslint/js';
 import globals from 'globals';
+import pluginJs from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
 const userJSGlobals = {
@@ -9,7 +9,7 @@ const userJSGlobals = {
   languageList: 'readonly',
   translations: 'readonly',
   userjs: 'writable',
-  ...globals.es2023,
+  ...globals.es2024,
   ...globals.browser,
   ...globals.greasemonkey
 };
@@ -19,7 +19,7 @@ const webextGlobals = {
   webext: 'readonly',
   brws: 'readonly',
   userjs: 'writable',
-  ...globals.es2023,
+  ...globals.es2024,
   ...globals.browser,
   ...globals.webextensions
 };
@@ -42,7 +42,7 @@ const rules = {
 };
 
 export default [
-  js.configs.recommended,
+  pluginJs.configs.recommended,
   eslintConfigPrettier,
   {
     files: ['src/js/*.js'],
@@ -84,7 +84,7 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        ...globals.es2021,
+        ...globals.es2024,
         ...globals.node
       },
       parserOptions
