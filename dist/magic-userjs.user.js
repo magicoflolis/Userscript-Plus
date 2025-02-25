@@ -40,6 +40,7 @@
 // @connect     greasyfork.org
 // @connect     sleazyfork.org
 // @connect     github.com
+// @connect     githubusercontent.com
 // @connect     openuserjs.org
 // @grant     GM_addElement
 // @grant     GM_info
