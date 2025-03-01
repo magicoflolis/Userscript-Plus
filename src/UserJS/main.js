@@ -1339,7 +1339,7 @@ class Container {
     this.tab.create(host);
 
     const tabbody = this.tabbody;
-    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+    const getCellValue = (tr, idx) => tr.children[idx].dataset.value || tr.children[idx].innerText || tr.children[idx].textContent;
     const comparer = (idx, asc) => (a, b) =>
       ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
@@ -2580,7 +2580,10 @@ function primaryFN() {
         textContent: ujs.daily_installs
       });
       const fupdated = make('td', 'mujs-list', {
-        textContent: language.toDate(ujs.code_updated_at)
+        textContent: language.toDate(ujs.code_updated_at),
+        dataset: {
+          value: (new Date(ujs.code_updated_at)).toISOString()
+        }
       });
       const fname = make('td', 'mujs-name');
       const fmore = make('mujs-column', 'mujs-list hidden', {
@@ -2604,7 +2607,10 @@ function primaryFN() {
         textContent: `${i18n$('version_number')}: ${ujs.version}`
       });
       const fcreated = make('mu-js', 'mujs-list', {
-        textContent: `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`
+        textContent: `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`,
+        dataset: {
+          value: (new Date(ujs.created_at)).toISOString()
+        }
       });
       const flicense = make('mu-js', 'mujs-list', {
         title: ujs.license ?? i18n$('no_license'),
