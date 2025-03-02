@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@userjs/builder",
+  "description": "Create a UserScript",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+	"main": "./src/index.js",
+  "types": "./typings/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./typings/index.d.ts",
+        "default": "./src/index.js"
+      }
+    }
+  },
+  "directories": {
+    "lib": "src"
+  },
+  "files": [
+    "src",
+    "typings"
+  ],
+  "dependencies": {
+    "@userjs/i18n": "workspace:^",
+    "minimist": "^1.2.8",
+    "watchpack": "^2.4.2"
+  }
+}

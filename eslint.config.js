@@ -79,7 +79,7 @@ export default [
     }
   },
   {
-    files: ['tools/*.js'],
+    files: ['tools/*.js', 'utils/**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

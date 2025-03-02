@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@userjs/i18n",
+  "description": "Loads languages",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "./src/index.js",
+  "types": "./typings/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./typings/index.d.ts",
+        "default": "./src/index.js"
+      }
+    }
+  },
+  "directories": {
+    "lib": "src"
+  },
+  "files": [
+    "src",
+    "typings"
+  ]
+}

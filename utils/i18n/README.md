@@ -1,0 +1,1 @@
+# UserScript i18n
