@@ -1,0 +1,69 @@
+{
+  "version": "7.5.0",
+  "name": "Magic Userscript+ : Show Site All UserJS",
+  "description": "Finds available userscripts for the current webpage.",
+  "author": "Magic <magicoflolis@tuta.io>",
+  "bugs": "https://github.com/magicoflolis/Userscript-Plus/issues",
+  "homepage": "https://github.com/magicoflolis/Userscript-Plus",
+  "icon": "./src/img/icon_64.png",
+  "downloadURL": "https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjs.user.js",
+  "updateURL": "https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjs.meta.js",
+  "license": "MIT",
+  "build": {
+    "source": {
+      "metadata": "./src/UserJS/header.js",
+      "code": "./src/UserJS/main.js",
+      "mainCSS": "./build/css/magicuserjs.css"
+    },
+    "watch": {
+      "files": ["main.js", "header.js", "magicuserjs.css"],
+      "dirs": ["src/UserJS", "build/css"]
+    },
+    "paths": {
+      "fileName": "magic-userjs",
+      "dir": "./dist",
+      "dev": {
+        "fileName": "magic-userjs.dev",
+        "dir": "./web-server"
+      }
+    }
+  },
+  "metadata": {
+    "compatible": ["chrome", "firefox", "edge", "opera", "safari"],
+    "connect": [
+      "greasyfork.org",
+      "sleazyfork.org",
+      "github.com",
+      "githubusercontent.com",
+      "openuserjs.org"
+    ],
+    "grant": [
+      "GM_addValueChangeListener",
+      "GM_addElement",
+      "GM_info",
+      "GM_getValue",
+      "GM_openInTab",
+      "GM_setValue",
+      "GM_registerMenuCommand",
+      "GM_removeValueChangeListener",
+      "GM_xmlhttpRequest",
+      "GM.addValueChangeListener",
+      "GM.addElement",
+      "GM.info",
+      "GM.getValue",
+      "GM.openInTab",
+      "GM.setValue",
+      "GM.registerMenuCommand",
+      "GM.removeValueChangeListener",
+      "GM.xmlHttpRequest"
+    ],
+    "exclude": [],
+    "include": [],
+    "exclude-match": [],
+    "match": ["https://*/*"],
+    "noframes": true,
+    "resource": {},
+    "require": [],
+    "run-at": "document-start"
+  }
+}

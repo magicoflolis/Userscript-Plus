@@ -310,7 +310,7 @@ const DEFAULT_CONFIG = {
 class i18nHandler {
   constructor() {
     if (userjs.pool !== undefined) {
-      return userjs.pool;
+      return this;
     }
     userjs.pool = new Map();
     for (const [k, v] of Object.entries(translations)) {
@@ -339,7 +339,7 @@ class i18nHandler {
   i18n$(key) {
     const { navigator } = safeSelf();
     const current = navigator.language.split('-')[0] ?? 'en';
-    return userjs.pool.get(current)?.[key] ?? 'Unknown';
+    return userjs.pool.get(current)?.[key] ?? 'Invalid Key';
   }
 }
 const language = new i18nHandler();
@@ -531,7 +531,7 @@ const getGMInfo = () => {
       icon: '',
       name: 'Magic Userscript+',
       namespace: 'https://github.com/magicoflolis/Userscript-Plus',
-      updateURL: 'https://github.com/magicoflolis/Userscript-Plus/releases',
+      updateURL: 'https://github.com/magicoflolis/Userscript-Plus/raw/master/dist/magic-userjs.js',
       version: 'Bookmarklet',
       bugs: 'https://github.com/magicoflolis/Userscript-Plus/issues'
     }
@@ -1339,7 +1339,8 @@ class Container {
     this.tab.create(host);
 
     const tabbody = this.tabbody;
-    const getCellValue = (tr, idx) => tr.children[idx].dataset.value || tr.children[idx].innerText || tr.children[idx].textContent;
+    const getCellValue = (tr, idx) =>
+      tr.children[idx].dataset.value || tr.children[idx].innerText || tr.children[idx].textContent;
     const comparer = (idx, asc) => (a, b) =>
       ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
@@ -2231,9 +2232,6 @@ function primaryFN() {
       data_names;
       constructor(code) {
         this.code = code;
-        this.get_all();
-      }
-      get_all() {
         this.get_meta_block();
         this.get_code_block();
         this.parse_meta();
@@ -2571,9 +2569,7 @@ function primaryFN() {
       if (badUserJS.includes(ujs.id) || badUserJS.includes(ujs.url)) {
         return;
       }
-      if (!container.userjsCache.has(ujs.id)) {
-        container.userjsCache.set(ujs.id, ujs);
-      }
+      if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
       const eframe = make('td', 'install-btn');
       const uframe = make('td', 'mujs-uframe');
       const fdaily = make('td', 'mujs-list', {
@@ -2582,7 +2578,7 @@ function primaryFN() {
       const fupdated = make('td', 'mujs-list', {
         textContent: language.toDate(ujs.code_updated_at),
         dataset: {
-          value: (new Date(ujs.code_updated_at)).toISOString()
+          value: new Date(ujs.code_updated_at).toISOString()
         }
       });
       const fname = make('td', 'mujs-name');
@@ -2609,7 +2605,7 @@ function primaryFN() {
       const fcreated = make('mu-js', 'mujs-list', {
         textContent: `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`,
         dataset: {
-          value: (new Date(ujs.created_at)).toISOString()
+          value: new Date(ujs.created_at).toISOString()
         }
       });
       const flicense = make('mu-js', 'mujs-list', {

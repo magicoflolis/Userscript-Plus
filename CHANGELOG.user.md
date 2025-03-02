@@ -1,5 +1,25 @@
 # Changelog
 
+## v7.5.0
+
+* Merged https://github.com/magicoflolis/Userscript-Plus/pull/64
+* Cleaned up old comments
+
+**Known Issues:**
+
+* Enabling a engine requires the page to be reloaded, while disabling a engine does not.
+  * This is caused by the cache system.
+* "Filter out other languages" may not filter _every_ userscript that is not in your language.
+* SVG elements don't load on every webpage, _can be blocked by the page, external script, or extensions._
+
+**TODO:**
+
+* Finish translations.
+* Finish blacklist section.
+* Finish config section.
+
+---
+
 ## v7.4.0
 
 * Merged https://github.com/magicoflolis/Userscript-Plus/pull/59
@@ -136,3 +156,7 @@
 * Improve design of blacklist section
 
 ---
+
+## Previous Changes
+
+[https://github.com/magicoflolis/Userscript-Plus/releases](https://github.com/magicoflolis/Userscript-Plus/releases)
