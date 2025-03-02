@@ -40,14 +40,10 @@ Finds available UserScripts and UserStyles for the current webpage, the power of
 * [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/userscript-plus/)
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
 
-Works for desktop and mobile versions.
-
 *Chromium:*
 
 * ~~[Chrome Web Store](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)~~
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
-
-Magic Userscript+ should be compatible with any Chromium-based browser
 
 **Bookmarklet (not recommended):**
 
