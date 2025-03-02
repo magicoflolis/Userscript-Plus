@@ -1,6 +1,11 @@
 # Wiki Page (Under Construction)
 
-## New Tab
+- [Wiki Page (Under Construction)](#wiki-page-under-construction)
+  - [Shortcuts](#shortcuts)
+
+## Shortcuts
+
+**New Tab:**
 
 Syntax: `*` - Shortcut for userscipts that apply to `All sites`
 
@@ -25,7 +30,7 @@ mujs:settings
 
 ---
 
-## Search Bar
+**Search Bar:**
 
 By default it will search by name and description, you can refine your searches using the examples listed below.
 

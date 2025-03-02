@@ -73,7 +73,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * Blacklist:
   * Attempts to exclude certain hosts from being queried - localhost, bank, government, etc.
 * Menu:
-  * Search for UserScripts - for shortcuts see [Wiki](https://github.com/magicoflolis/Userscript-Plus/blob/master/wiki/README.md)
+  * Search for UserScripts - for shortcuts see [Wiki](https://github.com/magicoflolis/Userscript-Plus/blob/master/wiki/README.md#shortcuts)
   * Filter UserScripts which do not match your current language
   * Sort UserScripts, default sorting "Daily Installs"
   * Preview UserScripts code before install
@@ -142,52 +142,11 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * **If nothing appears, this means the script is not executing at all!**
 * For any additional help, submit a [New Issue](https://github.com/magicoflolis/Userscript-Plus/issues/new/choose)
 
-## Build
+## Want to Contribute?
 
-Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) - *the version of Node.js should match or be greater than the `"node"` key in `package.json`.*
+Fork this repo and open a [pull request](https://github.com/magicoflolis/Userscript-Plus/pulls) - [Rules](https://github.com/magicoflolis/Userscript-Plus/blob/master/wiki/Build.md#contribution-rules) - [Guide](https://github.com/magicoflolis/Userscript-Plus/blob/master/wiki/Build.md#contribution-guide)
 
-``` sh
-# Install dependencies
-$ pnpm i
-```
-
-### UserScript Version
-
-Before you begin, rename `.env.example` to `.env`
-
-**Recommened Testing Environments:**
-
-* **Desktop:** any browser with [ViolentMonkey](https://violentmonkey.github.io/), see [How to edit scripts with your favorite editor?](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/)
-* **Mobile:**
-  * Desktop: use "Responsive Design Mode(Ctrl+Shift+M)" on [FireFox Developer Edition](https://www.mozilla.org/firefox/developer/) or just [FireFox](https://www.mozilla.org/firefox/)
-  * Android: any browser that supports User Script or support for installing a User Script manager, I use [Cromite](https://github.com/uazo/cromite)
-  * IOS: any browser that supports User Script or support for installing a User Script manager
-
-``` sh
-# Watch and compile to local HTTP server
-$ pnpm run dev:UserJS
-
-# Compile UserScript to "./dist"
-$ pnpm run pub:UserJS
-```
-
-### WebExtension Version
-
-``` sh
-# Compile WebExtension (developer version) for "Chromium" to "./build/chrome"
-$ pnpm run dev:Cr
-# Compile WebExtension (developer version) for "Firefox" to "./build/firefox"
-$ pnpm run dev:FF
-# Compile WebExtension (public version) for "Chromium" to "./build/chrome"
-$ pnpm run webpack:Cr
-# Compile WebExtension (public version) for "Firefox" to "./build/firefox"
-$ pnpm run webpack:FF
-
-# [ Testing ]
-# Browsers can be launched via "Run and Debug" in VSCode.
-# Edit runtimeExecutable in ".vscode/launch.json" to your Chrome executable.
-# Recommended to create an additional profile "about:profiles" for Firefox.
-```
+How to add or edit translations? How to build? - [Build](https://github.com/magicoflolis/Userscript-Plus/blob/master/wiki/Build.md)
 
 ### Roadmap
 
