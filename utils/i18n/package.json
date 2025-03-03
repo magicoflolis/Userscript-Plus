@@ -4,6 +4,7 @@
   "description": "Loads languages",
   "version": "1.0.0",
   "license": "MIT",
+	"type": "module",
   "main": "./src/index.js",
   "types": "./typings/index.d.ts",
   "exports": {
