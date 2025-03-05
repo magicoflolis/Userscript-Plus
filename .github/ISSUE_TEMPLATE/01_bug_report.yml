@@ -35,6 +35,13 @@ body:
     validations:
       required: true
   - type: input
+    id: userjs-manager
+    attributes:
+      label: User Script Manager
+      description: What user script manager are you using? - not required when using Web Extension
+    validations:
+      required: false
+  - type: input
     id: url
     attributes:
       label: URL
