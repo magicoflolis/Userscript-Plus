@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.5.0
+// @version      7.6.0
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS

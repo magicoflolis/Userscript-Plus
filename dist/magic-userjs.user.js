@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.5.0
+// @version      7.6.0
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -225,7 +225,7 @@ const translations = {
   "save": "Save",
   "reset": "Reset",
   "preview_code": "Preview Code",
-  "saveFile": "Save File",
+  "saveFile": "Download",
   "newTab": "New Tab",
   "applies_to": "Applies to",
   "license": "License",
@@ -737,6 +737,9 @@ const main_css = `mujs-root {
 }
 
 mujs-root * {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   scrollbar-color: var(--mujs-txt-color, hsl(0, 0%, 100%)) hsl(224, 14%, 21%);
   scrollbar-width: thin;
 }
@@ -783,10 +786,6 @@ td.mujs-list {
   font-weight: 500;
 }
 
-.mujs-sty-flex > mujs-btn {
-  margin: auto;
-}
-
 .mujs-invalid {
   border-radius: 8px !important;
   border-width: 2px !important;
@@ -806,11 +805,6 @@ mujs-row {
   gap: 0.5em;
 }
 
-@media screen and (max-width: 800px) {
-  mujs-column {
-    flex-flow: row wrap;
-  }
-}
 mujs-column count-frame[data-counter=greasyfork] {
   background: var(--mujs-gf-color, hsl(204, 100%, 40%));
 }
@@ -822,6 +816,11 @@ mujs-column count-frame[data-counter=github] {
 }
 mujs-column count-frame[data-counter=openuserjs] {
   background: hsla(12, 86%, 50%, 0.568);
+}
+@media screen and (max-width: 800px) {
+  mujs-column {
+    flex-flow: row wrap;
+  }
 }
 
 mujs-row {
@@ -920,6 +919,11 @@ mujs-main mujs-tabs mujs-tab {
   border-radius: 4px;
   background: transparent;
 }
+@media screen and (max-width: 800px) {
+  mujs-main mujs-tabs mujs-tab {
+    min-width: 6em !important;
+  }
+}
 mujs-main mujs-tabs mujs-tab.active {
   background: var(--mujs-even-row, hsl(222, 14%, 18%));
 }
@@ -962,16 +966,24 @@ mujs-main input:not([type=checkbox]) {
   border: transparent;
   outline: none !important;
 }
+mujs-main mujs-page,
 mujs-main textarea {
   background: inherit;
   overflow-y: auto;
-  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
   border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-  border-radius: 10px;
-  resize: vertical;
+  border-radius: 5px;
   outline: none;
   font-family: monospace;
   font-size: 14px;
+}
+mujs-main mujs-page {
+  padding: 0.5em;
+  margin: 0.5em;
+}
+mujs-main textarea {
+  overflow-y: auto;
+  color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+  resize: vertical;
 }
 mujs-main textarea:focus {
   outline: none;
@@ -1002,8 +1014,7 @@ mujs-main .mujs-prompt {
   align-items: center;
   justify-content: center;
 }
-mujs-main .mujs-prompt svg,
-mujs-main .mujs-prompt img {
+mujs-main .mujs-prompt svg {
   width: 14px;
   height: 14px;
   background: transparent;
@@ -1119,9 +1130,6 @@ mujs-header mujs-url > input {
 mujs-header .rate-container {
   order: 1;
 }
-mujs-header .mujs-sty-flex {
-  order: 2;
-}
 mujs-header .btn-frame {
   order: 999999999999;
 }
@@ -1168,13 +1176,11 @@ mujs-body table {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
     padding-top: 0.5em;
     padding-bottom: 0.5em;
   }
   mujs-body table .frame:not(.webext-page) td {
     margin: auto;
-    border-bottom: 1px solid transparent;
   }
   mujs-body table .frame:not(.webext-page) td > mujs-a,
   mujs-body table .frame:not(.webext-page) td > mu-js,
@@ -1182,9 +1188,32 @@ mujs-body table {
     text-align: center;
     justify-content: center;
   }
+  mujs-body table .frame:not(.webext-page) td > mujs-a {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1180px) and (max-width: 800px) {
+  mujs-body table .frame:not(.webext-page) td > mujs-column {
+    flex-flow: column wrap;
+  }
+  mujs-body table .frame:not(.webext-page) td > mujs-column > mujs-row {
+    align-content: center;
+  }
+  mujs-body table .frame:not(.webext-page) td > mujs-column mujs-column {
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 1180px) {
   mujs-body table .frame:not(.webext-page) td:not(.mujs-name, .install-btn) {
     width: 25%;
   }
+}
+@media screen and (max-width: 1180px) and (max-width: 800px) {
+  mujs-body table .frame:not(.webext-page) td.install-btn {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1180px) {
   mujs-body table .frame:not(.webext-page) .mujs-name {
     width: 100%;
   }
@@ -1197,15 +1226,12 @@ mujs-body table {
     width: auto !important;
   }
 }
-mujs-body table th,
-mujs-body table td {
-  border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-}
 mujs-body table th {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   background: hsla(222, 14%, 33%, 0.75);
+  border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
 mujs-body table th.mujs-header-name {
   width: 50%;
@@ -1218,8 +1244,14 @@ mujs-body table th.mujs-header-name {
 mujs-body table .frame:nth-child(even) {
   background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
 }
+mujs-body table .frame:nth-child(even) textarea {
+  background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+}
 mujs-body table .frame:nth-child(odd) {
   background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+}
+mujs-body table .frame:nth-child(odd) textarea {
+  background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
 }
 mujs-body table .frame:not([data-engine=sleazyfork], [data-engine=greasyfork]) mujs-a {
   color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
@@ -1295,12 +1327,9 @@ mujs-body table .frame .mujs-ratings[data-el=bad] {
   color: hsl(0, 100%, 50%);
 }
 mujs-body table .frame svg {
+  width: 12px;
+  height: 12px;
   fill: currentColor;
-}
-mujs-body table .frame svg,
-mujs-body table .frame img {
-  width: 14px;
-  height: 14px;
   background: transparent;
 }
 mujs-body table .frame > td:not(.mujs-name) {
@@ -1322,6 +1351,11 @@ mujs-body table .frame > .mujs-name > mu-jsbtn {
 }
 mujs-body table .frame > .mujs-name > mujs-column > mu-jsbtn {
   padding: 0px 7px;
+}
+@media screen and (max-width: 800px) {
+  mujs-body table .frame > .mujs-name > mujs-column > mu-jsbtn {
+    width: 100%;
+  }
 }
 mujs-body table .frame > .mujs-uframe > mujs-a {
   font-size: 16px;
@@ -1363,6 +1397,26 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a::after {
 mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after {
   content: "";
 }
+@media screen and (max-width: 800px) {
+  mujs-body table .frame [data-el=matches] {
+    width: 30em !important;
+  }
+}
+mujs-body table .frame [data-name=license] {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+@media screen and (max-width: 800px) {
+  mujs-body table .frame [data-name=license] {
+    width: 100% !important;
+    width: -moz-available !important;
+    width: -webkit-fill-available !important;
+  }
+}
 
 @media screen and (max-width: 1150px) {
   .mujs-cfg {
@@ -1374,18 +1428,6 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
   height: -moz-fit-content;
   height: -webkit-fit-content;
 }
-@media screen and (max-height: 720px) {
-  .mujs-cfg:not(.webext-page) {
-    height: 100%;
-    height: -moz-available;
-    height: -webkit-fill-available;
-    width: 100%;
-    width: -moz-available;
-    width: -webkit-fill-available;
-    overflow-x: auto;
-    padding: 0.5em;
-  }
-}
 .mujs-cfg mujs-section {
   border-radius: 16px;
   padding: 0.5em;
@@ -1393,14 +1435,42 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
 .mujs-cfg mujs-section:nth-child(even) {
   background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
 }
+.mujs-cfg mujs-section:nth-child(even) input,
+.mujs-cfg mujs-section:nth-child(even) select {
+  background: var(--mujs-odd-row, hsl(222, 14%, 33%));
+}
+.mujs-cfg mujs-section:nth-child(even) select option {
+  background: var(--mujs-odd-row, hsl(222, 14%, 33%));
+}
+.mujs-cfg mujs-section:nth-child(even) select option:hover {
+  background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+}
 .mujs-cfg mujs-section:nth-child(odd) {
   background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
 }
-.mujs-cfg mujs-section[data-name=theme], .mujs-cfg mujs-section[data-name=blacklist] {
+.mujs-cfg mujs-section:nth-child(odd) input,
+.mujs-cfg mujs-section:nth-child(odd) select {
+  background: var(--mujs-even-row, hsl(222, 14%, 18%));
+}
+.mujs-cfg mujs-section:nth-child(odd) select option {
+  background: var(--mujs-even-row, hsl(222, 14%, 18%));
+}
+.mujs-cfg mujs-section:nth-child(odd) select option:hover {
+  background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+}
+.mujs-cfg mujs-section[data-name=theme], .mujs-cfg mujs-section[data-name=exp], .mujs-cfg mujs-section[data-name=blacklist] {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   gap: 0.25em;
+}
+.mujs-cfg mujs-section[data-name=theme] > mujs-btn, .mujs-cfg mujs-section[data-name=exp] > mujs-btn, .mujs-cfg mujs-section[data-name=blacklist] > mujs-btn {
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+}
+.mujs-cfg mujs-section[data-name=theme] > mujs-btn:hover, .mujs-cfg mujs-section[data-name=exp] > mujs-btn:hover, .mujs-cfg mujs-section[data-name=blacklist] > mujs-btn:hover {
+  background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
 }
 .mujs-cfg mujs-section input[type=text]::-webkit-input-placeholder {
   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
@@ -1434,22 +1504,37 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
 .mujs-cfg mujs-section > label.new-list mujs-add {
   font-size: 20px;
 }
-.mujs-cfg mujs-section > label.sub-section {
-  padding: 0.2em;
-}
 .mujs-cfg mujs-section > label input:not([type=checkbox]) {
   font-size: 14px;
   position: relative;
   border-radius: 4px;
   border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
-.mujs-cfg mujs-section > input {
+.mujs-cfg mujs-section select,
+.mujs-cfg mujs-section select option {
+  color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+  border: 1px solid transparent;
+  list-style: none;
+  outline-style: none;
+  pointer-events: auto;
+}
+.mujs-cfg mujs-section select {
+  text-align: center;
+  border-radius: 4px;
+}
+.mujs-cfg mujs-section > *.sub-section {
+  padding: 0.2em;
+}
+.mujs-cfg mujs-section > *.sub-section[data-engine] {
+  flex-wrap: wrap;
+}
+.mujs-cfg mujs-section > *.sub-section[data-engine] input {
   width: 100%;
   width: -moz-available;
   width: -webkit-fill-available;
-  margin-top: 5px;
-  border-radius: 4px;
-  border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+}
+.mujs-cfg mujs-section > *.sub-section input[type=text] {
+  margin: 0.2em 0px;
 }
 .mujs-cfg .mujs-inlab {
   position: relative;
@@ -1465,8 +1550,11 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
 .mujs-cfg .mujs-inlab input[type=checkbox]:checked + label:before {
   right: 0px;
 }
-.mujs-cfg .mujs-inlab input[type=checkbox][data-name=greasyfork]:checked + label, .mujs-cfg .mujs-inlab input[type=checkbox][data-name=sleazyfork]:checked + label {
-  background: var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568));
+.mujs-cfg .mujs-inlab input[type=checkbox][data-name=greasyfork]:checked + label {
+  background: var(--mujs-gf-color, hsl(204, 100%, 40%));
+}
+.mujs-cfg .mujs-inlab input[type=checkbox][data-name=sleazyfork]:checked + label {
+  background: var(--mujs-sf-color, hsl(12, 86%, 50%));
 }
 .mujs-cfg .mujs-inlab input[type=checkbox][data-name=openuserjs]:checked + label {
   background: var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568));
@@ -1494,6 +1582,9 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
   right: 20px;
   border-radius: 20px;
 }
+.mujs-cfg .mujs-sty-flex mujs-btn {
+  margin: auto;
+}
 .mujs-cfg .mujs-sty-flex mujs-btn[data-command=reset] {
   background: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
   border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
@@ -1512,6 +1603,18 @@ mujs-body table .frame [data-el=matches] .mujs-grants > mujs-a:last-child::after
 }
 .mujs-cfg:not(.webext-page) {
   margin: 1rem 25rem;
+}
+@media screen and (max-height: 720px) {
+  .mujs-cfg:not(.webext-page) {
+    height: 100%;
+    height: -moz-available;
+    height: -webkit-fill-available;
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    overflow-x: auto;
+    padding: 0.5em;
+  }
 }
 
 mujs-a {
@@ -1541,12 +1644,9 @@ mujs-btn {
   padding: 6px 15px;
 }
 mujs-btn svg {
-  fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
-}
-mujs-btn svg,
-mujs-btn img {
   width: 14px;
   height: 14px;
+  fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
 }
 
 mu-jsbtn {
@@ -1564,7 +1664,7 @@ mu-jsbtn {
 mujs-a,
 mu-jsbtn,
 .mujs-pointer,
-.mujs-cfg mujs-section *:not(input[type=password], input[type=text], input[type=number], [data-theme], [data-blacklist]),
+.mujs-cfg mujs-section *:not(input[type=text], input[type=number], [data-theme], [data-blacklist]),
 .mainbtn,
 .mainframe,
 mujs-btn {
@@ -1624,6 +1724,65 @@ const log = (...msg) => {
  */
 let cfg = {};
 
+// #region Validators
+/**
+ * @type { import("../typings/types.d.ts").objToStr }
+ */
+const objToStr = (obj) => Object.prototype.toString.call(obj);
+/**
+ * @type { import("../typings/types.d.ts").isRegExp }
+ */
+const isRegExp = (obj) => {
+  const s = objToStr(obj);
+  return s.includes('RegExp');
+};
+/**
+ * @type { import("../typings/types.d.ts").isElem }
+ */
+const isElem = (obj) => {
+  const s = objToStr(obj);
+  return s.includes('Element');
+};
+/**
+ * @type { import("../typings/types.d.ts").isObj }
+ */
+const isObj = (obj) => {
+  const s = objToStr(obj);
+  return s.includes('Object');
+};
+/**
+ * @type { import("../typings/types.d.ts").isFN }
+ */
+const isFN = (obj) => {
+  const s = objToStr(obj);
+  return s.includes('Function');
+};
+/**
+ * @type { import("../typings/types.d.ts").isNull }
+ */
+const isNull = (obj) => {
+  return Object.is(obj, null) || Object.is(obj, undefined);
+};
+/**
+ * @type { import("../typings/types.d.ts").isBlank }
+ */
+const isBlank = (obj) => {
+  return (
+    (typeof obj === 'string' && Object.is(obj.trim(), '')) ||
+    ((obj instanceof Set || obj instanceof Map) && Object.is(obj.size, 0)) ||
+    (Array.isArray(obj) && Object.is(obj.length, 0)) ||
+    (isObj(obj) && Object.is(Object.keys(obj).length, 0))
+  );
+};
+/**
+ * @type { import("../typings/types.d.ts").isEmpty }
+ */
+const isEmpty = (obj) => {
+  return isNull(obj) || isBlank(obj);
+};
+// #endregion
+
+// #region Globals
 /**
  * https://github.com/zloirock/core-js/blob/master/packages/core-js/internals/global-this.js
  * @returns {typeof globalThis}
@@ -1643,7 +1802,6 @@ function globalWin() {
     Function('return this')()
   );
 }
-
 /** @type { import("../typings/UserJS.d.ts").safeSelf } */
 function safeSelf() {
   if (userjs.safeSelf) {
@@ -1653,6 +1811,7 @@ function safeSelf() {
   /** @type { import("../typings/UserJS.d.ts").safeHandles } */
   const safe = {
     XMLHttpRequest: g.XMLHttpRequest,
+    CustomEvent: g.CustomEvent,
     createElement: g.document.createElement.bind(g.document),
     createElementNS: g.document.createElementNS.bind(g.document),
     createTextNode: g.document.createTextNode.bind(g.document),
@@ -1689,9 +1848,20 @@ function safeSelf() {
       }
     }
   };
+  for (const [k, v] of Object.entries(safe)) {
+    if (k === 'scheduler') {
+      continue;
+    } else if (k === 'navigator') {
+      continue;
+    } else if (isFN(v)) {
+      continue;
+    }
+    err({ message: `Safe handles "${k}" returned "${v}"`, cause: 'safeSelf' });
+  }
   userjs.safeSelf = safe;
   return userjs.safeSelf;
 }
+// #endregion
 
 const BLANK_PAGE = 'about:blank';
 // Lets highlight me :)
@@ -1786,12 +1956,15 @@ const DEFAULT_CONFIG = {
   autoSort: 'daily_installs',
   clearTabCache: true,
   cache: true,
-  codePreview: false,
   autoexpand: false,
   filterlang: false,
   sleazyredirect: false,
   time: 10000,
   blacklist: ['userjs-local', 'userjs-finance', 'userjs-social', 'userjs-unsupported'],
+  preview: {
+    code: false,
+    metadata: false
+  },
   engines: [
     {
       enabled: true,
@@ -1942,61 +2115,6 @@ const qsA = (selectors, root) => {
     err(ex);
   }
   return [];
-};
-/**
- * @type { import("../typings/types.d.ts").objToStr }
- */
-const objToStr = (obj) => Object.prototype.toString.call(obj);
-/**
- * @type { import("../typings/types.d.ts").isRegExp }
- */
-const isRegExp = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('RegExp');
-};
-/**
- * @type { import("../typings/types.d.ts").isElem }
- */
-const isElem = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('Element');
-};
-/**
- * @type { import("../typings/types.d.ts").isObj }
- */
-const isObj = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('Object');
-};
-/**
- * @type { import("../typings/types.d.ts").isFN }
- */
-const isFN = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('Function');
-};
-/**
- * @type { import("../typings/types.d.ts").isNull }
- */
-const isNull = (obj) => {
-  return Object.is(obj, null) || Object.is(obj, undefined);
-};
-/**
- * @type { import("../typings/types.d.ts").isBlank }
- */
-const isBlank = (obj) => {
-  return (
-    (typeof obj === 'string' && Object.is(obj.trim(), '')) ||
-    ((obj instanceof Set || obj instanceof Map) && Object.is(obj.size, 0)) ||
-    (Array.isArray(obj) && Object.is(obj.length, 0)) ||
-    (isObj(obj) && Object.is(Object.keys(obj).length, 0))
-  );
-};
-/**
- * @type { import("../typings/types.d.ts").isEmpty }
- */
-const isEmpty = (obj) => {
-  return isNull(obj) || isBlank(obj);
 };
 /**
  * @type { import("../typings/types.d.ts").normalizeTarget }
@@ -2201,61 +2319,57 @@ class Memorize {
 const memory = new Memorize();
 //#region Icon SVGs
 const iconSVG = {
-  cfg: {
-    viewBox: '0 0 24 24',
-    html: '<g><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7848 0.449982C13.8239 0.449982 14.7167 1.16546 14.9122 2.15495L14.9991 2.59495C15.3408 4.32442 17.1859 5.35722 18.9016 4.7794L19.3383 4.63233C20.3199 4.30175 21.4054 4.69358 21.9249 5.56605L22.7097 6.88386C23.2293 7.75636 23.0365 8.86366 22.2504 9.52253L21.9008 9.81555C20.5267 10.9672 20.5267 13.0328 21.9008 14.1844L22.2504 14.4774C23.0365 15.1363 23.2293 16.2436 22.7097 17.1161L21.925 18.4339C21.4054 19.3064 20.3199 19.6982 19.3382 19.3676L18.9017 19.2205C17.1859 18.6426 15.3408 19.6754 14.9991 21.405L14.9122 21.845C14.7167 22.8345 13.8239 23.55 12.7848 23.55H11.2152C10.1761 23.55 9.28331 22.8345 9.08781 21.8451L9.00082 21.4048C8.65909 19.6754 6.81395 18.6426 5.09822 19.2205L4.66179 19.3675C3.68016 19.6982 2.59465 19.3063 2.07505 18.4338L1.2903 17.1161C0.770719 16.2436 0.963446 15.1363 1.74956 14.4774L2.09922 14.1844C3.47324 13.0327 3.47324 10.9672 2.09922 9.8156L1.74956 9.52254C0.963446 8.86366 0.77072 7.75638 1.2903 6.8839L2.07508 5.56608C2.59466 4.69359 3.68014 4.30176 4.66176 4.63236L5.09831 4.77939C6.81401 5.35722 8.65909 4.32449 9.00082 2.59506L9.0878 2.15487C9.28331 1.16542 10.176 0.449982 11.2152 0.449982H12.7848ZM12 15.3C13.8225 15.3 15.3 13.8225 15.3 12C15.3 10.1774 13.8225 8.69998 12 8.69998C10.1774 8.69998 8.69997 10.1774 8.69997 12C8.69997 13.8225 10.1774 15.3 12 15.3Z" fill="currentColor"></path></g>'
-  },
   close: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M4.70718 2.58574C4.31666 2.19522 3.68349 2.19522 3.29297 2.58574L2.58586 3.29285C2.19534 3.68337 2.19534 4.31654 2.58586 4.70706L9.87877 12L2.5859 19.2928C2.19537 19.6834 2.19537 20.3165 2.5859 20.7071L3.293 21.4142C3.68353 21.8047 4.31669 21.8047 4.70722 21.4142L12.0001 14.1213L19.293 21.4142C19.6835 21.8047 20.3167 21.8047 20.7072 21.4142L21.4143 20.7071C21.8048 20.3165 21.8048 19.6834 21.4143 19.2928L14.1214 12L21.4143 4.70706C21.8048 4.31654 21.8048 3.68337 21.4143 3.29285L20.7072 2.58574C20.3167 2.19522 19.6835 2.19522 19.293 2.58574L12.0001 9.87865L4.70718 2.58574Z" fill="currentColor"></path></g>'
+    viewBox: '0 0 384 512',
+    html: '<path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>'
   },
-  filter: {
-    viewBox: '0 0 24 24',
-    html: '<g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M4.22657 2C2.50087 2 1.58526 4.03892 2.73175 5.32873L8.99972 12.3802V19C8.99972 19.3788 9.21373 19.725 9.55251 19.8944L13.5525 21.8944C13.8625 22.0494 14.2306 22.0329 14.5255 21.8507C14.8203 21.6684 14.9997 21.3466 14.9997 21V12.3802L21.2677 5.32873C22.4142 4.03893 21.4986 2 19.7729 2H4.22657Z" fill="currentColor"/></g>'
+  code: {
+    viewBox: '0 0 640 512',
+    html: '<path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/>'
   },
-  fsClose: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M7 9.5C8.38071 9.5 9.5 8.38071 9.5 7V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H7.5C6.94772 1.5 6.5 1.94772 6.5 2.5V6.5H2.5C1.94772 6.5 1.5 6.94772 1.5 7.5V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H7Z" fill="currentColor"></path> <path d="M17 9.5C15.6193 9.5 14.5 8.38071 14.5 7V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H16.5C17.0523 1.5 17.5 1.94772 17.5 2.5V6.5H21.5C22.0523 6.5 22.5 6.94772 22.5 7.5V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H17Z" fill="currentColor"></path> <path d="M17 14.5C15.6193 14.5 14.5 15.6193 14.5 17V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H16.5C17.0523 22.5 17.5 22.0523 17.5 21.5V17.5H21.5C22.0523 17.5 22.5 17.0523 22.5 16.5V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H17Z" fill="currentColor"></path> <path d="M9.5 17C9.5 15.6193 8.38071 14.5 7 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V16.5C1.5 17.0523 1.94772 17.5 2.5 17.5H6.5V21.5C6.5 22.0523 6.94772 22.5 7.5 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V17Z" fill="currentColor"></path></g>'
+  collapse: {
+    viewBox: '0 0 448 512',
+    html: '<path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 320c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0z"/>'
   },
-  fsOpen: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M4 1.5C2.61929 1.5 1.5 2.61929 1.5 4V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H3.5C4.05228 9.5 4.5 9.05228 4.5 8.5V4.5H8.5C9.05228 4.5 9.5 4.05228 9.5 3.5V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H4Z" fill="currentColor"></path> <path d="M20 1.5C21.3807 1.5 22.5 2.61929 22.5 4V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H20.5C19.9477 9.5 19.5 9.05228 19.5 8.5V4.5H15.5C14.9477 4.5 14.5 4.05228 14.5 3.5V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H20Z" fill="currentColor"></path> <path d="M20 22.5C21.3807 22.5 22.5 21.3807 22.5 20V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H20.5C19.9477 14.5 19.5 14.9477 19.5 15.5V19.5H15.5C14.9477 19.5 14.5 19.9477 14.5 20.5V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H20Z" fill="currentColor"></path> <path d="M1.5 20C1.5 21.3807 2.61929 22.5 4 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V20.5C9.5 19.9477 9.05228 19.5 8.5 19.5H4.5V15.5C4.5 14.9477 4.05228 14.5 3.5 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V20Z" fill="currentColor"></path></g>'
+  download: {
+    viewBox: '0 0 384 512',
+    html: '<path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM216 232l0 102.1 31-31c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-72 72c-9.4 9.4-24.6 9.4-33.9 0l-72-72c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l31 31L168 232c0-13.3 10.7-24 24-24s24 10.7 24 24z"/>'
   },
-  fullscreen: {
-    viewBox: '0 0 96 96',
-    html: '<g><path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/><path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/><path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/><path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/></g>'
+  expand: {
+    viewBox: '0 0 448 512',
+    html: '<path d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"/>'
   },
-  gf: {
-    viewBox: '0 0 510.4 510.4',
-    html: '<g><path d="M505.2,80c-6.4-6.4-16-6.4-22.4,0l-89.6,89.6c-1.6,1.6-6.4,3.2-12.8,1.6c-4.8-1.6-9.6-3.2-14.4-6.4L468.4,62.4 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L343.6,142.4c-3.2-4.8-4.8-9.6-4.8-12.8c-1.6-6.4-1.6-11.2,1.6-12.8L430,27.2 c6.4-6.4,6.4-16,0-22.4c-6.4-6.4-16-6.4-22.4,0L290.8,121.6c-16,16-20.8,40-14.4,62.4l-264,256c-16,16-16,43.2,0,59.2 c6.4,6.4,16,11.2,27.2,11.2c11.2,0,22.4-4.8,30.4-12.8L319.6,232c8,3.2,16,4.8,24,4.8c16,0,32-6.4,44.8-17.6l116.8-116.8 C511.6,96,511.6,86.4,505.2,80z M46,475.2c-3.2,3.2-9.6,3.2-14.4,0c-3.2-3.2-3.2-9.6,1.6-12.8l257.6-249.6c0,0,1.6,1.6,1.6,3.2 L46,475.2z M316.4,192c-14.4-14.4-16-35.2-4.8-48c4.8,11.2,11.2,22.4,20.8,32c9.6,9.6,20.8,16,32,20.8 C351.6,208,329.2,206.4,316.4,192z"/></g>'
+  gear: {
+    viewBox: '0 0 512 512',
+    html: '<path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/>'
   },
-  gh: {
-    viewBox: '0 0 16 16',
-    html: '<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>'
+  github: {
+    viewBox: '0 0 496 512',
+    html: '<path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/>'
   },
-  hide: {
-    viewBox: '0 0 24 24',
-    html: '<g> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5L21 10.5C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="currentColor"></path></g>'
+  globe: {
+    viewBox: '0 0 512 512',
+    html: '<path d="M352 256c0 22.2-1.2 43.6-3.3 64l-185.3 0c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64l185.3 0c2.2 20.4 3.3 41.8 3.3 64zm28.8-64l123.1 0c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64l-123.1 0c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32l-116.7 0c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0l-176.6 0c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0L18.6 160C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192l123.1 0c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64L8.1 320C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6l176.6 0c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352l116.7 0zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6l116.7 0z"/>'
   },
   install: {
-    viewBox: '0 0 16 16',
-    html: '<g><path d="M8.75 1.75a.75.75 0 00-1.5 0v6.59L5.3 6.24a.75.75 0 10-1.1 1.02L7.45 10.76a.78.78 0 00.038.038.748.748 0 001.063-.037l3.25-3.5a.75.75 0 10-1.1-1.02l-1.95 2.1V1.75z"/><path d="M1.75 9a.75.75 0 01.75.75v3c0 .414.336.75.75.75h9.5a.75.75 0 00.75-.75v-3a.75.75 0 011.5 0v3A2.25 2.25 0 0112.75 15h-9.5A2.25 2.25 0 011 12.75v-3A.75.75 0 011.75 9z"/></g>'
+    viewBox: '0 0 512 512',
+    html: '<path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 242.7-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7 288 32zM64 352c-35.3 0-64 28.7-64 64l0 32c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-32c0-35.3-28.7-64-64-64l-101.5 0-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352 64 352zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/>'
   },
   issue: {
-    viewBox: '0 0 24 24',
-    html: '<path fill="none" stroke="#ffff" stroke-width="2" d="M23,20 C21.62,17.91 20,17 19,17 M5,17 C4,17 2.38,17.91 1,20 M19,9 C22,9 23,6 23,6 M1,6 C1,6 2,9 5,9 M19,13 L24,13 L19,13 Z M5,13 L0,13 L5,13 Z M12,23 L12,12 L12,23 L12,23 Z M12,23 C8,22.9999998 5,20.0000002 5,16 L5,9 C5,9 8,6.988 12,7 C16,7.012 19,9 19,9 C19,9 19,11.9999998 19,16 C19,20.0000002 16,23.0000002 12,23 L12,23 Z M7,8 L7,6 C7,3.24 9.24,1 12,1 C14.76,1 17,3.24 17,6 L17,8"/>'
+    viewBox: '0 0 512 512',
+    html: '<path d="M256 0c53 0 96 43 96 96l0 3.6c0 15.7-12.7 28.4-28.4 28.4l-135.1 0c-15.7 0-28.4-12.7-28.4-28.4l0-3.6c0-53 43-96 96-96zM41.4 105.4c12.5-12.5 32.8-12.5 45.3 0l64 64c.7 .7 1.3 1.4 1.9 2.1c14.2-7.3 30.4-11.4 47.5-11.4l112 0c17.1 0 33.2 4.1 47.5 11.4c.6-.7 1.2-1.4 1.9-2.1l64-64c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-64 64c-.7 .7-1.4 1.3-2.1 1.9c6.2 12 10.1 25.3 11.1 39.5l64.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c0 24.6-5.5 47.8-15.4 68.6c2.2 1.3 4.2 2.9 6 4.8l64 64c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-63.1-63.1c-24.5 21.8-55.8 36.2-90.3 39.6L272 240c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 239.2c-34.5-3.4-65.8-17.8-90.3-39.6L86.6 502.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l64-64c1.9-1.9 3.9-3.4 6-4.8C101.5 367.8 96 344.6 96 320l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64.3 0c1.1-14.1 5-27.5 11.1-39.5c-.7-.6-1.4-1.2-2.1-1.9l-64-64c-12.5-12.5-12.5-32.8 0-45.3z"/>'
+  },
+  minus: {
+    viewBox: '0 0 448 512',
+    html: '<path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>'
   },
   nav: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M2 5.5C2 4.94772 2.44772 4.5 3 4.5H21C21.5523 4.5 22 4.94772 22 5.5V6.5C22 7.05228 21.5523 7.5 21 7.5H3C2.44772 7.5 2 7.05228 2 6.5V5.5Z" fill="currentColor"></path> <path d="M2 11.5C2 10.9477 2.44772 10.5 3 10.5H21C21.5523 10.5 22 10.9477 22 11.5V12.5C22 13.0523 21.5523 13.5 21 13.5H3C2.44772 13.5 2 13.0523 2 12.5V11.5Z" fill="currentColor"></path><path d="M3 16.5C2.44772 16.5 2 16.9477 2 17.5V18.5C2 19.0523 2.44772 19.5 3 19.5H21C21.5523 19.5 22 19.0523 22 18.5V17.5C22 16.9477 21.5523 16.5 21 16.5H3Z" fill="currentColor"></path></g>'
+    viewBox: '0 0 448 512',
+    html: '<path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/>'
   },
-  plus: {
-    viewBox: '0 0 24 24',
-    html: '<g><path d="M13.5 3C13.5 2.44772 13.0523 2 12.5 2H11.5C10.9477 2 10.5 2.44772 10.5 3V10.5H3C2.44772 10.5 2 10.9477 2 11.5V12.5C2 13.0523 2.44772 13.5 3 13.5H10.5V21C10.5 21.5523 10.9477 22 11.5 22H12.5C13.0523 22 13.5 21.5523 13.5 21V13.5H21C21.5523 13.5 22 13.0523 22 12.5V11.5C22 10.9477 21.5523 10.5 21 10.5H13.5V3Z" fill="currentColor"/></g>'
-  },
-  search: {
-    viewBox: '0 0 24 24',
-    html: '<g><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.5C4.75329 0.5 0.5 4.75329 0.5 10C0.5 15.2467 4.75329 19.5 10 19.5C12.082 19.5 14.0076 18.8302 15.5731 17.6944L20.2929 22.4142C20.6834 22.8047 21.3166 22.8047 21.7071 22.4142L22.4142 21.7071C22.8047 21.3166 22.8047 20.6834 22.4142 20.2929L17.6944 15.5731C18.8302 14.0076 19.5 12.082 19.5 10C19.5 4.75329 15.2467 0.5 10 0.5ZM3.5 10C3.5 6.41015 6.41015 3.5 10 3.5C13.5899 3.5 16.5 6.41015 16.5 10C16.5 13.5899 13.5899 16.5 10 16.5C6.41015 16.5 3.5 13.5899 3.5 10Z" fill="currentColor"/></g>'
+  pager: {
+    viewBox: '0 0 512 512',
+    html: '<path d="M0 128C0 92.7 28.7 64 64 64l384 0c35.3 0 64 28.7 64 64l0 256c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64L0 128zm64 32l0 64c0 17.7 14.3 32 32 32l320 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32L96 128c-17.7 0-32 14.3-32 32zM80 320c-13.3 0-24 10.7-24 24s10.7 24 24 24l56 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-56 0zm136 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l48 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-48 0z"/>'
   },
   verified: {
     viewBox: '0 0 56 56',
@@ -2264,9 +2378,9 @@ const iconSVG = {
     html: '<g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g><path d="M 23.6641 52.3985 C 26.6407 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6407 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6407 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6407 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 26.2891 49.7734 L 21.8828 45.3438 C 21.3672 44.8047 20.8282 44.5938 20.1016 44.5938 L 13.7969 44.5938 C 11.7110 44.5938 11.3828 44.2656 11.3828 42.1797 L 11.3828 35.875 C 11.3828 35.1719 11.1719 34.6329 10.6563 34.1172 L 6.2266 29.7109 C 4.7501 28.2109 4.7501 27.7891 6.2266 26.2891 L 10.6563 21.8829 C 11.1719 21.3672 11.3828 20.8282 11.3828 20.1016 L 11.3828 13.7969 C 11.3828 11.6875 11.6876 11.3829 13.7969 11.3829 L 20.1016 11.3829 C 20.8282 11.3829 21.3672 11.1953 21.8828 10.6563 L 26.2891 6.2266 C 27.7891 4.7500 28.2110 4.7500 29.7110 6.2266 L 34.1172 10.6563 C 34.6328 11.1953 35.1719 11.3829 35.8750 11.3829 L 42.1797 11.3829 C 44.2657 11.3829 44.5938 11.7109 44.5938 13.7969 L 44.5938 20.1016 C 44.5938 20.8282 44.8282 21.3672 45.3439 21.8829 L 49.7733 26.2891 C 51.2498 27.7891 51.2498 28.2109 49.7733 29.7109 L 45.3439 34.1172 C 44.8282 34.6329 44.5938 35.1719 44.5938 35.875 L 44.5938 42.1797 C 44.5938 44.2656 44.2657 44.5938 42.1797 44.5938 L 35.8750 44.5938 C 35.1719 44.5938 34.6328 44.8047 34.1172 45.3438 L 29.7110 49.7734 C 28.2110 51.2500 27.7891 51.2500 26.2891 49.7734 Z M 24.3438 39.2266 C 25.0235 39.2266 25.5391 38.9453 25.8907 38.5234 L 38.8985 20.3360 C 39.1563 19.9609 39.2969 19.5391 39.2969 19.1407 C 39.2969 18.1094 38.5001 17.2891 37.4219 17.2891 C 36.6485 17.2891 36.2266 17.5469 35.7579 18.2266 L 24.2735 34.3985 L 18.3438 27.8594 C 17.9454 27.4141 17.5001 27.2266 16.9141 27.2266 C 15.7657 27.2266 14.9454 28.0000 14.9454 29.0782 C 14.9454 29.5469 15.1094 29.9922 15.4376 30.3203 L 22.8907 38.6172 C 23.2423 38.9922 23.6876 39.2266 24.3438 39.2266 Z"/></g>'
   },
   refresh: {
-    viewBox: '0 0 1024 1024',
+    viewBox: '0 0 512 512',
     fill: 'currentColor',
-    html: '<path d="M981.314663 554.296783a681.276879 681.276879 0 0 1-46.986468 152.746388q-105.706098 230.734238-360.983096 242.19829a593.06288 593.06288 0 0 1-228.689008-33.853939v-1.022615l-31.808709 79.979258a55.759429 55.759429 0 0 1-20.506122 22.551352 40.043451 40.043451 0 0 1-21.04434 5.382184 51.076928 51.076928 0 0 1-19.483507-5.382184 95.210839 95.210839 0 0 1-13.347817-7.158305 52.314831 52.314831 0 0 1-5.382184-4.628679L71.671707 731.908862a57.427906 57.427906 0 0 1-7.158305-21.528737 46.932646 46.932646 0 0 1 1.022615-17.438277 35.952991 35.952991 0 0 1 7.158305-13.347816 74.435608 74.435608 0 0 1 10.279972-10.279972 60.495751 60.495751 0 0 1 11.248765-7.373593 50.431066 50.431066 0 0 1 8.18092-3.606063 6.189512 6.189512 0 0 0 3.067845-1.776121l281.003839-74.866183a91.497132 91.497132 0 0 1 35.899168-2.583448 122.337047 122.337047 0 0 1 22.174599 6.404799 21.528737 21.528737 0 0 1 12.325202 12.325202 76.157907 76.157907 0 0 1 4.628679 14.854829 47.63233 47.63233 0 0 1 0 14.370431 55.167388 55.167388 0 0 1-2.04523 10.764369 10.764368 10.764368 0 0 0-1.022615 3.606063l-32.831324 79.979258a677.50935 677.50935 0 0 0 164.264262 39.505232q77.395809 7.696523 131.809692-3.606063a358.507291 358.507291 0 0 0 101.023598-36.921784 381.27393 381.27393 0 0 0 73.951211-50.753997 352.64071 352.64071 0 0 0 48.708767-55.382676 410.391547 410.391547 0 0 0 26.910921-41.550462c3.767529-7.481236 6.673908-13.616926 8.719139-18.460892zM40.885614 449.667121a685.69027 685.69027 0 0 1 63.563595-176.427998q118.0313-212.273346 374.330913-207.160271a571.803252 571.803252 0 0 1 207.160271 39.989629l33.853939-78.956643A75.619688 75.619688 0 0 1 735.187378 9.189165a37.67529 37.67529 0 0 1 15.393047-8.234742 42.303968 42.303968 0 0 1 14.854829-0.538219 47.578509 47.578509 0 0 1 13.347817 3.606064 102.907362 102.907362 0 0 1 11.302586 6.13569 49.569917 49.569917 0 0 1 6.673909 4.628678l3.067845 3.067845 154.84544 276.913379a81.970666 81.970666 0 0 1 6.13569 22.712817 46.986468 46.986468 0 0 1-1.022615 17.438277 32.293105 32.293105 0 0 1-7.696523 13.347817 69.322533 69.322533 0 0 1-10.764369 9.741753 92.142994 92.142994 0 0 1-11.302587 6.673909l-8.18092 4.09046a7.104483 7.104483 0 0 1-3.067845 1.022615l-283.049068 67.546412a112.003254 112.003254 0 0 1-46.125319-1.022615c-11.571696-3.390776-19.160576-8.019454-22.551352-13.832214a41.173709 41.173709 0 0 1-5.382184-21.04434 97.256069 97.256069 0 0 1 1.291724-17.438277 24.381295 24.381295 0 0 1 3.067845-8.234742L600.632773 296.81309a663.730958 663.730958 0 0 0-164.102797-43.057474q-77.987849-9.203535-131.809692 0a348.227319 348.227319 0 0 0-101.292707 33.853938 368.571976 368.571976 0 0 0-75.350579 49.246986 383.31916 383.31916 0 0 0-50.269601 54.360061 408.507783 408.507783 0 0 0-28.740863 41.012244A113.025869 113.025869 0 0 0 40.885614 449.667121z m0 0" fill="#ffffff" p-id="2275"></path>'
+    html: '<path d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/>'
   },
   load(type, container) {
     const { createElementNS } = safeSelf();
@@ -2610,6 +2724,7 @@ const Counter = {
     }
   }
 };
+
 // #region Container
 /**
  * @type { import("../typings/UserJS.d.ts").Container }
@@ -2675,11 +2790,7 @@ class Container {
           }
         });
     if (this.supported) {
-      this.shadowRoot = this.frame.attachShadow({
-        mode: 'closed'
-        // clonable: false,
-        // delegatesfocus: false
-      });
+      this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
       this.ready = true;
     }
     this.cache = memory.maps.container;
@@ -2698,6 +2809,7 @@ class Container {
       }
 
       set(delay, reason) {
+        const { setTimeout } = safeSelf();
         return new Promise((resolve, reject) => {
           const id = setTimeout(() => {
             Object.is(reason, null) || Object.is(reason, undefined) ? resolve() : reject(reason);
@@ -2708,6 +2820,7 @@ class Container {
       }
 
       clear(...ids) {
+        const { clearTimeout } = safeSelf();
         this.ids = this.ids.filter((id) => {
           if (ids.includes(id)) {
             clearTimeout(id);
@@ -2773,7 +2886,7 @@ class Container {
 
     Counter.cnt.total.root = this.mainbtn;
     for (const engine of cfg.engines) this.countframe.append(Counter.set(engine));
-    const { cfgpage, table, exBtn, supported, frame, refresh, cache, urlBar, host } = this;
+    const { cfgpage, table, supported, frame, refresh, cache, urlBar, host } = this;
 
     class Tabs {
       /**
@@ -2818,7 +2931,7 @@ class Container {
           return;
         }
         if (hostname.match(this.protoReg)[1] === 'settings') {
-          dom.cl.remove([cfgpage, exBtn], 'hidden');
+          dom.cl.remove(cfgpage, 'hidden');
           dom.cl.add(table, 'hidden');
           if (!supported) {
             dom.attr(frame, 'style', 'height: 100%;');
@@ -2831,7 +2944,7 @@ class Container {
        */
       active(tab, build = true) {
         if (!this.pool.has(tab)) this.pool.add(tab);
-        dom.cl.add([cfgpage, exBtn], 'hidden');
+        dom.cl.add(cfgpage, 'hidden');
         dom.cl.remove(table, 'hidden');
         dom.cl.remove([...this.pool], 'active');
         dom.cl.add(tab, 'active');
@@ -2913,8 +3026,7 @@ class Container {
     this.tab.create(host);
 
     const tabbody = this.tabbody;
-    const getCellValue = (tr, idx) =>
-      tr.children[idx].dataset.value || tr.children[idx].innerText || tr.children[idx].textContent;
+    const getCellValue = (tr, idx) => tr.children[idx].dataset.value;
     const comparer = (idx, asc) => (a, b) =>
       ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
@@ -2961,43 +3073,18 @@ class Container {
       this.tbody = make('mujs-body');
       this.cfgpage = make('mujs-row', 'mujs-cfg hidden');
       this.btnframe = make('mujs-column', 'btn-frame');
-      this.exBtn = make('mujs-column', 'mujs-sty-flex hidden');
       this.fsearch = make('mujs-btn', 'hidden');
-      this.exportCFG = make('mujs-btn', 'mujs-export', {
-        textContent: i18n$('export_config'),
-        dataset: {
-          command: 'export-cfg'
-        }
-      });
-      this.importCFG = make('mujs-btn', 'mujs-import', {
-        textContent: i18n$('import_config'),
-        dataset: {
-          command: 'import-cfg'
-        }
-      });
-      this.exportTheme = make('mujs-btn', 'mujs-export', {
-        textContent: i18n$('export_theme'),
-        dataset: {
-          command: 'export-theme'
-        }
-      });
-      this.importTheme = make('mujs-btn', 'mujs-import', {
-        textContent: i18n$('import_theme'),
-        dataset: {
-          command: 'import-theme'
-        }
-      });
       this.btnHandles = make('mujs-column', 'btn-handles');
       this.btnHide = make('mujs-btn', 'hide-list', {
         title: i18n$('min'),
-        innerHTML: iconSVG.load('hide'),
+        innerHTML: iconSVG.load('minus'),
         dataset: {
           command: 'hide-list'
         }
       });
       this.btnfullscreen = make('mujs-btn', 'fullscreen', {
         title: i18n$('max'),
-        innerHTML: iconSVG.load('fullscreen'),
+        innerHTML: iconSVG.load('expand'),
         dataset: {
           command: 'fullscreen'
         }
@@ -3013,7 +3100,7 @@ class Container {
       });
       this.btncfg = make('mujs-btn', 'settings hidden', {
         title: 'Settings',
-        innerHTML: iconSVG.load('cfg'),
+        innerHTML: iconSVG.load('gear'),
         dataset: {
           command: 'settings'
         }
@@ -3024,7 +3111,7 @@ class Container {
             ? $info.script.version
             : $info.script.version.slice(0, 5)
         })`,
-        innerHTML: iconSVG.load('gh'),
+        innerHTML: iconSVG.load('github'),
         dataset: {
           command: 'open-tab',
           webpage: $info.script.namespace
@@ -3040,7 +3127,7 @@ class Container {
       });
       this.btngreasy = make('mujs-btn', 'greasy hidden', {
         title: 'Greasy Fork',
-        innerHTML: iconSVG.load('gf'),
+        innerHTML: iconSVG.load('globe'),
         dataset: {
           command: 'open-tab',
           webpage: 'https://greasyfork.org/scripts/421603'
@@ -3081,17 +3168,30 @@ class Container {
         }
       ]);
       // #endregion
-
-      this.btnHandles.append(this.btnHide, this.btnfullscreen, this.closebtn);
-      this.btnframe.append(this.btnhome, this.btngreasy, this.btnissue, this.btncfg, this.btnnav);
+      if (isMobile) {
+        dom.cl.add([this.btnHide, this.btnfullscreen, this.closebtn], 'hidden');
+        this.btnframe.append(
+          this.btnHide,
+          this.btnfullscreen,
+          this.closebtn,
+          this.btnhome,
+          this.btngreasy,
+          this.btnissue,
+          this.btncfg,
+          this.btnnav
+        );
+      } else {
+        this.btnHandles.append(this.btnHide, this.btnfullscreen, this.closebtn);
+        this.btnframe.append(this.btnhome, this.btngreasy, this.btnissue, this.btncfg, this.btnnav);
+      }
       this.toolbar.append(this.btnHandles);
       this.urlContainer.append(this.urlBar);
       this.header.append(this.urlContainer, this.rateContainer, this.countframe, this.btnframe);
       this.tbody.append(this.table, this.cfgpage);
       this.main.append(this.toolbar, this.header, this.tbody, this.footer, this.promptElem);
       this.mainframe.append(this.mainbtn);
-      this.exBtn.append(this.importCFG, this.importTheme, this.exportCFG, this.exportTheme);
-      this.header.append(this.exBtn);
+      // this.exBtn.append(this.importCFG, this.importTheme, this.exportCFG, this.exportTheme);
+      // this.header.append(this.exBtn);
       this.root.append(this.mainframe, this.main);
 
       return true;
@@ -3390,10 +3490,6 @@ function primaryFN() {
       fsearch,
       btnfullscreen,
       main,
-      btncfg,
-      btnhome,
-      btnissue,
-      btngreasy,
       tab,
       showError
     } = container;
@@ -3438,8 +3534,75 @@ function primaryFN() {
       installLink.remove();
       await init();
     };
+    const applyTo = (ujs, name, elem, root) => {
+      const n = ujs._mujs.code[name] ?? ujs._mujs.code.data_meta[name];
+      if (isEmpty(n)) {
+        const el = make('mujs-a', {
+          textContent: i18n$('listing_none')
+        });
+        elem.append(el);
+        return;
+      }
+      dom.prop(elem, 'innerHTML', '');
+      dom.cl.remove(root, 'hidden');
+      if (isObj(n)) {
+        if (name === 'resource') {
+          for (const [k, v] of Object.entries(n)) {
+            const el = make('mujs-a', {
+              textContent: k ?? 'ERROR'
+            });
+            if (v.startsWith('http')) {
+              el.dataset.command = 'open-tab';
+              el.dataset.webpage = v;
+            }
+            elem.append(el);
+          }
+        } else {
+          const el = make('mujs-a', {
+            textContent: n.text
+          });
+          if (n.domain) {
+            el.dataset.command = 'open-tab';
+            el.dataset.webpage = `https://${n.text}`;
+          }
+          elem.append(el);
+        }
+      } else if (typeof n === 'string') {
+        const el = make('mujs-a', {
+          textContent: n
+        });
+        elem.append(el);
+      } else {
+        for (const c of n) {
+          if (typeof c === 'string' && c.startsWith('http')) {
+            const el = make('mujs-a', {
+              textContent: c,
+              dataset: {
+                command: 'open-tab',
+                webpage: c
+              }
+            });
+            elem.append(el);
+          } else if (isObj(c)) {
+            const el = make('mujs-a', {
+              textContent: c.text
+            });
+            if (c.domain) {
+              el.dataset.command = 'open-tab';
+              el.dataset.webpage = `https://${c.text}`;
+            }
+            elem.append(el);
+          } else {
+            const el = make('mujs-a', {
+              textContent: c
+            });
+            elem.append(el);
+          }
+        }
+      }
+    };
     // #region Main event handlers
-    ael(main, 'click', async (evt) => {
+    ael(main, isMobile ? 'touchend' : 'click', async (evt) => {
       try {
         /** @type { HTMLElement } */
         const target = evt.target.closest('[data-command]');
@@ -3485,10 +3648,13 @@ function primaryFN() {
           }
           return window.open(dataset.webpage, '_blank');
         } else if (cmd === 'navigation') {
-          if (dom.cl.has(btngreasy, 'hidden')) {
-            dom.cl.remove([btncfg, btngreasy, btnhome, btnissue], 'hidden');
-          } else {
-            dom.cl.add([btncfg, btngreasy, btnhome, btnissue], 'hidden');
+          for (const e of qsA('mujs-btn', target.parentElement)) {
+            if (dom.cl.has(e, 'nav')) continue;
+            if (dom.cl.has(e, 'hidden')) {
+              dom.cl.remove(e, 'hidden');
+            } else {
+              dom.cl.add(e, 'hidden');
+            }
           }
         } else if (cmd === 'list-description') {
           const arr = [];
@@ -3520,10 +3686,10 @@ function primaryFN() {
         } else if (cmd === 'fullscreen') {
           if (dom.cl.has(btnfullscreen, 'expanded')) {
             dom.cl.remove([btnfullscreen, main], 'expanded');
-            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsOpen'));
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('expand'));
           } else {
             dom.cl.add([btnfullscreen, main], 'expanded');
-            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('collapse'));
           }
         } else if (cmd === 'hide-list') {
           dom.cl.add(main, 'hidden');
@@ -3592,81 +3758,115 @@ function primaryFN() {
           dlBtn.click();
           URL.revokeObjectURL(dlBtn.href);
           dlBtn.remove();
-        } else if (cmd === 'load-userjs') {
+        } else if (cmd === 'load-userjs' || cmd === 'load-header') {
           if (!container.userjsCache.has(+dataset.userjs)) {
             return;
           }
           const codeArea = qs('textarea', target.parentElement.parentElement);
-          if (!isEmpty(codeArea.value)) {
+          if (!isEmpty(codeArea.value) && cmd === codeArea.dataset.load) {
             dom.cl.toggle(codeArea, 'hidden');
             return;
           }
+          codeArea.dataset.load = cmd;
           const dataUserJS = container.userjsCache.get(+dataset.userjs);
-          const r = await dataUserJS._mujs.code.request();
-          const txt = r.data;
-          if (typeof txt !== 'string') {
+          const code_obj = await dataUserJS._mujs.code.request();
+          if (typeof code_obj.data_code_block !== 'string') {
+            codeArea.value = 'An error occured';
             return;
           }
-          const code_obj = new ParseUserJS(txt);
-          codeArea.value = code_obj.get_code_block();
+          codeArea.value =
+            cmd === 'load-userjs' ? code_obj.data_code_block : code_obj.data_meta_block;
           dom.cl.remove(codeArea, 'hidden');
-          const apTo = (name, elem, root) => {
-            const n = dataUserJS._mujs.code[name];
-            if (isEmpty(n)) {
-              const el = make('mujs-a', {
-                textContent: i18n$('listing_none')
-              });
-              elem.append(el);
-              return;
-            }
-            dom.prop(elem, 'innerHTML', '');
-            dom.cl.remove(root, 'hidden');
-            for (const c of n) {
-              if (typeof c === 'string' && c.startsWith('http')) {
-                const el = make('mujs-a', {
-                  textContent: c,
-                  dataset: {
-                    command: 'open-tab',
-                    webpage: c
-                  }
-                });
-                elem.append(el);
-              } else if (isObj(c)) {
-                if (name === 'resource') {
-                  for (const [k, v] of Object.entries(c)) {
-                    const el = make('mujs-a', {
-                      textContent: k ?? 'ERROR'
-                    });
-                    if (v.startsWith('http')) {
-                      el.dataset.command = 'open-tab';
-                      el.dataset.webpage = v;
-                    }
-                    elem.append(el);
-                  }
-                } else {
-                  const el = make('mujs-a', {
-                    textContent: c.text
-                  });
-                  if (c.domain) {
-                    el.dataset.command = 'open-tab';
-                    el.dataset.webpage = `https://${c.text}`;
-                  }
-                  elem.append(el);
-                }
-              } else {
-                const el = make('mujs-a', {
-                  textContent: c
-                });
-                elem.append(el);
-              }
-            }
-          };
           for (const e of qsA(
             'mujs-column[data-el="matches"]',
             target.parentElement.parentElement
           )) {
-            apTo(e.dataset.type, qs('.mujs-grants', e), e);
+            applyTo(dataUserJS, e.dataset.type, qs('.mujs-grants', e), e);
           }
+        } else if (cmd === 'load-page') {
+          if (!container.userjsCache.has(+dataset.userjs)) {
+            return;
+          }
+          let pageArea = qs('mujs-page', target.parentElement.parentElement);
+          if (!pageArea) {
+            pageArea = make('mujs-page');
+            target.parentElement.parentElement.append(pageArea);
+            const dataUserJS = container.userjsCache.get(+dataset.userjs);
+            const engine = dataUserJS._mujs.info.engine;
+            let pageURL;
+            if (engine.name.includes('fork')) {
+              const { navigator } = safeSelf();
+              const current = navigator.language.split('-')[0] ?? 'en';
+              pageURL = dataUserJS.url.replace(
+                /\/scripts/,
+                `/${/^(zh|fr|es)/.test(current) ? navigator.language : current}/scripts`
+              );
+            } else if (engine.name.includes('github')) {
+              const page_url = await Network.req(dataUserJS.page_url, 'GET', 'json', {
+                headers: {
+                  Accept: 'application/vnd.github+json',
+                  Authorization: `Bearer ${engine.token}`,
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
+              }).catch(() => {
+                return {};
+              });
+              if (!page_url.download_url) {
+                return;
+              }
+              const page = await Network.req(page_url.download_url, 'GET', 'text');
+              if (container.supported) {
+                const shadow = pageArea.attachShadow({ mode: 'closed' });
+                const div = make('div', {
+                  innerHTML: page
+                });
+                shadow.append(div);
+              }
+              return;
+            } else {
+              pageURL = dataUserJS.url;
+            }
+            if (!pageURL) {
+              return;
+            }
+            const page = await Network.req(pageURL, 'GET', 'document');
+            const getContent = () => {
+              let content = 'An error occured';
+              const h = new URL(dataUserJS.url);
+              const root = qs('.user-content', page.documentElement);
+              for (const e of qsA('[href]', root)) {
+                e.target = '_blank';
+                e.style = 'pointer-events: auto;';
+                if (e.href.startsWith('/')) {
+                  e.href = `${h.origin}${e.href}`;
+                }
+              }
+              for (const e of qsA('img[src]', root)) {
+                e.style =
+                  'max-width: 25em; max-height: 25em; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;';
+              }
+              if (root) {
+                content = root.innerHTML;
+              } else {
+                content = 'No additional info available';
+              }
+              return content;
+            };
+            if (container.supported) {
+              const shadow = pageArea.attachShadow({ mode: 'closed' });
+              const div = make('div', {
+                style: 'pointer-events: none;',
+                innerHTML: getContent()
+              });
+              shadow.append(div);
+            }
+            return;
+          }
+          if (!dom.cl.has(pageArea, 'hidden')) {
+            dom.cl.add(pageArea, 'hidden');
+            return;
+          }
+          dom.cl.remove(pageArea, 'hidden');
         } else if (/export-/.test(cmd)) {
           const str = JSON.stringify(cmd === 'export-cfg' ? cfg : cfg.theme, null, ' ');
           const bytes = new TextEncoder().encode(str);
@@ -3767,9 +3967,50 @@ function primaryFN() {
         });
       }
     }
+    ael(main, 'updateditem', (evt) => {
+      /**
+       * @type {import("../typings/types.d.ts").GSForkQuery}
+       */
+      const ujs = evt.detail;
+      if (!ujs._mujs) return;
+      for (const elem of qsA('[data-name]', ujs._mujs.root)) {
+        const name = elem.dataset.name;
+        if (name === 'code') {
+          if (ujs._mujs.code.data_code_block) {
+            if (cfg.preview.code && !cfg.preview.metadata) {
+              elem.value = ujs._mujs.code.data_code_block;
+            } else if (cfg.preview.metadata && !cfg.preview.code) {
+              elem.value = ujs._mujs.code.data_meta_block;
+            } else {
+              elem.value = `${ujs._mujs.code.META_START_COMMENT}${ujs._mujs.code.data_meta_block}${ujs._mujs.code.META_END_COMMENT}${ujs._mujs.code.data_code_block}`;
+            }
+          }
+          continue;
+        }
+        if (!ujs[name]) continue;
+        if (name === 'license') {
+          dom.attr(elem, 'title', ujs.license ?? i18n$('no_license'));
+          dom.text(elem, `${i18n$('license')}: ${ujs.license ?? i18n$('no_license')}`);
+        } else if (name === 'code_updated_at') {
+          dom.text(elem, language.toDate(ujs.code_updated_at));
+          elem.dataset.value = new Date(ujs.code_updated_at).toISOString();
+        } else if (name === 'created_date') {
+          dom.text(elem, `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`);
+          elem.dataset.value = new Date(ujs.created_at).toISOString();
+        } else if (name === 'total_installs') {
+          dom.text(elem, `${i18n$('total_installs')}: ${language.toNumber(ujs.total_installs)}`);
+        } else {
+          dom.text(elem, ujs[name]);
+        }
+      }
+      if (ujs._mujs.code.data_code_block) {
+        for (const e of qsA('mujs-column[data-el="matches"]', ujs._mujs.root)) {
+          applyTo(ujs, e.dataset.type, qs('.mujs-grants', e), e);
+        }
+      }
+      if (container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
+    });
     // #endregion
-    const META_START_COMMENT = '// ==UserScript==';
-    const META_END_COMMENT = '// ==/UserScript==';
     const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
     const APPLIES_TO_ALL_PATTERNS = [
       'http://*',
@@ -3797,15 +4038,17 @@ function primaryFN() {
        */
       data_code_block;
       /**
-       * @type { { [meta: string]: any } }
+       * @type { { [meta: string]: string | string[] | { [resource: string]: string } } }
        */
       data_meta;
       /**
-       * @type { string[] }
+       * @type { {text: string;domain: boolean;tld_extra: boolean}[] }
        */
       data_names;
-      constructor(code) {
+      constructor(code, isUserCSS) {
         this.code = code;
+        this.META_START_COMMENT = isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
+        this.META_END_COMMENT = isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
         this.get_meta_block();
         this.get_code_block();
         this.parse_meta();
@@ -3818,17 +4061,20 @@ function primaryFN() {
         if (this.data_meta_block) {
           return this.data_meta_block;
         }
-        const start_block = this.code.indexOf(META_START_COMMENT);
+        const start_block = this.code.indexOf(this.META_START_COMMENT);
         if (isNull(start_block)) {
           return null;
         }
-        const end_block = this.code.indexOf(META_END_COMMENT, start_block);
+        const end_block = this.code.indexOf(this.META_END_COMMENT, start_block);
         if (isNull(end_block)) {
           return null;
         }
-        const meta_block = this.code.substring(start_block + META_START_COMMENT.length, end_block);
+        const meta_block = this.code.substring(
+          start_block + this.META_START_COMMENT.length,
+          end_block
+        );
         this.data_meta_block = meta_block;
-        return meta_block;
+        return this.data_meta_block;
       }
       get_code_block() {
         if (isEmpty(this.code)) {
@@ -3837,28 +4083,23 @@ function primaryFN() {
         if (this.data_code_block) {
           return this.data_code_block;
         }
-        const start_block = this.code.indexOf(META_START_COMMENT);
+        const start_block = this.code.indexOf(this.META_START_COMMENT);
         if (isNull(start_block)) {
           return null;
         }
-        const end_block = this.code.indexOf(META_END_COMMENT, start_block);
+        const end_block = this.code.indexOf(this.META_END_COMMENT, start_block);
         if (isNull(end_block)) {
           return null;
         }
         const code_block = this.code.substring(
-          end_block + META_END_COMMENT.length,
+          end_block + this.META_END_COMMENT.length,
           this.code.length
         );
-        const lines = [];
-        for (const l of code_block.split('\n')) {
-          if (isEmpty(l)) {
-            continue;
-          }
-          lines.push(l);
-        }
-        const clean_code = lines.join('\n');
-        this.data_code_block = clean_code;
-        return clean_code;
+        this.data_code_block = code_block
+          .split('\n')
+          .filter((l) => !isEmpty(l))
+          .join('\n');
+        return this.data_code_block;
       }
       parse_meta() {
         if (isEmpty(this.code)) {
@@ -3868,11 +4109,10 @@ function primaryFN() {
           return this.data_meta;
         }
         const meta = {};
-        const meta_block = this.get_meta_block();
         const meta_block_map = new Map();
-        for (const meta_line of meta_block.split('\n')) {
-          const meta_match = meta_line.match(/\/\/\s+@([a-zA-Z:-]+)\s+(.*)/);
-          if (isNull(meta_match)) {
+        for (const meta_line of this.get_meta_block().split('\n')) {
+          const meta_match = /\/\/\s+@([a-zA-Z:-]+)\s+(.*)/.exec(meta_line);
+          if (!meta_match) {
             continue;
           }
           const key = meta_match[1].trim();
@@ -3894,9 +4134,6 @@ function primaryFN() {
         this.data_meta = meta;
         return this.data_meta;
       }
-      /**
-       * @returns { string[] }
-       */
       calculate_applies_to_names() {
         if (isEmpty(this.code)) {
           return null;
@@ -3904,10 +4141,9 @@ function primaryFN() {
         if (this.data_names) {
           return this.data_names;
         }
-        const meta = this.parse_meta();
         let patterns = [];
-        for (const [k, v] of Object.entries(meta)) {
-          if (/include|match/.test(k)) {
+        for (const [k, v] of Object.entries(this.parse_meta())) {
+          if (/include|match/i.test(k)) {
             if (Array.isArray(v)) {
               patterns = patterns.concat(v);
             } else {
@@ -3919,14 +4155,21 @@ function primaryFN() {
           return [];
         }
         if (this.intersect(patterns, APPLIES_TO_ALL_PATTERNS)) {
-          return [];
+          this.data_names = [
+            {
+              domain: false,
+              text: 'All sites',
+              tld_extra: false
+            }
+          ];
+          return this.data_names;
         }
-        const name_set = new Set();
+        const name_map = new Map();
         const addObj = (obj) => {
-          if (name_set.has(obj)) {
+          if (name_map.has(obj.text)) {
             return;
           }
-          name_set.add(obj);
+          name_map.set(obj.text, obj);
         };
         for (let p of patterns) {
           try {
@@ -3935,8 +4178,8 @@ function primaryFN() {
             if (p.match(/^\/(.*)\/$/)) {
               pre_wildcards = [p];
             } else {
-              let m = p.match(/^\*(https?:.*)/i);
-              if (!isNull(m)) {
+              let m = /^\*(https?:.*)/i.exec(p);
+              if (m) {
                 p = m[1];
               }
               p = p
@@ -3944,20 +4187,20 @@ function primaryFN() {
                 .replace(/^\*\/\//i, 'http://')
                 .replace(/^http\*:/i, 'http:')
                 .replace(/^(https?):([^/])/i, '$1://$2');
-              m = p.match(/^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i);
-              if (!isNull(m)) {
+              m = /^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i.exec(p);
+              if (m) {
                 p = m[1] + m[2];
               }
-              m = p.match(/^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i);
-              if (!isNull(m)) {
+              m = /^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i.exec(p);
+              if (m) {
                 p = `http://${m[1]}`;
               }
-              m = p.match(/^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i);
-              if (!isNull(m)) {
+              m = /^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i.exec(p);
+              if (m) {
                 p = `http://${m[1]}`;
               }
-              m = p.match(/^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/);
-              if (!isNull(m)) {
+              m = /^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/.exec(p);
+              if (m) {
                 if (m[2].match(/A([0-9]+\.){2,}z/)) {
                   p = `${m[1]}tld${m[3]}`;
                   pre_wildcards = [p.split('*')[0]];
@@ -4007,26 +4250,12 @@ function primaryFN() {
             err(ex);
           }
         }
-        const arr = [...name_set];
-        this.data_names = arr;
+        this.data_names = [...name_map.values()];
         return this.data_names;
       }
-      intersect(a = [], b = []) {
-        for (const v of a) {
-          if (b.includes(v)) {
-            return true;
-          }
-        }
-        for (const v of b) {
-          if (a.includes(v)) {
-            return true;
-          }
-        }
-        return false;
+      intersect(a, ...arr) {
+        return !isBlank([...new Set(a)].filter((v) => arr.every((b) => b.includes(v))));
       }
-      // intersect(a, ...arr) {
-      //   return [...new Set(a)].filter((v) => arr.every((b) => b.includes(v)));
-      // }
     }
     const template = {
       id: 0,
@@ -4147,11 +4376,15 @@ function primaryFN() {
       const eframe = make('td', 'install-btn');
       const uframe = make('td', 'mujs-uframe');
       const fdaily = make('td', 'mujs-list', {
-        textContent: ujs.daily_installs
+        textContent: ujs.daily_installs,
+        dataset: {
+          name: 'daily_installs'
+        }
       });
       const fupdated = make('td', 'mujs-list', {
         textContent: language.toDate(ujs.code_updated_at),
         dataset: {
+          name: 'code_updated_at',
           value: new Date(ujs.code_updated_at).toISOString()
         }
       });
@@ -4179,17 +4412,22 @@ function primaryFN() {
       const fcreated = make('mu-js', 'mujs-list', {
         textContent: `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`,
         dataset: {
+          name: 'created_at',
           value: new Date(ujs.created_at).toISOString()
         }
       });
       const flicense = make('mu-js', 'mujs-list', {
         title: ujs.license ?? i18n$('no_license'),
         textContent: `${i18n$('license')}: ${ujs.license ?? i18n$('no_license')}`,
-        style:
-          'text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: fit-content; max-width: 20em;'
+        dataset: {
+          name: 'license'
+        }
       });
       const ftotal = make('mu-js', 'mujs-list', {
-        textContent: `${i18n$('total_installs')}: ${language.toNumber(ujs.total_installs)}`
+        textContent: `${i18n$('total_installs')}: ${language.toNumber(ujs.total_installs)}`,
+        dataset: {
+          name: 'total_installs'
+        }
       });
       const fratings = make('mu-js', 'mujs-list', {
         title: i18n$('ratings'),
@@ -4199,6 +4437,7 @@ function primaryFN() {
         title: i18n$('good'),
         textContent: ujs.good_ratings,
         dataset: {
+          name: 'good_ratings',
           el: 'good'
         }
       });
@@ -4206,6 +4445,7 @@ function primaryFN() {
         title: i18n$('ok'),
         textContent: ujs.ok_ratings,
         dataset: {
+          name: 'ok_ratings',
           el: 'ok'
         }
       });
@@ -4213,6 +4453,7 @@ function primaryFN() {
         title: i18n$('bad'),
         textContent: ujs.bad_ratings,
         dataset: {
+          name: 'bad_ratings',
           el: 'bad'
         }
       });
@@ -4232,7 +4473,7 @@ function primaryFN() {
         }
       });
       const scriptDownload = make('mu-jsbtn', {
-        innerHTML: `${iconSVG.load('install')} ${i18n$('saveFile')}`,
+        innerHTML: `${iconSVG.load('download')} ${i18n$('saveFile')}`,
         dataset: {
           command: 'download-userjs',
           userjs: ujs.id,
@@ -4254,23 +4495,22 @@ function primaryFN() {
         wrap: 'soft'
       });
       const loadCode = make('mu-jsbtn', {
-        innerHTML: `${iconSVG.load('search')} ${i18n$('preview_code')}`,
+        innerHTML: `${iconSVG.load('code')} ${i18n$('preview_code')}`,
         dataset: {
           command: 'load-userjs',
           userjs: ujs.id
         }
       });
-      if (engine) {
-        tr.dataset.engine = engine;
-        // if (engine.includes('fork')) {
-        //   fdaily.dataset.command = 'open-tab';
-        //   fdaily.dataset.webpage = `${ujs.url}/stats`;
-        //   fupdated.dataset.command = 'open-tab';
-        //   fupdated.dataset.webpage = `${ujs.url}/versions`;
-        // }
-        if (!engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.url)) {
-          tr.dataset.good = 'upsell';
+      const loadMetadata = make('mu-jsbtn', {
+        innerHTML: `${iconSVG.load('code')} Metadata`,
+        dataset: {
+          command: 'load-header',
+          userjs: ujs.id
         }
+      });
+      tr.dataset.engine = engine;
+      if (!engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.url)) {
+        tr.dataset.good = 'upsell';
       }
       for (const u of ujs.users) {
         const user = make('mujs-a', {
@@ -4287,7 +4527,7 @@ function primaryFN() {
         }
         uframe.append(user);
       }
-      if (engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.id)) {
+      if (cfg.recommend.others && goodUserJS.includes(ujs.id)) {
         tr.dataset.good = 'upsell';
       }
       eframe.append(scriptInstall);
@@ -4295,53 +4535,55 @@ function primaryFN() {
       jsInfo.append(ftotal, ratings, fver, fcreated);
       mkList(i18n$('code_size'), {
         list: ujs._mujs.code.code_size,
-        type: 'size',
+        type: 'code_size',
         root: jsInfo
       });
 
       jsInfoB.append(flicense);
+      const data_meta = ujs._mujs.code?.data_meta ?? {};
       mkList(i18n$('antifeatures'), {
-        list: ujs._mujs.code.antifeatures,
+        list: data_meta.antifeatures ?? [],
         type: 'antifeatures',
         root: jsInfoB
       });
       mkList(i18n$('applies_to'), {
-        list: ujs._mujs.code.match,
-        type: 'match',
+        list: ujs._mujs.code?.data_names ?? [],
+        type: 'data_names',
         root: jsInfoB
       });
       mkList('@grant', {
-        list: ujs._mujs.code.grant,
+        list: data_meta.grant ?? [],
         type: 'grant',
         root: jsInfoB
       });
       mkList('@require', {
-        list: ujs._mujs.code.meta?.require,
+        list: data_meta.require,
         type: 'require',
         root: jsInfoB
       });
-      const script_resources = ujs._mujs.code.meta?.resource;
       mkList('@resource', {
-        list: isNull(script_resources) ? [] : [script_resources],
+        list: isNull(data_meta.resource) ? [] : [data_meta.resource],
         type: 'resource',
         root: jsInfoB
       });
       fmore.append(jsInfo, jsInfoB);
-      fBtns.append(scriptDownload, loadCode);
+      fBtns.append(scriptDownload, loadCode, loadMetadata);
       fname.append(ftitle, fdesc, fmore, fBtns, codeArea);
 
-      const code_data = ujs._mujs.code.data;
-      if (code_data) {
-        const code_obj = new ParseUserJS(code_data);
-        codeArea.value = code_obj.get_code_block();
-      }
+      const loadPage = make('mu-jsbtn', {
+        innerHTML: `${iconSVG.load('pager')} Page`,
+        dataset: {
+          command: 'load-page',
+          userjs: ujs.id
+        }
+      });
+      fBtns.append(loadPage);
 
       if (ujs._mujs.code?.translated) tr.classList.add('translated');
 
       for (const e of [fname, uframe, fdaily, fupdated, eframe]) tr.append(e);
       ujs._mujs.root = tr;
-
-      return tr;
+      return ujs._mujs.root;
     };
     // #endregion
     const loadFilters = () => {
@@ -4399,10 +4641,17 @@ function primaryFN() {
         this.build = this.build.bind(this);
         this.toArr = this.toArr.bind(this);
         this.groupBy = this.groupBy.bind(this);
+        this.dispatch = this.dispatch.bind(this);
         this.sortRecords = this.sortRecords.bind(this);
         if (isEmpty(hostname)) hostname = container.host;
         this.engines = cfg.engines;
         this.host = hostname;
+      }
+
+      dispatch(ujs) {
+        const { CustomEvent } = safeSelf();
+        const customEvent = new CustomEvent('updateditem', { detail: ujs });
+        main.dispatchEvent(customEvent);
       }
 
       set host(hostname) {
@@ -4443,7 +4692,7 @@ function primaryFN() {
       build() {
         try {
           container.refresh();
-          const { blacklisted, engines, host, toArr } = this;
+          const { blacklisted, engines, host, toArr, dispatch } = this;
           if (blacklisted || isEmpty(engines)) {
             container.opacityMin = '0';
             mainframe.style.opacity = container.opacityMin;
@@ -4477,92 +4726,59 @@ function primaryFN() {
                       host
                     },
                     code: {
-                      antifeatures: [],
-                      grant: [],
-                      match: [],
                       meta: {},
                       request: async function (translate = false, code_url) {
-                        if (this.data) {
+                        if (this.data_code_block) {
                           return this;
                         }
-                        this.data = '';
+                        code_url = code_url ?? d.code_url;
                         /** @type { string } */
-                        const code = await Network.req(code_url ?? d.code_url, 'GET', 'text').catch(
-                          showError
-                        );
+                        const code = await Network.req(code_url, 'GET', 'text').catch(showError);
                         if (typeof code !== 'string') {
                           return this;
                         }
-                        Object.assign(this, {
-                          data: code,
-                          code_size: [Network.format(code.length)]
-                        });
-                        const grantSet = new Set();
-                        const afSet = new Set();
-                        const code_obj = new ParseUserJS(code);
-                        const meta = code_obj.parse_meta();
-                        const applies_to_names = code_obj.calculate_applies_to_names();
-
+                        const code_obj = new ParseUserJS(code, /\.user\.css/.test(code_url));
+                        const { data_meta } = code_obj;
                         if (translate) {
                           for (const k of userjs.pool.keys()) {
-                            if (meta[`name:${k}`]) {
+                            if (data_meta[`name:${k}`]) {
                               Object.assign(obj, {
-                                name: meta[`name:${k}`]
+                                name: data_meta[`name:${k}`]
                               });
                               this.translated = true;
                             }
-                            if (meta[`description:${k}`]) {
+                            if (data_meta[`description:${k}`]) {
                               Object.assign(obj, {
-                                description: meta[`description:${k}`]
+                                description: data_meta[`description:${k}`]
                               });
                               this.translated = true;
                             }
                           }
                         }
-
-                        for (const [key, value] of Object.entries(meta)) {
-                          if (/grant/.test(key)) {
-                            for (const v of normalizeTarget(value, false)) {
-                              if (grantSet.has(v)) {
-                                continue;
-                              }
-                              grantSet.add(v);
-                            }
-                          } else if (/antifeature/.test(key)) {
-                            for (const v of normalizeTarget(value, false)) {
-                              if (afSet.has(v)) {
-                                continue;
-                              }
-                              afSet.add(v);
-                            }
-                          }
+                        if (Array.isArray(data_meta.grant)) {
+                          data_meta.grant = union(data_meta.grant);
                         }
-                        if (typeof meta.require === 'string') {
-                          const s = meta.require;
-                          meta.require = [s];
-                        }
-                        if (meta.resource) {
+                        if (data_meta.resource) {
                           const obj = {};
-                          if (typeof meta.resource === 'string') {
-                            const reg = /(.+)\s+(.+)/.exec(meta.resource);
+                          if (typeof data_meta.resource === 'string') {
+                            const reg = /(.+)\s+(.+)/.exec(data_meta.resource);
                             if (reg) {
                               obj[reg[1].trim()] = reg[2];
                             }
                           } else {
-                            for (const r of meta.resource) {
+                            for (const r of data_meta.resource) {
                               const reg = /(.+)\s+(http.+)/.exec(r);
                               if (reg) {
                                 obj[reg[1].trim()] = reg[2];
                               }
                             }
                           }
-                          meta.resource = obj;
+                          data_meta.resource = obj;
                         }
                         Object.assign(this, {
-                          meta,
-                          match: applies_to_names,
-                          grant: [...grantSet],
-                          antifeatures: [...afSet]
+                          code_size: [Network.format(code.length)],
+                          meta: data_meta,
+                          ...code_obj
                         });
 
                         return this;
@@ -4637,8 +4853,13 @@ function primaryFN() {
                 finalList = union(hds, filterLang);
 
                 for (const ujs of finalList) {
-                  if (cfg.codePreview && !ujs._mujs.code.data) {
-                    await ujs._mujs.code.request();
+                  if (
+                    !ujs._mujs.code.data_code_block &&
+                    (cfg.preview.code || cfg.preview.metadata)
+                  ) {
+                    ujs._mujs.code.request().then(() => {
+                      dispatch(ujs);
+                    });
                   }
                   createjs(ujs, engine.name);
                 }
@@ -4654,7 +4875,8 @@ function primaryFN() {
                   }
                   const selected = htmlDocument.documentElement;
                   if (/openuserjs/gi.test(engine.name)) {
-                    for (const i of qsA('.col-sm-8 .tr-link', selected)) {
+                    const col = qsA('.col-sm-8 .tr-link', selected) ?? [];
+                    for (const i of col) {
                       while (isNull(qs('.script-version', i))) {
                         await new Promise((resolve) => requestAnimationFrame(resolve));
                       }
@@ -4683,8 +4905,13 @@ function primaryFN() {
                       if (bsFilter.match(ujs)) {
                         continue;
                       }
-                      if (cfg.codePreview && !ujs._mujs.code.data) {
-                        await ujs._mujs.code.request();
+                      if (
+                        !ujs._mujs.code.data_code_block &&
+                        (cfg.preview.code || cfg.preview.metadata)
+                      ) {
+                        ujs._mujs.code.request().then(() => {
+                          dispatch(ujs);
+                        });
                       }
                       createjs(ujs, engine.name);
                     }
@@ -4693,7 +4920,7 @@ function primaryFN() {
                   showError(ex);
                 }
               };
-              const gitFN = async (data) => {
+              const gitFN = (data) => {
                 try {
                   if (isBlank(data.items)) {
                     showError('Invalid data received from the server, TODO fix this');
@@ -4701,14 +4928,14 @@ function primaryFN() {
                   }
                   for (const r of data.items) {
                     const ujs = _mujs({
-                      name: r.name,
+                      id: r.repository.id ?? r.id ?? 0,
+                      name: r.repository.name ?? r.name,
                       description: isEmpty(r.repository.description)
                         ? i18n$('no_license')
                         : r.repository.description,
-                      url: r.html_url,
+                      url: r.repository.html_url,
                       code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
-                      code_updated_at: r.commit || Date.now(),
-                      total_installs: r.score,
+                      page_url: `${r.repository.url}/contents/README.md`,
                       users: [
                         {
                           name: r.repository.owner.login,
@@ -4716,11 +4943,30 @@ function primaryFN() {
                         }
                       ]
                     });
-                    if (bsFilter.match(ujs)) {
-                      continue;
-                    }
-                    if (cfg.codePreview && !ujs._mujs.code.data) {
-                      await ujs._mujs.code.request();
+                    // if (bsFilter.match(ujs)) {
+                    //   continue;
+                    // }
+                    Network.req(r.repository.url, 'GET', 'json', {
+                      headers: {
+                        Accept: 'application/vnd.github+json',
+                        Authorization: `Bearer ${engine.token}`,
+                        'X-GitHub-Api-Version': '2022-11-28'
+                      }
+                    }).then((repository) => {
+                      ujs.code_updated_at = r.commit || repository.updated_at || Date.now();
+                      ujs.created_at = repository.created_at;
+                      ujs.daily_installs = repository.watchers_count ?? 0;
+                      ujs.good_ratings = repository.stargazers_count ?? 0;
+                      if (repository.license?.name) ujs.license = repository.license.name;
+                      dispatch(ujs);
+                    });
+                    if (
+                      !ujs._mujs.code.data_code_block &&
+                      (cfg.preview.code || cfg.preview.metadata)
+                    ) {
+                      ujs._mujs.code.request().then(() => {
+                        dispatch(ujs);
+                      });
                     }
                     createjs(ujs, engine.name);
                   }
@@ -4847,6 +5093,8 @@ function primaryFN() {
           command: 'reset'
         }
       });
+      cbtn.append(resetbtn, savebtn);
+
       const makesection = (name, tag) => {
         tag = tag ?? i18n$('no_license');
         name = name ?? i18n$('no_license');
@@ -4871,7 +5119,7 @@ function primaryFN() {
           }
           const cmd = target.dataset.command;
           if (cmd === tag) {
-            const a = qsA(`label[data-${tag}]`, sec);
+            const a = qsA(`[data-${tag}]`, sec);
             if (dom.cl.has(a, 'hidden')) {
               dom.cl.remove(a, 'hidden');
             } else {
@@ -4885,133 +5133,24 @@ function primaryFN() {
         cfgpage.append(sec);
         return sec;
       };
-
       const sections = {
         general: makesection('General', 'general'),
         load: makesection('Automation', 'load'),
         list: makesection('List', 'list'),
         filters: makesection('List Filters', 'filters'),
         blacklist: makesection('Blacklist (WIP)', 'blacklist'),
-        // engine: makesection('Search Engine', 'engine'),
-        theme: makesection('Theme Colors', 'theme')
+        engine: makesection('Search Engines', 'engine'),
+        theme: makesection('Theme Colors', 'theme'),
+        exp: makesection('Import / Export', 'exp')
       };
-
-      const makerow = (desc, type = null, nm, attrs = {}) => {
-        desc = desc ?? i18n$('no_license');
-        nm = nm ?? i18n$('no_license');
-        const sec = make('mujs-section', {
-          dataset: {
-            name: nm
-          }
-        });
-        const lb = make('label');
-        const divDesc = make('mu-js', {
-          textContent: desc
-        });
-        lb.append(divDesc);
-        sec.append(lb);
-        cfgpage.append(sec);
-        if (isNull(type)) {
-          return lb;
-        }
-        const inp = make('input', {
-          type,
-          dataset: {
-            name: nm
-          },
-          ...attrs
-        });
-        if (!cfgMap.has(nm)) {
-          cfgMap.set(nm, inp);
-        }
-        if (type === 'checkbox') {
-          const inlab = make('mu-js', 'mujs-inlab');
-          const la = make('label', {
-            onclick() {
-              inp.dispatchEvent(new MouseEvent('click'));
-            }
-          });
-          inlab.append(inp, la);
-          lb.append(inlab);
-          if (nm.includes('-')) {
-            return inp;
-          }
-          if (/(greasy|sleazy)fork|openuserjs|gi(thub|st)/gi.test(nm)) {
-            const engine = cfg.engines.find((engine) => engine.name === nm);
-            if (engine) {
-              inp.checked = engine.enabled;
-              inp.dataset.engine = engine.name;
-              ael(inp, 'change', (evt) => {
-                container.unsaved = true;
-                container.rebuild = true;
-                engine.enabled = evt.target.checked;
-              });
-
-              if (engine.query) {
-                const d = DEFAULT_CONFIG.engines.find((e) => e.name === engine.name);
-                const urlInp = make('input', {
-                  type: 'text',
-                  defaultValue: '',
-                  value: decodeURIComponent(engine.query) ?? '',
-                  placeholder: decodeURIComponent(d.query) ?? '',
-                  dataset: {
-                    name: nm,
-                    engine: engine.name
-                  },
-                  onchange(evt) {
-                    container.unsaved = true;
-                    container.rebuild = true;
-                    try {
-                      engine.query = encodeURIComponent(new URL(evt.target.value).toString());
-                    } catch (ex) {
-                      err(ex);
-                    }
-                  }
-                });
-                sec.append(urlInp);
-              }
-              if (engine.name === 'github') {
-                const ghToken = make('input', {
-                  type: 'text',
-                  defaultValue: '',
-                  value: engine.token ?? '',
-                  placeholder: 'Paste Access Token',
-                  dataset: {
-                    engine: 'github-token'
-                  },
-                  onchange(evt) {
-                    container.unsaved = true;
-                    container.rebuild = true;
-                    engine.token = evt.target.value;
-                  }
-                });
-                sec.append(ghToken);
-                cfgMap.set('github-token', ghToken);
-              }
-            }
-          } else {
-            inp.checked = cfg[nm];
-            ael(inp, 'change', (evt) => {
-              container.unsaved = true;
-              if (/filterlang/i.test(nm)) {
-                container.rebuild = true;
-              }
-              cfg[nm] = evt.target.checked;
-            });
-          }
-        } else {
-          lb.append(inp);
-        }
-        return inp;
-      };
-      const mkSection = (text, value, type = 'checkbox', tag = 'general', attrs = {}) => {
-        cfgMap.set(text, value);
+      const makeRow = (text, value, type = 'checkbox', tag = 'general', attrs = {}) => {
         const lb = make('label', 'sub-section hidden', {
           textContent: text,
           dataset: {
             [tag]: text
           }
         });
+        cfgMap.set(text, value);
         if (type === 'select') {
           const inp = make('select', {
             dataset: {
@@ -5041,6 +5180,10 @@ function primaryFN() {
           },
           ...attrs
         });
+
+        if (tag === 'engine') {
+          inp.dataset.name = value;
+        }
 
         if (sections[tag]) {
           sections[tag].append(lb);
@@ -5081,6 +5224,61 @@ function primaryFN() {
               cfg[value] = evt.target.checked;
             }
           });
+
+          if (tag === 'engine') {
+            const engine = cfg.engines.find((engine) => engine.name === value);
+            if (engine) {
+              inp.checked = engine.enabled;
+              inp.dataset.engine = engine.name;
+              ael(inp, 'change', (evt) => {
+                container.unsaved = true;
+                container.rebuild = true;
+                engine.enabled = evt.target.checked;
+              });
+
+              if (engine.query) {
+                const d = DEFAULT_CONFIG.engines.find((e) => e.name === engine.name);
+                const urlInp = make('input', {
+                  type: 'text',
+                  defaultValue: '',
+                  value: decodeURIComponent(engine.query) ?? '',
+                  placeholder: decodeURIComponent(d.query) ?? '',
+                  dataset: {
+                    name: nm,
+                    engine: engine.name
+                  },
+                  onchange(evt) {
+                    container.unsaved = true;
+                    container.rebuild = true;
+                    try {
+                      engine.query = encodeURIComponent(new URL(evt.target.value).toString());
+                    } catch (ex) {
+                      err(ex);
+                    }
+                  }
+                });
+                lb.append(urlInp);
+              }
+              if (engine.name === 'github') {
+                const ghToken = make('input', {
+                  type: 'text',
+                  defaultValue: '',
+                  value: engine.token ?? '',
+                  placeholder: 'Paste Access Token',
+                  dataset: {
+                    engine: 'github-token'
+                  },
+                  onchange(evt) {
+                    container.unsaved = true;
+                    container.rebuild = true;
+                    engine.token = evt.target.value;
+                  }
+                });
+                lb.append(ghToken);
+                cfgMap.set('github-token', ghToken);
+              }
+            }
+          }
         } else {
           if (type === 'text') {
             inp.defaultValue = '';
@@ -5094,11 +5292,11 @@ function primaryFN() {
         return lb;
       };
       if (isGM) {
-        mkSection(i18n$('userjs_sync'), 'cache');
-        mkSection(i18n$('userjs_autoinject'), 'autoinject', 'checkbox', 'load');
+        makeRow(i18n$('userjs_sync'), 'cache');
+        makeRow(i18n$('userjs_autoinject'), 'autoinject', 'checkbox', 'load');
       }
-      mkSection(i18n$('redirect'), 'sleazyredirect');
-      mkSection(`${i18n$('dtime')} (ms)`, 'time', 'number', 'general', {
+      makeRow(i18n$('redirect'), 'sleazyredirect');
+      makeRow(`${i18n$('dtime')} (ms)`, 'time', 'number', 'general', {
         defaultValue: 10000,
         value: cfg.time,
         min: 0,
@@ -5126,34 +5324,35 @@ function primaryFN() {
         }
       });
 
-      mkSection(i18n$('auto_fetch'), 'autofetch', 'checkbox', 'load');
-      mkSection(i18n$('userjs_fullscreen'), 'autoexpand', 'checkbox', 'load', {
+      makeRow(i18n$('auto_fetch'), 'autofetch', 'checkbox', 'load');
+      makeRow(i18n$('userjs_fullscreen'), 'autoexpand', 'checkbox', 'load', {
         onchange(e) {
           if (e.target.checked) {
             dom.cl.add([btnfullscreen, main], 'expanded');
-            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('collapse'));
           } else {
             dom.cl.remove([btnfullscreen, main], 'expanded');
-            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsOpen'));
+            dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('expand'));
           }
         }
       });
-      mkSection('Clear on Tab close', 'clearTabCache', 'checkbox', 'load');
+      makeRow('Clear on Tab close', 'clearTabCache', 'checkbox', 'load');
 
-      mkSection('Default Sort', 'autoSort', 'select', 'list');
-      mkSection(i18n$('filter'), 'filterlang', 'checkbox', 'list');
-      mkSection(i18n$('preview_code'), 'codePreview', 'checkbox', 'list');
-      mkSection('Recommend author', 'recommend-author', 'checkbox', 'list');
-      mkSection('Recommend scripts', 'recommend-others', 'checkbox', 'list');
+      makeRow('Default Sort', 'autoSort', 'select', 'list');
+      makeRow(i18n$('filter'), 'filterlang', 'checkbox', 'list');
+      makeRow(i18n$('preview_code'), 'preview-code', 'checkbox', 'list');
+      makeRow('Preview Metadata', 'preview-metadata', 'checkbox', 'list');
+      makeRow('Recommend author', 'recommend-author', 'checkbox', 'list');
+      makeRow('Recommend scripts', 'recommend-others', 'checkbox', 'list');
 
       for (const [k, v] of Object.entries(cfg.filters)) {
-        mkSection(v.name, `filters-${k}`, 'checkbox', 'filters');
+        makeRow(v.name, `filters-${k}`, 'checkbox', 'filters');
       }
 
-      makerow('Greasy Fork', 'checkbox', 'greasyfork');
-      makerow('Sleazy Fork', 'checkbox', 'sleazyfork');
-      makerow('Open UserJS', 'checkbox', 'openuserjs');
-      makerow('GitHub API', 'checkbox', 'github');
+      makeRow('Greasy Fork', 'greasyfork', 'checkbox', 'engine');
+      makeRow('Sleazy Fork', 'sleazyfork', 'checkbox', 'engine');
+      makeRow('Open UserJS', 'openuserjs', 'checkbox', 'engine');
+      makeRow('GitHub API', 'github', 'checkbox', 'engine');
 
       for (const [k, v] of Object.entries(cfg.theme)) {
         const lb = make('label', 'hidden', {
@@ -5207,6 +5406,66 @@ function primaryFN() {
         sections.theme.append(lb);
       }
 
+      // const blacklist = make('textarea', {
+      //   dataset: {
+      //     name: 'blacklist'
+      //   },
+      //   rows: '10',
+      //   autocomplete: false,
+      //   spellcheck: false,
+      //   wrap: 'soft',
+      //   value: JSON.stringify(cfg.blacklist, null, ' '),
+      //   oninput(evt) {
+      //     let isvalid = true;
+      //     try {
+      //       cfg.blacklist = JSON.parse(evt.target.value);
+      //       isvalid = true;
+      //     } catch (ex) {
+      //       err(ex);
+      //       isvalid = false;
+      //     } finally {
+      //       if (isvalid) {
+      //         dom.cl.remove(evt.target, 'mujs-invalid');
+      //         dom.prop(savebtn, 'disabled', false);
+      //       } else {
+      //         dom.cl.add(evt.target, 'mujs-invalid');
+      //         dom.prop(savebtn, 'disabled', true);
+      //       }
+      //     }
+      //   }
+      // });
+      // cfgMap.set('blacklist', blacklist);
+      // const addList = make('mujs-add', {
+      //   textContent: '+',
+      //   dataset: {
+      //     command: 'new-list'
+      //   }
+      // });
+      // const n = make('input', {
+      //   type: 'text',
+      //   defaultValue: '',
+      //   value: '',
+      //   placeholder: 'Name',
+      // });
+      // const inpValue = make('input', {
+      //   type: 'text',
+      //   defaultValue: '',
+      //   value: '',
+      //   placeholder: 'Value',
+      // });
+      // const label = make('label', 'new-list hidden', {
+      //   dataset: {
+      //     blacklist: 'new-list'
+      //   }
+      // });
+      // label.append(n, inpValue, addList);
+      // listSec.append(label);
+      // ael(addList, 'click', () => {
+      //   if (isEmpty(n.value) || isEmpty(inpValue.value)) {
+      //     return
+      //   };
+      //   createList(n.value, n.value, inpValue.value);
+      // });
       const createList = (key, v = '', disabled = false, type = 'String') => {
         let txt = key;
         if (typeof key === 'string') {
@@ -5292,72 +5551,50 @@ function primaryFN() {
         lb.append(inp, selType);
         sections.blacklist.append(lb);
       };
-      // const blacklist = make('textarea', {
-      //   dataset: {
-      //     name: 'blacklist'
-      //   },
-      //   rows: '10',
-      //   autocomplete: false,
-      //   spellcheck: false,
-      //   wrap: 'soft',
-      //   value: JSON.stringify(cfg.blacklist, null, ' '),
-      //   oninput(evt) {
-      //     let isvalid = true;
-      //     try {
-      //       cfg.blacklist = JSON.parse(evt.target.value);
-      //       isvalid = true;
-      //     } catch (ex) {
-      //       err(ex);
-      //       isvalid = false;
-      //     } finally {
-      //       if (isvalid) {
-      //         dom.cl.remove(evt.target, 'mujs-invalid');
-      //         dom.prop(savebtn, 'disabled', false);
-      //       } else {
-      //         dom.cl.add(evt.target, 'mujs-invalid');
-      //         dom.prop(savebtn, 'disabled', true);
-      //       }
-      //     }
-      //   }
-      // });
-      // cfgMap.set('blacklist', blacklist);
-      // const addList = make('mujs-add', {
-      //   textContent: '+',
-      //   dataset: {
-      //     command: 'new-list'
-      //   }
-      // });
-      // const n = make('input', {
-      //   type: 'text',
-      //   defaultValue: '',
-      //   value: '',
-      //   placeholder: 'Name',
-      // });
-      // const inpValue = make('input', {
-      //   type: 'text',
-      //   defaultValue: '',
-      //   value: '',
-      //   placeholder: 'Value',
-      // });
-      // const label = make('label', 'new-list hidden', {
-      //   dataset: {
-      //     blacklist: 'new-list'
-      //   }
-      // });
-      // label.append(n, inpValue, addList);
-      // listSec.append(label);
-      // ael(addList, 'click', () => {
-      //   if (isEmpty(n.value) || isEmpty(inpValue.value)) {
-      //     return
-      //   };
-      //   createList(n.value, n.value, inpValue.value);
-      // });
-
       for (const key of cfg.blacklist) {
         createList(key);
       }
 
-      cbtn.append(resetbtn, savebtn);
+      const transfers = {
+        export: {
+          cfg: make('mujs-btn', 'mujs-export sub-section hidden', {
+            textContent: i18n$('export_config'),
+            dataset: {
+              command: 'export-cfg',
+              exp: 'export-cfg'
+            }
+          }),
+          theme: make('mujs-btn', 'mujs-export sub-section hidden', {
+            textContent: i18n$('export_theme'),
+            dataset: {
+              command: 'export-theme',
+              exp: 'export-theme'
+            }
+          })
+        },
+        import: {
+          cfg: make('mujs-btn', 'mujs-import sub-section hidden', {
+            textContent: i18n$('import_config'),
+            dataset: {
+              command: 'import-cfg',
+              exp: 'import-cfg'
+            }
+          }),
+          theme: make('mujs-btn', 'mujs-import sub-section hidden', {
+            textContent: i18n$('import_theme'),
+            dataset: {
+              command: 'import-theme',
+              exp: 'import-theme'
+            }
+          })
+        }
+      };
+      for (const value of Object.values(transfers)) {
+        for (const v of Object.values(value)) {
+          sections.exp.append(v);
+        }
+      }
+
       cfgpage.append(cbtn);
     };
     // #endregion
@@ -5384,7 +5621,7 @@ function primaryFN() {
       dom.cl.add(mainframe, 'hidden');
       if (cfg.autoexpand) {
         dom.cl.add([btnfullscreen, main], 'expanded');
-        dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('fsClose'));
+        dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('collapse'));
       }
       if (dom.cl.has(mainframe, 'error')) {
         tab.create('mujs:settings');
@@ -5512,11 +5749,8 @@ function primaryFN() {
         for (const v of cacheValues) {
           if (v.name && v.name.match(reg)) finds.add(v._mujs.root);
           if (v.description && v.description.match(reg)) finds.add(v._mujs.root);
-          const code_data = v._mujs.code.data;
-          if (code_data) {
-            const code_obj = new ParseUserJS(code_data);
-            const meta = code_obj.parse_meta(code_data);
-            for (const key of Object.keys(meta)) {
+          if (v._mujs.code.data_meta) {
+            for (const key of Object.keys(v._mujs.code.data_meta)) {
               if (/name|desc/i.test(key) && key.match(reg)) finds.add(v._mujs.root);
             }
           }

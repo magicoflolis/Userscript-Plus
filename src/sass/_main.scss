@@ -30,6 +30,12 @@ mujs-root {
 }
 
 mujs-root * {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  scrollbar-color: var(--mujs-txt-color, hsl(0, 0%, 100%)) hsl(224, 14%, 21%);
+  scrollbar-width: thin;
+
   @supports not (scrollbar-width: thin) {
     ::-webkit-scrollbar {
       width: 1.4vw;
@@ -61,9 +67,6 @@ mujs-root * {
       background: var(--mujs-txt-color, hsl(0, 0%, 100%));
     }
   }
-
-  scrollbar-color: var(--mujs-txt-color, hsl(0, 0%, 100%)) hsl(224, 14%, 21%);
-  scrollbar-width: thin;
 }
 
 @at-root mu-js {
@@ -87,10 +90,6 @@ td.mujs-list {
   font-weight: 500;
 }
 
-.mujs-sty-flex>mujs-btn {
-  margin: auto;
-}
-
 .mujs-invalid {
   border-radius: 8px !important;
   border-width: 2px !important;
@@ -111,10 +110,6 @@ mujs-row {
 }
 
 mujs-column {
-  @media screen and (max-width: 800px) {
-    flex-flow: row wrap;
-  }
-
   count-frame {
     &[data-counter="greasyfork"] {
       background: var(--mujs-gf-color, hsl(204, 100%, 40%));
@@ -132,6 +127,10 @@ mujs-column {
       background: hsla(12, 86%, 50%, 0.568);
     }
   }
+
+  @media screen and (max-width: 800px) {
+    flex-flow: row wrap;
+  }
 }
 
 mujs-row {
@@ -148,6 +147,13 @@ mu-js {
 }
 
 mujs-main {
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  background: var(--mujs-background-color, hsl(222, 14%, 33%)) !important;
+  border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+  border-radius: 16px;
+
   @media screen and (max-height: 720px) {
     &:not(.webext-page) {
       height: 100% !important;
@@ -156,13 +162,6 @@ mujs-main {
       margin: 0rem !important;
     }
   }
-
-  width: 100%;
-  width: -moz-available;
-  width: -webkit-fill-available;
-  background: var(--mujs-background-color, hsl(222, 14%, 33%)) !important;
-  border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-  border-radius: 16px;
 
   &.expanded {
     height: 100% !important;
@@ -240,6 +239,10 @@ mujs-main {
       border-radius: 4px;
       background: transparent;
 
+      @media screen and (max-width: 800px) {
+        min-width: 6em !important;
+      }
+
       &.active {
         background: var(--mujs-even-row, hsl(222, 14%, 18%));
       }
@@ -289,25 +292,33 @@ mujs-main {
     // background: var(--mujs-background-color, hsl(222, 14%, 33%));
     background: hsla(0, 0%, 0%, 0);
     color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+
+    &:not([type='checkbox']) {
+      border: transparent;
+      outline: none !important;
+    }
   }
 
-  input:not([type='checkbox']) {
-    border: transparent;
-    outline: none !important;
-  }
-
+  mujs-page,
   textarea {
     background: inherit;
     overflow-y: auto;
-    color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-    // background: var(--mujs-even-row, hsl(222, 14%, 18%));
-    // border: 1px solid transparent;
     border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-    border-radius: 10px;
-    resize: vertical;
+    border-radius: 5px;
     outline: none;
     font-family: monospace;
     font-size: 14px;
+  }
+
+  mujs-page {
+    padding: 0.5em;
+    margin: 0.5em;
+  }
+
+  textarea {
+    overflow-y: auto;
+    color: var(--mujs-placeholder, hsl(81, 56%, 54%));
+    resize: vertical;
 
     &:focus {
       outline: none;
@@ -347,8 +358,7 @@ mujs-main {
     align-items: center;
     justify-content: center;
 
-    svg,
-    img {
+    svg {
       width: 14px;
       height: 14px;
       background: transparent;
@@ -450,9 +460,6 @@ mujs-header {
   order: 1;
   display: flex;
   border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-  // border-top-left-radius: 10px;
-  // border-top-right-radius: 10px;
-  // padding: .5em;
   padding-left: .5em;
   padding-right: .5em;
   padding-bottom: .5em;
@@ -486,10 +493,6 @@ mujs-header {
     order: 1;
   }
 
-  .mujs-sty-flex {
-    order: 2;
-  }
-
   .btn-frame {
     order: 999999999999;
   }
@@ -500,7 +503,6 @@ mujs-body {
   overflow-x: hidden;
   padding: 0px;
   height: 100%;
-
   border: 1px solid var(--mujs-border-b-color, hsla(0, 0%, 0%, 0));
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
@@ -528,6 +530,10 @@ mujs-body {
   }
 
   table {
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+
     @media screen and (max-width: 1180px) {
       thead>tr {
         display: table-column;
@@ -538,13 +544,11 @@ mujs-body {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
         padding-top: .5em;
         padding-bottom: .5em;
 
         td {
           margin: auto;
-          border-bottom: 1px solid transparent;
 
           >mujs-a,
           >mu-js,
@@ -553,8 +557,32 @@ mujs-body {
             justify-content: center;
           }
 
+          >mujs-a {
+            width: 100%;
+          }
+
+          >mujs-column {
+            @media screen and (max-width: 800px) {
+              flex-flow: column wrap;
+
+              >mujs-row {
+                align-content: center;
+              }
+
+              mujs-column {
+                justify-content: center;
+              }
+            }
+          }
+
           &:not(.mujs-name, .install-btn) {
             width: 25%;
+          }
+
+          &.install-btn {
+            @media screen and (max-width: 800px) {
+              width: 100%;
+            }
           }
         }
 
@@ -576,37 +604,37 @@ mujs-body {
       }
     }
 
-    width: 100%;
-    width: -moz-available;
-    width: -webkit-fill-available;
-
-    th,
-    td {
-      border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-    }
-
     th {
       position: -webkit-sticky;
       position: sticky;
       top: 0;
       background: hsla(222, 14%, 33%, 0.75);
+      border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
 
       &.mujs-header-name {
+        width: 50%;
+
         @media screen and (max-width: 800px) {
           width: auto !important;
         }
-
-        width: 50%;
       }
     }
 
     .frame {
       &:nth-child(even) {
         background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+
+        textarea {
+          background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+        }
       }
 
       &:nth-child(odd) {
         background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+
+        textarea {
+          background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+        }
       }
 
       &:not([data-engine="sleazyfork"], [data-engine="greasyfork"]) {
@@ -714,13 +742,9 @@ mujs-body {
       }
 
       svg {
+        width: 12px;
+        height: 12px;
         fill: currentColor;
-      }
-
-      svg,
-      img {
-        width: 14px;
-        height: 14px;
         background: transparent;
       }
 
@@ -749,6 +773,10 @@ mujs-body {
         >mujs-column {
           >mu-jsbtn {
             padding: 0px 7px;
+
+            @media screen and (max-width: 800px) {
+              width: 100%;
+            }
           }
         }
       }
@@ -803,6 +831,26 @@ mujs-body {
             }
           }
         }
+
+        @media screen and (max-width: 800px) {
+          width: 30em !important;
+        }
+      }
+
+      [data-name="license"] {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
+        width: fit-content;
+        // max-width: 20em;
+
+        @media screen and (max-width: 800px) {
+          width: 100% !important;
+          width: -moz-available !important;
+          width: -webkit-fill-available !important;
+        }
       }
     }
   }
@@ -815,36 +863,46 @@ mujs-body {
 }
 
 .mujs-cfg {
-  @media screen and (max-height: 720px) {
-    &:not(.webext-page) {
-      height: 100%;
-      height: -moz-available;
-      height: -webkit-fill-available;
-      width: 100%;
-      width: -moz-available;
-      width: -webkit-fill-available;
-      overflow-x: auto;
-      padding: .5em;
-    }
-  }
-
-  height: fit-content;
-  height: -moz-fit-content;
-  height: -webkit-fit-content;
-
   mujs-section {
     border-radius: 16px;
     padding: .5em;
 
     &:nth-child(even) {
       background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+
+      input,
+      select {
+        background: var(--mujs-odd-row, hsl(222, 14%, 33%));
+      }
+
+      select option {
+        background: var(--mujs-odd-row, hsl(222, 14%, 33%));
+
+        &:hover {
+          background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+        }
+      }
     }
 
     &:nth-child(odd) {
       background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+
+      input,
+      select {
+        background: var(--mujs-even-row, hsl(222, 14%, 18%));
+      }
+
+      select option {
+        background: var(--mujs-even-row, hsl(222, 14%, 18%));
+
+        &:hover {
+          background: var(--mujs-odd-row, hsl(222, 14%, 33%)) !important;
+        }
+      }
     }
 
     &[data-name='theme'],
+    &[data-name='exp'],
     &[data-name='blacklist'] {
       display: flex;
       justify-content: space-between;
@@ -855,6 +913,15 @@ mujs-body {
       //   order: 999999999999;
       //   font-size: 20px;
       // }
+      >mujs-btn {
+        &:hover {
+          background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+        }
+
+        width: 100%;
+        width: -moz-available;
+        width: -webkit-fill-available;
+      }
     }
 
     input[type='text']::-webkit-input-placeholder {
@@ -903,48 +970,44 @@ mujs-body {
         }
       }
 
-      &.sub-section {
-        padding: 0.20em;
-      }
-
-      // display: flex;
-      // justify-content: space-between;
-
       input:not([type='checkbox']) {
         font-size: 14px;
         position: relative;
         border-radius: 4px;
         border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
       }
-
-      // input[type='text']::-webkit-input-placeholder {
-      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      // }
-
-      // input[type='text']::-moz-placeholder {
-      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      // }
-
-      // input[type='text']:-ms-input-placeholder {
-      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      // }
-
-      // input[type='text']::-ms-input-placeholder {
-      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      // }
-
-      // input[type='text']::placeholder {
-      //   color: var(--mujs-placeholder, hsl(81, 56%, 54%));
-      // }
     }
 
-    >input {
-      width: 100%;
-      width: -moz-available;
-      width: -webkit-fill-available;
-      margin-top: 5px;
+    select,
+    select option {
+      color: var(--mujs-txt-color, hsl(0, 0%, 100%));
+      border: 1px solid transparent;
+      list-style: none;
+      outline-style: none;
+      pointer-events: auto;
+    }
+
+    select {
+      text-align: center;
       border-radius: 4px;
-      border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
+    }
+
+    >*.sub-section {
+      padding: 0.20em;
+
+      &[data-engine] {
+        flex-wrap: wrap;
+
+        input {
+          width: 100%;
+          width: -moz-available;
+          width: -webkit-fill-available;
+        }
+      }
+
+      input[type='text'] {
+        margin: 0.2em 0px;
+      }
     }
   }
 
@@ -964,9 +1027,12 @@ mujs-body {
         }
       }
 
-      &[data-name='greasyfork']:checked+label,
+      &[data-name='greasyfork']:checked+label {
+        background: var(--mujs-gf-color, hsl(204, 100%, 40%));
+      }
+
       &[data-name='sleazyfork']:checked+label {
-        background: var(--mujs-chck-gf, hsla(197, 100%, 50%, 0.568));
+        background: var(--mujs-sf-color, hsl(12, 86%, 50%));
       }
 
       &[data-name='openuserjs']:checked+label {
@@ -1003,6 +1069,8 @@ mujs-body {
 
   .mujs-sty-flex {
     mujs-btn {
+      margin: auto;
+
       &[data-command="reset"] {
         background: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
         border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
@@ -1027,6 +1095,23 @@ mujs-body {
 
   &:not(.webext-page) {
     margin: 1rem 25rem;
+  }
+
+  height: fit-content;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+
+  @media screen and (max-height: 720px) {
+    &:not(.webext-page) {
+      height: 100%;
+      height: -moz-available;
+      height: -webkit-fill-available;
+      width: 100%;
+      width: -moz-available;
+      width: -webkit-fill-available;
+      overflow-x: auto;
+      padding: .5em;
+    }
   }
 }
 
@@ -1058,13 +1143,9 @@ mujs-btn {
   padding: 6px 15px;
 
   svg {
-    fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
-  }
-
-  svg,
-  img {
     width: 14px;
     height: 14px;
+    fill: var(--mujs-txt-color, hsl(0, 0%, 100%));
   }
 }
 
@@ -1083,25 +1164,9 @@ mu-jsbtn {
 mujs-a,
 mu-jsbtn,
 .mujs-pointer,
-.mujs-cfg mujs-section *:not(input[type='password'], input[type='text'], input[type='number'], [data-theme], [data-blacklist]),
+.mujs-cfg mujs-section *:not(input[type='text'], input[type='number'], [data-theme], [data-blacklist]),
 .mainbtn,
 .mainframe,
 mujs-btn {
   cursor: pointer !important;
 }
-
-// .install-link {
-//   transition: box-shadow .2s;
-//   display: inline-block;
-//   background-color: hsl(120, 100%, 16%);
-//   padding: .5em 1em;
-//   color: hsl(0, 0%, 100%);
-//   text-decoration: none;
-//   border-radius: .25rem 0 0 .25rem;
-// }
-
-// .install-help {
-//   background-color: hsl(120, 67%, 35%);
-//   color: hsl(0, 0%, 100%);
-//   border-radius: 0 .25rem .25rem 0;
-// }

@@ -58,14 +58,22 @@ export type GSForkQuery = {
       host?: string;
     };
     code: {
-      antifeatures: string[];
-      data?: string;
-      code_size?: string[];
-      translated?: boolean;
-      grant: string[];
-      match: string[];
       meta: UserJSMeta | null;
       request(): Promise<GSForkQuery['_mujs']['code']>;
+
+      code_size?: string[];
+      translated?: boolean;
+      code?: string;
+      data_meta_block?: string;
+      data_code_block?: string;
+      data_meta?: {
+        [meta: string]: string | string[] | { [resource: string]: string };
+      };
+      data_names?: {
+        text: string;
+        domain: boolean;
+        tld_extra: boolean;
+      }[];
     };
     root?: HTMLTableRowElement;
   };
@@ -94,9 +102,9 @@ export type GSFork = {
 export type UserJSEngine = {
   enabled: boolean;
   name: string;
-  url: string;
+  url?: string;
   token?: string;
-  query?: string;
+  query: string;
 };
 
 export interface FilterLayout {
@@ -136,7 +144,10 @@ export type config = {
   /**
    * Fetch all UserScript code on load
    */
-  codePreview: boolean;
+  preview: {
+    code: boolean;
+    metadata: boolean;
+  };
   /**
    * `UserScript:` Fullscreen list on load
    */
@@ -362,9 +373,11 @@ export declare function make<
   A extends keyof HTMLElementTagNameMap[K]
 >(
   tagName: K,
-  cname?: string | {
-    [key in A]: Record<string, unknown>;
-  },
+  cname?:
+    | string
+    | {
+        [key in A]: Record<string, unknown>;
+      },
   attrs?: {
     [key in A]: Record<string, unknown>;
   }

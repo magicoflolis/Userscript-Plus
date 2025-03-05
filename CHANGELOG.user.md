@@ -1,5 +1,36 @@
 # Changelog
 
+## v7.6.0
+
+* New feature, `Preview Metadata` - same as `Preview Code` but loads userscripts metadata head
+* Config changes, moved `codePreview` value to `preview: code`, recommended resetting your config to clear any old/unused settings.
+  * If you had `Preview Code` enabled, you will need to re-enable it
+* When `Preview Metadata` and `Preview Code` are both enabled, it will display the entire userscript
+* Icon changes, svgs are now from [fontawesome.com](fontawesome.com)
+* Search engines have been moved to the `Search Engines` section
+* Improved mobile UI
+* Improved userscript parsing
+* Improved load times - added custom event to handle async item changes
+* Improved GitHub engine
+  * Number of stars for a repo = daily installs
+  * Number of watchers for a repo = good rating
+* Cleanup old css
+* Minor bug fixes
+
+**Known Issues:**
+
+* Enabling a engine requires the page to be reloaded, while disabling a engine does not.
+  * This is caused by the cache system.
+* SVG elements don't load on every webpage, _can be blocked by the page, external scripts, or web extensions._
+* If an item changes after the list is sorted, the sorting won't be updated
+
+**TODO:**
+
+* Finish translations.
+* Finish blacklist section.
+
+---
+
 ## v7.5.0
 
 * Merged https://github.com/magicoflolis/Userscript-Plus/pull/64

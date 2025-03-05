@@ -9,6 +9,7 @@ export interface safeHandles {
   //   createPolicy(): void;
   // };
   XMLHttpRequest: typeof XMLHttpRequest;
+  CustomEvent: typeof CustomEvent;
   createElement: typeof document.createElement;
   createElementNS: typeof document.createElementNS;
   createTextNode: typeof document.createTextNode;

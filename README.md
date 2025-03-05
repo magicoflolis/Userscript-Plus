@@ -2,17 +2,17 @@
 [![Badge Issues](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/issues)
 [![Badge Greasy Fork](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
 [![Badge Stars](https://img.shields.io/github/stars/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/stargazers)
-[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=Greasy+Fork&logo=javascript&logoColor=white)](https://greasyfork.org/scripts/421603)
-[![UserScript](https://img.shields.io/badge/Userscript-Download-brightgreen.svg?style=flat-square&label=GitHub+Repo&logo=javascript&logoColor=white)](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
 
 ---
 
-<h1 align="center">
+<center>
+<h1>
 <sub>
 <img src="https://raw.githubusercontent.com/magicoflolis/Userscript-Plus/9aa3abea2e6d5caadf051edc9790657da91a1358/src/img/greasyfork.svg" height="38" width="38">
 </sub>
 Magic Userscript+
 </h1>
+</center>
 
 *A complete rewrite of [Userscript+ : Show Site All UserJS](https://github.com/jae-jae/Userscript-Plus)*
 
