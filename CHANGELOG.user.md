@@ -3,6 +3,7 @@
 ## v7.6.0
 
 * New feature, `Preview Metadata` - same as `Preview Code` but loads userscripts metadata head
+* New feature, `Page` - loads additonal information from userscripts homepage
 * Config changes, moved `codePreview` value to `preview: code`, recommended resetting your config to clear any old/unused settings.
   * If you had `Preview Code` enabled, you will need to re-enable it
 * When `Preview Metadata` and `Preview Code` are both enabled, it will display the entire userscript
