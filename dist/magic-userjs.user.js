@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.6.0
+// @version      7.6.1
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -3026,7 +3026,7 @@ class Container {
     this.tab.create(host);
 
     const tabbody = this.tabbody;
-    const getCellValue = (tr, idx) => tr.children[idx].dataset.value;
+    const getCellValue = (tr, idx) => tr.children[idx].dataset.value || tr.children[idx].textContent;
     const comparer = (idx, asc) => (a, b) =>
       ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)

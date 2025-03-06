@@ -1,5 +1,9 @@
 # Changelog
 
+## v7.6.1
+
+* Fixed sorting
+
 ## v7.6.0
 
 * New feature, `Preview Metadata` - same as `Preview Code` but loads userscripts metadata head

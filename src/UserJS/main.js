@@ -1352,7 +1352,7 @@ class Container {
     this.tab.create(host);
 
     const tabbody = this.tabbody;
-    const getCellValue = (tr, idx) => tr.children[idx].dataset.value;
+    const getCellValue = (tr, idx) => tr.children[idx].dataset.value || tr.children[idx].textContent;
     const comparer = (idx, asc) => (a, b) =>
       ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
