@@ -1,35 +1,33 @@
 'use strict';
+
+import { webext } from './ext.js';
 import { err } from './logger.js';
 
 // #region Utilities
-let isMob;
-// const isMobile = /Mobile|Tablet/.test(navigator.userAgent);
+const userjs = {};
 const getUAData = () => {
-  if (typeof isMob !== 'undefined') {
-    return isMob;
+  if (userjs.isMobile !== undefined) {
+    return userjs.isMobile;
   }
   try {
-    const { platform, mobile } = navigator.userAgentData ?? {};
-    isMob =
-      /Mobile|Tablet/.test(navigator.userAgent ?? '') ||
-      mobile ||
-      /Android|Apple/.test(platform ?? '');
+    if (navigator) {
+      const { userAgent, userAgentData } = navigator;
+      const { platform, mobile } = userAgentData ? Object(userAgentData) : {};
+      userjs.isMobile =
+        /Mobile|Tablet/.test(userAgent ? String(userAgent) : '') ||
+        Boolean(mobile) ||
+        /Android|Apple/.test(platform ? String(platform) : '');
+    } else {
+      userjs.isMobile = false;
+    }
   } catch (ex) {
-    err({ cause: 'getUAData', message: ex.message });
-    isMob = false;
+    userjs.isMobile = false;
+    ex.cause = 'getUAData';
+    err(ex);
   }
-  return isMob;
+  return userjs.isMobile;
 };
 const isMobile = getUAData();
-/**
- * @type { import("../typings/types").hasOwn }
- */
-const hasOwn = (obj, prop) => {
-  if (typeof Object.hasOwn !== 'undefined') {
-    return Object.hasOwn(obj, prop);
-  }
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-};
 const isString = (val) => typeof val === 'string';
 /**
  * @type { import("../typings/types").objToStr }
@@ -38,16 +36,21 @@ const objToStr = (obj) => {
   return Object.prototype.toString.call(obj);
 };
 /**
- * @type { import("../typings/types").strToURL }
+ * @template {string | URL} S
+ * @param {S} str
  */
 const strToURL = (str) => {
+  let url;
   try {
-    str = str ?? window.location ?? 'about:blank';
-    return objToStr(str).includes('URL') ? str : new URL(str);
+    url = objToStr(str).includes('URL') ? str : new URL(str);
   } catch (ex) {
-    err({ cause: 'strToURL', message: ex.message });
-    return window.location;
+    ex.cause = 'strToURL';
+    err(ex);
   }
+  if (url !== undefined) {
+    return url
+  }
+  return str;
 };
 /**
  * @type { import("../typings/types").isRegExp }
@@ -119,7 +122,7 @@ const normalizeTarget = (target, toQuery = true, root) => {
   return Array.from(target);
 };
 /**
- * @type { import("../typings/types").ael }
+ * @type { import("../typings/types.d.ts").ael }
  */
 const ael = (el, type, listener, options = {}) => {
   try {
@@ -134,11 +137,12 @@ const ael = (el, type, listener, options = {}) => {
       elem.addEventListener(type, listener, options);
     }
   } catch (ex) {
+    ex.cause = 'ael';
     err(ex);
   }
 };
 /**
- * @type { import("../typings/types").formAttrs }
+ * @type { import("../typings/types.d.ts").formAttrs }
  */
 const formAttrs = (elem, attr = {}) => {
   if (!elem) {
@@ -162,29 +166,28 @@ const formAttrs = (elem, attr = {}) => {
   return elem;
 };
 /**
- * @type { import("../typings/types").make }
+ * @type { import("../typings/types.d.ts").make }
  */
 const make = (tagName, cname, attrs) => {
   let el;
   try {
-    // el =
-    //   tagName === 'fragment' ? document.createDocumentFragment() : document.createElement(tagName);
     el = document.createElement(tagName);
     if (!isEmpty(cname)) {
-      if (isString(cname)) {
+      if (typeof cname === 'string') {
         el.className = cname;
       } else if (isObj(cname)) {
         formAttrs(el, cname);
       }
     }
     if (!isEmpty(attrs)) {
-      if (isString(attrs)) {
+      if (typeof attrs === 'string') {
         el.textContent = attrs;
       } else if (isObj(attrs)) {
         formAttrs(el, attrs);
       }
     }
   } catch (ex) {
+    ex.cause = 'make';
     err(ex);
   }
   return el;
@@ -198,57 +201,101 @@ const openInTab = async (url) => {
   const newTab = await webext.tabs.create({ url });
   return newTab;
 };
-const intersect = (a = [], b = []) => {
-  for (const v of a) {
-    if (b.includes(v)) {
-      return true;
-    }
-  }
-  for (const v of b) {
-    if (a.includes(v)) {
-      return true;
-    }
-  }
-  return false;
-};
-const template = {
-  data: {
-    id: 0,
-    bad_ratings: 0,
-    good_ratings: 0,
-    ok_ratings: 0,
-    daily_installs: 0,
-    total_installs: 0,
-    name: 'NOT FOUND',
-    description: 'NOT FOUND',
-    version: '0.0.0',
-    url: 'about:blank',
-    code_url: 'about:blank',
-    created_at: Date.now(),
-    code_updated_at: Date.now(),
-    users: [
-      {
-        name: '',
-        url: ''
+const union = (...arr) => [...new Set(arr.flat())];
+const loadFilters = (cfg) => {
+  /** @type {Map<string, import("../typings/types.d.ts").Filters >} */
+  const pool = new Map();
+  const handles = {
+    pool,
+    enabled() {
+      return [...pool.values()].filter((o) => o.enabled);
+    },
+    refresh() {
+      if (!Object.is(pool.size, 0)) pool.clear();
+      for (const [key, value] of Object.entries(cfg.filters)) {
+        if (!pool.has(key))
+          pool.set(key, {
+            ...value,
+            reg: new RegExp(value.regExp, value.flag),
+            keyReg: new RegExp(key.trim().toLocaleLowerCase(), 'gi'),
+            valueReg: new RegExp(value.name.trim().toLocaleLowerCase(), 'gi')
+          });
       }
-    ]
-  },
-  merge(obj = {}) {
-    for (const key in template.data) {
-      if (hasOwn(obj, key)) continue;
-      obj[key] = template.data[key];
+      return this;
+    },
+    get(str) {
+      return [...pool.values()].find((v) => v.keyReg.test(str) || v.valueReg.test(str));
+    },
+    /**
+     * @param { import("../typings/types.d.ts").GSForkQuery } param0
+     */
+    match({ name, users }) {
+      const p = handles.enabled();
+      if (Object.is(p.length, 0)) return true;
+      for (const v of p) {
+        if ([{ name }, ...users].find((o) => o.name.match(v.reg))) return false;
+      }
+      return true;
     }
-    return obj;
+  };
+  for (const [key, value] of Object.entries(cfg.filters)) {
+    if (!pool.has(key))
+      pool.set(key, {
+        ...value,
+        reg: new RegExp(value.regExp, value.flag),
+        keyReg: new RegExp(key.trim().toLocaleLowerCase(), 'gi'),
+        valueReg: new RegExp(value.name.trim().toLocaleLowerCase(), 'gi')
+      });
   }
+  return handles.refresh();
 };
+/**
+ * @param {string} txt
+ */
+const formatURL = (txt) =>
+  txt
+    .split('.')
+    .splice(-2)
+    .join('.')
+    .replace(/\/|https:/g, '');
+/******************************************************************************/
+
+const matchesFromHostnames = (hostnames) => {
+  const out = [];
+  for (const hn of hostnames) {
+    if (hn === '*' || hn === 'all-urls') {
+      out.length = 0;
+      out.push('<all_urls>');
+      break;
+    }
+    out.push(`*://*.${hn}/*`);
+  }
+  return out;
+};
+
+const hostnamesFromMatches = (origins) => {
+  const out = [];
+  for (const origin of origins) {
+    if (origin === '<all_urls>') {
+      out.push('all-urls');
+      continue;
+    }
+    const match = /^\*:\/\/(?:\*\.)?([^/]+)\/\*/.exec(origin);
+    if (match === null) {
+      continue;
+    }
+    out.push(match[1]);
+  }
+  return out;
+};
+
+/******************************************************************************/
 // #endregion
 
 export {
-  isMobile,
-  hasOwn,
+  formatURL,
   objToStr,
   strToURL,
-  intersect,
   isRegExp,
   isElem,
   isObj,
@@ -262,5 +309,8 @@ export {
   formAttrs,
   make,
   openInTab,
-  template
+  union,
+  loadFilters,
+  matchesFromHostnames,
+  hostnamesFromMatches
 };

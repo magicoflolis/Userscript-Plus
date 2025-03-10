@@ -85,6 +85,11 @@ export default async (env, args) => {
           to: file(`${webExtDir}/img`),
           globOptions
         },
+        {
+          from: file(`${webExtSrc}/webfonts`),
+          to: file(`${webExtDir}/webfonts`),
+          globOptions
+        },
         // {
         //   from: file(`${webExtSrc}/web_accessible_resources`),
         //   to: file(`${webExtDir}/web_accessible_resources`),
@@ -105,7 +110,6 @@ export default async (env, args) => {
   const Config = {
     context: file(webExtSrc),
     entry: {
-      // start: './js/start.js'
       mu: './js/mu.js'
     },
     output: {

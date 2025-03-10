@@ -1,17 +1,31 @@
 'use strict';
 
-/******************************************************************************/
-
+// #region i18n
 const i18n =
   self.browser instanceof Object && self.browser instanceof Element === false
     ? self.browser.i18n
     : self.chrome.i18n;
 
-const i18n$ = (...args) => i18n.getMessage(...args);
+const i18n$ = (...args) => {
+  return i18n.getMessage(...args);
+};
+/**
+ * @param {string | Date | number} str
+ */
+const toDate = (str = '') => {
+  return new Intl.DateTimeFormat(navigator.language).format(
+    typeof str === 'string' ? new Date(str) : str
+  );
+};
+/**
+ * @param {number | bigint} number
+ */
+const toNumber = (number) => {
+  return new Intl.NumberFormat(navigator.language).format(number);
+};
+// #endregion
 
-/******************************************************************************/
-
-const isBackgroundProcess = document.title === 'Magic UserJS+ Background Page';
+const isBackgroundProcess = document && document.title === 'Magic UserJS+ Background Page';
 
 if (isBackgroundProcess !== true) {
   // Helper to deal with the i18n'ing of HTML files.
@@ -35,5 +49,6 @@ if (isBackgroundProcess !== true) {
   };
   i18n.render();
 }
+const language = { i18n$, toDate, toNumber };
 
-export { i18n, i18n$ };
+export { i18n, i18n$, toDate, toNumber, language };

@@ -1,13 +1,22 @@
+// importing core styling file
+@use './fontawesome/fontawesome.scss';
+
+// our project needs Solid + Brands
+@use './fontawesome/solid.scss';
+@use './fontawesome/brands.scss';
+
 body.webext-page {
-  // overflow-x: hidden;
+  overflow: hidden;
   padding: 0;
   margin: 0;
-  background: #495060;
-  color: #ffffff;
+  background: var(--mujs-background-color, hsl(222, 14%, 33%));
+  color: var(--mujs-txt-color, hsl(0, 0%, 100%));
   border: 1px solid rgba(0, 0, 0, 0);
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   font-size: 14px;
+  min-width: 720px;
+
   .mujs-cfg {
     display: flex;
     gap: 10px;
@@ -20,11 +29,7 @@ body.webext-page {
     }
   }
   mujs-main {
-    // max-width: 100%;
-    min-width: 480px;
-    // max-height: 100%;
-    // min-height: 200px;
-    // min-width: 50em;
-    min-height: 40em;
+    min-width: 25em;
+    height: 492px;
   }
 }

@@ -42,7 +42,7 @@
     "message": "Search"
   },
   "search_placeholder": {
-    "message": "Search scripts"
+    "message": "Search for userscripts"
   },
   "install": {
     "message": "Install"
@@ -66,7 +66,7 @@
     "message": "Good"
   },
   "ok": {
-    "message": "Ok"
+    "message": "Okay"
   },
   "bad": {
     "message": "Bad"
@@ -93,7 +93,7 @@
     "message": "Preview Code"
   },
   "saveFile": {
-    "message": "Save File"
+    "message": "Download"
   },
   "newTab": {
     "message": "New Tab"
@@ -141,7 +141,7 @@
     "message": "Close Userscript+"
   },
   "userjs_sync": {
-    "message": "Sync with UserScript Manager"
+    "message": "Sync"
   },
   "userjs_autoinject": {
     "message": "Inject on load"

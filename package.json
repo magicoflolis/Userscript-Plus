@@ -2,7 +2,7 @@
   "name": "userscript-plus",
   "description": "Finds available userscripts for the current webpage.",
   "author": "Magic <magicoflolis@tuta.io>",
-  "version": "5.0.2",
+  "version": "6.0.0",
   "license": "MIT",
   "homepage": "https://github.com/magicoflolis/Userscript-Plus",
   "bugs": {

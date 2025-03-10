@@ -57,7 +57,7 @@ const SafeAnimationFrame = class {
   }
 };
 /**
- * @type { import("../typings/types").isElem }
+ * @type { import("../typings/types.d.ts").isElem }
  */
 const isElem = (obj) => {
   /** @type { string } */
@@ -65,7 +65,7 @@ const isElem = (obj) => {
   return s.includes('Element');
 };
 /**
- * @type { import("../typings/types").normalizeTarget }
+ * @type { import("../typings/types.d.ts").normalizeTarget }
  */
 const normalizeTarget = (target, toQuery = true, root) => {
   if (Object.is(target, null) || Object.is(target, undefined)) {
@@ -320,7 +320,7 @@ dom.cl = class {
 /******************************************************************************/
 
 /**
- * @type { import("../typings/types").qsA }
+ * @type { import("../typings/types.d.ts").qsA }
  */
 const qsA = (selectors, root) => {
   try {
@@ -331,7 +331,7 @@ const qsA = (selectors, root) => {
   return [];
 };
 /**
- * @type { import("../typings/types").qs }
+ * @type { import("../typings/types.d.ts").qs }
  */
 const qs = (selector, root) => {
   try {
@@ -343,7 +343,7 @@ const qs = (selector, root) => {
 };
 
 /**
- * @type { import("../typings/WebExt").query }
+ * @type { import("../typings/WebExt.d.ts").query }
  */
 const query = async (selector, root) => {
   let el = null;

@@ -1,133 +1,312 @@
 'use strict';
+
+import { webext, runtime } from './ext.js';
+import { hermes } from './messager.js';
 import { log, err, info } from './logger.js';
-import { i18n$ } from './i18n.js';
-// import Config from './config.js';
 import Network from './network.js';
-import { reqCode } from './request-code.js';
-import { language } from './language.js';
-import { isBlank, isNull, isEmpty, normalizeTarget, template } from './util.js';
-import { XMap } from './XMap.js';
-import storage, { storageByPrefix } from './storage.js';
-
-const MUJS = {
-  cache: new XMap()
-};
-
-window.MUJS = MUJS;
-window.Config = storage;
-window.storageByPrefix = storageByPrefix;
+import { isBlank, isNull, isEmpty, union, loadFilters, isRegExp, isObj, formatURL } from './util.js';
+import { BLANK_PAGE, template, builtinList } from './constants.js';
+import storage, { DEFAULT_CONFIG } from './storage.js';
+import { BaseContainer, BaseList } from './container.js';
 
 /**
  * @type { import("../typings/types").config }
  */
-const cfg = {};
-/**
- * @type { import("../typings/types").config }
- */
-const DEFAULT_CONFIG = {
-  // cache: true,
-  codePreview: false,
-  // autoexpand: false,
-  filterlang: false,
-  sleazyredirect: false,
-  // time: 10000,
-  blacklist: [
-    {
-      enabled: true,
-      regex: true,
-      flags: '',
-      name: 'Blacklist 1',
-      url: '(gov|cart|checkout|login|join|signin|signup|sign-up|password|reset|password_reset)'
-    },
-    {
-      enabled: true,
-      regex: true,
-      flags: '',
-      name: 'Blacklist 2',
-      url: '(pay|bank|money|localhost|authorize|checkout|bill|wallet|router)'
-    },
-    {
-      enabled: true,
-      regex: false,
-      flags: '',
-      name: 'Blacklist 3',
-      url: 'https://home.bluesnap.com'
-    },
-    {
-      enabled: true,
-      regex: false,
-      flags: '',
-      name: 'Blacklist 4',
-      url: ['zalo.me', 'skrill.com']
-    }
-  ],
-  engines: [
-    {
-      enabled: true,
-      name: 'greasyfork',
-      url: 'https://greasyfork.org'
-    },
-    {
-      enabled: false,
-      name: 'sleazyfork',
-      url: 'https://sleazyfork.org'
-    },
-    {
-      enabled: false,
-      name: 'openuserjs',
-      url: 'https://openuserjs.org/?q='
-    },
-    {
-      enabled: false,
-      name: 'github',
-      url: 'https://api.github.com/search/code?q=',
-      token: ''
-    }
-  ],
-  theme: {
-    'even-row': '',
-    'odd-row': '',
-    'even-err': '',
-    'odd-err': '',
-    'background-color': '',
-    'gf-color': '',
-    'sf-color': '',
-    'border-b-color': '',
-    'gf-btn-color': '',
-    'sf-btn-color': '',
-    'sf-txt-color': '',
-    'txt-color': '',
-    'chck-color': '',
-    'chck-gf': '',
-    'chck-git': '',
-    'chck-open': '',
-    placeholder: '',
-    'position-top': '',
-    'position-bottom': '',
-    'position-left': '',
-    'position-right': '',
-    'font-family': ''
-  },
-  recommend: {
-    author: true,
-    others: true
-  }
-};
-
+let cfg = {};
 const initCfg = async () => {
   const c = await storage.config.getMulti();
   if (!c) {
     await storage.config.set(DEFAULT_CONFIG);
   }
-  Object.assign(cfg, c);
+  cfg = {
+    ...DEFAULT_CONFIG,
+    ...c
+  };
   return cfg;
 };
 initCfg();
 
-const { hermes } = userjs;
+class Container extends BaseContainer {
+  constructor(url) {
+    super(url);
+  }
+
+  checkBlacklist(str) {
+    str = str || this.host;
+    let blacklisted = false;
+    if (/accounts*\.google\./.test(str)) {
+      blacklisted = true;
+    }
+    const blacklist = cfg.blacklist ?? [];
+    for (const b of blacklist) {
+      if (typeof b === 'string') {
+        if (b.startsWith('userjs-')) {
+          const r = /userjs-(\w+)/.exec(b)[1];
+          const biList = builtinList[r];
+          if (isRegExp(biList)) {
+            if (!biList.test(str)) continue;
+            blacklisted = true;
+          } else if (isObj(biList) && biList.host === this.host) {
+            blacklisted = true;
+          }
+        }
+      } else if (isObj(b)) {
+        if (!b.enabled) {
+          continue;
+        }
+        if (b.regex === true) {
+          const reg = new RegExp(b.url, b.flags);
+          if (!reg.test(str)) continue;
+          blacklisted = true;
+        }
+        if (Array.isArray(b.url)) {
+          for (const c of b.url) {
+            if (!str.includes(c)) continue;
+            blacklisted = true;
+          }
+        }
+        if (!str.includes(b.url)) continue;
+        blacklisted = true;
+      }
+    }
+    this.isBlacklisted = blacklisted;
+    return this.isBlacklisted;
+  }
+}
+const container = new Container();
+// #region List
+class List extends BaseList {
+  constructor(hostname = undefined, tabId = -2) {
+    super(hostname, container, cfg);
+    this.build = this.build.bind(this);
+    if (isEmpty(hostname)) hostname = BLANK_PAGE;
+    this.engines = cfg.engines;
+    this.host = hostname;
+    this.tabId = tabId;
+  }
+
+  // #region Builder
+  async build() {
+    await initCfg();
+    this.engines = cfg.engines;
+    const { container, blacklisted, engines, host, tabId } = this;
+    if (blacklisted || isEmpty(engines) || host === BLANK_PAGE) {
+      return [];
+    }
+    const records = [];
+    const fetchRecords = [];
+    const bsFilter = loadFilters(cfg);
+    const hostCache = Array.from(this);
+    info('Building list', { hostCache, engines, container, list: this });
+    try {
+      const g = this.groupBy();
+      if (isEmpty(g)) {
+        const toFetch = engines.filter((engine) => !g[engine.name]);
+        for (const engine of toFetch) {
+          info(`Fetching from "${engine.name}" for "${host}"`);
+          const respError = (error) => {
+            if (!error.cause) error.cause = engine.name;
+            if (error.message.startsWith('429')) {
+              err(`Engine: "${engine.name}" Too many requests...`);
+              return;
+            }
+            err(`Engine: "${engine.name}"`, error.message);
+          };
+          const _mujs = (d) => {
+            const obj = {
+              ...template,
+              ...d,
+              _mujs: {
+                root: {},
+                info: {
+                  tabId,
+                  engine,
+                  host
+                },
+                code: {
+                  meta: {}
+                }
+              }
+            };
+            // obj._mujs.code.request = (translate = false, code_url) => {
+            //   requestUserJS.call(obj._mujs.code, translate, code_url ?? obj.code_url, obj);
+            // };
+            return obj;
+          };
+          /**
+           * Prior to UserScript v7.0.0
+           * @template {string} F
+           * @param {F} fallback
+           * @returns {F}
+           */
+          const toQuery = (fallback) => {
+            if (engine.query) {
+              return decodeURIComponent(engine.query).replace(/\{host\}/g, host);
+            }
+            return fallback;
+          };
+          /**
+           * @param { import("../typings/types.d.ts").GSFork } dataQ
+           */
+          const forkFN = async (dataQ) => {
+            if (!dataQ) {
+              err('Invalid data received from the server, check internet connection');
+              return;
+            }
+            /**
+             * @type { import("../typings/types.d.ts").GSForkQuery[] }
+             */
+            const dq = Array.isArray(dataQ) ? dataQ : Array.isArray(dataQ.query) ? dataQ.query : [];
+            const dataA = dq
+              .filter(Boolean)
+              .filter((d) => !d.deleted)
+              .filter(bsFilter.match);
+            if (isBlank(dataA)) {
+              // records.push(_mujs({}));
+              return;
+            }
+            const data = dataA.map(_mujs);
+            const otherLng = [];
+            /**
+             * @param {import("../typings/types.d.ts").GSForkQuery} d
+             * @returns {boolean}
+             */
+            const inUserLanguage = (d) => {
+              if (userjs.pool.has(d.locale.split('-')[0] ?? d.locale)) {
+                return true;
+              }
+              otherLng.push(d);
+              return false;
+            };
+            const filterLang = data.filter((d) => {
+              if (cfg.filterlang && !inUserLanguage(d)) {
+                return false;
+              }
+              return true;
+            });
+            let finalList = filterLang;
+            const hds = [];
+            for (const ujs of otherLng) {
+              const c = await ujs._mujs.code.request(true);
+              if (c.translated) {
+                hds.push(ujs);
+              }
+            }
+            finalList = union(hds, filterLang);
+
+            for (const ujs of finalList) {
+              // if (!ujs._mujs.code.data_code_block && (cfg.preview.code || cfg.preview.metadata)) {
+              //   ujs._mujs.code.request().then(() => {
+              //     dispatch(ujs);
+              //   });
+              // }
+              if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
+            }
+            records.push(...finalList);
+          };
+          const gitFN = async (data) => {
+            try {
+              if (isBlank(data.items)) {
+                err('Invalid data received from the server, TODO fix this');
+                return;
+              }
+              for (const r of data.items) {
+                const ujs = _mujs({
+                  id: r.repository.id ?? r.id ?? 0,
+                  name: r.repository.name ?? r.name,
+                  description: isEmpty(r.repository.description)
+                    ? 'N/A'
+                    : r.repository.description,
+                  url: r.repository.html_url,
+                  code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
+                  page_url: `${r.repository.url}/contents/README.md`,
+                  users: [
+                    {
+                      name: r.repository.owner.login,
+                      url: r.repository.owner.html_url
+                    }
+                  ]
+                });
+                Network.req(r.repository.url, 'GET', 'json', {
+                  headers: {
+                    Accept: 'application/vnd.github+json',
+                    Authorization: `Bearer ${engine.token}`,
+                    'X-GitHub-Api-Version': '2022-11-28'
+                  }
+                }).then((repository) => {
+                  ujs.code_updated_at = r.commit || repository.updated_at || Date.now();
+                  ujs.created_at = repository.created_at;
+                  ujs.daily_installs = repository.watchers_count ?? 0;
+                  ujs.good_ratings = repository.stargazers_count ?? 0;
+                  if (repository.license?.name) ujs.license = repository.license.name;
+                  // dispatch(ujs);
+                });
+                // if (!ujs._mujs.code.data_code_block && (cfg.preview.code || cfg.preview.metadata)) {
+                //   ujs._mujs.code.request().then(() => {
+                //     dispatch(ujs);
+                //   });
+                // }
+                if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
+                records.push(ujs);
+              }
+            } catch (ex) {
+              err(ex);
+            }
+          };
+          let netFN;
+          if (/github/gi.test(engine.name)) {
+            if (isEmpty(engine.token)) {
+              err(`"${engine.name}" requires a token to use`);
+              continue;
+            }
+            netFN = Network.req(
+              toQuery(
+                `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`
+              ),
+              'GET',
+              'json',
+              {
+                headers: {
+                  Accept: 'application/vnd.github+json',
+                  Authorization: `Bearer ${engine.token}`,
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
+              }
+            )
+              .then(gitFN)
+              .then(() => {
+                Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
+                  headers: {
+                    Accept: 'application/vnd.github+json',
+                    Authorization: `Bearer ${engine.token}`,
+                    'X-GitHub-Api-Version': '2022-11-28'
+                  }
+                }).catch(respError);
+              });
+          } else {
+            netFN = Network.req(
+              toQuery(`${engine.url}/scripts/by-site/${host}.json?language=all`)
+            ).then(forkFN);
+          }
+          if (netFN) {
+            fetchRecords.push(netFN.catch(respError));
+          }
+        }
+      }
+      if (!isBlank(fetchRecords)) {
+        await Promise.allSettled(fetchRecords);
+      }
+    } catch (ex) {
+      err(ex);
+    }
+    return Array.from(this);
+  }
+  // #endregion
+}
+// #endregion
 
 const msgCache = {};
-webext.runtime.onConnect.addListener((p) => {
+runtime.onConnect.addListener((p) => {
   hermes.port = p;
   /**
    * Default post message to send to all connected scripts
@@ -138,532 +317,148 @@ webext.runtime.onConnect.addListener((p) => {
     log('Background Script: received message from content script', root);
     const r = root.msg;
     if (root.channel === 'Save') {
-      const v = isNull(r.value) ? cfg[r.prop] : r.value;
-      storage.config.setOne(r.prop, v);
-    }
-    if (root.channel === 'Reset') {
+      if (r.cfg) {
+        storage.config.set(r.cfg).then(initCfg);
+      } else {
+        const v = isNull(r.value) ? cfg[r.prop] : r.value;
+        storage.config.setOne(r.prop, v).then(initCfg);
+      }
+    } else if (root.channel === 'Reset') {
       storage.config.set(DEFAULT_CONFIG);
+    } else if (root.channel === 'Clear') {
+      const cache = Array.from(container).filter(({ _mujs }) => _mujs.info.host === r.host);
+      for (const ujs of cache) container.userjsCache.delete(ujs.id);
+    } else if (root.channel === 'Engine' && cfg.engines) {
+      const engine = cfg.engines.find((engine) => engine.name === r.engine.name);
+      for (const [k, v] of Object.entries(r.engine)) {
+        engine[k] = v;
+      }
+      storage.config.set(cfg).then(initCfg);
     }
   });
 });
 
-// Unsupport webpages for each engine
-const unsupported = {
-  greasyfork: ['pornhub.com'],
-  sleazyfork: ['pornhub.com'],
-  openuserjs: [],
-  github: []
-};
-
-const formatURL = (txt) =>
-  txt
-    .split('.')
-    .splice(-2)
-    .join('.')
-    .replace(/\/|https:/g, '');
-
+const MUList = new List();
 /**
  * @param {chrome.tabs.Tab} tab
- * @returns {string}
  */
-const getTabUrl = (tab) => tab.pendingUrl || tab.url || '';
-// const queryOptions = { active: true, lastFocusedWindow: true };
-const queryOptions = { active: true, currentWindow: true };
-
-// class Website {
-//   constructor(e) {
-//     this.engine = e.engine ?? {};
-//     this.data = e.data ?? [];
-//     this.host = e.host ?? 'about:blank';
-//     this.link = e.link ?? 'about:blank';
-//   }
-
-//   setData(v) {
-//     this.data = v ?? [];
-//   }
-// }
-
-// class Engine {
-//   constructor(host, engine) {
-//     this.host = host ?? 'about:blank';
-//     this.engine = engine ?? {};
-//     this.data = [];
-//   }
-
-//   setEngine(engine) {
-//     this.engine = engine;
-//     return this;
-//   }
-
-//   setHost(host) {
-//     if (host !== this.host) {
-//       this.host = host;
-//     }
-//     return this;
-//   }
-
-//   async getData() {
-//     if (isEmpty(this.host) || this.host === 'about:blank') {
-//       return []
-//     }
-//     const engine = this.engine;
-//     /**
-//      * @param { import("../typings/types").GSFork } dataQ
-//      */
-//     const forkFN = async (dataQ) => {
-//       if (!dataQ) {
-//         err('Invalid data received from the server, check internet connection');
-//         return [];
-//       }
-//       /**
-//        * @type { import("../typings/types").GSForkQuery[] }
-//        */
-//       const dq = Array.isArray(dataQ) ? dataQ : Array.isArray(dataQ.query) ? dataQ.query : [];
-//       const data = dq.filter((d) => !d.deleted);
-//       if (isBlank(data)) {
-//         return [];
-//       }
-//       const hideData = [];
-//       const inUserLanguage = (d) => {
-//         const dlocal = d.locale.split('-')[0] ?? d.locale;
-//         if (language.cache.includes(dlocal)) {
-//           return true;
-//         }
-//         hideData.push(d);
-//         return false;
-//       };
-//       const filterLang = data.filter((d) => {
-//         if (cfg.filterlang && !inUserLanguage(d)) {
-//           return false;
-//         }
-//         return true;
-//       });
-
-//       let finalList = filterLang;
-//       const hds = [];
-//       for (const ujs of hideData) {
-//         await reqCode(ujs, true);
-//         if (ujs.translated) {
-//           hds.push(ujs);
-//         }
-//       }
-//       finalList = [...new Set([...hds, ...filterLang])];
-
-//       this.data.push(...finalList);
-//       return finalList;
-//     };
-//     const gitFN = async (data) => {
-//       const records = [];
-//       try {
-//         if (isBlank(data.items)) {
-//           err('Invalid data received from the server, TODO fix this');
-//           return;
-//         }
-//         for (const r of data.items) {
-//           const ujs = template.merge({
-//             name: r.name,
-//             description: isEmpty(r.repository.description)
-//               ? i18n$('no_license')
-//               : r.repository.description,
-//             url: r.html_url,
-//             code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
-//             code_updated_at: r.commit || Date.now(),
-//             total_installs: r.score,
-//             users: [
-//               {
-//                 name: r.repository.owner.login,
-//                 url: r.repository.owner.html_url
-//               }
-//             ]
-//           });
-//           if (cfg.codePreview && !ujs.code_data) {
-//             await reqCode(ujs);
-//           }
-//           records.push(ujs);
-//         }
-//         this.data.push(...records);
-//       } catch (ex) {
-//         err(ex);
-//       }
-//       return records;
-//     };
-//     if (engine.name.includes('fork')) {
-//       await Network.req(`${engine.url}/scripts/by-site/${this.host}.json?language=all`)
-//         .then(forkFN)
-//         .catch(err);
-//     } else if (/github/gi.test(engine.name)) {
-//       if (isEmpty(engine.token)) {
-//         err(`"${engine.name}" requires a token to use`);
-//         return;
-//       }
-//       await Network.req(
-//         `${engine.url}"// ==UserScript=="+${this.host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
-//         'GET',
-//         'json',
-//         {
-//           headers: {
-//             Accept: 'application/vnd.github+json',
-//             Authorization: `Bearer ${engine.token}`,
-//             'X-GitHub-Api-Version': '2022-11-28'
-//           }
-//         }
-//       )
-//         .then(gitFN)
-//         .catch(err);
-//     }
-//     return this.data;
-//   }
-// }
-// const eng = new Engine();
-
-// const cac = new Map();
-
-const webFetcher = async (loc, tabId = -2, link) => {
-  if (isBlank(loc)) {
-    return [];
+const setCount = (tab, tabId) => {
+  let url;
+  try {
+    url = new URL(tab.url);
+  } catch (ex) {
+    err(ex);
   }
-  const host = formatURL(loc);
-
-  let isBlacklisted = false;
-  for (const b of cfg.blacklist.filter((b) => b.enabled)) {
-    if (b.regex === true) {
-      const reg = new RegExp(b.url, b.flags);
-      if (!reg.test(host)) continue;
-      isBlacklisted = true;
-    }
-    if (Array.isArray(b.url)) {
-      for (const c of b.url) {
-        if (!host.includes(c)) continue;
-        isBlacklisted = true;
-      }
-    }
-    if (!host.includes(b.url)) continue;
-    isBlacklisted = true;
-  }
-
-  // log('Blacklisted:', isBlacklisted, host);
-  if (isBlacklisted) {
-    return [];
-  }
-
-  if (!MUJS.cache.has(host)) {
-    const engineTemplate = {};
-    for (const engine of cfg.engines) {
-      engineTemplate[engine.name] = [];
-    }
-    MUJS.cache.set(host, engineTemplate);
-  }
-
-  const isSupported = (name) => {
-    for (const [k, v] of Object.entries(unsupported)) {
-      if (k !== name) {
-        continue;
-      }
-      if (v.includes(host)) {
-        return false;
-      }
-    }
-    return true;
-  };
-  const engines = cfg.engines.filter((e) => e.enabled && isSupported(e.name));
-  if (isEmpty(engines)) {
-    return [];
-  }
-  const cache = MUJS.cache.get(host);
-  const sites = [];
-
-  info('Building list', { cfg, cache, engines, allCache: MUJS.cache, sites });
-
-
-  // for (const engine of engines) {
-  //   if (!isEmpty(cache[`${engine.name}`])) {
-  //     sites.push({
-  //       engine,
-  //       data: normalizeTarget(cache[`${engine.name}`]),
-  //       host,
-  //       link
-  //       // tab
-  //     });
-  //     continue;
-  //   }
-  //   eng.setHost(host).setEngine(engine);
-  //   await eng.getData();
-  // }
-  // log(eng.data);
-
-  for (const engine of engines) {
-    if (!isEmpty(cache[`${engine.name}`])) {
-      sites.push({
-        engine,
-        data: normalizeTarget(cache[`${engine.name}`]),
-        host,
-        link
-        // tab
+  if (url !== undefined) {
+    if (!Object.is(url.origin, 'null')) {
+      MUList.host = formatURL(url.host);
+      MUList.tabId = tabId ?? tab.id ?? -2;
+      webext.action.setBadgeText({
+        text: `${Array.from(MUList).length ?? 0}`
       });
-      continue;
-    }
-    const engineArr = cache[engine.name];
-    /**
-     * @param { import("../typings/types").GSFork } dataQ
-     */
-    const forkFN = async (dataQ) => {
-      if (!dataQ) {
-        err('Invalid data received from the server, check internet connection');
-        return [];
-      }
-      /**
-       * @type { import("../typings/types").GSForkQuery[] }
-       */
-      const dq = Array.isArray(dataQ) ? dataQ : Array.isArray(dataQ.query) ? dataQ.query : [];
-      const data = dq.filter((d) => !d.deleted);
-      if (isBlank(data)) {
-        return [];
-      }
-      const hideData = [];
-      const inUserLanguage = (d) => {
-        const dlocal = d.locale.split('-')[0] ?? d.locale;
-        if (language.cache.includes(dlocal)) {
-          return true;
-        }
-        hideData.push(d);
-        return false;
-      };
-      const filterLang = data.filter((d) => {
-        if (cfg.filterlang && !inUserLanguage(d)) {
-          return false;
-        }
-        return true;
-      });
-
-      let finalList = filterLang;
-      const hds = [];
-      for (const ujs of hideData) {
-        await reqCode(ujs, true);
-        if (ujs.translated) {
-          hds.push(ujs);
-        }
-      }
-      finalList = [...new Set([...hds, ...filterLang])];
-
-      // for (const ujs of finalList) {
-      //   if (!cac.has(ujs.id)) {
-      //     cac.set(ujs.id, {
-      //       ...ujs,
-      //       mujs: {
-      //         engine,
-      //         host,
-      //         timestamp: Date.now(),
-      //       }
-      //     })
-      //   }
-      // }
-
-      engineArr.push(...finalList);
-      return finalList;
-    };
-    const gitFN = async (data) => {
-      const records = [];
-      try {
-        if (isBlank(data.items)) {
-          err('Invalid data received from the server, TODO fix this');
-          return;
-        }
-        for (const r of data.items) {
-          const ujs = template.merge({
-            name: r.name,
-            description: isEmpty(r.repository.description)
-              ? i18n$('no_license')
-              : r.repository.description,
-            url: r.html_url,
-            code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
-            code_updated_at: r.commit || Date.now(),
-            total_installs: r.score,
-            users: [
-              {
-                name: r.repository.owner.login,
-                url: r.repository.owner.html_url
-              }
-            ]
-          });
-          if (cfg.codePreview && !ujs.code_data) {
-            await reqCode(ujs);
-          }
-          // createjs(ujs, engine.name);
-          records.push(ujs);
-        }
-        engineArr.push(...records);
-      } catch (ex) {
-        err(ex);
-      }
-      return records;
-    };
-    if (engine.name.includes('fork')) {
-      const data = await Network.req(`${engine.url}/scripts/by-site/${host}.json?language=all`)
-        .then(forkFN)
-        .catch(err);
-      sites.push({
-        engine,
-        data,
-        host,
-        link
-        // tab
-      });
-    } else if (/github/gi.test(engine.name)) {
-      if (isEmpty(engine.token)) {
-        err(`"${engine.name}" requires a token to use`);
-        continue;
-      }
-      const data = await Network.req(
-        `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`,
-        'GET',
-        'json',
-        {
-          headers: {
-            Accept: 'application/vnd.github+json',
-            Authorization: `Bearer ${engine.token}`,
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        }
-      )
-        .then(gitFN)
-        .catch(err);
-      sites.push({
-        engine,
-        data,
-        host,
-        link
-        // tab
-      });
+      return;
     }
   }
-  if (tabId > -1) {
-    webext.tabs.get(tabId, updateCount);
-  }
-  // log(cac);
-  return sites;
+  webext.action.setBadgeText({
+    text: '0'
+  });
 };
 
 let requestId = -2;
-// let isRedirect = false;
 
 webext.webRequest.onHeadersReceived.addListener(
   (e) => {
     if (Object.is(e.type, 'main_frame')) {
-      // log(e, isRedirect);
-      if (requestId !== e.requestId) {
+      if (cfg.autofetch && requestId !== e.requestId) {
         requestId = e.requestId;
         const loc = new URL(e.url);
-        webFetcher(loc.host, e.tabId, e.url);
+        MUList.host = formatURL(loc.host);
+        MUList.tabId = e.tabId ?? -2;
+        MUList.build().then(() => {
+          setCount(e, e.tabId)
+        });
       }
     }
   },
   {
-    urls: [
-      // 'http://*/*',
-      'https://*/*'
-    ]
+    urls: ['https://*/*']
   }
 );
-// webext.webRequest.onBeforeRedirect.addListener(
-//   (e) => {
-//     if (Object.is(e.type, 'main_frame')) {
-//       log(e);
-//       if (requestId === e.requestId) {
-//         isRedirect = true;
-//         requestId = -2;
-//       }
-//       // if (requestId !== e.requestId) {
-//       //   log(e);
-//       //   requestId = e.requestId;
-//       //   const loc = new URL(e.url);
-//       //   webFetcher(loc.host, e.tabId);
-//       // }
-//     }
-//   },
-//   {
-//     urls: [
-//       // 'http://*/*',
-//       'https://*/*'
-//     ]
-//   }
-// );
 
 /**
  * [onMessage description]
- * @param  {*} message - The message itself. This is a JSON-ifiable object.
+ * @param  {object} message - The message itself. This is a JSON-ifiable object.
  * @param  {chrome.runtime.MessageSender} sender
  * @param  {(response: any) => void} sendResponse - A function to call, at most once, to send a response to the message. The function takes a single argument, which may be any JSON-ifiable object. This argument is passed back to the message sender.
  */
 function onMessage(message, sender, sendResponse) {
   if (sender.url.includes('popup.html')) {
-    if (message.location) {
-      webFetcher(message.location).then((data) => sendResponse(data));
-    } else {
-      webext.tabs.query(queryOptions, (tabs) => {
-        const tab = tabs[0];
-        const loc = new URL(getTabUrl(tab));
-        webFetcher(loc.host, tab.id, getTabUrl(tab)).then((data) => sendResponse(data));
+    if (message.type === 'getData') {
+      if (MUList.host !== message.hostname) {
+        MUList.host = message.hostname ?? BLANK_PAGE;
+        MUList.tabId = message.currentTab?.id ?? -2;
+      };
+      MUList.build().then((data) => {
+        if (message.init) {
+          sendResponse({ cfg, data })
+        } else {
+          sendResponse({ data })
+        }
       });
-    }
-  }
-
-  if (message.name) {
-    if (sender.url.includes('settings.html')) {
-      storage.config.setOne(message.name, message.value);
-      sendResponse({
-        name: message.name,
-        value: message.value
-      });
+    } else if (message.type === 'save') {
+      if (message.cfg) {
+        storage.config.set(message.cfg).then(initCfg);
+      } else {
+        const v = isNull(message.value) ? cfg[message.prop] : message.value;
+        storage.config.setOne(message.prop, v).then(initCfg);
+      }
+    } else if (message.type === 'reset') {
+      storage.config.set(DEFAULT_CONFIG);
+    } else if (message.type === 'clear') {
+      const cache = Array.from(container).filter(({ _mujs }) => _mujs.info.host === message.host);
+      for (const ujs of cache) container.userjsCache.delete(ujs.id);
+    } else if (message.type === 'engine') {
+      const engine = cfg.engines.find((engine) => engine.name === message.engine.name);
+      for (const [k, v] of Object.entries(message.engine)) {
+        engine[k] = v;
+      }
+      storage.config.set(cfg).then(initCfg);
+    } else if (message.location) {
+      MUList.host = formatURL(message.location);
+      MUList.build().then(sendResponse);
     } else {
-      sendResponse({ value: cfg[message.name] });
+      sendResponse({ cfg });
     }
   }
   return true;
 }
 
-webext.runtime.onMessage.addListener(onMessage);
+function start() {
+  runtime.onMessage.addListener(onMessage);
 
-const tc = (tab) => {
-  const loc = new URL(tab.url);
-  const host = formatURL(loc.host);
-  return {
-    loc,
-    host,
-    cache: MUJS.cache.get(host)
-  };
-};
-const updateCount = (tab) => {
-  const { cache } = tc(tab);
-  let cnt = 0;
-  if (cache) {
-    for (const v of Object.values(cache)) {
-      cnt += v.length;
-    }
-  }
-  webext.browserAction.setBadgeText({
-    text: `${cnt}`
+  webext.tabs.onRemoved.addListener((tabId) => {
+    const cache = Array.from(container.userjsCache.values()).filter(({ _mujs }) => {
+      return !isEmpty(_mujs) && _mujs.info.tabId === tabId;
+    });
+    for (const ujs of cache) container.userjsCache.delete(ujs.id);
   });
-};
 
-// webext.tabs.onCreated.addListener((tab) => {
-//   updateCount(tab);
-// });
+  webext.tabs.onCreated.addListener(setCount);
 
-webext.tabs.onActivated.addListener((activeInfo) => {
-  const { tabId } = activeInfo;
-  webext.tabs.get(tabId, updateCount);
-  // if (currentTab.tabId !== tabId) {
-  //   currentTab.tabId = tabId;
-  // }
-  // log('onActivated', currentTab);
-});
+  webext.tabs.onActivated.addListener((activeInfo) => {
+    const { tabId } = activeInfo;
+    webext.tabs.get(tabId, setCount);
+  });
 
-webext.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  updateCount(tab);
-  // if (changeInfo.status === 'complete') {
-  //   if (currentTab.tabId !== tabId) {
-  //     currentTab.tabId = tabId;
-  //     currentTab.url = getTabUrl(tab);
-  //   }
-  // }
-});
+  webext.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (tab.status === 'complete') {
+      setCount(tab, tabId);
+    }
+  });
+
+  webext.action.setBadgeText({
+    text: '0'
+  });
+}
+
+start();

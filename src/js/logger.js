@@ -20,11 +20,6 @@ const err = (...msg) => {
     'color: rgb(249, 24, 128);',
     ...msg
   );
-  for (const ex of msg) {
-    if (typeof ex === 'object' && 'cause' in ex && typeof alert !== 'undefined') {
-      alert(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
-    }
-  }
 };
 const info = (...msg) => {
   console.info(

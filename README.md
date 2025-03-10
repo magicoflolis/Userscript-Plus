@@ -18,6 +18,8 @@ Finds available UserScripts and UserStyles for the current webpage, the power of
 
 [UserScript Changelog](https://github.com/magicoflolis/Userscript-Plus/blob/master/CHANGELOG.user.md)
 
+[Web Extension Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
+
 [List of known issues by Web Browser](https://github.com/magicoflolis/Userscript-Plus/blob/master/browser-issues.md)
 
 ## **Download**
@@ -31,17 +33,23 @@ Finds available UserScripts and UserStyles for the current webpage, the power of
 * [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - outdated
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
 
-**Web Extension (under construction):**
+**Web Extension:**
+
+*General:*
+
+* [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases)
 
 *Firefox:*
 
 * [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/userscript-plus/)
-* [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
 
 *Chromium:*
 
-* ~~[Chrome Web Store](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)~~
-* [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases/tag/webext/latest)
+* ~~[Chrome Web Store](https://chromewebstore.google.com/detail/kbelpalpbddhjhoakbjkfookjeiennbo)~~ - Under review
+
+*Microsoft Edge:*
+
+* ~~[Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/golkolijobdaldjgefapmcknlmkjlhdh)~~ - Under review
 
 **Bookmarklet (not recommended):**
 
@@ -61,7 +69,6 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
 * Query UserScripts and UserStyles from:
   * [Greasy Fork](https://greasyfork.org) - enabled by default
   * [Sleazy Fork](https://sleazyfork.org) - disabled by default
-  * [Open UserJS](https://openuserjs.org) ( limited availability, will read `Too many requests...` if limit is reached ) - disabled by default
   * [GitHub](https://github.com/search?l=JavaScript&o=desc&q="==UserScript==") ( requires [Personal Access Token](https://github.com/settings/tokens), no permissions are required ) - disabled by default
 * Built-in UserScripts:
   * [GreasyFork Bullshit Filter](https://greasyfork.org/scripts/12179) - disabled by default
@@ -88,12 +95,19 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plu
   * Maximize, minimize, or close menu
   * Sync config with UserScript manager or per host
   * Customize timeout window - can be re-injected using your managers User Script Commands menu
+* Query UserScripts and UserStyles from:
+  * [Open UserJS](https://openuserjs.org) ( limited availability, will read `Too many requests...` if limit is reached ) - disabled by default
 * Automation:
   * Inject on load - injects menu on page load
   * Automatic fullscreen - maximizes menu when opened
 * UserScript Commands via `GM_registerMenuCommand`:
   * Inject Userscript+ - injects menu into the page
   * Close Userscript+ - removes menu from the page
+
+**Web Extension Features:**
+
+* General:
+  * You can fullscreen the list and it will open it to a new tab
 
 ## Previews
 

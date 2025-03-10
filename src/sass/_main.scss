@@ -833,6 +833,7 @@ mujs-body {
         }
 
         @media screen and (max-width: 800px) {
+          align-self: center;
           width: 30em !important;
         }
       }
@@ -844,7 +845,6 @@ mujs-body {
         width: -webkit-fit-content;
         width: -moz-fit-content;
         width: fit-content;
-        // max-width: 20em;
 
         @media screen and (max-width: 800px) {
           width: 100% !important;

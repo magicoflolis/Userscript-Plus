@@ -4,7 +4,7 @@
     "description": "Must not exceed 45 characters"
   },
   "extDesc": {
-    "message": "The power of Greasy Fork on the go! Finds available UserJS for the current webpage.",
+    "message": "为当前网页查找可用的 UserJS，随时随地发挥 Greasy Fork 的威力！",
     "description": "Must not exceed 132 characters"
   },
   "extShortDesc": {
