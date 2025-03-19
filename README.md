@@ -30,8 +30,8 @@ Finds available UserScripts and UserStyles for the current webpage, the power of
 > The UserScript only works on `HTTPS` sites! ([https://example.com](https://example.com))
 
 * [Greasy Fork](https://greasyfork.org/scripts/421603)
-* [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - outdated
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
+* [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - outdated
 
 **Web Extension:**
 
@@ -45,11 +45,11 @@ Finds available UserScripts and UserStyles for the current webpage, the power of
 
 *Chromium:*
 
-* ~~[Chrome Web Store](https://chromewebstore.google.com/detail/kbelpalpbddhjhoakbjkfookjeiennbo)~~ - Under review
+* [Chrome Web Store](https://chromewebstore.google.com/detail/kbelpalpbddhjhoakbjkfookjeiennbo)
 
 *Microsoft Edge:*
 
-* ~~[Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/golkolijobdaldjgefapmcknlmkjlhdh)~~ - Under review
+* [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/golkolijobdaldjgefapmcknlmkjlhdh)
 
 **Bookmarklet (not recommended):**
 
