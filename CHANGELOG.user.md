@@ -42,9 +42,13 @@
 * Finish blacklist section.
 * GitHub engine - filter out UserScript and UserStyles that don't match the host
 
+---
+
 ## v7.6.1
 
 * Fixed sorting
+
+---
 
 ## v7.6.0
 
