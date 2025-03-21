@@ -148,5 +148,23 @@
   },
   "auto_fetch": {
     "message": "Fetch on load"
+  },
+  "code": {
+    "message": "Code"
+  },
+  "metadata": {
+    "message": "Metadata"
+  },
+  "preview_metadata": {
+    "message": "Preview Metadata"
+  },
+  "recommend_author": {
+    "message": "Recommend Author"
+  },
+  "recommend_other": {
+    "message": "Recommend Others"
+  },
+  "default_sort": {
+    "message": "Default Sort"
   }
 }

@@ -1,15 +1,15 @@
 // #region Console
-const dbg = (...msg) => {
-  const dt = new Date();
-  console.debug(
-    '[%cMagic Userscript+%c] %cDBG',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(255, 212, 0);',
-    `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
-    ...msg
-  );
-};
+// const dbg = (...msg) => {
+//   const dt = new Date();
+//   console.debug(
+//     '[%cMagic Userscript+%c] %cDBG',
+//     'color: rgb(29, 155, 240);',
+//     '',
+//     'color: rgb(255, 212, 0);',
+//     `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
+//     ...msg
+//   );
+// };
 const err = (...msg) => {
   console.error(
     '[%cMagic Userscript+%c] %cERROR',
@@ -48,41 +48,47 @@ const log = (...msg) => {
 /**
  * @type { import("../typings/types.d.ts").config }
  */
-let cfg = {};
+let cfg;
+
+const BLANK_FN = function () {};
+const BLANK_ASYNC_FN = async function () {};
+const BLANK_PAGE = 'about:blank';
+/**
+ * @param {string} hn
+ */
+const normalizedHostname = (hn) => hn.replace(/^www\./, '');
+/**
+ * @param {string} txt
+ */
+const formatURL = (txt) =>
+  txt
+    .split('.')
+    .splice(-2)
+    .join('.')
+    .replace(/\/|https:/g, '');
+/**
+ * @param {string} str
+ */
+const getHostname = (str) => formatURL(normalizedHostname(str));
+/**
+ * @type {URL | undefined}
+ */
+let url;
+try {
+  url = new URL(window.location.href ?? BLANK_PAGE);
+} catch {
+  /* empty */
+}
 
 // #region Validators
-/**
- * @type { import("../typings/types.d.ts").objToStr }
- */
 const objToStr = (obj) => Object.prototype.toString.call(obj);
-/**
- * @type { import("../typings/types.d.ts").isRegExp }
- */
-const isRegExp = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('RegExp');
-};
-/**
- * @type { import("../typings/types.d.ts").isElem }
- */
-const isElem = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('Element');
-};
-/**
- * @type { import("../typings/types.d.ts").isObj }
- */
-const isObj = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('Object');
-};
-/**
- * @type { import("../typings/types.d.ts").isFN }
- */
-const isFN = (obj) => {
-  const s = objToStr(obj);
-  return s.includes('Function');
-};
+const isRegExp = (obj) => /RegExp/.test(objToStr(obj));
+const isElem = (obj) => /Element/.test(objToStr(obj));
+const isHTML = (obj) => /object HTML/.test(objToStr(obj));
+const isObj = (obj) => /Object/.test(objToStr(obj));
+const isFN = (obj) => /Function/.test(objToStr(obj));
+const isUserCSS = (str) => /\.user\.css$/.test(str);
+const isUserJS = (str) => /\.user\.js$/.test(str);
 /**
  * @type { import("../typings/types.d.ts").isNull }
  */
@@ -107,7 +113,6 @@ const isEmpty = (obj) => {
   return isNull(obj) || isBlank(obj);
 };
 // #endregion
-
 // #region Globals
 /**
  * https://github.com/zloirock/core-js/blob/master/packages/core-js/internals/global-this.js
@@ -172,6 +177,18 @@ function safeSelf() {
           g.setTimeout(resolve, 0);
         });
       }
+    },
+    groupBy(arr, callback) {
+      if (isFN(Object.groupBy)) {
+        return Object.groupBy(arr, callback);
+      }
+      /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
+      return arr.reduce((acc = {}, ...args) => {
+        const key = callback(...args);
+        acc[key] ??= [];
+        acc[key].push(args[0]);
+        return acc;
+      }, {});
     }
   };
   for (const [k, v] of Object.entries(safe)) {
@@ -188,12 +205,16 @@ function safeSelf() {
   return userjs.safeSelf;
 }
 // #endregion
-
-const BLANK_PAGE = 'about:blank';
-// Lets highlight me :)
+// #region Constants
+/**
+ * @type { import("../typings/types.d.ts").cfgBase }
+ */
+const cfgBase = [];
+const cfgSec = new Set();
+/** Lets highlight me :) */
 const authorID = 166061;
 /**
- * Some UserJS I personally enjoy - `https://greasyfork.org/scripts/{{id}}`
+ * Some UserJS I personally enjoy - `https://greasyfork.org/scripts/{id}`
  */
 const goodUserJS = [
   33005,
@@ -237,7 +258,7 @@ const engineUnsupported = {
   openuserjs: [],
   github: []
 };
-const getUAData = () => {
+const isMobile = (() => {
   if (userjs.isMobile !== undefined) {
     return userjs.isMobile;
   }
@@ -259,8 +280,7 @@ const getUAData = () => {
     err(ex);
   }
   return userjs.isMobile;
-};
-const isMobile = getUAData();
+})();
 const isGM = typeof GM !== 'undefined';
 const builtinList = {
   local: /localhost|router|gov|(\d+\.){3}\d+/,
@@ -272,6 +292,7 @@ const builtinList = {
     pathname: '/hentai/.+/read/page/.+'
   }
 };
+// #endregion
 // #region DEFAULT_CONFIG
 /**
  * @type { import("../typings/types.d.ts").config }
@@ -312,7 +333,7 @@ const DEFAULT_CONFIG = {
       name: 'github',
       token: '',
       query: encodeURIComponent(
-        'https://api.github.com/search/code?q="// ==UserScript=="+{host}+ "// ==/UserScript=="+in:file+language:js&per_page=30'
+        'https://api.github.com/search/repositories?q=topic:{domain}+topic:userscript'
       )
     }
   ],
@@ -412,7 +433,15 @@ class i18nHandler {
   i18n$(key) {
     const { navigator } = safeSelf();
     const current = navigator.language.split('-')[0] ?? 'en';
-    return userjs.pool.get(current)?.[key] ?? 'Invalid Key';
+    if (userjs.pool) {
+      return userjs.pool.get(current)?.[key] ?? 'Invalid Key';
+    }
+    return 'userjs.pool is undefined';
+  }
+
+  get current() {
+    const { navigator } = safeSelf();
+    return navigator.language.split('-')[0] ?? 'en';
   }
 }
 const language = new i18nHandler();
@@ -420,6 +449,37 @@ const { i18n$ } = language;
 // #endregion
 // #region Utilities
 const union = (...arr) => [...new Set(arr.flat())];
+/**
+ * @param {string} str
+ */
+const decode = (str) => {
+  try {
+    if (decodeURI(str) !== decodeURIComponent(str)) {
+      return decode(decodeURIComponent(str));
+    }
+  } catch (ex) {
+    err(ex);
+  }
+  return str;
+};
+/**
+ * @type { import("../typings/types.d.ts").normalizeTarget }
+ */
+const normalizeTarget = (target, toQuery = true, root) => {
+  if (Object.is(target, null) || Object.is(target, undefined)) {
+    return [];
+  }
+  if (Array.isArray(target)) {
+    return target;
+  }
+  if (typeof target === 'string') {
+    return toQuery ? Array.from((root || document).querySelectorAll(target)) : Array.of(target);
+  }
+  if (/object HTML/.test(Object.prototype.toString.call(target))) {
+    return Array.of(target);
+  }
+  return Array.from(target);
+};
 /**
  * @type { import("../typings/types.d.ts").qs }
  */
@@ -443,41 +503,15 @@ const qsA = (selectors, root) => {
   return [];
 };
 /**
- * @type { import("../typings/types.d.ts").normalizeTarget }
- */
-const normalizeTarget = (target, toQuery = true, root) => {
-  if (Object.is(target, null) || Object.is(target, undefined)) {
-    return [];
-  }
-  if (Array.isArray(target)) {
-    return target;
-  }
-  if (typeof target === 'string') {
-    return toQuery ? Array.from((root || document).querySelectorAll(target)) : [target];
-  }
-  if (isElem(target)) {
-    return [target];
-  }
-  return Array.from(target);
-};
-/**
  * @type { import("../typings/types.d.ts").ael }
  */
 const ael = (el, type, listener, options = {}) => {
-  try {
-    for (const elem of normalizeTarget(el)) {
-      if (!elem) {
-        continue;
-      }
-      if (isMobile && type === 'click') {
-        elem.addEventListener('touchstart', listener, options);
-        continue;
-      }
-      elem.addEventListener(type, listener, options);
+  for (const elem of normalizeTarget(el).filter(isHTML)) {
+    if (isMobile && type === 'click') {
+      elem.addEventListener('touchstart', listener, options);
+      continue;
     }
-  } catch (ex) {
-    ex.cause = 'ael';
-    err(ex);
+    elem.addEventListener(type, listener, options);
   }
 };
 /**
@@ -527,16 +561,14 @@ const make = (tagName, cname, attrs) => {
       }
     }
   } catch (ex) {
+    if (ex instanceof DOMException) throw new Error(`${ex.name}: ${ex.message}`, { cause: 'make' });
     ex.cause = 'make';
     err(ex);
   }
   return el;
 };
 
-/**
- * @type { import("../typings/UserJS.d.ts").getGMInfo }
- */
-const getGMInfo = () => {
+const $info = (() => {
   if (isGM) {
     if (isObj(GM.info)) {
       return GM.info;
@@ -554,15 +586,14 @@ const getGMInfo = () => {
       bugs: 'https://github.com/magicoflolis/Userscript-Plus/issues'
     }
   };
-};
-const $info = getGMInfo();
+})();
 // #endregion
 /**
  * @type { import("../typings/types.d.ts").dom }
  */
 const dom = {
   attr(target, attr, value = undefined) {
-    for (const elem of normalizeTarget(target)) {
+    for (const elem of normalizeTarget(target).filter(isHTML)) {
       if (value === undefined) {
         return elem.getAttribute(attr);
       }
@@ -574,7 +605,7 @@ const dom = {
     }
   },
   prop(target, prop, value = undefined) {
-    for (const elem of normalizeTarget(target)) {
+    for (const elem of normalizeTarget(target).filter(isHTML)) {
       if (value === undefined) {
         return elem[prop];
       }
@@ -582,7 +613,7 @@ const dom = {
     }
   },
   text(target, text) {
-    const targets = normalizeTarget(target);
+    const targets = normalizeTarget(target).filter(isHTML);
     if (text === undefined) {
       return targets.length !== 0 ? targets[0].textContent : undefined;
     }
@@ -590,59 +621,30 @@ const dom = {
       elem.textContent = text;
     }
   },
+  remove(target) {
+    normalizeTarget(target).filter(isHTML).some((elem) => elem.remove());
+  },
   cl: {
     add(target, token) {
-      token = Array.isArray(token) ? token : [token];
-      return normalizeTarget(target).some((elem) => elem.classList.add(...token));
+      token = normalizeTarget(token, false);
+      return normalizeTarget(target).filter(isHTML).some((elem) => elem.classList.add(...token));
     },
     remove(target, token) {
-      token = Array.isArray(token) ? token : [token];
-      return normalizeTarget(target).some((elem) => elem.classList.remove(...token));
+      token = normalizeTarget(token, false);
+      return normalizeTarget(target).filter(isHTML).some((elem) => elem.classList.remove(...token));
     },
     toggle(target, token, force) {
       let r;
-      for (const elem of normalizeTarget(target)) {
+      for (const elem of normalizeTarget(target).filter(isHTML)) {
         r = elem.classList.toggle(token, force);
       }
       return r;
     },
     has(target, token) {
-      return normalizeTarget(target).some((elem) => elem.classList.contains(token));
+      return normalizeTarget(target).filter(isHTML).some((elem) => elem.classList.contains(token));
     }
   }
 };
-class Memorize {
-  constructor() {
-    /**
-     * @type {Map<string, Map<string, any>>}
-     */
-    this.store = new Map();
-    /**
-     * @type { { [key: string]: Map<string, any>; userjs: Map<number, import("../typings/types.d.ts").GSForkQuery> } }
-     */
-    this.maps = {};
-    this.create('cfg', 'container', 'userjs');
-  }
-  /**
-   * @template { string } S
-   * @param { ...S } maps
-   * @returns { S | S[] }
-   */
-  create(...maps) {
-    const resp = [];
-    for (const key of maps) {
-      if (this.store.has(key)) {
-        return this.store.get(key);
-      }
-      const m = new Map();
-      this.store.set(key, m);
-      this.maps[key] = m;
-      resp.push(this.store.get(key));
-    }
-    return resp.length >= 2 ? resp : resp[0];
-  }
-}
-const memory = new Memorize();
 //#region Icon SVGs
 const iconSVG = {
   close: {
@@ -720,7 +722,7 @@ const iconSVG = {
     try {
       if (typeof iconSVG[type].html === 'string') {
         svgElem.innerHTML = iconSVG[type].html;
-        dom.attr(svgElem, 'id', `mujs_${type ?? 'Unknown'}`);
+        svgElem.setAttribute('id', `mujs_${type ?? 'Unknown'}`);
       }
       // eslint-disable-next-line no-unused-vars
     } catch (ex) {
@@ -744,49 +746,13 @@ const StorageSystem = {
     return window.localStorage.getItem(key);
   },
   has(key) {
-    return !isNull(this.getItem(key));
+    return !this.getItem(key);
   },
   setItem(key, value) {
     window.localStorage.setItem(key, value);
   },
   remove(key) {
     window.localStorage.removeItem(key);
-  },
-  addListener(name, callback) {
-    if (isGM) {
-      let GMType;
-      if (isFN(GM.addValueChangeListener)) {
-        GMType = GM.addValueChangeListener(name, callback);
-      } else if (isFN(GM_addValueChangeListener)) {
-        GMType = GM_addValueChangeListener(name, callback);
-      }
-      if (GMType) {
-        return this.events.add(GMType) && GMType;
-      }
-    }
-    return (
-      this.events.add(callback) &&
-      window.addEventListener('storage', (evt) => {
-        const { key, oldValue, newValue } = evt;
-        if (key === name) callback(key, oldValue, newValue, false);
-      })
-    );
-  },
-  attach() {
-    window.addEventListener('beforeunload', () => {
-      for (const e of this.events) {
-        if (isGM && typeof e === 'number' && !Number.isNaN(e)) {
-          if (isFN(GM.removeValueChangeListener)) {
-            GM.removeValueChangeListener(e);
-          } else if (isFN(GM_addValueChangeListener)) {
-            GM_removeValueChangeListener(e);
-          }
-        } else {
-          window.removeEventListener('storage', e);
-        }
-        this.events.delete(e);
-      }
-    });
   },
   async setValue(key, v) {
     if (!v) {
@@ -820,6 +786,7 @@ const StorageSystem = {
         ? JSON.parse(this.getItem(`${this.prefix}-${key}`))
         : def;
     } catch (ex) {
+      ex.cause = 'getValue';
       err(ex);
       return def;
     }
@@ -856,7 +823,7 @@ const Network = {
     }
     data = Object.assign({}, data);
     method = this.bscStr(method, false);
-    responseType = this.bscStr(responseType);
+    responseType = this.bscStr(responseType, true);
     const params = {
       method,
       ...data
@@ -1020,7 +987,7 @@ const Counter = {
         dataset: {
           counter: engine.name
         },
-        title: engine.query ? decodeURIComponent(engine.query) : engine.url,
+        title: decode(engine.query ?? engine.url),
         textContent: '0'
       });
       this.cnt[engine.name] = {
@@ -1050,7 +1017,6 @@ const Counter = {
     }
   }
 };
-
 // #region Container
 /**
  * @type { import("../typings/UserJS.d.ts").Container }
@@ -1058,13 +1024,11 @@ const Counter = {
 class Container {
   webpage;
   host;
-  domain;
   ready;
   injected;
   shadowRoot;
   supported;
   frame;
-  cache;
   userjsCache;
   root;
   unsaved;
@@ -1072,16 +1036,14 @@ class Container {
   rebuild;
   opacityMin;
   opacityMax;
-  constructor(url) {
+  constructor() {
     this.remove = this.remove.bind(this);
     this.refresh = this.refresh.bind(this);
     this.showError = this.showError.bind(this);
-    this.toArr = this.toArr.bind(this);
     this.toElem = this.toElem.bind(this);
 
-    this.webpage = this.strToURL(url);
-    this.host = this.getHost(this.webpage.host);
-    this.domain = this.getDomain(this.webpage.host);
+    this.webpage = url;
+    this.host = getHostname(url?.hostname ?? BLANK_PAGE);
     this.ready = false;
     this.injected = false;
     this.shadowRoot = undefined;
@@ -1119,8 +1081,7 @@ class Container {
       this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
       this.ready = true;
     }
-    this.cache = memory.maps.container;
-    this.userjsCache = memory.maps.userjs;
+    this.userjsCache = new Map();
     this.root = make('mujs-root');
     this.unsaved = false;
     this.isBlacklisted = false;
@@ -1161,7 +1122,7 @@ class Container {
       mouse: new Timeout()
     };
 
-    this.injFN = () => {};
+    this.injFN = BLANK_FN;
 
     window.addEventListener('beforeunload', this.remove);
   }
@@ -1194,24 +1155,22 @@ class Container {
         return;
       }
       this.shadowRoot.append(this.root);
-      if (isNull(this.loadCSS(main_css, 'primary-stylesheet'))) {
+      if (isNull(this.loadCSS(main_css, 'primary-stylesheet')))
         throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
-      }
       this.injected = true;
       this.initFn();
-      if (this.elementsReady && isFN(callback)) {
-        this.injFN = callback.call(this, this.shadowRoot);
-      }
+      if (isFN(callback) && this.elementsReady) this.injFN = callback.call(this, this.shadowRoot);
     } catch (ex) {
       err(ex);
       this.remove();
     }
   }
   initFn() {
-    this.renderTheme(cfg.theme);
+    this.setTheme();
 
     Counter.cnt.total.root = this.mainbtn;
-    for (const engine of cfg.engines) this.countframe.append(Counter.set(engine));
+    if (this.countframe)
+      for (const engine of cfg.engines) this.countframe.append(Counter.set(engine));
     const { cfgpage, table, supported, frame, refresh, cache, urlBar, host } = this;
 
     class Tabs {
@@ -1238,7 +1197,7 @@ class Container {
         };
         this.el.head.append(this.el.add);
         this.el.root.append(this.el.head);
-        this.custom = () => {};
+        this.custom = BLANK_FN;
       }
       /**
        * @param {string} hostname
@@ -1253,12 +1212,14 @@ class Container {
        * @param {string} hostname
        */
       intFN(hostname) {
-        if (!hostname.startsWith(this.protocal)) {
+        const p = this.protoReg.exec(hostname);
+        if (!p) {
           return;
         }
-        if (hostname.match(this.protoReg)[1] === 'settings') {
+        if (p[1] === 'settings') {
           dom.cl.remove(cfgpage, 'hidden');
           dom.cl.add(table, 'hidden');
+          urlBar.placeholder = 'Search settings';
           if (!supported) {
             dom.attr(frame, 'style', 'height: 100%;');
           }
@@ -1270,19 +1231,23 @@ class Container {
        */
       active(tab, build = true) {
         if (!this.pool.has(tab)) this.pool.add(tab);
-        dom.cl.add(cfgpage, 'hidden');
-        dom.cl.remove(table, 'hidden');
+        dom.cl.add([table, cfgpage], 'hidden');
         dom.cl.remove([...this.pool], 'active');
         dom.cl.add(tab, 'active');
         if (!build) {
+          dom.cl.remove(table, 'hidden');
           return;
         }
         const host = tab.dataset.host ?? this.blank;
         if (host === this.blank) {
+          dom.cl.add(cfgpage, 'hidden');
+          dom.cl.remove(table, 'hidden');
           refresh();
         } else if (host.startsWith(this.protocal)) {
           this.intFN(host);
         } else {
+          dom.cl.add(cfgpage, 'hidden');
+          dom.cl.remove(table, 'hidden');
           this.custom(host);
         }
       }
@@ -1325,19 +1290,18 @@ class Container {
           textContent: 'X'
         });
         const tabHost = make('mujs-host');
+        const p = this.protoReg.exec(hostname);
         tab.append(tabHost, tabClose);
         this.el.head.append(tab);
         this.active(tab, false);
         if (isNull(hostname)) {
           refresh();
-          urlBar.placeholder = i18n$('newTab');
           tab.dataset.host = this.blank;
           tabHost.title = i18n$('newTab');
           tabHost.textContent = i18n$('newTab');
-        } else if (hostname.startsWith(this.protocal)) {
-          const type = hostname.match(this.protoReg)[1];
+        } else if (p) {
           tab.dataset.host = hostname || host;
-          tabHost.title = type || tab.dataset.host;
+          tabHost.title = p[1] || tab.dataset.host;
           tabHost.textContent = tabHost.title;
           this.intFN(hostname);
         } else {
@@ -1348,11 +1312,12 @@ class Container {
         return tab;
       }
     }
-    this.tab = new Tabs(this.toolbar);
-    this.tab.create(host);
+    this.Tabs = new Tabs(this.toolbar);
+    this.Tabs.create(host);
 
     const tabbody = this.tabbody;
-    const getCellValue = (tr, idx) => tr.children[idx].dataset.value || tr.children[idx].textContent;
+    const getCellValue = (tr, idx) =>
+      tr.children[idx].dataset.value || tr.children[idx].textContent;
     const comparer = (idx, asc) => (a, b) =>
       ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2)
@@ -1398,8 +1363,9 @@ class Container {
       this.header = make('mujs-header');
       this.tbody = make('mujs-body');
       this.cfgpage = make('mujs-row', 'mujs-cfg hidden');
+      this.main = make('mujs-main', 'hidden');
+      this.urlContainer = make('mujs-url');
       this.btnframe = make('mujs-column', 'btn-frame');
-      this.fsearch = make('mujs-btn', 'hidden');
       this.btnHandles = make('mujs-column', 'btn-handles');
       this.btnHide = make('mujs-btn', 'hide-list', {
         title: i18n$('min'),
@@ -1415,8 +1381,6 @@ class Container {
           command: 'fullscreen'
         }
       });
-      this.main = make('mujs-main', 'hidden');
-      this.urlContainer = make('mujs-url');
       this.closebtn = make('mujs-btn', 'close', {
         title: i18n$('close'),
         innerHTML: iconSVG.load('close'),
@@ -1433,7 +1397,7 @@ class Container {
       });
       this.btnhome = make('mujs-btn', 'github hidden', {
         title: `GitHub (v${
-          $info.script.version.includes('.') || $info.script.version.includes('Book')
+          /\d+\.\d+\.\d+|Book/.test($info.script.version)
             ? $info.script.version
             : $info.script.version.slice(0, 5)
         })`,
@@ -1516,8 +1480,6 @@ class Container {
       this.tbody.append(this.table, this.cfgpage);
       this.main.append(this.toolbar, this.header, this.tbody, this.footer, this.promptElem);
       this.mainframe.append(this.mainbtn);
-      // this.exBtn.append(this.importCFG, this.importTheme, this.exportCFG, this.exportTheme);
-      // this.header.append(this.exBtn);
       this.root.append(this.mainframe, this.main);
 
       return true;
@@ -1527,10 +1489,9 @@ class Container {
     return false;
   }
   remove() {
-    memory.store.clear();
-    if (this.frame) {
-      this.frame.remove();
-    }
+    this.cache.clear();
+    this.userjsCache.clear();
+    dom.remove(this.frame);
   }
   async save() {
     this.unsaved = false;
@@ -1542,34 +1503,26 @@ class Container {
   /**
    * @param { string } css - CSS to inject
    * @param { string } name - Name of stylesheet
-   * @return { HTMLStyleElement } Style element
+   * @return { HTMLStyleElement | undefined } Style element
    */
   loadCSS(css, name = 'CSS') {
     try {
-      if (typeof name !== 'string') {
+      if (typeof name !== 'string')
         throw new Error('"name" must be a typeof "string"', { cause: 'loadCSS' });
-      }
-      if (qs(`style[data-role="${name}"]`, this.root)) {
+      if (qs(`style[data-role="${name}"]`, this.root))
         return qs(`style[data-role="${name}"]`, this.root);
-      }
-      if (typeof css !== 'string') {
+      if (typeof css !== 'string')
         throw new Error('"css" must be a typeof "string"', { cause: 'loadCSS' });
-      }
-      if (isBlank(css)) {
+      if (isBlank(css))
         throw new Error(`"${name}" contains empty CSS string`, { cause: 'loadCSS' });
-      }
       const parent = isEmpty(this.root.shadowRoot) ? this.root : this.root.shadowRoot;
       if (isGM) {
-        let sty;
-        if (isFN(GM.addElement)) {
-          sty = GM.addElement(parent, 'style', {
-            textContent: css
-          });
-        } else if (isFN(GM_addElement)) {
-          sty = GM_addElement(parent, 'style', {
-            textContent: css
-          });
-        }
+        const fn = isFN(GM.addElement)
+          ? GM.addElement
+          : isFN(GM_addElement)
+            ? GM_addElement
+            : BLANK_FN;
+        const sty = fn(parent, 'style', { textContent: css });
         if (isElem(sty)) {
           sty.dataset.insertedBy = $info.script.name;
           sty.dataset.role = name;
@@ -1591,10 +1544,11 @@ class Container {
   }
   checkBlacklist(str) {
     str = str || this.host;
-    let blacklisted = false;
     if (/accounts*\.google\./.test(this.webpage.host)) {
-      blacklisted = true;
+      this.isBlacklisted = true;
+      return this.isBlacklisted;
     }
+    let blacklisted = false;
     for (const b of normalizeTarget(cfg.blacklist)) {
       if (typeof b === 'string') {
         if (b.startsWith('userjs-')) {
@@ -1629,32 +1583,8 @@ class Container {
     this.isBlacklisted = blacklisted;
     return this.isBlacklisted;
   }
-  getInfo(url) {
-    const webpage = this.strToURL(url || this.webpage);
-    const host = this.getHost(webpage.host);
-    const domain = this.getDomain(webpage.host);
-    return {
-      domain,
-      host,
-      webpage
-    };
-  }
-  /**
-   * @template { string } S
-   * @param { S } str
-   */
-  getHost(str = '') {
-    return str.split('.').splice(-2).join('.');
-  }
-  /**
-   * @template { string } S
-   * @param { S } str
-   */
-  getDomain(str = '') {
-    return str.split('.').at(-2) ?? BLANK_PAGE;
-  }
-  renderTheme(theme) {
-    theme = theme || cfg.theme;
+  setTheme() {
+    const theme = cfg.theme ?? DEFAULT_CONFIG.theme;
     if (theme === DEFAULT_CONFIG.theme) {
       return;
     }
@@ -1662,23 +1592,15 @@ class Container {
     for (const [k, v] of Object.entries(theme)) {
       const str = `--mujs-${k}`;
       const prop = sty.getPropertyValue(str);
-      if (isEmpty(v)) {
-        theme[k] = prop;
-      }
-      if (prop === v) {
-        continue;
-      }
+      if (isEmpty(v)) theme[k] = prop;
+      if (prop === v) continue;
       sty.removeProperty(str);
       sty.setProperty(str, v);
     }
   }
   makePrompt(txt, dataset = {}, usePrompt = true) {
-    if (qs('.prompt', this.promptElem)) {
-      for (const elem of qsA('.prompt', this.promptElem)) {
-        if (elem.dataset.prompt) {
-          elem.remove();
-        }
-      }
+    for (const elem of normalizeTarget(qsA('.prompt', this.promptElem))) {
+      if (elem.dataset.prompt) elem.remove();
     }
     const el = make('mu-js', 'prompt', {
       dataset: {
@@ -1705,8 +1627,19 @@ class Container {
       });
       elPrompt.append(elYes, elNo);
       el.append(elPrompt);
+    } else {
+      const elPrompt = make('mu-js', 'prompt-body');
+      const elNo = make('mujs-btn', 'prompt-deny', {
+        textContent: i18n$('close')
+      });
+      ael(elNo, isMobile ? 'touchend' : 'click', () => {
+        el.remove();
+      });
+      elPrompt.append(elNo);
+      el.append(elPrompt);
     }
     this.promptElem.append(el);
+    return el;
   }
   /**
    * @template {string | Error} E
@@ -1718,48 +1651,17 @@ class Container {
     let str = '';
     for (const e of ex) {
       str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message}${e.stack ? ` ${e.stack}` : ''}`}\n`;
-      if (isObj(e)) {
-        if (e.notify) {
-          dom.cl.add(this.mainframe, 'error');
-        }
-      }
     }
     const { createTextNode } = safeSelf();
     error.appendChild(createTextNode(str));
     this.footer.append(error);
   }
-  toArr() {
-    return Array.from(this.userjsCache.values()).filter(({ _mujs }) => {
-      return isElem(_mujs.root) && _mujs.info.engine.enabled;
-    });
-  }
-  toElem() {
-    return this.toArr().map(({ _mujs }) => {
-      return _mujs.root;
-    });
-  }
   refresh() {
     this.urlBar.placeholder = i18n$('newTab');
     Counter.reset();
     dom.cl.remove(this.toElem(), 'hidden');
-    dom.cl.remove(qsA('mujs-section[data-name]', this.cfgpage), 'hidden');
+    dom.cl.remove(cfgSec, 'hidden');
     dom.prop([this.tabbody, this.rateContainer, this.footer], 'innerHTML', '');
-  }
-  /**
-   * @template {string | URL} S
-   * @param {S} str
-   * @returns {URL}
-   */
-  strToURL(str) {
-    const WIN_LOCATION = window.location ?? BLANK_PAGE;
-    try {
-      str = str ?? WIN_LOCATION;
-      return objToStr(str).includes('URL') ? str : new URL(str);
-    } catch (ex) {
-      ex.cause = 'strToURL';
-      this.showError(ex);
-    }
-    return WIN_LOCATION;
   }
   /**
    * Redirects sleazyfork userscripts from greasyfork.org to sleazyfork.org
@@ -1796,13 +1698,44 @@ class Container {
       }
     }
   }
+  /**
+   * @param {number} [time]
+   */
+  async timeoutFrame(time) {
+    const frameTimeout = this.timeouts.frame;
+    frameTimeout.clear(...frameTimeout.ids);
+    if (dom.cl.has(this.mainframe, 'hidden')) {
+      return;
+    }
+    time = time ?? cfg.time ?? DEFAULT_CONFIG.time;
+    let n = 10000;
+    if (typeof time === 'number' && !Number.isNaN(time)) {
+      n = this.isBlacklisted ? time / 2 : time;
+    }
+    await frameTimeout.set(n);
+    this.remove();
+    frameTimeout.clear(...frameTimeout.ids);
+  }
+  toElem() {
+    return Array.from(this).map(({ _mujs }) => {
+      return _mujs.root;
+    });
+  }
+  *[Symbol.iterator]() {
+    const arr = Array.from(this.userjsCache.values()).filter(({ _mujs }) => {
+      return !isEmpty(_mujs) && _mujs.info.engine.enabled;
+    });
+    for (const userjs of arr) {
+      yield userjs;
+    }
+  }
 }
 const container = new Container();
 // #endregion
 // #region Primary Function
 function primaryFN() {
   const respHandles = {
-    build: async () => {}
+    build: BLANK_ASYNC_FN
   };
   try {
     const { scheduler } = safeSelf();
@@ -1813,42 +1746,59 @@ function primaryFN() {
       footer,
       tabbody,
       cfgpage,
-      fsearch,
       btnfullscreen,
       main,
-      tab,
+      Tabs,
       showError
     } = container;
-    const frameTimeout = container.timeouts.frame;
-    const cfgMap = memory.maps.cfg;
-    const rebuildCfg = () => {
-      for (const engine of cfg.engines) {
-        if (cfgMap.has(engine.name)) {
-          const inp = cfgMap.get(engine.name);
-          inp.checked = engine.enabled;
-          if (engine.name === 'github') {
-            const txt = cfgMap.get('github-token');
-            dom.prop(txt, 'value', engine.token);
-          }
-        }
-      }
-      for (const [k, v] of Object.entries(cfg)) {
-        if (typeof v === 'boolean') {
-          if (cfgMap.has(k)) {
-            const inp = cfgMap.get(k);
-            if (inp.type === 'checkbox') {
-              inp.checked = v;
-            } else {
-              dom.prop(inp, 'value', v);
+    const reloadCfg = () => {
+      for (const base of cfgBase) {
+        const nm = /^(\w+)-(.+)/.exec(base.value);
+        const d = (() => {
+          if (base.tag === 'engine') {
+            const engine = DEFAULT_CONFIG.engines.find((engine) => engine.name === base.value);
+            if (engine) {
+              return engine;
             }
           }
+          if (nm) {
+            return DEFAULT_CONFIG[nm[1]][nm[2]];
+          }
+          return DEFAULT_CONFIG[base.value];
+        })();
+        const v = (() => {
+          if (base.tag === 'engine') {
+            const engine = cfg.engines.find((engine) => engine.name === base.value);
+            if (engine) {
+              return engine;
+            }
+          }
+          if (nm) {
+            return cfg[nm[1]][nm[2]];
+          }
+          return cfg[base.value];
+        })();
+        base.cache = v;
+        if (base.type === 'checkbox') {
+          if (nm) {
+            if (nm[1] === 'filters') {
+              base.elem.checked = cfg[nm[1]][nm[2]].enabled;
+            } else {
+              base.elem.checked = v;
+            }
+          } else if (base.tag === 'engine') {
+            base.elem.checked = v.enabled;
+            base.elemUrl.value = decode(v.query);
+            base.elemUrl.placeholder = decode(d.query);
+            if (base.elemToken) {
+              base.elemToken = v.token;
+            }
+          }
+        } else {
+          base.elem.value = v;
         }
       }
-      // dom.prop(cfgMap.get('blacklist'), 'value', JSON.stringify(cfg.blacklist, null, ' '));
-      for (const [k, v] of Object.entries(cfg.theme)) {
-        dom.prop(cfgMap.get(k), 'value', v);
-      }
-      container.renderTheme(cfg.theme);
+      container.setTheme();
     };
     const doInstallProcess = async (installLink) => {
       const locObj = window.top.location;
@@ -1858,6 +1808,17 @@ function primaryFN() {
         locObj.href = installLink.href;
       }
       installLink.remove();
+      await init();
+    };
+    const doDownloadProcess = async (details) => {
+      if (!details.url) {
+        return;
+      }
+      const a = make('a');
+      a.href = details.url;
+      a.setAttribute('download', details.filename || '');
+      a.setAttribute('type', 'text/plain');
+      a.dispatchEvent(new MouseEvent('click'));
       await init();
     };
     const applyTo = (ujs, name, elem, root) => {
@@ -1928,6 +1889,7 @@ function primaryFN() {
       }
     };
     // #region Main event handlers
+    const frameTimeout = container.timeouts.frame;
     ael(main, isMobile ? 'touchend' : 'click', async (evt) => {
       try {
         /** @type { HTMLElement } */
@@ -1935,32 +1897,68 @@ function primaryFN() {
         if (!target) {
           return;
         }
-        const prmpt = /prompt-/.test(target.dataset.command);
         let dataset = target.dataset;
         let cmd = dataset.command;
-        let prmptChoice = false;
-        if (prmpt) {
+        if (/^prompt-/.test(target.dataset.command)) {
           dataset = target.parentElement.dataset;
           cmd = dataset.command;
-          prmptChoice = /confirm/.test(target.dataset.command);
-          target.parentElement.parentElement.remove();
-        }
-        if (cmd === 'install-script' && dataset.userjs) {
-          let installCode = dataset.userjs;
-          if (!prmpt && dataset.userjs.endsWith('.user.css')) {
-            container.makePrompt(i18n$('prmpt_css'), dataset);
-            return;
-          } else if (prmpt !== prmptChoice) {
-            installCode = dataset.userjs.replace(/\.user\.css$/, '.user.js');
-          }
-          const dlBtn = make('a', {
-            onclick(evt) {
-              evt.preventDefault();
-              doInstallProcess(evt.target);
+          let pElem = target.parentElement.parentElement;
+          if (/prompt-install/.test(target.dataset.command)) {
+            pElem = target.parentElement.parentElement.parentElement;
+            const a = make('a', {
+              onclick(evt) {
+                evt.preventDefault();
+                doInstallProcess(evt.target);
+              }
+            });
+            a.href = target.dataset.code_url;
+            a.click();
+          } else if (/prompt-download/.test(target.dataset.command)) {
+            pElem = target.parentElement.parentElement.parentElement;
+            const dataUserJS = container.userjsCache.get(+target.dataset.userjs);
+            if (dataUserJS) {
+              const code_obj = await dataUserJS._mujs.code.request(false, target.dataset.code_url);
+              if (typeof code_obj.code === 'string')
+                doDownloadProcess({
+                  url: 'data:text/plain;charset=utf-8,' + encodeURIComponent(code_obj.code),
+                  filename: `${dataUserJS.name}${isUserCSS(target.dataset.code_url) ? '.user.css' : '.user.js'}`
+                });
             }
-          });
-          dlBtn.href = installCode;
-          dlBtn.click();
+          }
+          pElem.remove();
+          return;
+        }
+        if (cmd === 'install-script') {
+          const dataUserJS = container.userjsCache.get(+dataset.userjs);
+          if (isNull(dataUserJS)) {
+            return;
+          }
+          if (dataUserJS.code_urls.length > 1) {
+            const list = make('mujs-list', {
+              style: 'display: flex; flex-direction: column;'
+            });
+            for (const ujs of dataUserJS.code_urls) {
+              const a = make('mujs-a', {
+                title: ujs.code_url,
+                textContent: ujs.name,
+                dataset: {
+                  command: 'prompt-install',
+                  code_url: ujs.code_url
+                }
+              });
+              list.append(a);
+            }
+            container.makePrompt(`Multiple detected: ${list.outerHTML}`, dataset, false);
+          } else {
+            const a = make('a', {
+              onclick(evt) {
+                evt.preventDefault();
+                doInstallProcess(evt.target);
+              }
+            });
+            a.href = dataUserJS.code_url;
+            a.click();
+          }
         } else if (cmd === 'open-tab' && dataset.webpage) {
           if (isGM) {
             if (isFN(GM.openInTab)) {
@@ -1974,18 +1972,15 @@ function primaryFN() {
           }
           return window.open(dataset.webpage, '_blank');
         } else if (cmd === 'navigation') {
-          for (const e of qsA('mujs-btn', target.parentElement)) {
-            if (dom.cl.has(e, 'nav')) continue;
-            if (dom.cl.has(e, 'hidden')) {
-              dom.cl.remove(e, 'hidden');
-            } else {
-              dom.cl.add(e, 'hidden');
-            }
+          for (const e of normalizeTarget(qsA('mujs-btn', target.parentElement)).filter(
+            (e) => !dom.cl.has(e, 'nav')
+          )) {
+            dom.cl.toggle(e, 'hidden');
           }
         } else if (cmd === 'list-description') {
           const arr = [];
           const ignoreTags = new Set(['TD', 'MUJS-A', 'MU-JS']);
-          for (const node of target.parentElement.childNodes) {
+          for (const node of Object.values(target.parentElement._mujs)) {
             if (ignoreTags.has(node.tagName)) {
               continue;
             }
@@ -2007,8 +2002,6 @@ function primaryFN() {
           }
         } else if (cmd === 'close') {
           container.remove();
-        } else if (cmd === 'show-filter') {
-          dom.cl.toggle(fsearch, 'hidden');
         } else if (cmd === 'fullscreen') {
           if (dom.cl.has(btnfullscreen, 'expanded')) {
             dom.cl.remove([btnfullscreen, main], 'expanded');
@@ -2020,14 +2013,13 @@ function primaryFN() {
         } else if (cmd === 'hide-list') {
           dom.cl.add(main, 'hidden');
           dom.cl.remove(mainframe, 'hidden');
-          timeoutFrame();
+          container.timeoutFrame();
         } else if (cmd === 'save') {
           container.rebuild = true;
           dom.prop(rateContainer, 'innerHTML', '');
           if (!dom.prop(target, 'disabled')) {
             const config = await container.save();
             if (container.rebuild) {
-              container.cache.clear();
               if (config.autofetch) {
                 respHandles.build();
               }
@@ -2037,53 +2029,53 @@ function primaryFN() {
           }
         } else if (cmd === 'reset') {
           cfg = DEFAULT_CONFIG;
-          dom.cl.remove(mainframe, 'error');
-          if (qs('.error', footer)) {
-            for (const elem of qsA('.error', footer)) {
-              elem.remove();
-            }
-          }
+          dom.remove(qsA('.error', footer));
           container.unsaved = true;
           container.rebuild = true;
-          rebuildCfg();
+          reloadCfg();
         } else if (cmd === 'settings') {
           if (container.unsaved) {
             showError('Unsaved changes');
           }
-          tab.create('mujs:settings');
+          Tabs.create('mujs:settings');
           container.rebuild = false;
         } else if (cmd === 'new-tab') {
-          tab.create();
+          Tabs.create();
         } else if (cmd === 'switch-tab') {
-          tab.active(target);
+          Tabs.active(target);
         } else if (cmd === 'close-tab' && target.parentElement) {
-          tab.close(target.parentElement);
+          Tabs.close(target.parentElement);
         } else if (cmd === 'download-userjs') {
-          if (!container.userjsCache.has(+dataset.userjs)) {
-            return;
-          }
           const dataUserJS = container.userjsCache.get(+dataset.userjs);
-          let installCode = dataUserJS.code_url;
-          if (!prmpt && dataUserJS.code_url.endsWith('.user.css')) {
-            container.makePrompt('Download as UserStyle?', dataset);
-            return;
-          } else if (prmpt !== prmptChoice) {
-            installCode = dataUserJS.code_url.replace(/\.user\.css$/, '.user.js');
-          }
-          const r = await dataUserJS._mujs.code.request(false, installCode);
-          const txt = r.data;
-          if (typeof txt !== 'string') {
+          if (isNull(dataUserJS)) {
             return;
           }
-          const userjsName = dataset.userjsName ?? dataset.userjs;
-          const userjsExt = prmpt !== prmptChoice ? '.user.js' : '.user.css';
-          const makeUserJS = new Blob([txt], { type: 'text/plain' });
-          const dlBtn = make('a', 'mujs_Downloader');
-          dlBtn.href = URL.createObjectURL(makeUserJS);
-          dlBtn.download = `${userjsName}${userjsExt}`;
-          dlBtn.click();
-          URL.revokeObjectURL(dlBtn.href);
-          dlBtn.remove();
+
+          if (dataUserJS.code_urls.length > 1) {
+            const list = make('mujs-list', {
+              style: 'display: flex; flex-direction: column;'
+            });
+            for (const ujs of dataUserJS.code_urls) {
+              const a = make('mujs-a', {
+                title: ujs.code_url,
+                textContent: ujs.name,
+                dataset: {
+                  command: 'prompt-download',
+                  code_url: ujs.code_url,
+                  userjs: dataset.userjs
+                }
+              });
+              list.append(a);
+            }
+            container.makePrompt(`Multiple detected: ${list.outerHTML}`, dataset, false);
+          } else {
+            const code_obj = await dataUserJS._mujs.code.request(false);
+            if (typeof code_obj.code === 'string')
+              doDownloadProcess({
+                url: 'data:text/plain;charset=utf-8,' + encodeURIComponent(code_obj.code),
+                filename: `${dataUserJS.name}${isUserCSS(dataUserJS.code_url) ? '.user.css' : '.user.js'}`
+              });
+          }
         } else if (cmd === 'load-userjs' || cmd === 'load-header') {
           if (!container.userjsCache.has(+dataset.userjs)) {
             return;
@@ -2194,15 +2186,13 @@ function primaryFN() {
           }
           dom.cl.remove(pageArea, 'hidden');
         } else if (/export-/.test(cmd)) {
-          const str = JSON.stringify(cmd === 'export-cfg' ? cfg : cfg.theme, null, ' ');
-          const bytes = new TextEncoder().encode(str);
-          const blob = new Blob([bytes], { type: 'application/json;charset=utf-8' });
-          const dlBtn = make('a', 'mujs-exporter', {
-            href: URL.createObjectURL(blob),
-            download: `Magic_Userscript_${cmd === 'export-cfg' ? 'config' : 'theme'}.json`
+          const toCfg = cmd === 'export-cfg';
+          doDownloadProcess({
+            url:
+              'data:text/plain;charset=utf-8,' +
+              encodeURIComponent(JSON.stringify(toCfg ? cfg : cfg.theme, null, ' ')),
+            filename: `Magic_Userscript_${toCfg ? 'config' : 'theme'}.json`
           });
-          dlBtn.click();
-          URL.revokeObjectURL(dlBtn.href);
         } else if (/import-/.test(cmd)) {
           if (qs('input', target.parentElement)) {
             qs('input', target.parentElement).click();
@@ -2212,42 +2202,35 @@ function primaryFN() {
             type: 'file',
             accept: '.json',
             onchange(evt) {
-              try {
-                [...evt.target.files].forEach((file) => {
-                  const reader = new FileReader();
-                  reader.readAsText(file);
-                  reader.onload = () => {
-                    const result = JSON.parse(reader.result);
-                    if (result.blacklist) {
-                      log(`Imported config: { ${file.name} }`, result);
-                      cfg = result;
-                      container.unsaved = true;
-                      container.rebuild = true;
-                      rebuildCfg();
-                      container.save().then((config) => {
-                        container.cache.clear();
-                        if (config.autofetch) {
-                          respHandles.build();
-                        }
-                        container.unsaved = false;
-                        container.rebuild = false;
-                      });
-                    } else {
-                      log(`Imported theme: { ${file.name} }`, result);
-                      cfg.theme = result;
-                      container.renderTheme(cfg.theme);
-                    }
-                    inpJSON.remove();
-                  };
-                  reader.onerror = () => {
-                    showError(reader.error);
-                    inpJSON.remove();
-                  };
-                });
-              } catch (ex) {
-                showError(ex);
-                inpJSON.remove();
+              const file = evt.target.files[0];
+              if (file === undefined || file.name === '') {
+                return;
               }
+              const fr = new FileReader();
+              fr.onload = function () {
+                if (typeof fr.result !== 'string') {
+                  return;
+                }
+                const content = JSON.parse(fr.result);
+                if (content.blacklist) {
+                  cfg = content;
+                  container.unsaved = true;
+                  container.rebuild = true;
+                  reloadCfg();
+                  container.save().then((config) => {
+                    if (config.autofetch) {
+                      respHandles.build();
+                    }
+                    container.unsaved = false;
+                    container.rebuild = false;
+                  });
+                } else {
+                  cfg.theme = content;
+                  container.setTheme();
+                }
+                inpJSON.remove();
+              };
+              fr.readAsText(file);
             }
           });
           target.parentElement.append(inpJSON);
@@ -2269,9 +2252,9 @@ function primaryFN() {
       const dataset = target.dataset;
       const cmd = dataset.command;
       if (cmd === 'switch-tab' || cmd === 'close-tab') {
-        tab.close(target);
+        Tabs.close(target);
       } else if (cmd === 'new-tab') {
-        tab.create();
+        Tabs.create();
       }
     });
     if (!isMobile) {
@@ -2293,12 +2276,20 @@ function primaryFN() {
         });
       }
     }
-    ael(main, 'updateditem', (evt) => {
-      /**
-       * @type {import("../typings/types.d.ts").GSForkQuery}
-       */
+    /**
+     * @param {CustomEvent<import("../typings/types.d.ts").GSForkQuery>} evt
+     */
+    const updatedItem = (evt) => {
       const ujs = evt.detail;
       if (!ujs._mujs) return;
+      if (ujs.deleted === true) {
+        ujs._mujs.root.remove();
+        container.userjsCache.delete(ujs.id);
+        Counter.reset();
+        MUList.sortRecords();
+        return;
+      }
+      if (!isEmpty(ujs.code_urls)) ujs.code_url = ujs.code_urls[0].code_url;
       for (const elem of qsA('[data-name]', ujs._mujs.root)) {
         const name = elem.dataset.name;
         if (name === 'code') {
@@ -2335,7 +2326,8 @@ function primaryFN() {
         }
       }
       if (container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
-    });
+    };
+    ael(main, 'updateditem', updatedItem);
     // #endregion
     const TLD_EXPANSION = ['com', 'net', 'org', 'de', 'co.uk'];
     const APPLIES_TO_ALL_PATTERNS = [
@@ -2371,29 +2363,32 @@ function primaryFN() {
        * @type { {text: string;domain: boolean;tld_extra: boolean}[] }
        */
       data_names;
-      constructor(code, isUserCSS) {
-        this.code = code;
-        this.META_START_COMMENT = isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
-        this.META_END_COMMENT = isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
-        this.get_meta_block();
-        this.get_code_block();
-        this.parse_meta();
-        this.calculate_applies_to_names();
+      constructor(code, isCSS) {
+        this.isUserCSS = isCSS === true;
+        this.META_START_COMMENT = this.isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
+        this.META_END_COMMENT = this.isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
+        if (code) {
+          this.code = code;
+          this.get_meta_block();
+          this.get_code_block();
+          this.parse_meta();
+          this.calculate_applies_to_names();
+        }
       }
       get_meta_block() {
         if (isEmpty(this.code)) {
-          return null;
+          return '';
         }
         if (this.data_meta_block) {
           return this.data_meta_block;
         }
         const start_block = this.code.indexOf(this.META_START_COMMENT);
         if (isNull(start_block)) {
-          return null;
+          return '';
         }
         const end_block = this.code.indexOf(this.META_END_COMMENT, start_block);
         if (isNull(end_block)) {
-          return null;
+          return '';
         }
         const meta_block = this.code.substring(
           start_block + this.META_START_COMMENT.length,
@@ -2404,7 +2399,7 @@ function primaryFN() {
       }
       get_code_block() {
         if (isEmpty(this.code)) {
-          return null;
+          return '';
         }
         if (this.data_code_block) {
           return this.data_code_block;
@@ -2421,31 +2416,24 @@ function primaryFN() {
           end_block + this.META_END_COMMENT.length,
           this.code.length
         );
-        this.data_code_block = code_block
-          .split('\n')
-          .filter((l) => !isEmpty(l))
-          .join('\n');
+        this.data_code_block = code_block.split('\n').filter(Boolean).join('\n');
         return this.data_code_block;
       }
       parse_meta() {
         if (isEmpty(this.code)) {
-          return null;
+          return {};
         }
         if (this.data_meta) {
           return this.data_meta;
         }
         const meta = {};
         const meta_block_map = new Map();
-        for (const meta_line of this.get_meta_block().split('\n')) {
+        for (const meta_line of this.get_meta_block().split('\n').filter(Boolean)) {
           const meta_match = /\/\/\s+@([a-zA-Z:-]+)\s+(.*)/.exec(meta_line);
-          if (!meta_match) {
-            continue;
-          }
+          if (!meta_match) continue;
           const key = meta_match[1].trim();
           const value = meta_match[2].trim();
-          if (!meta_block_map.has(key)) {
-            meta_block_map.set(key, []);
-          }
+          if (!meta_block_map.has(key)) meta_block_map.set(key, []);
           const meta_map = meta_block_map.get(key);
           meta_map.push(value);
           meta_block_map.set(key, meta_map);
@@ -2462,7 +2450,7 @@ function primaryFN() {
       }
       calculate_applies_to_names() {
         if (isEmpty(this.code)) {
-          return null;
+          return [];
         }
         if (this.data_names) {
           return this.data_names;
@@ -2490,6 +2478,13 @@ function primaryFN() {
           ];
           return this.data_names;
         }
+        this.data_names = ParseUserJS.getNames(patterns);
+        return this.data_names;
+      }
+      intersect(a, ...arr) {
+        return !isBlank([...new Set(a)].filter((v) => arr.every((b) => b.includes(v))));
+      }
+      static getNames(patterns = []) {
         const name_map = new Map();
         const addObj = (obj) => {
           if (name_map.has(obj.text)) {
@@ -2498,89 +2493,146 @@ function primaryFN() {
           name_map.set(obj.text, obj);
         };
         for (let p of patterns) {
-          try {
-            const original_pattern = p;
-            let pre_wildcards = [];
-            if (p.match(/^\/(.*)\/$/)) {
-              pre_wildcards = [p];
-            } else {
-              let m = /^\*(https?:.*)/i.exec(p);
-              if (m) {
-                p = m[1];
-              }
-              p = p
-                .replace(/^\*:/i, 'http:')
-                .replace(/^\*\/\//i, 'http://')
-                .replace(/^http\*:/i, 'http:')
-                .replace(/^(https?):([^/])/i, '$1://$2');
-              m = /^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i.exec(p);
-              if (m) {
-                p = m[1] + m[2];
-              }
-              m = /^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i.exec(p);
-              if (m) {
-                p = `http://${m[1]}`;
-              }
-              m = /^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i.exec(p);
-              if (m) {
-                p = `http://${m[1]}`;
-              }
-              m = /^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/.exec(p);
-              if (m) {
-                if (m[2].match(/A([0-9]+\.){2,}z/)) {
-                  p = `${m[1]}tld${m[3]}`;
-                  pre_wildcards = [p.split('*')[0]];
-                } else {
-                  pre_wildcards = [p];
-                }
+          const original_pattern = p;
+          let pre_wildcards = [];
+          if (p.match(/^\/(.*)\/$/)) {
+            pre_wildcards = [p];
+          } else {
+            let m = /^\*(https?:.*)/i.exec(p);
+            if (m) {
+              p = m[1];
+            }
+            p = p
+              .replace(/^\*:/i, 'http:')
+              .replace(/^\*\/\//i, 'http://')
+              .replace(/^http\*:/i, 'http:')
+              .replace(/^(https?):([^/])/i, '$1://$2');
+            m = /^([a-z]+:\/\/)\*\.?([a-z0-9-]+(?:.[a-z0-9-]+)+.*)/i.exec(p);
+            if (m) {
+              p = m[1] + m[2];
+            }
+            m = /^\*\.?([a-z0-9-]+\.[a-z0-9-]+.*)/i.exec(p);
+            if (m) {
+              p = `http://${m[1]}`;
+            }
+            m = /^http\*(?:\/\/)?\.?((?:[a-z0-9-]+)(?:\.[a-z0-9-]+)+.*)/i.exec(p);
+            if (m) {
+              p = `http://${m[1]}`;
+            }
+            m = /^([a-z]+:\/\/([a-z0-9-]+(?:\.[a-z0-9-]+)*\.))\*(.*)/.exec(p);
+            if (m) {
+              if (m[2].match(/A([0-9]+\.){2,}z/)) {
+                p = `${m[1]}tld${m[3]}`;
+                pre_wildcards = [p.split('*')[0]];
               } else {
                 pre_wildcards = [p];
               }
+            } else {
+              pre_wildcards = [p];
             }
-            for (const pre_wildcard of pre_wildcards) {
-              try {
-                const urlObj = new URL(pre_wildcard);
-                const { host } = urlObj;
-                if (isNull(host)) {
-                  addObj({ text: original_pattern, domain: false, tld_extra: false });
-                } else if (!host.includes('.') && host.includes('*')) {
-                  addObj({ text: original_pattern, domain: false, tld_extra: false });
-                } else if (host.endsWith('.tld')) {
-                  for (let i = 0; i < TLD_EXPANSION.length; i++) {
-                    const tld = TLD_EXPANSION[i];
-                    addObj({
-                      text: host.replace(/tld$/i, tld),
-                      domain: true,
-                      tld_extra: i != 0
-                    });
-                  }
-                } else if (host.endsWith('.')) {
+          }
+          for (const pre_wildcard of pre_wildcards) {
+            try {
+              const urlObj = new URL(pre_wildcard);
+              const { host } = urlObj;
+              if (isNull(host)) {
+                addObj({ text: original_pattern, domain: false, tld_extra: false });
+              } else if (!host.includes('.') && host.includes('*')) {
+                addObj({ text: original_pattern, domain: false, tld_extra: false });
+              } else if (host.endsWith('.tld')) {
+                for (let i = 0; i < TLD_EXPANSION.length; i++) {
+                  const tld = TLD_EXPANSION[i];
                   addObj({
-                    text: host.slice(0, -1),
+                    text: host.replace(/tld$/i, tld),
                     domain: true,
-                    tld_extra: false
-                  });
-                } else {
-                  addObj({
-                    text: host,
-                    domain: true,
-                    tld_extra: false
+                    tld_extra: i != 0
                   });
                 }
-                // eslint-disable-next-line no-unused-vars
-              } catch (ex) {
-                addObj({ text: original_pattern, domain: false, tld_extra: false });
+              } else if (host.endsWith('.')) {
+                addObj({
+                  text: host.slice(0, -1),
+                  domain: true,
+                  tld_extra: false
+                });
+              } else {
+                addObj({
+                  text: host,
+                  domain: true,
+                  tld_extra: false
+                });
               }
+            } catch {
+              addObj({ text: original_pattern, domain: false, tld_extra: false });
             }
-          } catch (ex) {
-            err(ex);
           }
         }
-        this.data_names = [...name_map.values()];
-        return this.data_names;
+        return [...name_map.values()];
       }
-      intersect(a, ...arr) {
-        return !isBlank([...new Set(a)].filter((v) => arr.every((b) => b.includes(v))));
+      /**
+       * @template {import("../typings/types.d.ts").GSForkQuery} O
+       * @param {boolean} translate
+       * @param {O["code_url"]} code_url
+       * @param {O} [obj]
+       */
+      async request(translate = false, code_url, obj) {
+        if (this.data_code_block) {
+          return this;
+        }
+        /** @type { string } */
+        const code = await Network.req(code_url, 'GET', 'text').catch(err);
+        if (typeof code !== 'string') {
+          return this;
+        }
+        this.isUserCSS = isUserCSS(code_url);
+        this.META_START_COMMENT = this.isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
+        this.META_END_COMMENT = this.isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
+        this.code = code;
+        this.get_meta_block();
+        this.get_code_block();
+        this.parse_meta();
+        this.calculate_applies_to_names();
+
+        const { data_meta } = this;
+        if (translate) {
+          if (data_meta[`name:${language.current}`]) {
+            Object.assign(obj, {
+              name: data_meta[`name:${language.current}`]
+            });
+            this.translated = true;
+          }
+          if (data_meta[`description:${language.current}`]) {
+            Object.assign(obj, {
+              description: data_meta[`description:${language.current}`]
+            });
+            this.translated = true;
+          }
+        }
+        if (Array.isArray(data_meta.grant)) {
+          data_meta.grant = union(data_meta.grant);
+        }
+        if (data_meta.resource) {
+          const obj = {};
+          if (typeof data_meta.resource === 'string') {
+            const reg = /(.+)\s+(.+)/.exec(data_meta.resource);
+            if (reg) {
+              obj[reg[1].trim()] = reg[2];
+            }
+          } else {
+            for (const r of data_meta.resource) {
+              const reg = /(.+)\s+(http.+)/.exec(r);
+              if (reg) {
+                obj[reg[1].trim()] = reg[2];
+              }
+            }
+          }
+          data_meta.resource = obj;
+        }
+        Object.assign(this, {
+          code_size: [Network.format(code.length)],
+          meta: data_meta
+        });
+
+        return this;
       }
     }
     const template = {
@@ -2602,9 +2654,7 @@ function primaryFN() {
       users: []
     };
     const mkList = (txt = '', obj = {}) => {
-      if (!obj.root || !obj.type) {
-        return;
-      }
+      if (!obj.root || !obj.type) return;
       const { root, type } = obj;
       const appliesTo = make('mu-js', 'mujs-list', {
         textContent: `${txt}: `
@@ -2668,34 +2718,19 @@ function primaryFN() {
         }
       }
     };
-    /**
-     * @param {number} [time]
-     */
-    const timeoutFrame = async (time) => {
-      frameTimeout.clear(...frameTimeout.ids);
-      if (dom.cl.has(mainframe, 'hidden')) {
-        return;
-      }
-      time = time ?? cfg.time ?? DEFAULT_CONFIG.time;
-      let n = 10000;
-      if (typeof time === 'number' && !Number.isNaN(time)) {
-        n = container.isBlacklisted ? time / 2 : time;
-      }
-      await frameTimeout.set(n);
-      container.remove();
-      return frameTimeout.clear(...frameTimeout.ids);
-    };
     // #region Create UserJS
     /**
      * @param { import("../typings/types.d.ts").GSForkQuery } ujs
      * @param { string } engine
      */
     const createjs = (ujs, engine) => {
-      // Lets not add this UserJS to the list
-      if (ujs.id === 421603) {
-        return;
-      }
-      if (badUserJS.includes(ujs.id) || badUserJS.includes(ujs.url)) {
+      const a = [
+        ujs.deleted === true,
+        ujs.id === 421603, // Lets not add this UserJS to the list
+        badUserJS.includes(ujs.id),
+        badUserJS.includes(ujs.url)
+      ].some((t) => t === true);
+      if (a) {
         return;
       }
       if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
@@ -2795,7 +2830,7 @@ function primaryFN() {
         title: `${i18n$('install')} "${ujs.name}"`,
         dataset: {
           command: 'install-script',
-          userjs: ujs.code_url
+          userjs: ujs.id
         }
       });
       const scriptDownload = make('mu-jsbtn', {
@@ -2821,14 +2856,14 @@ function primaryFN() {
         wrap: 'soft'
       });
       const loadCode = make('mu-jsbtn', {
-        innerHTML: `${iconSVG.load('code')} ${i18n$('preview_code')}`,
+        innerHTML: `${iconSVG.load('code')} ${i18n$('code')}`,
         dataset: {
           command: 'load-userjs',
           userjs: ujs.id
         }
       });
       const loadMetadata = make('mu-jsbtn', {
-        innerHTML: `${iconSVG.load('code')} Metadata`,
+        innerHTML: `${iconSVG.load('code')} ${i18n$('metadata')}`,
         dataset: {
           command: 'load-header',
           userjs: ujs.id
@@ -2847,7 +2882,10 @@ function primaryFN() {
             webpage: u.url
           }
         });
-        if (cfg.recommend.author && u.id === authorID) {
+        if (
+          cfg.recommend.author &&
+          (u.id === authorID || u.url === 'https://github.com/magicoflolis')
+        ) {
           tr.dataset.author = 'upsell';
           dom.prop(user, 'innerHTML', `${u.name} ${iconSVG.load('verified')}`);
         }
@@ -2895,6 +2933,7 @@ function primaryFN() {
       fmore.append(jsInfo, jsInfoB);
       fBtns.append(scriptDownload, loadCode, loadMetadata);
       fname.append(ftitle, fdesc, fmore, fBtns, codeArea);
+      fname._mujs = { fmore, fBtns, codeArea };
 
       const loadPage = make('mu-jsbtn', {
         innerHTML: `${iconSVG.load('pager')} Page`,
@@ -2961,17 +3000,32 @@ function primaryFN() {
     };
     // #region List
     class List {
-      engines;
+      intEngines;
       intHost;
       constructor(hostname = undefined) {
         this.build = this.build.bind(this);
-        this.toArr = this.toArr.bind(this);
         this.groupBy = this.groupBy.bind(this);
         this.dispatch = this.dispatch.bind(this);
         this.sortRecords = this.sortRecords.bind(this);
-        if (isEmpty(hostname)) hostname = container.host;
-        this.engines = cfg.engines;
+        this.container = container;
+        this.intEngines = cfg.engines ?? [];
         this.host = hostname;
+      }
+
+      setEngines(engines = []) {
+        const { host } = this;
+        return engines.filter((e) => {
+          if (!e.enabled) {
+            return false;
+          }
+          const v = engineUnsupported[e.name] ?? [];
+          if (v.includes(host)) {
+            showError(`Engine: "${e.name}" unsupported on "${host}"`);
+            container.timeoutFrame();
+            return false;
+          }
+          return true;
+        });
       }
 
       dispatch(ujs) {
@@ -2980,45 +3034,46 @@ function primaryFN() {
         main.dispatchEvent(customEvent);
       }
 
-      set host(hostname) {
-        this.intHost = hostname;
+      set engines(engines) {
+        this.intEngines = this.setEngines(engines);
+      }
 
-        if (!container.cache.has(hostname)) {
-          const engineTemplate = {};
-          for (const engine of cfg.engines) {
-            engineTemplate[engine.name] = [];
-          }
-          container.cache.set(hostname, engineTemplate);
-        }
-        this.blacklisted = container.checkBlacklist(hostname);
+      get engines() {
+        return this.intEngines;
+      }
+
+      set host(hostname) {
+        if (isEmpty(hostname)) hostname = this.container.host;
+        this.intHost = hostname;
+        this.blacklisted = this.container.checkBlacklist(hostname);
+        this.intEngines = this.setEngines(this.engines);
+        this.domain = this.getDomain(this.intHost);
         if (this.blacklisted) {
           showError(`Blacklisted "${hostname}"`);
-          timeoutFrame();
+          this.container.timeoutFrame();
         }
-
-        this.engines = cfg.engines.filter((e) => {
-          if (!e.enabled) {
-            return false;
-          }
-          const v = engineUnsupported[e.name] ?? [];
-          if (v.includes(hostname)) {
-            showError(`Engine: "${e.name}" unsupported on "${hostname}"`);
-            timeoutFrame();
-            return false;
-          }
-          return true;
-        });
       }
 
       get host() {
         return this.intHost;
       }
 
+      /**
+       * @template { string } S
+       * @param { S } str
+       */
+      getDomain(str = '') {
+        if (str === '*') {
+          return 'all-sites';
+        }
+        return str.split('.').at(-2) ?? BLANK_PAGE;
+      }
+
       // #region Builder
       build() {
         try {
           container.refresh();
-          const { blacklisted, engines, host, toArr, dispatch } = this;
+          const { blacklisted, engines, host, domain, dispatch } = this;
           if (blacklisted || isEmpty(engines)) {
             container.opacityMin = '0';
             mainframe.style.opacity = container.opacityMin;
@@ -3026,11 +3081,16 @@ function primaryFN() {
           }
           const fetchRecords = [];
           const bsFilter = loadFilters();
-          const hostCache = toArr();
+          const hostCache = Array.from(this);
 
-          info('Building list', { hostCache, engines });
+          info('Building list', { hostCache, engines, container, list: this });
 
-          if (isBlank(hostCache)) {
+          const g = this.groupBy();
+          const toFetch = engines.filter((engine) => !g[engine.name]);
+          const isCached = toFetch.filter((engine) =>
+            hostCache.find(({ _mujs }) => engine.name === _mujs.info.engine.name)
+          );
+          if (!isBlank(toFetch) && isBlank(isCached)) {
             for (const engine of engines) {
               info(`Fetching from "${engine.name}" for "${host}"`);
               const respError = (error) => {
@@ -3042,9 +3102,13 @@ function primaryFN() {
                 showError(`Engine: "${engine.name}"`, error.message);
               };
               const _mujs = (d) => {
-                const obj = {
+                /**
+                 * @type {import("../typings/types.d.ts").GSForkQuery}
+                 */
+                const ujs = {
                   ...template,
                   ...d,
+                  code_urls: [],
                   _mujs: {
                     root: {},
                     info: {
@@ -3052,67 +3116,23 @@ function primaryFN() {
                       host
                     },
                     code: {
-                      meta: {},
-                      request: async function (translate = false, code_url) {
-                        if (this.data_code_block) {
-                          return this;
-                        }
-                        code_url = code_url ?? d.code_url;
-                        /** @type { string } */
-                        const code = await Network.req(code_url, 'GET', 'text').catch(showError);
-                        if (typeof code !== 'string') {
-                          return this;
-                        }
-                        const code_obj = new ParseUserJS(code, /\.user\.css/.test(code_url));
-                        const { data_meta } = code_obj;
-                        if (translate) {
-                          for (const k of userjs.pool.keys()) {
-                            if (data_meta[`name:${k}`]) {
-                              Object.assign(obj, {
-                                name: data_meta[`name:${k}`]
-                              });
-                              this.translated = true;
-                            }
-                            if (data_meta[`description:${k}`]) {
-                              Object.assign(obj, {
-                                description: data_meta[`description:${k}`]
-                              });
-                              this.translated = true;
-                            }
-                          }
-                        }
-                        if (Array.isArray(data_meta.grant)) {
-                          data_meta.grant = union(data_meta.grant);
-                        }
-                        if (data_meta.resource) {
-                          const obj = {};
-                          if (typeof data_meta.resource === 'string') {
-                            const reg = /(.+)\s+(.+)/.exec(data_meta.resource);
-                            if (reg) {
-                              obj[reg[1].trim()] = reg[2];
-                            }
-                          } else {
-                            for (const r of data_meta.resource) {
-                              const reg = /(.+)\s+(http.+)/.exec(r);
-                              if (reg) {
-                                obj[reg[1].trim()] = reg[2];
-                              }
-                            }
-                          }
-                          data_meta.resource = obj;
-                        }
-                        Object.assign(this, {
-                          code_size: [Network.format(code.length)],
-                          meta: data_meta,
-                          ...code_obj
-                        });
-
-                        return this;
-                      }
+                      meta: {}
                     }
                   }
                 };
-                return obj;
+                ujs._mujs.code.request = async (translate = false, code_url) => {
+                  if (typeof ujs._mujs.code.data_code_block === 'string') {
+                    return ujs._mujs.code;
+                  }
+                  const p = new ParseUserJS();
+                  await p.request(translate, code_url ?? ujs.code_url, ujs);
+                  if (code_url) {
+                    return p;
+                  }
+                  for (const [k, v] of Object.entries(p)) ujs._mujs.code[k] = v;
+                  return ujs._mujs.code;
+                };
+                return ujs;
               };
               /**
                * Prior to UserScript v7.0.0
@@ -3122,7 +3142,9 @@ function primaryFN() {
                */
               const toQuery = (fallback) => {
                 if (engine.query) {
-                  return decodeURIComponent(engine.query).replace(/\{host\}/g, host);
+                  return decode(engine.query)
+                    .replace(/\{host\}/g, host)
+                    .replace(/\{domain\}/g, domain);
                 }
                 return fallback;
               };
@@ -3134,9 +3156,6 @@ function primaryFN() {
                   showError('Invalid data received from the server, check internet connection');
                   return;
                 }
-                /**
-                 * @type { import("../typings/types.d.ts").GSForkQuery[] }
-                 */
                 const dq = Array.isArray(dataQ)
                   ? dataQ
                   : Array.isArray(dataQ.query)
@@ -3149,45 +3168,41 @@ function primaryFN() {
                 if (isBlank(dataA)) {
                   return;
                 }
-                const data = dataA.map(_mujs);
-                const otherLng = [];
+                const { groupBy } = safeSelf();
                 /**
-                 * @param {import("../typings/types.d.ts").GSForkQuery} d
-                 * @returns {boolean}
+                 * @type { {[key: string]: import("../typings/types.d.ts").GSForkQuery[]} }
                  */
-                const inUserLanguage = (d) => {
-                  if (userjs.pool.has(d.locale.split('-')[0] ?? d.locale)) {
-                    return true;
-                  }
-                  otherLng.push(d);
-                  return false;
-                };
-                const filterLang = data.filter((d) => {
-                  if (cfg.filterlang && !inUserLanguage(d)) {
-                    return false;
-                  }
-                  return true;
+                const g = groupBy(dataA.map(_mujs), ({ locale }) => {
+                  return locale.split('-')[0] ?? locale;
                 });
-                let finalList = filterLang;
-                const hds = [];
-                for (const ujs of otherLng) {
-                  const c = await ujs._mujs.code.request(true);
-                  if (c.translated) {
-                    hds.push(ujs);
+                for (const [k, list] of Object.entries(g)) {
+                  for (const ujs of list) {
+                    if (cfg.filterlang && k !== language.current) {
+                      const c = await ujs._mujs.code.request(true);
+                      if (!c.translated) continue;
+                    }
+                    if (
+                      !ujs._mujs.code.data_code_block &&
+                      (cfg.preview.code || cfg.preview.metadata)
+                    ) {
+                      ujs._mujs.code.request().then(() => {
+                        dispatch(ujs);
+                      });
+                    }
+                    if (isUserCSS(ujs.code_url)) {
+                      ujs.code_urls.push(
+                        {
+                          name: `${ujs.name} (.user.css)`,
+                          code_url: ujs.code_url
+                        },
+                        {
+                          name: `${ujs.name} (.user.js)`,
+                          code_url: ujs.code_url.replace(/\.user\.css$/, '.user.js')
+                        }
+                      );
+                    }
+                    createjs(ujs, engine.name);
                   }
-                }
-                finalList = union(hds, filterLang);
-
-                for (const ujs of finalList) {
-                  if (
-                    !ujs._mujs.code.data_code_block &&
-                    (cfg.preview.code || cfg.preview.metadata)
-                  ) {
-                    ujs._mujs.code.request().then(() => {
-                      dispatch(ujs);
-                    });
-                  }
-                  createjs(ujs, engine.name);
                 }
               };
               /**
@@ -3249,51 +3264,69 @@ function primaryFN() {
               const gitFN = (data) => {
                 try {
                   if (isBlank(data.items)) {
-                    showError('Invalid data received from the server, TODO fix this');
                     return;
                   }
                   for (const r of data.items) {
                     const ujs = _mujs({
-                      id: r.repository.id ?? r.id ?? 0,
-                      name: r.repository.name ?? r.name,
-                      description: isEmpty(r.repository.description)
-                        ? i18n$('no_license')
-                        : r.repository.description,
-                      url: r.repository.html_url,
-                      code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
-                      page_url: `${r.repository.url}/contents/README.md`,
+                      id: r.id ?? 0,
+                      name: r.name,
+                      description: isEmpty(r.description) ? i18n$('no_license') : r.description,
+                      url: r.html_url,
+                      code_url: r.html_url,
+                      page_url: `${r.url}/contents/README.md`,
+                      created_at: r.created_at,
+                      code_updated_at: r.updated_at || Date.now(),
+                      daily_installs: r.watchers_count ?? 0,
+                      good_ratings: r.stargazers_count ?? 0,
                       users: [
                         {
-                          name: r.repository.owner.login,
-                          url: r.repository.owner.html_url
+                          name: r.owner.login,
+                          url: r.owner.html_url
                         }
                       ]
                     });
-                    // if (bsFilter.match(ujs)) {
-                    //   continue;
-                    // }
-                    Network.req(r.repository.url, 'GET', 'json', {
-                      headers: {
-                        Accept: 'application/vnd.github+json',
-                        Authorization: `Bearer ${engine.token}`,
-                        'X-GitHub-Api-Version': '2022-11-28'
+                    if (r.license?.name) ujs.license = r.license.name;
+                    const rootPath = r.contents_url.replace(/\{\+path\}/, '');
+                    const fetchContent = async (dir) => {
+                      const contents = await Network.req(dir, 'GET', 'json', {
+                        headers: {
+                          Accept: 'application/vnd.github+json',
+                          Authorization: `Bearer ${engine.token}`,
+                          'X-GitHub-Api-Version': '2022-11-28'
+                        }
+                      }).catch(respError);
+                      for (const content of contents) {
+                        if (content.type === 'file') {
+                          if (isUserJS(content.name)) {
+                            ujs.code_urls.push({
+                              name: content.name,
+                              code_url: content.download_url
+                            });
+                          } else if (isUserCSS(content.name)) {
+                            ujs.code_urls.push({
+                              name: content.name,
+                              code_url: content.download_url
+                            });
+                          }
+                        } else if (content.type === 'dir') {
+                          await fetchContent(`${rootPath}/${content.path}`);
+                        }
                       }
-                    }).then((repository) => {
-                      ujs.code_updated_at = r.commit || repository.updated_at || Date.now();
-                      ujs.created_at = repository.created_at;
-                      ujs.daily_installs = repository.watchers_count ?? 0;
-                      ujs.good_ratings = repository.stargazers_count ?? 0;
-                      if (repository.license?.name) ujs.license = repository.license.name;
+                    };
+                    fetchContent(rootPath).then(() => {
+                      if (isEmpty(ujs.code_urls)) {
+                        ujs.deleted = true;
+                      } else if (
+                        !ujs._mujs.code.data_code_block &&
+                        (cfg.preview.code || cfg.preview.metadata)
+                      ) {
+                        ujs._mujs.code.request().then(() => {
+                          dispatch(ujs);
+                        });
+                        return;
+                      }
                       dispatch(ujs);
                     });
-                    if (
-                      !ujs._mujs.code.data_code_block &&
-                      (cfg.preview.code || cfg.preview.metadata)
-                    ) {
-                      ujs._mujs.code.request().then(() => {
-                        dispatch(ujs);
-                      });
-                    }
                     createjs(ujs, engine.name);
                   }
                 } catch (ex) {
@@ -3306,9 +3339,23 @@ function primaryFN() {
                   showError(`"${engine.name}" requires a token to use`);
                   continue;
                 }
+                Network.req(
+                  `https://api.github.com/search/repositories?q=topic:${domain}+topic:userstyle`,
+                  'GET',
+                  'json',
+                  {
+                    headers: {
+                      Accept: 'application/vnd.github+json',
+                      Authorization: `Bearer ${engine.token}`,
+                      'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                  }
+                )
+                  .then(gitFN)
+                  .catch(respError);
                 netFN = Network.req(
                   toQuery(
-                    `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`
+                    `https://api.github.com/search/repositories?q=topic:${domain}+topic:userscript`
                   ),
                   'GET',
                   'json',
@@ -3368,9 +3415,10 @@ function primaryFN() {
           showError(ex);
         }
       }
+      // #endregion
 
       sortRecords() {
-        const arr = this.toArr();
+        const arr = Array.from(this);
         for (const ujs of arr.flat().sort((a, b) => {
           const sortType = cfg.autoSort ?? 'daily_installs';
           return b[sortType] - a[sortType];
@@ -3381,25 +3429,22 @@ function primaryFN() {
           Counter.update(value.length, { name });
       }
 
-      toArr() {
-        const h = this.intHost;
-        return container.toArr().filter(({ _mujs }) => _mujs.info.host === h);
+      groupBy() {
+        const { groupBy } = safeSelf();
+        return groupBy(Array.from(this), ({ _mujs }) => _mujs.info.engine.name);
       }
 
-      groupBy(arr) {
-        const callback = ({ _mujs }) => _mujs.info.engine.name;
-        if (isFN(Object.groupBy)) {
-          return Object.groupBy(arr, callback);
+      *[Symbol.iterator]() {
+        const { intHost, engines } = this;
+        const arr = Array.from(this.container).filter(
+          ({ _mujs }) =>
+            _mujs.info.host === intHost &&
+            engines.find((engine) => engine.enabled && engine.name === _mujs.info.engine.name)
+        );
+        for (const userjs of arr) {
+          yield userjs;
         }
-        /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
-        return arr.reduce((acc = {}, ...args) => {
-          const key = callback(...args);
-          acc[key] ??= [];
-          acc[key].push(args[0]);
-          return acc;
-        }, {});
       }
-      // #endregion
     }
     const MUList = new List();
     // #endregion
@@ -3453,10 +3498,10 @@ function primaryFN() {
             }
           }
         });
-
         lb.append(divDesc);
         sec.append(lb);
         cfgpage.append(sec);
+        !cfgSec.has(sec) && cfgSec.add(sec);
         return sec;
       };
       const sections = {
@@ -3476,7 +3521,41 @@ function primaryFN() {
             [tag]: text
           }
         });
-        cfgMap.set(text, value);
+        const getDefault = () => {
+          if (tag === 'engine') {
+            const engine = DEFAULT_CONFIG.engines.find((engine) => engine.name === value);
+            if (engine) {
+              return engine;
+            }
+          }
+          const nm = /^(\w+)-(.+)/.exec(value);
+          if (nm) {
+            return DEFAULT_CONFIG[nm[1]][nm[2]];
+          }
+          return DEFAULT_CONFIG[value];
+        };
+        const getValue = () => {
+          if (tag === 'engine') {
+            const engine = cfg.engines.find((engine) => engine.name === value);
+            if (engine) {
+              return engine;
+            }
+          }
+          const nm = /^(\w+)-(.+)/.exec(value);
+          if (nm) {
+            return cfg[nm[1]][nm[2]];
+          }
+          return cfg[value];
+        };
+        const obj = {
+          text,
+          tag,
+          value,
+          type,
+          attrs,
+          default: getDefault(),
+          cache: getValue()
+        };
         if (type === 'select') {
           const inp = make('select', {
             dataset: {
@@ -3497,6 +3576,8 @@ function primaryFN() {
           if (sections[tag]) {
             sections[tag].append(lb);
           }
+          obj.elem = inp;
+          cfgBase.push(obj);
           return lb;
         }
         const inp = make('input', {
@@ -3560,6 +3641,7 @@ function primaryFN() {
                 container.unsaved = true;
                 container.rebuild = true;
                 engine.enabled = evt.target.checked;
+                MUList.engines = cfg.engines;
               });
 
               if (engine.query) {
@@ -3567,8 +3649,8 @@ function primaryFN() {
                 const urlInp = make('input', {
                   type: 'text',
                   defaultValue: '',
-                  value: decodeURIComponent(engine.query) ?? '',
-                  placeholder: decodeURIComponent(d.query) ?? '',
+                  value: decode(engine.query),
+                  placeholder: decode(d.query),
                   dataset: {
                     name: nm,
                     engine: engine.name
@@ -3578,11 +3660,13 @@ function primaryFN() {
                     container.rebuild = true;
                     try {
                       engine.query = encodeURIComponent(new URL(evt.target.value).toString());
+                      MUList.engines = cfg.engines;
                     } catch (ex) {
                       err(ex);
                     }
                   }
                 });
+                obj.elemUrl = urlInp;
                 lb.append(urlInp);
               }
               if (engine.name === 'github') {
@@ -3598,10 +3682,11 @@ function primaryFN() {
                     container.unsaved = true;
                     container.rebuild = true;
                     engine.token = evt.target.value;
+                    MUList.engines = cfg.engines;
                   }
                 });
+                obj.elemToken = ghToken;
                 lb.append(ghToken);
-                cfgMap.set('github-token', ghToken);
               }
             }
           }
@@ -3610,10 +3695,47 @@ function primaryFN() {
             inp.defaultValue = '';
             inp.value = value ?? '';
             inp.placeholder = value ?? '';
+
+            if (tag === 'theme') {
+              inp.dataset[tag] = text;
+              ael(inp, 'change', (evt) => {
+                let isvalid = true;
+                try {
+                  const val = evt.target.value;
+                  const sty = container.root.style;
+                  const str = `--mujs-${text}`;
+                  const prop = sty.getPropertyValue(str);
+                  if (isEmpty(val)) {
+                    cfg.theme[text] = DEFAULT_CONFIG.theme[text];
+                    sty.removeProperty(str);
+                    return;
+                  }
+                  if (prop === val) {
+                    return;
+                  }
+                  sty.removeProperty(str);
+                  sty.setProperty(str, val);
+                  cfg.theme[text] = val;
+                } catch (ex) {
+                  err(ex);
+                  isvalid = false;
+                } finally {
+                  if (isvalid) {
+                    dom.cl.remove(evt.target, 'mujs-invalid');
+                    dom.prop(savebtn, 'disabled', false);
+                  } else {
+                    dom.cl.add(evt.target, 'mujs-invalid');
+                    dom.prop(savebtn, 'disabled', true);
+                  }
+                }
+              });
+            }
           }
 
           lb.append(inp);
         }
+        obj.elem = inp;
+        cfgBase.push(obj);
 
         return lb;
       };
@@ -3664,73 +3786,22 @@ function primaryFN() {
       });
       makeRow('Clear on Tab close', 'clearTabCache', 'checkbox', 'load');
 
-      makeRow('Default Sort', 'autoSort', 'select', 'list');
+      makeRow(i18n$('default_sort'), 'autoSort', 'select', 'list');
       makeRow(i18n$('filter'), 'filterlang', 'checkbox', 'list');
       makeRow(i18n$('preview_code'), 'preview-code', 'checkbox', 'list');
-      makeRow('Preview Metadata', 'preview-metadata', 'checkbox', 'list');
-      makeRow('Recommend author', 'recommend-author', 'checkbox', 'list');
-      makeRow('Recommend scripts', 'recommend-others', 'checkbox', 'list');
+      makeRow(i18n$('preview_metadata'), 'preview-metadata', 'checkbox', 'list');
+      makeRow(i18n$('recommend_author'), 'recommend-author', 'checkbox', 'list');
+      makeRow(i18n$('recommend_other'), 'recommend-others', 'checkbox', 'list');
 
-      for (const [k, v] of Object.entries(cfg.filters)) {
+      for (const [k, v] of Object.entries(cfg.filters))
         makeRow(v.name, `filters-${k}`, 'checkbox', 'filters');
-      }
 
       makeRow('Greasy Fork', 'greasyfork', 'checkbox', 'engine');
       makeRow('Sleazy Fork', 'sleazyfork', 'checkbox', 'engine');
       makeRow('Open UserJS', 'openuserjs', 'checkbox', 'engine');
       makeRow('GitHub API', 'github', 'checkbox', 'engine');
 
-      for (const [k, v] of Object.entries(cfg.theme)) {
-        const lb = make('label', 'hidden', {
-          textContent: k,
-          dataset: {
-            theme: k
-          }
-        });
-        const inp = make('input', {
-          type: 'text',
-          defaultValue: '',
-          value: v ?? '',
-          placeholder: v ?? '',
-          dataset: {
-            theme: k
-          },
-          onchange(evt) {
-            let isvalid = true;
-            try {
-              const val = evt.target.value;
-              const sty = container.root.style;
-              const str = `--mujs-${k}`;
-              const prop = sty.getPropertyValue(str);
-              if (isEmpty(val)) {
-                cfg.theme[k] = DEFAULT_CONFIG.theme[k];
-                sty.removeProperty(str);
-                return;
-              }
-              if (prop === val) {
-                return;
-              }
-              sty.removeProperty(str);
-              sty.setProperty(str, val);
-              cfg.theme[k] = val;
-            } catch (ex) {
-              err(ex);
-              isvalid = false;
-            } finally {
-              if (isvalid) {
-                dom.cl.remove(evt.target, 'mujs-invalid');
-                dom.prop(savebtn, 'disabled', false);
-              } else {
-                dom.cl.add(evt.target, 'mujs-invalid');
-                dom.prop(savebtn, 'disabled', true);
-              }
-            }
-          }
-        });
-        cfgMap.set(k, inp);
-        lb.append(inp);
-        sections.theme.append(lb);
-      }
+      for (const [k, v] of Object.entries(cfg.theme)) makeRow(k, v, 'text', 'theme');
 
       // const blacklist = make('textarea', {
       //   dataset: {
@@ -3760,7 +3831,6 @@ function primaryFN() {
       //     }
       //   }
       // });
-      // cfgMap.set('blacklist', blacklist);
       // const addList = make('mujs-add', {
       //   textContent: '+',
       //   dataset: {
@@ -3877,10 +3947,7 @@ function primaryFN() {
         lb.append(inp, selType);
         sections.blacklist.append(lb);
       };
-      for (const key of cfg.blacklist) {
-        createList(key);
-      }
-
+      for (const key of cfg.blacklist) createList(key);
       const transfers = {
         export: {
           cfg: make('mujs-btn', 'mujs-export sub-section hidden', {
@@ -3920,11 +3987,10 @@ function primaryFN() {
           sections.exp.append(v);
         }
       }
-
       cfgpage.append(cbtn);
     };
     // #endregion
-    container.tab.custom = (host) => {
+    container.Tabs.custom = (host) => {
       MUList.host = host;
       respHandles.build();
     };
@@ -3938,7 +4004,7 @@ function primaryFN() {
       evt.preventDefault();
       evt.stopPropagation();
       evt.target.style.opacity = container.opacityMin;
-      timeoutFrame();
+      container.timeoutFrame();
     });
     ael(mainframe, 'click', (evt) => {
       evt.preventDefault();
@@ -3948,9 +4014,6 @@ function primaryFN() {
       if (cfg.autoexpand) {
         dom.cl.add([btnfullscreen, main], 'expanded');
         dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('collapse'));
-      }
-      if (dom.cl.has(mainframe, 'error')) {
-        tab.create('mujs:settings');
       }
     });
     ael(urlBar, 'input', (evt) => {
@@ -3972,21 +4035,15 @@ function primaryFN() {
       if (!dom.cl.has(cfgpage, 'hidden')) {
         const reg = new RegExp(val, 'gi');
         for (const elem of section) {
-          if (!isElem(elem)) {
-            continue;
-          }
-          if (finds.has(elem)) {
-            continue;
-          }
-          if (elem.dataset.name.match(reg)) {
-            finds.add(elem);
-          }
+          if (!isElem(elem)) continue;
+          if (finds.has(elem)) continue;
+          if (elem.dataset.name.match(reg)) finds.add(elem);
         }
         dom.cl.add(section, 'hidden');
         dom.cl.remove([...finds], 'hidden');
         return;
       }
-      const cacheValues = container.toArr().filter(({ _mujs }) => {
+      const cacheValues = Array.from(container).filter(({ _mujs }) => {
         return !finds.has(_mujs.root);
       });
       /**
@@ -4038,12 +4095,8 @@ function primaryFN() {
         const parts = /^[\w_]+:(\w+)/.exec(val);
         if (parts) {
           const reg = new RegExp(parts[1], 'gi');
-          for (const { _mujs } of cacheValues) {
-            if (!_mujs.info.engine.name.match(reg)) {
-              continue;
-            }
-            finds.add(_mujs.root);
-          }
+          for (const { _mujs } of cacheValues)
+            if (_mujs.info.engine.name.match(reg)) finds.add(_mujs.root);
         }
       } else if (val.match(/^filter:/)) {
         const parts = /^\w+:(.+)/.exec(val);
@@ -4053,9 +4106,7 @@ function primaryFN() {
           if (filterType) {
             const { reg } = filterType;
             for (const { name, users, _mujs } of cacheValues) {
-              if ([{ name }, ...users].find((o) => o.name.match(reg))) {
-                continue;
-              }
+              if ([{ name }, ...users].find((o) => o.name.match(reg))) continue;
               finds.add(_mujs.root);
             }
           }
@@ -4075,11 +4126,9 @@ function primaryFN() {
         for (const v of cacheValues) {
           if (v.name && v.name.match(reg)) finds.add(v._mujs.root);
           if (v.description && v.description.match(reg)) finds.add(v._mujs.root);
-          if (v._mujs.code.data_meta) {
-            for (const key of Object.keys(v._mujs.code.data_meta)) {
+          if (v._mujs.code.data_meta)
+            for (const key of Object.keys(v._mujs.code.data_meta))
               if (/name|desc/i.test(key) && key.match(reg)) finds.add(v._mujs.root);
-            }
-          }
         }
       }
       dom.cl.add(qsA('tr[data-engine]', tabbody), 'hidden');
@@ -4088,51 +4137,49 @@ function primaryFN() {
     ael(urlBar, 'change', (evt) => {
       evt.preventDefault();
       const val = evt.target.value;
-      const tabElem = tab.getActive();
+      const tabElem = Tabs.getActive();
       if (urlBar.placeholder === i18n$('newTab') && tabElem) {
         const tabHost = tabElem.firstElementChild;
-        if (tab.protoReg.test(val)) {
-          const createdTab = tab.getTab(val);
-          tab.close(tabElem);
+        const host = formatURL(normalizedHostname(val));
+        if (Tabs.protoReg.test(val)) {
+          const createdTab = Tabs.getTab(val);
+          Tabs.close(tabElem);
           if (createdTab) {
-            tab.active(createdTab);
+            Tabs.active(createdTab);
           } else {
-            tab.create(val);
+            Tabs.create(val);
           }
           evt.target.placeholder = i18n$('search_placeholder');
           evt.target.value = '';
-          return;
-        } else if (val === '*') {
-          tabElem.dataset.host = val;
+        } else if (host === '*') {
+          tabElem.dataset.host = host;
           tabHost.title = '<All Sites>';
           tabHost.textContent = '<All Sites>';
-          MUList.host = val;
+          MUList.host = host;
           respHandles.build();
-          return;
+        } else if (container.checkBlacklist(host)) {
+          showError(`Blacklisted "${host}"`);
+        } else {
+          tabElem.dataset.host = host;
+          tabHost.title = host;
+          tabHost.textContent = host;
+          MUList.host = host;
+          respHandles.build();
         }
-        const value = container.getHost(val);
-        if (container.checkBlacklist(value)) {
-          showError(`Blacklisted "${value}"`);
-          return;
-        }
-        tabElem.dataset.host = value;
-        tabHost.title = value;
-        tabHost.textContent = value;
-        MUList.host = value;
-        respHandles.build();
       }
     });
     scheduler.postTask(makecfg, { priority: 'background' });
 
     respHandles.build = async () => {
-      const time = await scheduler.postTask(MUList.build, { priority: 'background' });
-      return timeoutFrame(time);
+      await scheduler.postTask(MUList.build, { priority: 'background' });
+      container.timeoutFrame();
     };
 
     if (cfg.autofetch) {
       respHandles.build();
+    } else {
+      container.timeoutFrame();
     }
-    dbg('Container', container);
   } catch (ex) {
     err(ex);
     container.remove();
@@ -4165,20 +4212,20 @@ const init = async (prefix = 'Config') => {
   info('Config:', cfg);
   loadDOM((doc) => {
     try {
-      if (window.location === null) {
+      if (window.location === null)
         throw new Error('"window.location" is null, reload the webpage or use a different one', {
           cause: 'loadDOM'
         });
-      }
-      if (doc === null) {
+      if (doc === null)
         throw new Error('"doc" is null, reload the webpage or use a different one', {
           cause: 'loadDOM'
         });
-      }
       container.redirect();
-
-      if (cfg.autoinject) container.inject(primaryFN, doc);
-
+      if (cfg.autoinject) {
+        container.inject(primaryFN, doc);
+      } else {
+        container.timeoutFrame();
+      }
       Command.register(i18n$('userjs_inject'), () => {
         container.inject(primaryFN, doc);
       });

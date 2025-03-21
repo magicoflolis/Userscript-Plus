@@ -25,6 +25,7 @@
   "dependencies": {
     "@userjs/i18n": "workspace:^",
     "minimist": "^1.2.8",
+    "sass-embedded": "^1.85.1",
     "watchpack": "^2.4.2"
   }
 }

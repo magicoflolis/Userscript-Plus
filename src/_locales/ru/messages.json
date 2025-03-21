@@ -141,12 +141,30 @@
     "message": "Закрыть Userscript+"
   },
   "userjs_sync": {
-    "message": "Sync with UserScript Manager"
+    "message": "Sync"
   },
   "userjs_autoinject": {
     "message": "Inject on load"
   },
   "auto_fetch": {
     "message": "Fetch on load"
+  },
+  "code": {
+    "message": "Исходный код"
+  },
+  "metadata": {
+    "message": "Metadata"
+  },
+  "preview_metadata": {
+    "message": "Preview Metadata"
+  },
+  "recommend_author": {
+    "message": "Recommend Author"
+  },
+  "recommend_other": {
+    "message": "Recommend Others"
+  },
+  "default_sort": {
+    "message": "Default Sort"
   }
 }

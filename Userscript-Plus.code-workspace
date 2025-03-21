@@ -6,38 +6,36 @@
 	],
 	"settings": {
     "search.exclude": {
+			"**/.vscode/**": true,
       "**/build/**": true,
       "**/dist/**": true,
       "**/node_modules/**": true,
       "**/Notes/**": true
     },
-		"editor.codeActionsOnSave": {
-      "source.fixAll": "never",
-      "source.fixAll.eslint": "explicit"
-    },
-    "editor.formatOnSaveMode": "modifications",
     "explorer.excludeGitIgnore": true,
     "files.exclude": {
+				"**/.vscode/**": true,
         "**/build/**": true,
         "**/dist/**": true,
         "**/node_modules/**": true,
         "**/Notes/**": true
     },
-    "files.trimTrailingWhitespace": true,
     "local-history.daysLimit": 3,
     "local-history.maxDisplay": 10,
     "local-history.saveDelay": 0,
     "local-history.dateLocale": "en-US",
     "local-history.exclude": [
       "**/.history/**",
-      "**/.vscode/**",
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/chrome_dist/**",
-      "**/build/**",
-      "**/*.code-workspace",
-      "**/src/sass/**",
+			"**/.vscode/**",
+			"**/node_modules/**",
+			"**/typings/**",
+			"**/out/**",
+			"**/Code/User/**",
+			"**/*.code-workspace",
+			"**/build/**",
+			"**/dist/**",
+			"**/Notes/**"
     ],
-    "local-history.path": "${workspaceFolder}/.vscode",
+    "local-history.path": "${workspaceFolder}/.vscode"
 	}
 }

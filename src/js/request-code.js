@@ -39,8 +39,9 @@ class ParseUserJS {
    */
   data_names;
   constructor(code, isUserCSS) {
-    this.META_START_COMMENT = isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
-    this.META_END_COMMENT = isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
+    this.isUserCSS = isUserCSS ?? false;
+    this.META_START_COMMENT = this.isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
+    this.META_END_COMMENT = this.isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
     if (code) {
       this.code = code;
       this.get_meta_block();
@@ -251,7 +252,7 @@ class ParseUserJS {
     }
     return [...name_map.values()];
   }
-  async request(translate = false, code_url, obj) {
+  async request(code_url) {
     if (this.data_code_block) {
       return this;
     }
@@ -260,10 +261,10 @@ class ParseUserJS {
     if (typeof code !== 'string') {
       return this;
     }
-    const isUserCSS = /\.user\.css/.test(code_url);
+    this.isUserCSS = /\.user\.css$/.test(code_url);
+    this.META_START_COMMENT = this.isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
+    this.META_END_COMMENT = this.isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
 
-    this.META_START_COMMENT = isUserCSS ? '/* ==UserStyle==' : '// ==UserScript==';
-    this.META_END_COMMENT = isUserCSS ? '==/UserStyle== */' : '// ==/UserScript==';
     this.code = code;
     this.get_meta_block();
     this.get_code_block();
@@ -271,22 +272,6 @@ class ParseUserJS {
     this.calculate_applies_to_names();
 
     const { data_meta } = this;
-    if (translate) {
-      for (const k of userjs.pool.keys()) {
-        if (data_meta[`name:${k}`]) {
-          Object.assign(obj, {
-            name: data_meta[`name:${k}`]
-          });
-          this.translated = true;
-        }
-        if (data_meta[`description:${k}`]) {
-          Object.assign(obj, {
-            description: data_meta[`description:${k}`]
-          });
-          this.translated = true;
-        }
-      }
-    }
     if (Array.isArray(data_meta.grant)) {
       data_meta.grant = union(data_meta.grant);
     }

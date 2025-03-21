@@ -4,6 +4,15 @@ import '@violentmonkey/types';
 import { type GSForkQuery } from './types';
 import './scheduler';
 
+/** [i18n directory](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales) */
+export const translations: {
+  [i18n: string]: {
+    [key: string]: string;
+  };
+};
+/** [source code](https://github.com/magicoflolis/Userscript-Plus/blob/master/src/sass/_main.scss) */
+export const main_css: string;
+
 export interface safeHandles {
   // trustedTypes: {
   //   createPolicy(): void;
@@ -18,6 +27,7 @@ export interface safeHandles {
   navigator: typeof navigator;
   /** Taken from [scheduler-polyfill](https://github.com/GoogleChromeLabs/scheduler-polyfill) */
   scheduler: typeof scheduler;
+  groupBy<O extends object, F extends Function>(arr: O[], callback: (this: F, element: O, index: number) => any): O;
 }
 
 export interface Translations {
@@ -117,13 +127,6 @@ export declare function observe<E extends Node>(
  */
 export declare function openTab(url: string | URL): WindowProxy | null;
 
-/**
- * Get information about the current userscript.
- *
- * [ViolentMonkey Reference](https://violentmonkey.github.io/api/gm/#gm_info)
- */
-export declare function getGMInfo(): typeof GM_info;
-
 export interface StorageSystem {
   prefix: string;
   events: Set<Function | number>;
@@ -209,13 +212,7 @@ export interface Container {
   shadowRoot?: ShadowRoot | HTMLElement;
   supported: boolean;
   frame: HTMLElement | HTMLIFrameElement;
-  cache: Map<
-    string,
-    {
-      [engine: string]: GSForkQuery[];
-    }
-  >;
-  userjsCache: Map<number, GSForkQuery[]>;
+  userjsCache: Map<number, GSForkQuery>;
   root: HTMLElement;
   unsaved: boolean;
   isBlacklisted: boolean;
@@ -223,4 +220,15 @@ export interface Container {
   opacityMin: string;
   opacityMax: string;
   Timeout: new () => Timeout;
+}
+
+declare global {
+  let translations: {
+    [i18n: string]: string;
+  };
+  let userjs: {
+    safeSelf?: safeHandles;
+    isMobile?: boolean;
+    pool?: Map<string, string>;
+  };
 }

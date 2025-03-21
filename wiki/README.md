@@ -1,7 +1,23 @@
-# Wiki Page (Under Construction)
+# Wiki Page
 
-- [Wiki Page (Under Construction)](#wiki-page-under-construction)
+- [Wiki Page](#wiki-page)
+  - [GitHub Detection](#github-detection)
   - [Shortcuts](#shortcuts)
+
+## GitHub Detection
+
+For this Web Extension / UserScript to detect your UserScript or UserStyle:
+
+- Your repository must have the following:
+  - UserScripts **must** be in `.user.js` format
+  - UserStyles **must** be in `.user.css` format
+  - In the Topics section of your repository:
+    - `domain` or `hostname`:
+      - example: you create a userscript for `google.com` then put `google` in the Topics section
+      - if you match all sites: `*` or `http*://*` then put `all-sites` in the Topics section
+    - put `userscript` or `userstyle` in the Topics section
+
+_if you need to create a build environment, you can use my workspace and tools as a template._
 
 ## Shortcuts
 

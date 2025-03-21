@@ -23,14 +23,8 @@
       "keepProfileChanges": false,
       "url": "https://www.google.com/",
       "addonPath": "${workspaceFolder}/build/firefox",
-      "reloadOnChange": {
-        "watch": [
-          "${workspaceFolder}/src/**"
-        ],
-        "ignore": [
-          "${workspaceFolder}/node_modules/**"
-        ]
-      },
+      "reloadOnChange": "${workspaceFolder}/src/**",
+      "firefoxArgs": ["--devtools"],
       "pathMappings": [
         {
           "url": "webpack:///js",

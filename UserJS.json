@@ -1,5 +1,5 @@
 {
-  "version": "7.6.1",
+  "version": "7.6.2",
   "name": "Magic Userscript+ : Show Site All UserJS",
   "description": "Finds available userscripts for the current webpage.",
   "author": "Magic <magicoflolis@tuta.io>",
@@ -13,15 +13,19 @@
     "source": {
       "metadata": "./src/UserJS/header.js",
       "code": "./src/UserJS/main.js",
-      "mainCSS": "./build/css/magicuserjs.css"
+      "mainCSS": "./src/sass/magicuserjs.scss"
     },
     "watch": {
-      "files": ["main.js", "header.js", "magicuserjs.css"],
-      "dirs": ["src/UserJS", "build/css"]
+      "files": ["main.js", "header.js", "_main.scss"],
+      "dirs": ["src/UserJS", "src/sass"]
     },
     "paths": {
       "fileName": "magic-userjs",
       "dir": "./dist",
+			"i18n": {
+				"default": "en",
+				"dir": "../../../src/_locales"
+			},
       "dev": {
         "fileName": "magic-userjs.dev",
         "dir": "./web-server"
@@ -38,23 +42,19 @@
       "openuserjs.org"
     ],
     "grant": [
-      "GM_addValueChangeListener",
       "GM_addElement",
       "GM_info",
       "GM_getValue",
       "GM_openInTab",
       "GM_setValue",
       "GM_registerMenuCommand",
-      "GM_removeValueChangeListener",
       "GM_xmlhttpRequest",
-      "GM.addValueChangeListener",
       "GM.addElement",
       "GM.info",
       "GM.getValue",
       "GM.openInTab",
       "GM.setValue",
       "GM.registerMenuCommand",
-      "GM.removeValueChangeListener",
       "GM.xmlHttpRequest"
     ],
     "exclude": [],

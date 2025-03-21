@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.6.1
+// @version      7.6.2
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -42,23 +42,19 @@
 // @connect     github.com
 // @connect     githubusercontent.com
 // @connect     openuserjs.org
-// @grant     GM_addValueChangeListener
 // @grant     GM_addElement
 // @grant     GM_info
 // @grant     GM_getValue
 // @grant     GM_openInTab
 // @grant     GM_setValue
 // @grant     GM_registerMenuCommand
-// @grant     GM_removeValueChangeListener
 // @grant     GM_xmlhttpRequest
-// @grant     GM.addValueChangeListener
 // @grant     GM.addElement
 // @grant     GM.info
 // @grant     GM.getValue
 // @grant     GM.openInTab
 // @grant     GM.setValue
 // @grant     GM.registerMenuCommand
-// @grant     GM.removeValueChangeListener
 // @grant     GM.xmlHttpRequest
 // @match     https://*/*
 // @noframes

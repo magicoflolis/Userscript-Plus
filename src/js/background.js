@@ -4,10 +4,20 @@ import { webext, runtime } from './ext.js';
 import { hermes } from './messager.js';
 import { log, err, info } from './logger.js';
 import Network from './network.js';
-import { isBlank, isNull, isEmpty, union, loadFilters, isRegExp, isObj, formatURL } from './util.js';
+import {
+  isBlank,
+  isNull,
+  isEmpty,
+  loadFilters,
+  isRegExp,
+  isObj,
+  formatURL,
+  decode
+} from './util.js';
 import { BLANK_PAGE, template, builtinList } from './constants.js';
 import storage, { DEFAULT_CONFIG } from './storage.js';
 import { BaseContainer, BaseList } from './container.js';
+import { i18n$ } from './i18n.js';
 
 /**
  * @type { import("../typings/types").config }
@@ -89,7 +99,7 @@ class List extends BaseList {
   async build() {
     await initCfg();
     this.engines = cfg.engines;
-    const { container, blacklisted, engines, host, tabId } = this;
+    const { container, blacklisted, engines, host, domain, tabId } = this;
     if (blacklisted || isEmpty(engines) || host === BLANK_PAGE) {
       return [];
     }
@@ -128,9 +138,6 @@ class List extends BaseList {
                 }
               }
             };
-            // obj._mujs.code.request = (translate = false, code_url) => {
-            //   requestUserJS.call(obj._mujs.code, translate, code_url ?? obj.code_url, obj);
-            // };
             return obj;
           };
           /**
@@ -141,7 +148,9 @@ class List extends BaseList {
            */
           const toQuery = (fallback) => {
             if (engine.query) {
-              return decodeURIComponent(engine.query).replace(/\{host\}/g, host);
+              return decode(engine.query)
+                .replace(/\{host\}/g, host)
+                .replace(/\{domain\}/g, domain);
             }
             return fallback;
           };
@@ -162,91 +171,79 @@ class List extends BaseList {
               .filter((d) => !d.deleted)
               .filter(bsFilter.match);
             if (isBlank(dataA)) {
-              // records.push(_mujs({}));
               return;
             }
             const data = dataA.map(_mujs);
-            const otherLng = [];
-            /**
-             * @param {import("../typings/types.d.ts").GSForkQuery} d
-             * @returns {boolean}
-             */
-            const inUserLanguage = (d) => {
-              if (userjs.pool.has(d.locale.split('-')[0] ?? d.locale)) {
-                return true;
-              }
-              otherLng.push(d);
-              return false;
-            };
-            const filterLang = data.filter((d) => {
-              if (cfg.filterlang && !inUserLanguage(d)) {
-                return false;
-              }
-              return true;
-            });
-            let finalList = filterLang;
-            const hds = [];
-            for (const ujs of otherLng) {
-              const c = await ujs._mujs.code.request(true);
-              if (c.translated) {
-                hds.push(ujs);
-              }
-            }
-            finalList = union(hds, filterLang);
 
-            for (const ujs of finalList) {
-              // if (!ujs._mujs.code.data_code_block && (cfg.preview.code || cfg.preview.metadata)) {
-              //   ujs._mujs.code.request().then(() => {
-              //     dispatch(ujs);
-              //   });
-              // }
+            for (const ujs of data) {
+              if (!ujs._mujs.code.data_code_block && (cfg.preview.code || cfg.preview.metadata)) {
+                await ujs._mujs.code.request();
+              }
               if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
             }
-            records.push(...finalList);
+            records.push(...data);
           };
           const gitFN = async (data) => {
             try {
               if (isBlank(data.items)) {
-                err('Invalid data received from the server, TODO fix this');
                 return;
               }
               for (const r of data.items) {
                 const ujs = _mujs({
-                  id: r.repository.id ?? r.id ?? 0,
-                  name: r.repository.name ?? r.name,
-                  description: isEmpty(r.repository.description)
-                    ? 'N/A'
-                    : r.repository.description,
-                  url: r.repository.html_url,
-                  code_url: r.html_url.replace(/\/blob\//g, '/raw/'),
-                  page_url: `${r.repository.url}/contents/README.md`,
+                  id: r.id ?? 0,
+                  name: r.name,
+                  description: isEmpty(r.description) ? i18n$('no_license') : r.description,
+                  url: r.html_url,
+                  code_url: r.html_url,
+                  page_url: `${r.url}/contents/README.md`,
+                  created_at: r.created_at,
+                  code_updated_at: r.updated_at || Date.now(),
+                  daily_installs: r.watchers_count ?? 0,
+                  good_ratings: r.stargazers_count ?? 0,
                   users: [
                     {
-                      name: r.repository.owner.login,
-                      url: r.repository.owner.html_url
+                      name: r.owner.login,
+                      url: r.owner.html_url
                     }
                   ]
                 });
-                Network.req(r.repository.url, 'GET', 'json', {
-                  headers: {
-                    Accept: 'application/vnd.github+json',
-                    Authorization: `Bearer ${engine.token}`,
-                    'X-GitHub-Api-Version': '2022-11-28'
+                if (r.license?.name) ujs.license = r.license.name;
+                const rootPath = r.contents_url.replace(/\{\+path\}/, '');
+                const fetchContent = async (dir) => {
+                  const contents = await Network.req(dir, 'GET', 'json', {
+                    headers: {
+                      Accept: 'application/vnd.github+json',
+                      Authorization: `Bearer ${engine.token}`,
+                      'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                  }).catch(respError);
+                  for (const content of contents) {
+                    if (content.type === 'file') {
+                      if (/\.user\.js$/.test(content.name)) {
+                        ujs.code_urls.push({
+                          name: content.name,
+                          code_url: content.download_url
+                        });
+                      } else if (/\.user\.css$/.test(content.name)) {
+                        ujs.code_urls.push({
+                          name: content.name,
+                          code_url: content.download_url
+                        });
+                      }
+                    } else if (content.type === 'dir') {
+                      await fetchContent(`${rootPath}/${content.path}`);
+                    }
                   }
-                }).then((repository) => {
-                  ujs.code_updated_at = r.commit || repository.updated_at || Date.now();
-                  ujs.created_at = repository.created_at;
-                  ujs.daily_installs = repository.watchers_count ?? 0;
-                  ujs.good_ratings = repository.stargazers_count ?? 0;
-                  if (repository.license?.name) ujs.license = repository.license.name;
-                  // dispatch(ujs);
-                });
-                // if (!ujs._mujs.code.data_code_block && (cfg.preview.code || cfg.preview.metadata)) {
-                //   ujs._mujs.code.request().then(() => {
-                //     dispatch(ujs);
-                //   });
-                // }
-                if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
+                };
+                await fetchContent(rootPath);
+                if (isEmpty(ujs.code_urls)) {
+                  ujs.deleted = true;
+                } else if (
+                  !ujs._mujs.code.data_code_block &&
+                  (cfg.preview.code || cfg.preview.metadata)
+                ) {
+                  await ujs._mujs.code.request();
+                }
                 records.push(ujs);
               }
             } catch (ex) {
@@ -259,38 +256,35 @@ class List extends BaseList {
               err(`"${engine.name}" requires a token to use`);
               continue;
             }
+            const data = {
+              headers: {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${engine.token}`,
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
+            };
+            Network.req(
+              `https://api.github.com/search/repositories?q=topic:userstyle+topic:${domain}`,
+              'GET',
+              'json',
+              data
+            )
+              .then(gitFN)
+              .catch(respError);
             netFN = Network.req(
               toQuery(
-                `${engine.url}"// ==UserScript=="+${host}+ "// ==/UserScript=="+in:file+language:js&per_page=30`
+                `https://api.github.com/search/repositories?q=topic:userscript+topic:${domain}`
               ),
               'GET',
               'json',
-              {
-                headers: {
-                  Accept: 'application/vnd.github+json',
-                  Authorization: `Bearer ${engine.token}`,
-                  'X-GitHub-Api-Version': '2022-11-28'
-                }
-              }
-            )
-              .then(gitFN)
-              .then(() => {
-                Network.req('https://api.github.com/rate_limit', 'GET', 'json', {
-                  headers: {
-                    Accept: 'application/vnd.github+json',
-                    Authorization: `Bearer ${engine.token}`,
-                    'X-GitHub-Api-Version': '2022-11-28'
-                  }
-                }).catch(respError);
-              });
+              data
+            ).then(gitFN);
           } else {
             netFN = Network.req(
               toQuery(`${engine.url}/scripts/by-site/${host}.json?language=all`)
             ).then(forkFN);
           }
-          if (netFN) {
-            fetchRecords.push(netFN.catch(respError));
-          }
+          if (netFN) fetchRecords.push(netFN.catch(respError));
         }
       }
       if (!isBlank(fetchRecords)) {
@@ -375,7 +369,7 @@ webext.webRequest.onHeadersReceived.addListener(
         MUList.host = formatURL(loc.host);
         MUList.tabId = e.tabId ?? -2;
         MUList.build().then(() => {
-          setCount(e, e.tabId)
+          setCount(e, e.tabId);
         });
       }
     }
@@ -397,12 +391,12 @@ function onMessage(message, sender, sendResponse) {
       if (MUList.host !== message.hostname) {
         MUList.host = message.hostname ?? BLANK_PAGE;
         MUList.tabId = message.currentTab?.id ?? -2;
-      };
+      }
       MUList.build().then((data) => {
         if (message.init) {
-          sendResponse({ cfg, data })
+          sendResponse({ cfg, data });
         } else {
-          sendResponse({ data })
+          sendResponse({ data });
         }
       });
     } else if (message.type === 'save') {

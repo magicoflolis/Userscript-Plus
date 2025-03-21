@@ -17,7 +17,8 @@ import {
   strToURL,
   isRegExp,
   loadFilters,
-  formatURL
+  formatURL,
+  normalizedHostname
 } from './util.js';
 import { builtinList, template, BLANK_PAGE, badUserJS, authorID, goodUserJS } from './constants.js';
 import { DEFAULT_CONFIG } from './storage.js';
@@ -35,12 +36,6 @@ let cfg = {};
  */
 const currentTab = {};
 const tabURL = new URL(runtime.getURL('/'));
-
-/******************************************************************************/
-
-function normalizedHostname(hn) {
-  return hn.replace(/^www\./, '');
-}
 
 /******************************************************************************/
 
@@ -312,9 +307,6 @@ class Container extends BaseContainer {
          * @param {string} hostname
          */
         intFN(hostname) {
-          if (!hostname.startsWith(this.protocal)) {
-            return;
-          }
           const p = this.protoReg.exec(hostname);
           if (!p) {
             return;
@@ -405,7 +397,6 @@ class Container extends BaseContainer {
             tab.dataset.host = this.blank;
             tabHost.title = i18n$('newTab');
             tabHost.textContent = i18n$('newTab');
-            // hostname.startsWith(this.protocal)
           } else if (p) {
             tab.dataset.host = hostname || host;
             tabHost.title = p[1] || tab.dataset.host;
@@ -415,7 +406,6 @@ class Container extends BaseContainer {
             tab.dataset.host = hostname || host;
             tabHost.title = hostname || host;
             tabHost.textContent = tabHost.title;
-            // this.custom(host);
           }
           return tab;
         }
@@ -571,7 +561,7 @@ class Container extends BaseContainer {
       sty.setProperty(str, v);
     }
   }
-  makePrompt(txt, dataset = {}, usePrompt = true) {
+  makePrompt(txt) {
     if (qs('.prompt', this.promptElem)) {
       for (const elem of qsA('.prompt', this.promptElem)) {
         if (elem.dataset.prompt) {
@@ -587,25 +577,18 @@ class Container extends BaseContainer {
     const elHead = make('mu-js', 'prompt-head', {
       innerHTML: `${iconSVG.load('refresh')} ${txt}`
     });
-    el.append(elHead);
-    if (usePrompt) {
-      const elPrompt = make('mu-js', 'prompt-body', { dataset });
-      const elYes = make('mujs-btn', 'prompt-confirm', {
-        innerHTML: 'Confirm',
-        dataset: {
-          command: 'prompt-confirm'
-        }
-      });
-      const elNo = make('mujs-btn', 'prompt-deny', {
-        innerHTML: 'Deny',
-        dataset: {
-          command: 'prompt-deny'
-        }
-      });
-      elPrompt.append(elYes, elNo);
-      el.append(elPrompt);
-    }
+    const elPrompt = make('mu-js', 'prompt-body');
+    const elClose = make('mujs-btn', 'prompt-deny', {
+      textContent: i18n$('close')
+    });
+
+    ael(elClose, 'click', () => {
+      el.remove();
+    });
+    elPrompt.append(elClose);
+    el.append(elHead, elPrompt);
     this.promptElem.append(el);
+    return el;
   }
   save() {
     this.unsaved = false;
@@ -723,11 +706,13 @@ const mkList = (txt = '', obj = {}) => {
  * @param { string } engine
  */
 const createjs = (ujs, engine) => {
-  // Lets not add this UserJS to the list
-  if (ujs.id === 421603) {
-    return;
-  }
-  if (badUserJS.includes(ujs.id) || badUserJS.includes(ujs.url)) {
+  const a = [
+    ujs.deleted === true,
+    ujs.id === 421603, // Lets not add this UserJS to the list
+    badUserJS.includes(ujs.id),
+    badUserJS.includes(ujs.url)
+  ].find((t) => t === true);
+  if (a) {
     return;
   }
   if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
@@ -1016,6 +1001,16 @@ const doInstallProcess = (installLink) => {
     webext.tabs.update(currentTab.id, { url: installLink });
   }
 };
+const doDownloadProcess = (details) => {
+  if (!details.url) {
+    return;
+  }
+  const a = make('a');
+  a.href = details.url;
+  a.setAttribute('download', details.filename || '');
+  a.setAttribute('type', 'text/plain');
+  a.dispatchEvent(new MouseEvent('click'));
+};
 
 // #region List
 class List extends BaseList {
@@ -1049,12 +1044,14 @@ class List extends BaseList {
         results = data;
       }
       for (const ujs of results ?? []) {
-        ujs._mujs.code.request = async (translate = false, code_url) => {
+        // translate = false, code_url
+        ujs._mujs.code.request = async (code_url) => {
           if (ujs._mujs.code.data_code_block) {
             return ujs._mujs.code;
           }
           const p = new ParseUserJS();
-          await p.request(translate, code_url ?? ujs.code_url, ujs);
+          await p.request(code_url ?? ujs.code_url);
+          // await p.request(translate, code_url ?? ujs.code_url, ujs);
           for (const [k, v] of Object.entries(p)) {
             ujs._mujs.code[k] = v;
           }
@@ -1100,22 +1097,43 @@ ael(main, 'click', async (evt) => {
     const prmpt = /prompt-/.test(target.dataset.command);
     let dataset = target.dataset;
     let cmd = dataset.command;
-    let prmptChoice = false;
     if (prmpt) {
       dataset = target.parentElement.dataset;
       cmd = dataset.command;
-      prmptChoice = /confirm/.test(target.dataset.command);
-      target.parentElement.parentElement.remove();
-    }
-    if (cmd === 'install-script' && dataset.userjs) {
-      let installCode = dataset.userjs;
-      if (!prmpt && dataset.userjs.endsWith('.user.css')) {
-        container.makePrompt(i18n$('prmpt_css'), dataset);
-        return;
-      } else if (prmpt !== prmptChoice) {
-        installCode = dataset.userjs.replace(/\.user\.css$/, '.user.js');
+      if (/prompt-install/.test(target.dataset.command)) {
+        doInstallProcess(target.dataset.code_url);
+        target.parentElement.parentElement.parentElement.remove();
+      } else if (/prompt-download/.test(target.dataset.command)) {
+        target.parentElement.parentElement.parentElement.remove();
+      } else {
+        target.parentElement.parentElement.remove();
       }
-      doInstallProcess(installCode);
+      return;
+    }
+    if (cmd === 'install-script') {
+      if (!container.userjsCache.has(+dataset.userjs)) {
+        return;
+      }
+      const dataUserJS = container.userjsCache.get(+dataset.userjs);
+      if (dataUserJS.code_urls.length > 1) {
+        const list = make('mujs-list', {
+          style: 'display: flex; flex-direction: column;'
+        });
+        for (const ujs of dataUserJS.code_urls) {
+          const a = make('mujs-a', {
+            title: ujs.code_url,
+            textContent: ujs.name,
+            dataset: {
+              command: 'prompt-install',
+              code_url: ujs.code_url
+            }
+          });
+          list.append(a);
+        }
+        container.makePrompt(`Multiple detected: ${list.outerHTML}`, dataset, false);
+      } else {
+        doInstallProcess(dataUserJS.code_url);
+      }
     } else if (cmd === 'open-tab' && dataset.webpage) {
       openInTab(dataset.webpage);
     } else if (cmd === 'fullscreen') {
@@ -1186,27 +1204,31 @@ ael(main, 'click', async (evt) => {
         return;
       }
       const dataUserJS = container.userjsCache.get(+dataset.userjs);
-      let installCode = dataUserJS.code_url;
-      if (!prmpt && dataUserJS.code_url.endsWith('.user.css')) {
-        container.makePrompt('Download as UserStyle?', dataset);
-        return;
-      } else if (prmpt !== prmptChoice) {
-        installCode = dataUserJS.code_url.replace(/\.user\.css$/, '.user.js');
+
+      if (dataUserJS.code_urls.length > 1) {
+        const list = make('mujs-list', {
+          style: 'display: flex; flex-direction: column;'
+        });
+        for (const ujs of dataUserJS.code_urls) {
+          const a = make('mujs-a', {
+            title: ujs.code_url,
+            textContent: ujs.name,
+            dataset: {
+              command: 'prompt-download',
+              code_url: ujs.code_url
+            }
+          });
+          list.append(a);
+        }
+        container.makePrompt(`Multiple detected: ${list.outerHTML}`, dataset, false);
+      } else {
+        const code_obj = await dataUserJS._mujs.code.request();
+        if (typeof code_obj.code === 'string')
+          doDownloadProcess({
+            url: 'data:text/plain;charset=utf-8,' + encodeURIComponent(code_obj.code),
+            filename: `${dataUserJS.name}${/\.user\.css$/.test(dataUserJS.code_url) ? '.user.css' : '.user.js'}`
+          });
       }
-      const r = await dataUserJS._mujs.code.request(false, installCode);
-      const txt = r.data;
-      if (typeof txt !== 'string') {
-        return;
-      }
-      const userjsName = dataset.userjsName ?? dataset.userjs;
-      const userjsExt = prmpt !== prmptChoice ? '.user.js' : '.user.css';
-      const makeUserJS = new Blob([txt], { type: 'text/plain' });
-      const dlBtn = make('a', 'mujs_Downloader');
-      dlBtn.href = URL.createObjectURL(makeUserJS);
-      dlBtn.download = `${userjsName}${userjsExt}`;
-      dlBtn.click();
-      URL.revokeObjectURL(dlBtn.href);
-      dlBtn.remove();
     } else if (cmd === 'load-userjs' || cmd === 'load-header') {
       if (!container.userjsCache.has(+dataset.userjs)) {
         return;
@@ -1577,11 +1599,11 @@ ael(urlBar, 'change', (evt) => {
       }
       evt.target.placeholder = i18n$('search_placeholder');
       evt.target.value = '';
-    } else if (host === 'all-urls') {
-      tabElem.dataset.host = '*';
+    } else if (host === '*') {
+      tabElem.dataset.host = host;
       tabHost.title = '<All Sites>';
       tabHost.textContent = '<All Sites>';
-      MUList.host = '*';
+      MUList.host = host;
       MUList.build();
     } else if (container.checkBlacklist(host)) {
       showError(`Blacklisted "${host}"`);
@@ -1836,12 +1858,12 @@ const makecfg = () => {
   makeRow(i18n$('auto_fetch'), 'autofetch', 'checkbox', 'load');
   makeRow('Clear on Tab close', 'clearTabCache', 'checkbox', 'load');
 
-  makeRow('Default Sort', 'autoSort', 'select', 'list');
+  makeRow(i18n$('default_sort'), 'autoSort', 'select', 'list');
   makeRow(i18n$('filter'), 'filterlang', 'checkbox', 'list');
   makeRow(i18n$('preview_code'), 'preview-code', 'checkbox', 'list');
-  makeRow('Preview Metadata', 'preview-metadata', 'checkbox', 'list');
-  makeRow('Recommend author', 'recommend-author', 'checkbox', 'list');
-  makeRow('Recommend scripts', 'recommend-others', 'checkbox', 'list');
+  makeRow(i18n$('preview_metadata'), 'preview-metadata', 'checkbox', 'list');
+  makeRow(i18n$('recommend_author'), 'recommend-author', 'checkbox', 'list');
+  makeRow(i18n$('recommend_others'), 'recommend-others', 'checkbox', 'list');
 
   for (const [k, v] of Object.entries(cfg.filters)) {
     makeRow(v.name, `filters-${k}`, 'checkbox', 'filters');

@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import Watchpack from 'watchpack';
 import minimist from 'minimist';
 import { loadLanguages } from '@userjs/i18n';
+import { compile } from 'sass-embedded';
 
 /**
  * @typedef { import('../typings/index.d.ts').UserJS } CFG
@@ -160,7 +161,7 @@ async function build() {
       }
       return process.env;
     };
-    const { JS_ROOT, JS_ENV, JS_i18n } = getEnv();
+    const { JS_ENV, JS_i18n } = getEnv();
     const jsonRecords = await Promise.all([
       // fileToJSON('./package.json').then(({ userJS }) => {
       //   return userJS ?? {};
@@ -183,27 +184,22 @@ async function build() {
     const isDev = isEmpty(JS_ENV) || JS_ENV === 'development';
     const buildUserJS = async () => {
       try {
-        const i18nList = await loadLanguages(new URL(JS_i18n ?? `${JS_ROOT}src/_locales`, import.meta.url));
+        const i18n = userJS.build.paths.i18n;
+        const i18nList = await loadLanguages(new URL(i18n.dir ?? JS_i18n, import.meta.url));
         const compileLanguage = (type = 'userjs_name') => {
           const resp = [];
-          for (const obj of i18nList) {
-            for (const [k, v] of Object.entries(obj)) {
-              if (v[type]) {
-                if (isEmpty(v[type].message)) {
-                  continue;
-                }
-                if (k.startsWith('en')) {
-                  continue;
-                }
-                const t = type.toLowerCase().replace('userjs_', '');
-                if (type === 'userjs_name') {
-                  resp.push(
-                    `// @${t}:${k.replace('_', '-')}      ${isDev ? '[Dev] ' : ''}${v[type].message}`
-                  );
-                } else {
-                  resp.push(`// @${t}:${k.replace('_', '-')}      ${v[type].message}`);
-                }
-              }
+          for (const [key, obj] of i18nList.entries()) {
+            const value = obj[type];
+            if (!value || isEmpty(value) || key.startsWith(i18n.default)) {
+              continue;
+            }
+            const t = type.toLowerCase().replace('userjs_', '');
+            if (type === 'userjs_name') {
+              resp.push(
+                `// @${t}:${key.replace('_', '-')}      ${isDev ? '[Dev] ' : ''}${value}`
+              );
+            } else {
+              resp.push(`// @${t}:${key.replace('_', '-')}      ${value}`);
             }
           }
           return resp;
@@ -296,6 +292,13 @@ async function build() {
           metaPath: ''
         };
         for (const [k, v] of Object.entries(userJS.build.source)) {
+          if (/\.s[ac]ss$/i.test(v)) {
+            cfg.nano[k] = compile(v, {
+              sourceMap: false,
+              style: 'expanded'
+            }).css;
+            continue;
+          }
           const f = await canAccess(v);
           if (typeof f !== 'string') continue;
           if (k === 'metadata') {
@@ -305,23 +308,18 @@ async function build() {
           }
         }
         if (!isEmpty(i18nList)) {
-          for (const i18n of i18nList) {
-            for (const [k, v] of Object.entries(i18n)) {
-              const o = {};
-              for (const [key, value] of Object.entries(v)) {
-                if (key.startsWith('ext')) {
-                  continue;
-                }
-                if (/userjs_(name|description)/i.test(key)) {
-                  continue;
-                }
-                if (isEmpty(value.message)) {
-                  continue;
-                }
-                o[key] = value.message;
+          for (const [k, obj] of i18nList.entries()) {
+            const o = {};
+            for (const [key, value] of Object.entries(obj)) {
+              if (isEmpty(value)) {
+                continue;
               }
-              cfg.nano.languageList[k] = o;
+              if (/^ext[A-Z_]|^userjs_(name|description)/.test(key)) {
+                continue;
+              }
+              o[key] = value;
             }
+            cfg.nano.languageList[k] = o;
           }
         }
         for (const [k, v] of Object.entries(userJS.build.paths)) {
@@ -339,7 +337,7 @@ async function build() {
         cfg.nano.languageList = JSON.stringify(cfg.nano.languageList, null, ' ');
 
         await writeUserJS(cfg.file, nano(cfg.meta, cfg.nano));
-        log('UserJS Build:', {
+        log('UserJS File:', {
           path: cfg.file,
           time: toTime()
         });
@@ -364,7 +362,11 @@ async function build() {
     if (isDev) {
       const wp = new Watchpack();
       let changed = new Set();
-      wp.watch(userJS.build.watch.files, userJS.build.watch.dirs);
+      if (isEmpty(userJS.build.watch.files)) {
+        wp.watch(userJS.build.watch.dirs);
+      } else {
+        wp.watch(userJS.build.watch.files, userJS.build.watch.dirs);
+      }
       wp.on('change', (changedFile, mtime) => {
         if (mtime === null) {
           changed.delete(changedFile);

@@ -6,7 +6,7 @@ import { URL, fileURLToPath } from 'node:url';
  *
  * @type { import('../typings/index.d.ts').loadLanguages }
  */
-async function loadLanguages(dir, recursive = true) {
+async function loadLanguages(dir, recursive = true, mapper = new Map()) {
   try {
     // Get the stats of the directory
     const statDir = await stat(dir);
@@ -19,10 +19,6 @@ async function loadLanguages(dir, recursive = true) {
     // Get all the files in the directory
     const files = await readdir(dir);
 
-    // Create an empty array to store the structures
-    /** @type {T[]} */
-    const structures = [];
-
     // Loop through all the files in the directory
     for (const file of files) {
       // Get the stats of the file
@@ -30,29 +26,28 @@ async function loadLanguages(dir, recursive = true) {
 
       // If the file is a directory and recursive is true, recursively load the structures in the directory
       if (statFile.isDirectory() && recursive) {
-        structures.push(...(await loadLanguages(new URL(`${dir}/${file}`), recursive)));
+        await loadLanguages(new URL(`${dir}/${file}`), recursive, mapper);
         continue;
       }
 
       if (!file.endsWith('.json')) {
         continue;
       }
-
       const filePath = fileURLToPath(`${dir}/${file}`);
       const reg = /_locales\\(.*?)\\messages\.json/g.exec(filePath);
       if (reg) {
         const structure = await readFile(filePath, 'utf-8');
-        structures.push({
-          [reg[1]]: JSON.parse(structure.toString('utf-8'))
-        });
+        const obj = {};
+        for (const [k, v] of Object.entries(JSON.parse(structure.toString('utf-8'))))
+          obj[k] = v.message ?? '';
+        mapper.set(reg[1], obj);
       }
     }
-
-    return structures;
-    // eslint-disable-next-line no-unused-vars
   } catch (ex) {
-    return [];
+    console.error(ex);
   }
+
+  return mapper;
 }
 
 export { loadLanguages };

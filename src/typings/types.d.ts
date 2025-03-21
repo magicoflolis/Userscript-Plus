@@ -48,6 +48,10 @@ export type GSForkQuery = {
   description: string;
   url: string;
   code_url: string;
+  code_urls: {
+    name: string;
+    code_url: string;
+  }[];
   license: string;
   version: string;
   locale: string;
@@ -59,7 +63,7 @@ export type GSForkQuery = {
     };
     code: {
       meta: UserJSMeta | null;
-      request(): Promise<GSForkQuery['_mujs']['code']>;
+      request(translate: boolean, code_url?: string): Promise<GSForkQuery['_mujs']['code']>;
 
       code_size?: string[];
       translated?: boolean;
@@ -257,12 +261,12 @@ export declare function isNull<O>(obj: O): boolean;
 /**
  * Object is Blank
  */
-export declare function isBlank<O>(obj: O): boolean;
+export declare function isBlank<O extends object | string | any[]>(obj: O): boolean;
 
 /**
  * Object is Empty
  */
-export declare function isEmpty<O>(obj: O): boolean;
+export declare function isEmpty<O extends object | string | any[]>(obj: O): boolean;
 
 /**
  * Type is not 100% accurate
@@ -315,26 +319,12 @@ declare global {
 }
 
 /**
- * Appends an event listener for events whose type attribute value is type. The callback argument sets the callback that will be invoked when the event is dispatched.
- *
- * The options argument sets listener-specific options. For compatibility this can be a boolean, in which case the method behaves exactly as if the value was specified as options's capture.
- *
- * When set to true, options's capture prevents callback from being invoked when the event's eventPhase attribute value is BUBBLING_PHASE. When false (or not present), callback will not be invoked when event's eventPhase attribute value is CAPTURING_PHASE. Either way, callback will be invoked if event's eventPhase attribute value is AT_TARGET.
- *
- * When set to true, options's passive indicates that the callback will not cancel the event by invoking preventDefault(). This is used to enable performance optimizations described in § 2.8 Observing event listeners.
- *
- * When set to true, options's once indicates that the callback will only be invoked once after which the event listener will be removed.
- *
- * If an AbortSignal is passed for options's signal, then the event listener will be removed when signal is aborted.
- *
- * The event listener is appended to target's event listener list and is not appended if it has the same type, callback, and capture.
- *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/EventTarget/addEventListener)
  */
 export declare function ael<E extends HTMLElement, K extends keyof HTMLElementEventMap>(
   el: E,
   type: K,
-  listener: EventListenerOrEventListenerObject,
+  listener: (this: E, ev: HTMLElementEventMap[K]) => any | EventListenerOrEventListenerObject,
   options?: AddEventListenerOptions | boolean
 ): void;
 
@@ -357,8 +347,10 @@ export declare function qsA<E extends HTMLElement, S extends string>(
 
 /**
  * Set attributes for an element.
+ * @param elem HTML element
+ * @param attr Set attributes for the element
  */
-export declare function formAttrs<E extends HTMLElement>(elem: E, attr: keyof E): E;
+export declare function formAttrs<E extends HTMLElement>(elem: E, attr?: E[keyof E]): E;
 
 /**
  * Creates an instance of the element for the specified tag.
@@ -400,6 +392,7 @@ export interface dom {
     value?: V
   ): V | undefined;
   text<T extends HTMLElement, V extends unknown>(target: T, text?: V): string | null | undefined;
+  remove<T extends HTMLElement>(target: T): void;
   cl: {
     add<T extends HTMLElement>(target: T, token: string | string[]): boolean;
     remove<T extends HTMLElement>(target: T, token: string | string[]): boolean;
@@ -407,3 +400,15 @@ export interface dom {
     has<T extends HTMLElement>(target: T, token: string | string[]): boolean;
   };
 }
+export type cfgBase = {
+  text: string;
+  tag: string;
+  value: string;
+  type: HTMLInputElement['type'];
+  attrs: object;
+  default: string | boolean | number | UserJSEngine | FilterLayout;
+  cache: string | boolean | number | UserJSEngine | FilterLayout;
+  elem: HTMLInputElement | HTMLSelectElement;
+  elemUrl?: HTMLInputElement;
+  elemToken?: HTMLInputElement;
+}[];

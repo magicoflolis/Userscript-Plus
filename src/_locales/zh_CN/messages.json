@@ -141,12 +141,30 @@
     "message": "关闭 Userscript+"
   },
   "userjs_sync": {
-    "message": "Sync with UserScript Manager"
+    "message": "Sync"
   },
   "userjs_autoinject": {
     "message": "Inject on load"
   },
   "auto_fetch": {
     "message": "Fetch on load"
+  },
+  "code": {
+    "message": "代码"
+  },
+  "metadata": {
+    "message": "Metadata"
+  },
+  "preview_metadata": {
+    "message": "Preview Metadata"
+  },
+  "recommend_author": {
+    "message": "Recommend Author"
+  },
+  "recommend_other": {
+    "message": "Recommend Others"
+  },
+  "default_sort": {
+    "message": "Default Sort"
   }
 }

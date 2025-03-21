@@ -24,6 +24,10 @@ export interface UserJS {
     paths: {
       fileName: string;
       dir: PathLike;
+      i18n?: {
+        default: string;
+        dir: PathLike;
+      };
       dev?: {
         fileName?: string;
         dir?: PathLike;

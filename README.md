@@ -31,25 +31,15 @@ Finds available UserScripts and UserStyles for the current webpage, the power of
 
 * [Greasy Fork](https://greasyfork.org/scripts/421603)
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/blob/master/dist/magic-userjs.user.js?raw=1)
-* [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - outdated
+* [Open UserJS](https://openuserjs.org/scripts/Magic/Magic_Userscript+_Show_Site_All_UserJS) - Outdated
 
 **Web Extension:**
 
-*General:*
-
 * [GitHub Repo](https://github.com/magicoflolis/Userscript-Plus/releases)
-
-*Firefox:*
-
 * [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/userscript-plus/)
-
-*Chromium:*
-
 * [Chrome Web Store](https://chromewebstore.google.com/detail/kbelpalpbddhjhoakbjkfookjeiennbo)
-
-*Microsoft Edge:*
-
 * [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/golkolijobdaldjgefapmcknlmkjlhdh)
+* ~~[Opera Add-ons](https://github.com/magicoflolis/Userscript-Plus/releases)~~ - Under review
 
 **Bookmarklet (not recommended):**
 
@@ -162,8 +152,8 @@ How to add or edit translations? How to build? - [Build](https://github.com/magi
 
 ### Roadmap
 
-* Finish WebExtension
 * See TODO section in [UserScript Changelog](https://github.com/magicoflolis/Userscript-Plus/blob/master/CHANGELOG.user.md)
+* See TODO section in [Web Extension Changelog](https://github.com/magicoflolis/Userscript-Plus/releases)
 
 ### Source Code
 

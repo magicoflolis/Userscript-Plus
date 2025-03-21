@@ -258,8 +258,6 @@ const formatURL = (txt) =>
     .splice(-2)
     .join('.')
     .replace(/\/|https:/g, '');
-/******************************************************************************/
-
 const matchesFromHostnames = (hostnames) => {
   const out = [];
   for (const hn of hostnames) {
@@ -272,7 +270,9 @@ const matchesFromHostnames = (hostnames) => {
   }
   return out;
 };
-
+/**
+ * @param {string[]} origins
+ */
 const hostnamesFromMatches = (origins) => {
   const out = [];
   for (const origin of origins) {
@@ -288,11 +288,29 @@ const hostnamesFromMatches = (origins) => {
   }
   return out;
 };
-
-/******************************************************************************/
+/**
+ * @param {string} hn
+ */
+const normalizedHostname = (hn) => {
+  return hn.replace(/^www\./, '');
+};
+/**
+ * @param {string} str
+ */
+const decode = (str) => {
+  try {
+    if (decodeURI(str) !== decodeURIComponent(str)) {
+      return decode(decodeURIComponent(str));
+    }
+  } catch (ex) {
+    err(ex);
+  }
+  return str;
+};
 // #endregion
 
 export {
+  decode,
   formatURL,
   objToStr,
   strToURL,
@@ -312,5 +330,6 @@ export {
   union,
   loadFilters,
   matchesFromHostnames,
-  hostnamesFromMatches
+  hostnamesFromMatches,
+  normalizedHostname
 };

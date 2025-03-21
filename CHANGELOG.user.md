@@ -1,5 +1,47 @@
 # Changelog
 
+## v7.6.2
+
+* Improvements:
+  * improved multiple UserScript/UserStyle detection
+  * improved cache system
+  * _improved_ hostname recognition - somewhat follows web extension version
+  * improved readablity of "Theme Colors" section
+  * improved import/export of config and theme
+  * improved download process of UserScripts and UserStyles
+* Config changes:
+  * GitHub engine:
+    * if your a UserScript or UserStyle developer and it's hosted on GitHub see [GitHub Detection](https://github.com/magicoflolis/Userscript-Plus/tree/master/wiki#github-detection)
+    * will now list all UserScripts and UserStyles within a repository - _even if they don't match the host_
+    * multiple urls will now be fetched:
+      * `https://api.github.com/search/repositories?q=topic:{domain}+topic:userstyle` - cannot be changed in the settings menu
+      * `https://api.github.com/search/repositories?q=topic:{domain}+topic:userscript` - reset your config or manually set this address for changes to take effect
+    * the repository is removed from the list if no valid UserScripts or UserStyles are found
+* Bug fixes:
+  * fixed "Enabling a engine requires the page to be reloaded, while disabling a engine does not."
+  * fixed "If an item changes after the list is sorted, the sorting won't be updated"
+  * fixed menu not timing out when "Fetch on load" was disabled
+  * fixed tab when searching for all-sites / `*`
+  * fixed searching settings
+* Internal changes:
+  * removed `Memorize` class
+  * removed unused \@grants `GM_addValueChangeListener`, `GM_removeValueChangeListener`, and there `GM.*` counter parts
+  * removed some unused functions, types, css
+  * shortened some functions, types, css
+* i18n additions (still not localized):
+  * new keys: `code`, `metadata`, `preview_metadata`, `recommend_author`, `recommend_other`, `default_sort`
+
+**Known Issues:**
+
+* SVG elements don't load on every webpage:
+  * _can be blocked by host, external scripts, web extensions, etc._
+
+**TODO:**
+
+* Finish translations.
+* Finish blacklist section.
+* GitHub engine - filter out UserScript and UserStyles that don't match the host
+
 ## v7.6.1
 
 * Fixed sorting

@@ -1,29 +1,35 @@
 'use strict';
 
-// #region i18n
 const i18n =
   self.browser instanceof Object && self.browser instanceof Element === false
     ? self.browser.i18n
     : self.chrome.i18n;
 
-const i18n$ = (...args) => {
-  return i18n.getMessage(...args);
-};
-/**
- * @param {string | Date | number} str
- */
-const toDate = (str = '') => {
-  return new Intl.DateTimeFormat(navigator.language).format(
-    typeof str === 'string' ? new Date(str) : str
-  );
-};
-/**
- * @param {number | bigint} number
- */
-const toNumber = (number) => {
-  return new Intl.NumberFormat(navigator.language).format(number);
-};
-// #endregion
+class i18nHandler {
+  /**
+   * @param {string | Date | number} str
+   */
+  static toDate(str = '') {
+    return new Intl.DateTimeFormat(navigator.language).format(
+      typeof str === 'string' ? new Date(str) : str
+    );
+  }
+  /**
+   * @param {number | bigint} number
+   */
+  static toNumber(number) {
+    return new Intl.NumberFormat(navigator.language).format(number);
+  }
+  /**
+   * @param {...string} args
+   */
+  static i18n$(...args) {
+    return i18n.getMessage(...args);
+  }
+}
+
+const { i18n$, toDate, toNumber } = i18nHandler;
+const language = { i18n$, toDate, toNumber };
 
 const isBackgroundProcess = document && document.title === 'Magic UserJS+ Background Page';
 
@@ -49,6 +55,5 @@ if (isBackgroundProcess !== true) {
   };
   i18n.render();
 }
-const language = { i18n$, toDate, toNumber };
 
-export { i18n, i18n$, toDate, toNumber, language };
+export { i18n, i18n$, language };

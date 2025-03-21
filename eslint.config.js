@@ -1,79 +1,61 @@
+import { defineConfig } from 'eslint/config';
+
 import globals from 'globals';
 import pluginJs from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
 
-const userJSGlobals = {
-  code: 'readonly',
-  metadata: 'readonly',
-  main_css: 'readonly',
-  languageList: 'readonly',
-  translations: 'readonly',
-  userjs: 'writable',
-  ...globals.es2024,
-  ...globals.browser,
-  ...globals.greasemonkey
-};
-const webextGlobals = {
-  MU: 'writable',
-  sleazyfork_redirect: 'readonly',
-  webext: 'readonly',
-  brws: 'readonly',
-  userjs: 'writable',
-  ...globals.es2024,
-  ...globals.browser,
-  ...globals.webextensions
-};
-const parserOptions = {
-  allowImportExportEverywhere: false,
-  ecmaFeatures: {
-    globalReturn: true,
-    arrowFunctions: true,
-    modules: true
-  }
-};
-const rules = {
-  'keyword-spacing': ['error', { before: true }],
-  'no-var': 'error',
-  'prefer-const': ['error', { destructuring: 'all' }],
-  'prefer-promise-reject-errors': 'error',
-  'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
-  quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
-  'space-before-blocks': ['error', 'always']
-};
-
-export default [
+export default defineConfig([
   pluginJs.configs.recommended,
   eslintConfigPrettier,
   {
-    files: ['src/js/*.js'],
+    rules: {
+      'no-var': 'error',
+      'prefer-const': ['error', { destructuring: 'all' }],
+      'prefer-promise-reject-errors': 'error',
+      'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
+      quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
+      'space-before-blocks': ['error', 'always']
+    },
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: webextGlobals,
-      parserOptions
-    },
-    rules
+      globals: globals.es2024
+    }
+  },
+  {
+    files: ['src/js/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.webextensions
+      }
+    }
   },
   {
     files: ['src/UserJS/main.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: userJSGlobals,
-      parserOptions
-    },
-    rules
+      sourceType: 'script',
+      globals: {
+        main_css: 'readonly',
+        translations: 'writable',
+        userjs: 'writable',
+        ...globals.browser,
+        ...globals.greasemonkey
+      }
+    }
   },
   {
     files: ['src/UserJS/header.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: userJSGlobals,
-      parserOptions
+      sourceType: 'script',
+      globals: {
+        code: 'readonly',
+        metadata: 'readonly',
+        languageList: 'readonly',
+        ...globals.browser
+      }
     },
     rules: {
-      ...rules,
       quotes: 'off',
       'no-unused-vars': 'off'
     }
@@ -81,14 +63,7 @@ export default [
   {
     files: ['tools/*.js', 'utils/**/*.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: {
-        ...globals.es2024,
-        ...globals.node
-      },
-      parserOptions
-    },
-    rules
+      globals: globals.node
+    }
   }
-];
+]);

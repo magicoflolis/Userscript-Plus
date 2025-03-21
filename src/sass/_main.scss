@@ -53,14 +53,16 @@ mujs-root * {
     ::-webkit-scrollbar-thumb {
       border-radius: 16px;
       background-color: var(--mujs-txt-color, hsl(0, 0%, 100%));
-      background-image: -webkit-linear-gradient(45deg,
-          hsla(0, 0%, 100%, 0.2) 25%,
-          transparent 25%,
-          transparent 50%,
-          hsla(0, 0%, 100%, 0.2) 50%,
-          hsla(0, 0%, 100%, 0.2) 75%,
-          transparent 75%,
-          transparent);
+      background-image: -webkit-linear-gradient(
+        45deg,
+        hsla(0, 0%, 100%, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        hsla(0, 0%, 100%, 0.2) 50%,
+        hsla(0, 0%, 100%, 0.2) 75%,
+        transparent 75%,
+        transparent
+      );
     }
 
     ::-webkit-scrollbar-thumb:hover {
@@ -73,7 +75,7 @@ mujs-root * {
   line-height: normal;
 }
 
-mujs-section>label,
+mujs-section > label,
 .mujs-homepag e,
 td.mujs-list,
 .install {
@@ -85,7 +87,7 @@ td.mujs-list,
   font-weight: 700;
 }
 
-mujs-section>label,
+mujs-section > label,
 td.mujs-list {
   font-weight: 500;
 }
@@ -111,19 +113,19 @@ mujs-row {
 
 mujs-column {
   count-frame {
-    &[data-counter="greasyfork"] {
+    &[data-counter='greasyfork'] {
       background: var(--mujs-gf-color, hsl(204, 100%, 40%));
     }
 
-    &[data-counter="sleazyfork"] {
+    &[data-counter='sleazyfork'] {
       background: var(--mujs-sf-color, hsl(12, 86%, 50%));
     }
 
-    &[data-counter="github"] {
+    &[data-counter='github'] {
       background: hsla(213, 13%, 16%);
     }
 
-    &[data-counter="openuserjs"] {
+    &[data-counter='openuserjs'] {
       background: hsla(12, 86%, 50%, 0.568);
     }
   }
@@ -186,7 +188,7 @@ mujs-main {
     flex-direction: column !important;
   }
 
-  >* {
+  > * {
     width: 100%;
     width: -moz-available;
     width: -webkit-fill-available;
@@ -194,7 +196,7 @@ mujs-main {
 
   mujs-toolbar {
     order: 0;
-    padding: .5em;
+    padding: 0.5em;
     display: flex;
     place-content: space-between;
 
@@ -208,7 +210,7 @@ mujs-main {
       order: 999999999999;
     }
 
-    >* {
+    > * {
       width: -webkit-fit-content;
       width: -moz-fit-content;
       width: fit-content;
@@ -339,7 +341,7 @@ mujs-main {
     text-align: center;
     border-radius: 16px;
 
-    >* {
+    > * {
       min-height: 50px;
     }
 
@@ -364,13 +366,13 @@ mujs-main {
       background: transparent;
     }
 
-    >.prompt {
+    > .prompt {
       position: absolute;
       background: var(--mujs-background-color, hsl(222, 14%, 33%)) !important;
       border: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
       border-radius: 16px;
       text-align: center;
-      padding: .5em;
+      padding: 0.5em;
       z-index: 1;
 
       .prompt-head {
@@ -380,12 +382,12 @@ mujs-main {
       .prompt-body {
         display: grid;
         grid-auto-flow: column;
-        grid-gap: .5em;
-        padding-top: .5em;
+        grid-gap: 0.5em;
+        padding-top: 0.5em;
       }
 
       mujs-btn {
-        &[data-command="prompt-deny"] {
+        &.prompt-deny {
           background: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
           border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
 
@@ -395,7 +397,7 @@ mujs-main {
           }
         }
 
-        &[data-command="prompt-confirm"] {
+        &.prompt-confirm {
           background: var(--mujs-gf-color, hsl(204, 100%, 40%));
           border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
 
@@ -460,9 +462,9 @@ mujs-header {
   order: 1;
   display: flex;
   border-bottom: 1px solid var(--mujs-txt-color, hsl(0, 0%, 100%));
-  padding-left: .5em;
-  padding-right: .5em;
-  padding-bottom: .5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  padding-bottom: 0.5em;
   font-size: 1em;
   place-content: space-between;
   height: fit-content;
@@ -470,7 +472,7 @@ mujs-header {
   height: -webkit-fit-content;
   gap: 1em;
 
-  >*:not(mujs-url) {
+  > *:not(mujs-url) {
     height: fit-content;
     height: -moz-fit-content;
     height: -webkit-fit-content;
@@ -480,7 +482,7 @@ mujs-header {
     order: 0;
     flex-grow: 1;
 
-    >input {
+    > input {
       width: 100%;
       height: 100%;
       background: var(--mujs-even-row, hsl(222, 14%, 18%));
@@ -535,7 +537,7 @@ mujs-body {
     width: -webkit-fill-available;
 
     @media screen and (max-width: 1180px) {
-      thead>tr {
+      thead > tr {
         display: table-column;
       }
 
@@ -544,28 +546,28 @@ mujs-body {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        padding-top: .5em;
-        padding-bottom: .5em;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
 
         td {
           margin: auto;
 
-          >mujs-a,
-          >mu-js,
-          >mujs-column {
+          > mujs-a,
+          > mu-js,
+          > mujs-column {
             text-align: center;
             justify-content: center;
           }
 
-          >mujs-a {
+          > mujs-a {
             width: 100%;
           }
 
-          >mujs-column {
+          > mujs-column {
             @media screen and (max-width: 800px) {
               flex-flow: column wrap;
 
-              >mujs-row {
+              > mujs-row {
                 align-content: center;
               }
 
@@ -637,7 +639,7 @@ mujs-body {
         }
       }
 
-      &:not([data-engine="sleazyfork"], [data-engine="greasyfork"]) {
+      &:not([data-engine='sleazyfork'], [data-engine='greasyfork']) {
         mujs-a {
           color: var(--mujs-sf-txt-color, hsl(12, 79%, 55%));
         }
@@ -653,8 +655,8 @@ mujs-body {
         }
       }
 
-      &[data-engine="sleazyfork"],
-      &[data-engine="greasyfork"] {
+      &[data-engine='sleazyfork'],
+      &[data-engine='greasyfork'] {
         mujs-a {
           color: var(--mujs-gf-color, hsl(197, 100%, 50%));
 
@@ -722,19 +724,19 @@ mujs-body {
       }
 
       .mujs-ratings {
-        &[data-el="good"] {
+        &[data-el='good'] {
           border-color: hsl(120, 50%, 40%);
           background-color: hsla(120, 50%, 40%, 0.102);
           color: hsl(120, 100%, 60%);
         }
 
-        &[data-el="ok"] {
+        &[data-el='ok'] {
           border-color: hsl(60, 100%, 30%);
           background-color: hsla(60, 100%, 30%, 0.102);
           color: hsl(60, 100%, 50%);
         }
 
-        &[data-el="bad"] {
+        &[data-el='bad'] {
           border-color: hsl(0, 100%, 30%);
           background-color: hsla(0, 50%, 40%, 0.102);
           color: hsl(0, 100%, 50%);
@@ -748,12 +750,12 @@ mujs-body {
         background: transparent;
       }
 
-      >td:not(.mujs-name) {
+      > td:not(.mujs-name) {
         text-align: center;
       }
 
-      >.mujs-name {
-        >mujs-a {
+      > .mujs-name {
+        > mujs-a {
           width: -webkit-fit-content;
           width: -moz-fit-content;
           width: fit-content;
@@ -766,12 +768,12 @@ mujs-body {
           height: fit-content;
         }
 
-        >mu-jsbtn {
+        > mu-jsbtn {
           margin: auto;
         }
 
-        >mujs-column {
-          >mu-jsbtn {
+        > mujs-column {
+          > mu-jsbtn {
             padding: 0px 7px;
 
             @media screen and (max-width: 800px) {
@@ -781,23 +783,23 @@ mujs-body {
         }
       }
 
-      >.mujs-uframe {
-        >mujs-a {
+      > .mujs-uframe {
+        > mujs-a {
           font-size: 16px;
           font-weight: 500;
-          padding-left: .5rem;
-          padding-right: .5rem;
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
         }
       }
 
-      [data-el="more-info"] {
-        >mujs-row {
-          gap: .25em;
+      [data-el='more-info'] {
+        > mujs-row {
+          gap: 0.25em;
         }
       }
 
-      [data-el="matches"] {
-        gap: .25em;
+      [data-el='matches'] {
+        gap: 0.25em;
         max-width: 40em;
 
         .mujs-grants {
@@ -811,9 +813,9 @@ mujs-body {
           width: -moz-fit-content;
           width: fit-content;
           max-height: 5em;
-          gap: .2em;
+          gap: 0.2em;
 
-          >mujs-a {
+          > mujs-a {
             display: inline;
 
             &:not([data-command]) {
@@ -822,12 +824,12 @@ mujs-body {
             }
 
             &::after {
-              content: ", ";
+              content: ', ';
               color: var(--mujs-txt-color, hsl(0, 0%, 100%));
             }
 
             &:last-child::after {
-              content: "";
+              content: '';
             }
           }
         }
@@ -838,7 +840,7 @@ mujs-body {
         }
       }
 
-      [data-name="license"] {
+      [data-name='license'] {
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -865,11 +867,11 @@ mujs-body {
 .mujs-cfg {
   mujs-section {
     border-radius: 16px;
-    padding: .5em;
+    padding: 0.5em;
 
     &:nth-child(even) {
       background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
-
+      
       input,
       select {
         background: var(--mujs-odd-row, hsl(222, 14%, 33%));
@@ -901,7 +903,32 @@ mujs-body {
       }
     }
 
-    &[data-name='theme'],
+    &[data-name='theme'] {
+      .sub-section {
+        border-radius: 4px;
+        
+        &:nth-child(even) {
+          background: var(--mujs-even-row, hsl(222, 14%, 18%));
+        }
+        &:nth-child(odd) {
+          background: var(--mujs-odd-row, hsl(222, 14%, 33%));
+        }
+      }
+      input,
+      select {
+        background: inherit;
+      }
+
+      select option {
+        background: inherit;
+
+        &:hover {
+          background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
+        }
+      }
+    }
+
+    // &[data-name='theme'],
     &[data-name='exp'],
     &[data-name='blacklist'] {
       display: flex;
@@ -909,11 +936,7 @@ mujs-body {
       flex-direction: column;
       gap: 0.25em;
 
-      // mujs-add {
-      //   order: 999999999999;
-      //   font-size: 20px;
-      // }
-      >mujs-btn {
+      > mujs-btn {
         &:hover {
           background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
         }
@@ -944,15 +967,12 @@ mujs-body {
       color: var(--mujs-placeholder, hsl(81, 56%, 54%));
     }
 
-    >label {
-
-      // [data-theme]
+    > label {
       &:not([data-blacklist]) {
         display: flex;
         justify-content: space-between;
       }
 
-      // &[data-theme],
       &[data-blacklist] {
         display: grid;
         grid-auto-flow: column;
@@ -992,8 +1012,8 @@ mujs-body {
       border-radius: 4px;
     }
 
-    >*.sub-section {
-      padding: 0.20em;
+    > *.sub-section {
+      padding: 0.2em;
 
       &[data-engine] {
         flex-wrap: wrap;
@@ -1018,7 +1038,7 @@ mujs-body {
     input[type='checkbox'] {
       display: none;
 
-      &:checked+label {
+      &:checked + label {
         margin-left: 0;
         background: var(--mujs-chck-color, hsla(0, 0%, 100%, 0.568));
 
@@ -1027,19 +1047,19 @@ mujs-body {
         }
       }
 
-      &[data-name='greasyfork']:checked+label {
+      &[data-name='greasyfork']:checked + label {
         background: var(--mujs-gf-color, hsl(204, 100%, 40%));
       }
 
-      &[data-name='sleazyfork']:checked+label {
+      &[data-name='sleazyfork']:checked + label {
         background: var(--mujs-sf-color, hsl(12, 86%, 50%));
       }
 
-      &[data-name='openuserjs']:checked+label {
+      &[data-name='openuserjs']:checked + label {
         background: var(--mujs-chck-open, hsla(12, 86%, 50%, 0.568));
       }
 
-      &[data-name='github']:checked+label {
+      &[data-name='github']:checked + label {
         background: var(--mujs-chck-git, hsla(213, 13%, 16%, 0.568));
       }
     }
@@ -1071,7 +1091,7 @@ mujs-body {
     mujs-btn {
       margin: auto;
 
-      &[data-command="reset"] {
+      &[data-command='reset'] {
         background: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
         border-color: var(--mujs-sf-btn-color, hsl(12, 86%, 50%));
 
@@ -1081,7 +1101,7 @@ mujs-body {
         }
       }
 
-      &[data-command="save"] {
+      &[data-command='save'] {
         background: var(--mujs-gf-color, hsl(204, 100%, 40%));
         border-color: var(--mujs-gf-color, hsl(204, 100%, 40%));
 
@@ -1110,7 +1130,7 @@ mujs-body {
       width: -moz-available;
       width: -webkit-fill-available;
       overflow-x: auto;
-      padding: .5em;
+      padding: 0.5em;
     }
   }
 }
@@ -1122,7 +1142,7 @@ mujs-a {
 .mujs-name {
   display: flex;
   flex-flow: column wrap;
-  gap: .5em;
+  gap: 0.5em;
 
   span {
     font-size: 0.8em !important;
@@ -1164,7 +1184,9 @@ mu-jsbtn {
 mujs-a,
 mu-jsbtn,
 .mujs-pointer,
-.mujs-cfg mujs-section *:not(input[type='text'], input[type='number'], [data-theme], [data-blacklist]),
+.mujs-cfg
+  mujs-section
+  *:not(input[type='text'], input[type='number'], [data-theme], [data-blacklist]),
 .mainbtn,
 .mainframe,
 mujs-btn {

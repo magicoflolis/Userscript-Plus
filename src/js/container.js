@@ -6,13 +6,13 @@ import { webext } from './ext.js';
 
 const MUJS_ORIGIN = webext.runtime.getURL('').replace(/\/$/, '');
 
+/**
+ * @type { import("../typings/UserJS.d.ts").Container }
+ */
 export class BaseContainer {
   constructor() {
     this.toElem = this.toElem.bind(this);
     this.cache = new Map();
-    /**
-     * @type { Map<number, import("../typings/types.d.ts").GSForkQuery[]> }
-     */
     this.userjsCache = new Map();
   }
 
@@ -38,7 +38,15 @@ export class BaseContainer {
 
 export class BaseList {
   intEngines;
+  /**
+   * @type { string | undefined }
+   */
   intHost;
+  /**
+   * @param {string} [hostname]
+   * @param {BaseContainer} [container]
+   * @param {import("../typings/types").config} [cfg]
+   */
   constructor(hostname = undefined, container = new BaseContainer(), cfg = {}) {
     this.groupBy = this.groupBy.bind(this);
     this.container = container;
@@ -72,7 +80,7 @@ export class BaseList {
     if (!MUJS_ORIGIN.includes(hostname)) {
       this.intHost = hostname ?? BLANK_PAGE;
     } else if (isEmpty(this.intHost)) {
-      this.intHost = BLANK_PAGE
+      this.intHost = BLANK_PAGE;
     }
 
     if (!this.container.cache.has(hostname)) {
@@ -84,10 +92,23 @@ export class BaseList {
     }
     this.blacklisted = this.container.checkBlacklist(hostname);
     this.intEngines = this.setEngines(this.engines);
+    this.domain = this.getDomain(this.intHost);
   }
 
   get host() {
     return this.intHost;
+  }
+
+  /**
+   * @template { string } S
+   * @param { S } str
+   * @returns { S | 'all-sites' }
+   */
+  getDomain(str) {
+    if (str === '*') {
+      return 'all-sites';
+    }
+    return str.split('.').at(-2) ?? BLANK_PAGE;
   }
 
   groupBy() {
