@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.6.4
+
+* fixed `this.hostCache` for real this time
+* changed `safeSelf` into a class
+
+---
+
 ## v7.6.3
 
 * fixed [#66](https://github.com/magicoflolis/Userscript-Plus/issues/66)

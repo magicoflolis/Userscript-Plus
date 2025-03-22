@@ -1,48 +1,53 @@
 // #region Console
-// const dbg = (...msg) => {
-//   const dt = new Date();
-//   console.debug(
-//     '[%cMagic Userscript+%c] %cDBG',
-//     'color: rgb(29, 155, 240);',
-//     '',
-//     'color: rgb(255, 212, 0);',
-//     `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
-//     ...msg
-//   );
-// };
-const err = (...msg) => {
-  console.error(
-    '[%cMagic Userscript+%c] %cERROR',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(249, 24, 128);',
-    ...msg
-  );
-  const a = typeof alert !== 'undefined' && alert;
-  for (const ex of msg) {
-    if (typeof ex === 'object' && 'cause' in ex && a) {
-      a(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
+const con = {
+  title: '[%cMagic Userscript+%c]',
+  color: 'color: rgb(29, 155, 240);',
+  dbg(...msg) {
+    const dt = new Date();
+    console.debug(
+      `${con.title} %cDBG`,
+      con.color,
+      '',
+      'color: rgb(255, 212, 0);',
+      `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
+      ...msg
+    );
+  },
+  err(...msg) {
+    console.error(
+      `${con.title} %cERROR`,
+      con.color,
+      '',
+      'color: rgb(249, 24, 128);',
+      ...msg
+    );
+    const a = typeof alert !== 'undefined' && alert;
+    for (const ex of msg) {
+      if (typeof ex === 'object' && 'cause' in ex && a) {
+        a(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
+      }
     }
+  },
+  info(...msg) {
+    console.info(
+      `${con.title} %cINF`,
+      con.color,
+      '',
+      'color: rgb(0, 186, 124);',
+      ...msg
+    );
+  },
+  log(...msg) {
+    console.log(
+      `${con.title} %cLOG`,
+      con.color,
+      '',
+      'color: rgb(219, 160, 73);',
+      ...msg
+    );
   }
 };
-const info = (...msg) => {
-  console.info(
-    '[%cMagic Userscript+%c] %cINF',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(0, 186, 124);',
-    ...msg
-  );
-};
-const log = (...msg) => {
-  console.log(
-    '[%cMagic Userscript+%c] %cLOG',
-    'color: rgb(29, 155, 240);',
-    '',
-    'color: rgb(219, 160, 73);',
-    ...msg
-  );
-};
+const { err, info } = con;
 // #endregion
 
 /**
@@ -133,77 +138,83 @@ function globalWin() {
     Function('return this')()
   );
 }
-/** @type { import("../typings/UserJS.d.ts").safeSelf } */
-function safeSelf() {
-  if (userjs.safeSelf) {
-    return userjs.safeSelf;
-  }
-  const g = globalWin();
+class Safe {
   /** @type { import("../typings/UserJS.d.ts").safeHandles } */
-  const safe = {
-    XMLHttpRequest: g.XMLHttpRequest,
-    CustomEvent: g.CustomEvent,
-    createElement: g.document.createElement.bind(g.document),
-    createElementNS: g.document.createElementNS.bind(g.document),
-    createTextNode: g.document.createTextNode.bind(g.document),
-    setTimeout: g.setTimeout,
-    clearTimeout: g.clearTimeout,
-    navigator: g.navigator,
-    scheduler: {
-      postTask(callback, options) {
-        if ('scheduler' in g && 'postTask' in g.scheduler) {
-          return g.scheduler.postTask(callback, options);
+  _safe;
+  create() {
+    try {
+      const g = globalWin();
+      /** @type { import("../typings/UserJS.d.ts").safeHandles } */
+      const safe = {
+        XMLHttpRequest: g.XMLHttpRequest,
+        CustomEvent: g.CustomEvent,
+        createElement: g.document.createElement.bind(g.document),
+        createElementNS: g.document.createElementNS.bind(g.document),
+        createTextNode: g.document.createTextNode.bind(g.document),
+        setTimeout: g.setTimeout,
+        clearTimeout: g.clearTimeout,
+        navigator: g.navigator,
+        scheduler: {
+          postTask(callback, options) {
+            if ('scheduler' in g && 'postTask' in g.scheduler) {
+              return g.scheduler.postTask(callback, options);
+            }
+  
+            options = Object.assign({}, options);
+  
+            if (options.delay === undefined) options.delay = 0;
+            options.delay = Number(options.delay);
+            if (options.delay < 0) {
+              return Promise.reject(new TypeError('"delay" must be a positive number.'));
+            }
+            return new Promise((resolve) => {
+              g.setTimeout(() => {
+                resolve(callback());
+              }, options.delay);
+            });
+          },
+          yield() {
+            if ('scheduler' in g && 'yield' in g.scheduler) {
+              scheduler.yield();
+              return g.scheduler.yield();
+            }
+            return new Promise((resolve) => {
+              g.setTimeout(resolve, 0);
+            });
+          }
+        },
+        groupBy(arr, callback) {
+          if (isFN(Object.groupBy)) {
+            return Object.groupBy(arr, callback);
+          }
+          /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
+          return arr.reduce((acc = {}, ...args) => {
+            const key = callback(...args);
+            acc[key] ??= [];
+            acc[key].push(args[0]);
+            return acc;
+          }, {});
         }
-
-        options = Object.assign({}, options);
-
-        if (options.delay === undefined) options.delay = 0;
-        options.delay = Number(options.delay);
-        if (options.delay < 0) {
-          return Promise.reject(new TypeError('"delay" must be a positive number.'));
-        }
-        return new Promise((resolve) => {
-          g.setTimeout(() => {
-            resolve(callback());
-          }, options.delay);
-        });
-      },
-      yield() {
-        if ('scheduler' in g && 'yield' in g.scheduler) {
-          scheduler.yield();
-          return g.scheduler.yield();
-        }
-        return new Promise((resolve) => {
-          g.setTimeout(resolve, 0);
-        });
+      };
+      for (const [k, v] of Object.entries(safe)) {
+        if (/scheduler|navigator/.test(k) || isFN(v)) continue;
+        throw new Error(`Safe handles "${k}" returned "${v}"`, { cause: 'safeSelf' });
       }
-    },
-    groupBy(arr, callback) {
-      if (isFN(Object.groupBy)) {
-        return Object.groupBy(arr, callback);
-      }
-      /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
-      return arr.reduce((acc = {}, ...args) => {
-        const key = callback(...args);
-        acc[key] ??= [];
-        acc[key].push(args[0]);
-        return acc;
-      }, {});
+      this._safe = safe;
+    } catch (e) {
+      err(e);
+      this._safe = null;
     }
-  };
-  for (const [k, v] of Object.entries(safe)) {
-    if (k === 'scheduler') {
-      continue;
-    } else if (k === 'navigator') {
-      continue;
-    } else if (isFN(v)) {
-      continue;
-    }
-    err({ message: `Safe handles "${k}" returned "${v}"`, cause: 'safeSelf' });
+    return this._safe;
   }
-  userjs.safeSelf = safe;
-  return userjs.safeSelf;
+  get _self() {
+    return this._safe ?? this.create();
+  }
+  set _self(obj) {
+    this._safe = obj;
+  }
 }
+const { _self } = new Safe();
 // #endregion
 // #region Constants
 /**
@@ -263,7 +274,7 @@ const isMobile = (() => {
     return userjs.isMobile;
   }
   try {
-    const { navigator } = safeSelf();
+    const { navigator } = _self;
     if (navigator) {
       const { userAgent, userAgentData } = navigator;
       const { platform, mobile } = userAgentData ? Object(userAgentData) : {};
@@ -401,21 +412,19 @@ const DEFAULT_CONFIG = {
 };
 // #endregion
 // #region i18n
+/** @type {Map<string, string>} */
+const i18nMap = new Map();
 class i18nHandler {
   constructor() {
-    if (userjs.pool !== undefined) {
-      return this;
-    }
-    userjs.pool = new Map();
     for (const [k, v] of Object.entries(translations)) {
-      if (!userjs.pool.has(k)) userjs.pool.set(k, v);
+      if (!i18nMap.has(k)) i18nMap.set(k, v);
     }
   }
   /**
    * @param {string | Date | number} str
    */
   toDate(str = '') {
-    const { navigator } = safeSelf();
+    const { navigator } = _self;
     return new Intl.DateTimeFormat(navigator.language).format(
       typeof str === 'string' ? new Date(str) : str
     );
@@ -424,23 +433,25 @@ class i18nHandler {
    * @param {number | bigint} number
    */
   toNumber(number) {
-    const { navigator } = safeSelf();
+    const { navigator } = _self;
     return new Intl.NumberFormat(navigator.language).format(number);
   }
   /**
    * @type { import("../typings/UserJS.d.ts").i18n$ }
    */
   i18n$(key) {
-    const { navigator } = safeSelf();
+    const { navigator } = _self;
     const current = navigator.language.split('-')[0] ?? 'en';
-    if (userjs.pool) {
-      return userjs.pool.get(current)?.[key] ?? 'Invalid Key';
+    try {
+      return i18nMap.get(current)?.[key] ?? 'Invalid Key'
+    } catch (e) {
+      err(e);
+      return 'error';
     }
-    return 'userjs.pool is undefined';
   }
 
   get current() {
-    const { navigator } = safeSelf();
+    const { navigator } = _self;
     return navigator.language.split('-')[0] ?? 'en';
   }
 }
@@ -544,7 +555,7 @@ const formAttrs = (elem, attr = {}) => {
 const make = (tagName, cname, attrs) => {
   let el;
   try {
-    const { createElement } = safeSelf();
+    const { createElement } = _self;
     el = createElement(tagName);
     if (!isEmpty(cname)) {
       if (typeof cname === 'string') {
@@ -622,16 +633,22 @@ const dom = {
     }
   },
   remove(target) {
-    normalizeTarget(target).filter(isHTML).some((elem) => elem.remove());
+    normalizeTarget(target)
+      .filter(isHTML)
+      .some((elem) => elem.remove());
   },
   cl: {
     add(target, token) {
       token = normalizeTarget(token, false);
-      return normalizeTarget(target).filter(isHTML).some((elem) => elem.classList.add(...token));
+      return normalizeTarget(target)
+        .filter(isHTML)
+        .some((elem) => elem.classList.add(...token));
     },
     remove(target, token) {
       token = normalizeTarget(token, false);
-      return normalizeTarget(target).filter(isHTML).some((elem) => elem.classList.remove(...token));
+      return normalizeTarget(target)
+        .filter(isHTML)
+        .some((elem) => elem.classList.remove(...token));
     },
     toggle(target, token, force) {
       let r;
@@ -641,7 +658,9 @@ const dom = {
       return r;
     },
     has(target, token) {
-      return normalizeTarget(target).filter(isHTML).some((elem) => elem.classList.contains(token));
+      return normalizeTarget(target)
+        .filter(isHTML)
+        .some((elem) => elem.classList.contains(token));
     }
   }
 };
@@ -711,7 +730,7 @@ const iconSVG = {
     html: '<path d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/>'
   },
   load(type, container) {
-    const { createElementNS } = safeSelf();
+    const { createElementNS } = _self;
     const svgElem = createElementNS('http://www.w3.org/2000/svg', 'svg');
     for (const [k, v] of Object.entries(iconSVG[type])) {
       if (k === 'html') {
@@ -914,7 +933,7 @@ const Network = {
       }
     }
     return await new Promise((resolve, reject) => {
-      const { XMLHttpRequest } = safeSelf();
+      const { XMLHttpRequest } = _self;
       const req = new XMLHttpRequest();
       let method = 'GET';
       let url = BLANK_PAGE;
@@ -1081,6 +1100,7 @@ class Container {
       this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
       this.ready = true;
     }
+    this.hostCache = new Map();
     this.userjsCache = new Map();
     this.root = make('mujs-root');
     this.unsaved = false;
@@ -1096,7 +1116,7 @@ class Container {
       }
 
       set(delay, reason) {
-        const { setTimeout } = safeSelf();
+        const { setTimeout } = _self;
         return new Promise((resolve, reject) => {
           const id = setTimeout(() => {
             Object.is(reason, null) || Object.is(reason, undefined) ? resolve() : reject(reason);
@@ -1107,7 +1127,7 @@ class Container {
       }
 
       clear(...ids) {
-        const { clearTimeout } = safeSelf();
+        const { clearTimeout } = _self;
         this.ids = this.ids.filter((id) => {
           if (ids.includes(id)) {
             clearTimeout(id);
@@ -1171,7 +1191,7 @@ class Container {
     Counter.cnt.total.root = this.mainbtn;
     if (this.countframe)
       for (const engine of cfg.engines) this.countframe.append(Counter.set(engine));
-    const { cfgpage, table, supported, frame, refresh, cache, urlBar, host } = this;
+    const { cfgpage, table, supported, frame, refresh, hostCache, urlBar, host } = this;
 
     class Tabs {
       /**
@@ -1255,7 +1275,7 @@ class Container {
       close(tab) {
         if (this.pool.has(tab)) this.pool.delete(tab);
         const host = tab.dataset.host;
-        if (cfg.clearTabCache && cache.has(host)) cache.delete(host);
+        if (cfg.clearTabCache && hostCache.has(host)) hostCache.delete(host);
         if (tab.classList.contains('active')) refresh();
         const sibling = tab.nextElementSibling ?? tab.previousElementSibling;
         if (sibling) {
@@ -1652,7 +1672,7 @@ class Container {
     for (const e of ex) {
       str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message}${e.stack ? ` ${e.stack}` : ''}`}\n`;
     }
-    const { createTextNode } = safeSelf();
+    const { createTextNode } = _self;
     error.appendChild(createTextNode(str));
     this.footer.append(error);
   }
@@ -1738,7 +1758,7 @@ function primaryFN() {
     build: BLANK_ASYNC_FN
   };
   try {
-    const { scheduler } = safeSelf();
+    const { scheduler } = _self;
     const {
       mainframe,
       urlBar,
@@ -2113,7 +2133,7 @@ function primaryFN() {
             const engine = dataUserJS._mujs.info.engine;
             let pageURL;
             if (engine.name.includes('fork')) {
-              const { navigator } = safeSelf();
+              const { navigator } = _self;
               const current = navigator.language.split('-')[0] ?? 'en';
               pageURL = dataUserJS.url.replace(
                 /\/scripts/,
@@ -3029,7 +3049,7 @@ function primaryFN() {
       }
 
       dispatch(ujs) {
-        const { CustomEvent } = safeSelf();
+        const { CustomEvent } = _self;
         const customEvent = new CustomEvent('updateditem', { detail: ujs });
         main.dispatchEvent(customEvent);
       }
@@ -3168,7 +3188,7 @@ function primaryFN() {
                 if (isBlank(dataA)) {
                   return;
                 }
-                const { groupBy } = safeSelf();
+                const { groupBy } = _self;
                 /**
                  * @type { {[key: string]: import("../typings/types.d.ts").GSForkQuery[]} }
                  */
@@ -3430,7 +3450,7 @@ function primaryFN() {
       }
 
       groupBy() {
-        const { groupBy } = safeSelf();
+        const { groupBy } = _self;
         return groupBy(Array.from(this), ({ _mujs }) => _mujs.info.engine.name);
       }
 

@@ -227,8 +227,6 @@ declare global {
     [i18n: string]: string;
   };
   let userjs: {
-    safeSelf?: safeHandles;
     isMobile?: boolean;
-    pool?: Map<string, string>;
   };
 }
