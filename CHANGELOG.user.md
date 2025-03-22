@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.6.3
+
+* fixed [#66](https://github.com/magicoflolis/Userscript-Plus/issues/66)
+  * `this.cache` should have been `this.hostCache`, my bad
+
+---
+
 ## v7.6.2
 
 * Improvements:
@@ -84,7 +91,7 @@
 
 ## v7.5.0
 
-* Merged https://github.com/magicoflolis/Userscript-Plus/pull/64
+* Merged [#64](https://github.com/magicoflolis/Userscript-Plus/pull/64)
 * Cleaned up old comments
 
 **Known Issues:**
@@ -104,7 +111,7 @@
 
 ## v7.4.0
 
-* Merged https://github.com/magicoflolis/Userscript-Plus/pull/59
+* Merged [#59](https://github.com/magicoflolis/Userscript-Plus/pull/59)
 * Added `githubusercontent.com` to `@connect`.
 * Added `autoSort` to config.
 * Added sorting to the following: "Total installs", "Ratings", "Created date".
@@ -127,7 +134,7 @@
 * Finish translations.
 * Finish blacklist section.
 * Finish config section.
-* Merge https://github.com/magicoflolis/Userscript-Plus/pull/64
+* Merge [#64](https://github.com/magicoflolis/Userscript-Plus/pull/64)
 
 ---
 
@@ -149,7 +156,7 @@
 
 * Finish translations.
 * Finish blacklist section.
-* Merge https://github.com/magicoflolis/Userscript-Plus/pull/59
+* Merge [#59](https://github.com/magicoflolis/Userscript-Plus/pull/59)
 * Add sorting to the following: "Total installs", "Ratings", "Created date"
 
 ---
@@ -176,14 +183,14 @@
 **TODO:**
 
 * Add [GreasyFork Bullshit Filter](https://greasyfork.org/scripts/12179) into list
-* Merge https://github.com/magicoflolis/Userscript-Plus/pull/59
+* Merge [#59](https://github.com/magicoflolis/Userscript-Plus/pull/59)
 * Add sorting to the following: "Total installs", "Ratings", "Created date"
 
 ---
 
 ## v7.1.1
 
-* Fixed "Error When Opening YouTube" https://github.com/magicoflolis/Userscript-Plus/issues/63
+* Fixed "Error When Opening YouTube" [#63](https://github.com/magicoflolis/Userscript-Plus/issues/63)
 
 ---
 
@@ -203,7 +210,7 @@
 **TODO:**
 
 * Add [GreasyFork Bullshit Filter](https://greasyfork.org/scripts/12179) into list
-* Merge https://github.com/magicoflolis/Userscript-Plus/pull/59
+* Merge [#59](https://github.com/magicoflolis/Userscript-Plus/pull/59)
 * Add sorting to the following: "Total installs", "Ratings", "Created date"
 * Improve design of blacklist section
 
