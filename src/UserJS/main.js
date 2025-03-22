@@ -1489,7 +1489,7 @@ class Container {
     return false;
   }
   remove() {
-    this.cache.clear();
+    this.hostCache.clear();
     this.userjsCache.clear();
     dom.remove(this.frame);
   }
