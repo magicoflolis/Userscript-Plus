@@ -1,5 +1,11 @@
 # Changelog
 
+## v7.6.5
+
+* fixed [#67](https://github.com/magicoflolis/Userscript-Plus/issues/67)
+
+---
+
 ## v7.6.4
 
 * fixed `this.hostCache` for real this time

@@ -14,37 +14,20 @@ const con = {
     );
   },
   err(...msg) {
-    console.error(
-      `${con.title} %cERROR`,
-      con.color,
-      '',
-      'color: rgb(249, 24, 128);',
-      ...msg
-    );
+    console.error(`${con.title} %cERROR`, con.color, '', 'color: rgb(249, 24, 128);', ...msg);
     const a = typeof alert !== 'undefined' && alert;
+    const t = con.title.replace(/%c/g, '');
     for (const ex of msg) {
       if (typeof ex === 'object' && 'cause' in ex && a) {
-        a(`[Magic Userscript+] (${ex.cause}) ${ex.message}`);
+        a(`${t} (${ex.cause}) ${ex.message}`);
       }
     }
   },
   info(...msg) {
-    console.info(
-      `${con.title} %cINF`,
-      con.color,
-      '',
-      'color: rgb(0, 186, 124);',
-      ...msg
-    );
+    console.info(`${con.title} %cINF`, con.color, '', 'color: rgb(0, 186, 124);', ...msg);
   },
   log(...msg) {
-    console.log(
-      `${con.title} %cLOG`,
-      con.color,
-      '',
-      'color: rgb(219, 160, 73);',
-      ...msg
-    );
+    console.log(`${con.title} %cLOG`, con.color, '', 'color: rgb(219, 160, 73);', ...msg);
   }
 };
 const { err, info } = con;
@@ -159,9 +142,9 @@ class Safe {
             if ('scheduler' in g && 'postTask' in g.scheduler) {
               return g.scheduler.postTask(callback, options);
             }
-  
+
             options = Object.assign({}, options);
-  
+
             if (options.delay === undefined) options.delay = 0;
             options.delay = Number(options.delay);
             if (options.delay < 0) {
@@ -443,7 +426,7 @@ class i18nHandler {
     const { navigator } = _self;
     const current = navigator.language.split('-')[0] ?? 'en';
     try {
-      return i18nMap.get(current)?.[key] ?? 'Invalid Key'
+      return i18nMap.get(current)?.[key] ?? 'Invalid Key';
     } catch (e) {
       err(e);
       return 'error';
@@ -556,7 +539,7 @@ const make = (tagName, cname, attrs) => {
   let el;
   try {
     const { createElement } = _self;
-    el = createElement(tagName);
+    el = createElement(tagName.toLowerCase());
     if (!isEmpty(cname)) {
       if (typeof cname === 'string') {
         el.className = cname;
@@ -1043,7 +1026,6 @@ const Counter = {
 class Container {
   webpage;
   host;
-  ready;
   injected;
   shadowRoot;
   supported;
@@ -1063,12 +1045,25 @@ class Container {
 
     this.webpage = url;
     this.host = getHostname(url?.hostname ?? BLANK_PAGE);
-    this.ready = false;
     this.injected = false;
     this.shadowRoot = undefined;
     this.supported = isFN(make('main-userjs').attachShadow);
+
+    // /** furture update */
+    // if (!this.supported) throw new Error('Failed to initialize: "attachShadow not supported"', { cause: 'Container' });
+    // this.frame = make('main-userjs', {
+    //   style: 'visibility: visible;',
+    //   dataset: {
+    //     insertedBy: $info.script.name,
+    //     role: 'primary-container'
+    //   }
+    // });
+    // this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
+
+    this.ready = false;
     this.frame = this.supported
       ? make('main-userjs', {
+        style: 'visibility: visible;',
           dataset: {
             insertedBy: $info.script.name,
             role: 'primary-container'
@@ -1082,24 +1077,20 @@ class Container {
           loading: 'lazy',
           src: BLANK_PAGE,
           style:
-            'position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
-          onload: (iFrame) => {
-            /**
-             * @type { HTMLIFrameElement }
-             */
-            const target = iFrame.target;
-            if (!target.contentDocument) {
-              return;
+            'visibility: visible;position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
+          onload: ({ target }) => {
+            if (target.contentDocument) {
+              this.shadowRoot = target.contentDocument.documentElement;
+              this.ready = true;
+              dom.cl.add([this.shadowRoot, target.contentDocument.body], 'mujs-iframe');
             }
-            this.shadowRoot = target.contentDocument.documentElement;
-            this.ready = true;
-            dom.cl.add([this.shadowRoot, target.contentDocument.body], 'mujs-iframe');
           }
         });
     if (this.supported) {
       this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
       this.ready = true;
     }
+
     this.hostCache = new Map();
     this.userjsCache = new Map();
     this.root = make('mujs-root');
@@ -1156,13 +1147,7 @@ class Container {
       this.remove();
       return;
     }
-    if (!this.shadowRoot) {
-      return;
-    }
-    if (doc === null) {
-      return;
-    }
-
+    if (!this.shadowRoot || doc === null) return;
     while (this.ready === false) {
       await new Promise((resolve) => requestAnimationFrame(resolve));
     }
@@ -1575,29 +1560,23 @@ class Container {
           const r = /userjs-(\w+)/.exec(b)[1];
           const biList = builtinList[r];
           if (isRegExp(biList)) {
-            if (!biList.test(str)) continue;
-            blacklisted = true;
+            if (biList.test(str)) blacklisted = true;
           } else if (isObj(biList) && biList.host === this.host) {
             blacklisted = true;
           }
         }
       } else if (isObj(b)) {
-        if (!b.enabled) {
-          continue;
-        }
+        if (!b.enabled) continue;
         if (b.regex === true) {
           const reg = new RegExp(b.url, b.flags);
-          if (!reg.test(str)) continue;
-          blacklisted = true;
+          if (reg.test(str)) blacklisted = true;
         }
         if (Array.isArray(b.url)) {
           for (const c of b.url) {
-            if (!str.includes(c)) continue;
-            blacklisted = true;
+            if (str.includes(c)) blacklisted = true;
           }
         }
-        if (!str.includes(b.url)) continue;
-        blacklisted = true;
+        if (str.includes(b.url)) blacklisted = true;
       }
     }
     this.isBlacklisted = blacklisted;
@@ -1692,16 +1671,10 @@ class Container {
     const locObj = window.top.location;
     const { hostname } = locObj;
     const gfSite = /greasyfork\.org/.test(hostname);
-    if (!gfSite && cfg.sleazyredirect) {
-      return;
-    }
+    if (!gfSite && cfg.sleazyredirect) return;
     const otherSite = gfSite ? 'sleazyfork' : 'greasyfork';
-    if (!qs('span.sign-in-link')) {
-      return;
-    }
-    if (!/scripts\/\d+/.test(locObj.href)) {
-      return;
-    }
+    if (!qs('span.sign-in-link')) return;
+    if (!/scripts\/\d+/.test(locObj.href)) return;
     if (
       !qs('#script-info') &&
       (otherSite == 'greasyfork' || qs('div.width-constraint>section>p>a'))
