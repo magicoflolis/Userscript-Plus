@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.6.5
+// @version      7.6.6
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -1546,6 +1546,12 @@ mujs-body table .frame [data-name=license] {
 .mujs-cfg mujs-section[data-name=theme] select option:hover {
   background: var(--mujs-even-row, hsl(222, 14%, 18%)) !important;
 }
+.mujs-cfg mujs-section svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  background: transparent;
+}
 .mujs-cfg mujs-section[data-name=exp], .mujs-cfg mujs-section[data-name=blacklist] {
   display: flex;
   justify-content: space-between;
@@ -1793,21 +1799,33 @@ const con = {
 };
 const { err, info } = con;
 // #endregion
-
 /**
  * @type { import("../typings/types.d.ts").config }
  */
 let cfg;
-
+/**
+ * @type {URL | undefined}
+ */
+let url;
+try {
+  // for some reason `window.location.href` isn't always the same as `location.href`
+  url = new URL(window.location.href ?? BLANK_PAGE);
+} catch {
+  /* empty */
+}
+//#region Placeholders
 const BLANK_FN = function () {};
 const BLANK_ASYNC_FN = async function () {};
 const BLANK_PAGE = 'about:blank';
+//#endregion
 /**
- * @param {string} hn
+ * @template {string} S
+ * @param {S} hn
  */
 const normalizedHostname = (hn) => hn.replace(/^www\./, '');
 /**
- * @param {string} txt
+ * @template {string} S
+ * @param {S} txt
  */
 const formatURL = (txt) =>
   txt
@@ -1816,25 +1834,34 @@ const formatURL = (txt) =>
     .join('.')
     .replace(/\/|https:/g, '');
 /**
- * @param {string} str
+ * @template {string} S
+ * @param {S} str
  */
 const getHostname = (str) => formatURL(normalizedHostname(str));
-/**
- * @type {URL | undefined}
- */
-let url;
-try {
-  url = new URL(window.location.href ?? BLANK_PAGE);
-} catch {
-  /* empty */
-}
-
 // #region Validators
-const objToStr = (obj) => Object.prototype.toString.call(obj);
+/**
+ * @type { import("../typings/types.d.ts").objToStr }
+ */
+const objToStr = (obj) => Object.prototype.toString.call(obj).match(/\[object (.*)\]/)[1];
+/**
+ * @type { import("../typings/types.d.ts").isRegExp }
+ */
 const isRegExp = (obj) => /RegExp/.test(objToStr(obj));
+/**
+ * @type { import("../typings/types.d.ts").isElem }
+ */
 const isElem = (obj) => /Element/.test(objToStr(obj));
-const isHTML = (obj) => /object HTML/.test(objToStr(obj));
+/**
+ * @type { import("../typings/types.d.ts").isHTML }
+ */
+const isHTML = (obj) => /HTML/.test(objToStr(obj));
+/**
+ * @type { import("../typings/types.d.ts").isObj }
+ */
 const isObj = (obj) => /Object/.test(objToStr(obj));
+/**
+ * @type { import("../typings/types.d.ts").isFN }
+ */
 const isFN = (obj) => /Function/.test(objToStr(obj));
 const isUserCSS = (str) => /\.user\.css$/.test(str);
 const isUserJS = (str) => /\.user\.js$/.test(str);
@@ -1863,109 +1890,84 @@ const isEmpty = (obj) => {
 };
 // #endregion
 // #region Globals
-/**
- * https://github.com/zloirock/core-js/blob/master/packages/core-js/internals/global-this.js
- * @returns {typeof globalThis}
- */
-function globalWin() {
-  const check = function (it) {
-    return it && it.Math === Math && it;
+/** @type { import("../typings/UserJS.d.ts").safeHandles } */
+let _self;
+{
+  /**
+   * https://github.com/zloirock/core-js/blob/master/packages/core-js/internals/global-this.js
+   * @returns {typeof globalThis}
+   */
+  const globalWin = () => {
+    const check = (it) => it && it.Math === Math && it;
+    return (
+      check(typeof globalThis == 'object' && globalThis) ||
+      check(typeof window == 'object' && window) ||
+      check(typeof self == 'object' && self)
+    );
   };
-  return (
-    check(typeof globalThis == 'object' && globalThis) ||
-    check(typeof window == 'object' && window) ||
-    check(typeof self == 'object' && self) ||
-    check(typeof this == 'object' && this) ||
-    (function () {
-      return this;
-    })() ||
-    Function('return this')()
-  );
-}
-class Safe {
-  /** @type { import("../typings/UserJS.d.ts").safeHandles } */
-  _safe;
-  create() {
-    try {
-      const g = globalWin();
-      /** @type { import("../typings/UserJS.d.ts").safeHandles } */
-      const safe = {
-        XMLHttpRequest: g.XMLHttpRequest,
-        CustomEvent: g.CustomEvent,
-        createElement: g.document.createElement.bind(g.document),
-        createElementNS: g.document.createElementNS.bind(g.document),
-        createTextNode: g.document.createTextNode.bind(g.document),
-        setTimeout: g.setTimeout,
-        clearTimeout: g.clearTimeout,
-        navigator: g.navigator,
-        scheduler: {
-          postTask(callback, options) {
-            if ('scheduler' in g && 'postTask' in g.scheduler) {
-              return g.scheduler.postTask(callback, options);
-            }
-
-            options = Object.assign({}, options);
-
-            if (options.delay === undefined) options.delay = 0;
-            options.delay = Number(options.delay);
-            if (options.delay < 0) {
-              return Promise.reject(new TypeError('"delay" must be a positive number.'));
-            }
-            return new Promise((resolve) => {
-              g.setTimeout(() => {
-                resolve(callback());
-              }, options.delay);
-            });
-          },
-          yield() {
-            if ('scheduler' in g && 'yield' in g.scheduler) {
-              scheduler.yield();
-              return g.scheduler.yield();
-            }
-            return new Promise((resolve) => {
-              g.setTimeout(resolve, 0);
-            });
+  const g = globalWin();
+  try {
+    /** @type { import("../typings/UserJS.d.ts").safeHandles } */
+    const safe = {
+      XMLHttpRequest: g.XMLHttpRequest,
+      CustomEvent: g.CustomEvent,
+      createElement: g.document.createElement.bind(g.document),
+      createElementNS: g.document.createElementNS.bind(g.document),
+      createTextNode: g.document.createTextNode.bind(g.document),
+      setTimeout: g.setTimeout,
+      clearTimeout: g.clearTimeout,
+      navigator: g.navigator,
+      scheduler: {
+        postTask(callback, options) {
+          if ('scheduler' in g && 'postTask' in g.scheduler) {
+            return g.scheduler.postTask(callback, options);
           }
+          options = Object.assign({}, options);
+          if (options.delay === undefined) options.delay = 0;
+          options.delay = Number(options.delay);
+          if (options.delay < 0) {
+            return Promise.reject(new TypeError('"delay" must be a positive number.'));
+          }
+          return new Promise((resolve) => {
+            g.setTimeout(() => {
+              resolve(callback());
+            }, options.delay);
+          });
         },
-        groupBy(arr, callback) {
-          if (isFN(Object.groupBy)) {
-            return Object.groupBy(arr, callback);
+        yield() {
+          if ('scheduler' in g && 'yield' in g.scheduler) {
+            return g.scheduler.yield();
           }
-          /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
-          return arr.reduce((acc = {}, ...args) => {
-            const key = callback(...args);
-            acc[key] ??= [];
-            acc[key].push(args[0]);
-            return acc;
-          }, {});
+          return new Promise((resolve) => {
+            g.setTimeout(resolve, 0);
+          });
         }
-      };
-      for (const [k, v] of Object.entries(safe)) {
-        if (/scheduler|navigator/.test(k) || isFN(v)) continue;
-        throw new Error(`Safe handles "${k}" returned "${v}"`, { cause: 'safeSelf' });
+      },
+      groupBy(items, keySelector) {
+        if ('groupBy' in Object) {
+          return Object.groupBy(items, keySelector);
+        }
+        /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
+        return items.reduce((acc = {}, ...args) => {
+          const key = keySelector(...args);
+          acc[key] ??= [];
+          acc[key].push(args[0]);
+          return acc;
+        }, {});
       }
-      this._safe = safe;
-    } catch (e) {
-      err(e);
-      this._safe = null;
+    };
+    for (const [k, v] of Object.entries(safe)) {
+      if (/scheduler|navigator/.test(k) || isFN(v)) continue;
+      throw new Error(`Safe "${k}" returned "${v}"`, { cause: '_self' });
     }
-    return this._safe;
-  }
-  get _self() {
-    return this._safe ?? this.create();
-  }
-  set _self(obj) {
-    this._safe = obj;
+    _self = safe;
+  } catch (e) {
+    err(e);
+    _self = null;
   }
 }
-const { _self } = new Safe();
 // #endregion
 // #region Constants
-/**
- * @type { import("../typings/types.d.ts").cfgBase }
- */
-const cfgBase = [];
-const cfgSec = new Set();
 /** Lets highlight me :) */
 const authorID = 166061;
 /**
@@ -2020,12 +2022,12 @@ const isMobile = (() => {
   try {
     const { navigator } = _self;
     if (navigator) {
-      const { userAgent, userAgentData } = navigator;
-      const { platform, mobile } = userAgentData ? Object(userAgentData) : {};
+      const { userAgent = '', userAgentData = {} } = navigator;
+      const { platform = '', mobile = false } = Object(userAgentData);
       userjs.isMobile =
-        /Mobile|Tablet/.test(userAgent ? String(userAgent) : '') ||
+        /Mobile|Tablet/.test(String(userAgent)) ||
         Boolean(mobile) ||
-        /Android|Apple/.test(platform ? String(platform) : '');
+        /Android|Apple/.test(String(platform));
     } else {
       userjs.isMobile = false;
     }
@@ -2036,7 +2038,7 @@ const isMobile = (() => {
   }
   return userjs.isMobile;
 })();
-const isGM = typeof GM !== 'undefined';
+const isGM = typeof GM !== 'undefined' || typeof GM_xmlhttpRequest !== 'undefined';
 const builtinList = {
   local: /localhost|router|gov|(\d+\.){3}\d+/,
   finance:
@@ -2053,7 +2055,7 @@ const builtinList = {
  * @type { import("../typings/types.d.ts").config }
  */
 const DEFAULT_CONFIG = {
-  autofetch: true,
+  autofetch: false,
   autoinject: true,
   autoSort: 'daily_installs',
   clearTabCache: true,
@@ -2156,51 +2158,46 @@ const DEFAULT_CONFIG = {
 };
 // #endregion
 // #region i18n
-/** @type {Map<string, string>} */
-const i18nMap = new Map();
-class i18nHandler {
-  constructor() {
-    for (const [k, v] of Object.entries(translations)) {
-      if (!i18nMap.has(k)) i18nMap.set(k, v);
-    }
-  }
+const Language = class {
+  static i18nMap = new Map(Object.entries(translations));
   /**
    * @param {string | Date | number} str
    */
-  toDate(str = '') {
-    const { navigator } = _self;
-    return new Intl.DateTimeFormat(navigator.language).format(
-      typeof str === 'string' ? new Date(str) : str
-    );
+  static toDate(str = '') {
+    const {
+      navigator: { language }
+    } = _self;
+    return new Intl.DateTimeFormat(language).format(typeof str === 'string' ? new Date(str) : str);
   }
   /**
    * @param {number | bigint} number
    */
-  toNumber(number) {
-    const { navigator } = _self;
-    return new Intl.NumberFormat(navigator.language).format(number);
+  static toNumber(number) {
+    const {
+      navigator: { language }
+    } = _self;
+    return new Intl.NumberFormat(language).format(number);
   }
   /**
    * @type { import("../typings/UserJS.d.ts").i18n$ }
    */
-  i18n$(key) {
-    const { navigator } = _self;
-    const current = navigator.language.split('-')[0] ?? 'en';
+  static i18n$(key) {
     try {
-      return i18nMap.get(current)?.[key] ?? 'Invalid Key';
+      return Language.i18nMap.get(Language.current)?.[key] ?? 'Invalid Key';
     } catch (e) {
       err(e);
       return 'error';
     }
   }
-
-  get current() {
-    const { navigator } = _self;
-    return navigator.language.split('-')[0] ?? 'en';
+  static get current() {
+    const {
+      navigator: { language }
+    } = _self;
+    const [current = 'en'] = language.split('-');
+    return current;
   }
-}
-const language = new i18nHandler();
-const { i18n$ } = language;
+};
+const { i18n$ } = Language;
 // #endregion
 // #region Utilities
 const union = (...arr) => [...new Set(arr.flat())];
@@ -2273,22 +2270,22 @@ const ael = (el, type, listener, options = {}) => {
  * @type { import("../typings/types.d.ts").formAttrs }
  */
 const formAttrs = (elem, attr = {}) => {
-  if (!elem) {
-    return elem;
-  }
-  for (const key in attr) {
-    if (typeof attr[key] === 'object') {
-      formAttrs(elem[key], attr[key]);
-    } else if (isFN(attr[key])) {
+  if (!elem) return elem;
+  for (const [key, value] of Object.entries(attr)) {
+    if (/^_mujs/i.test(key)) {
+      elem[key] = value;
+    } else if (typeof value === 'object') {
+      formAttrs(elem[key], value);
+    } else if (isFN(value)) {
       if (/^on/.test(key)) {
-        elem[key] = attr[key];
+        elem[key] = value;
         continue;
       }
-      ael(elem, key, attr[key]);
-    } else if (key === 'class') {
-      elem.className = attr[key];
+      ael(elem, key, value);
+    } else if (/^class/i.test(key)) {
+      dom.cl.add(elem, value);
     } else {
-      elem[key] = attr[key];
+      elem[key] = value;
     }
   }
   return elem;
@@ -2299,22 +2296,11 @@ const formAttrs = (elem, attr = {}) => {
 const make = (tagName, cname, attrs) => {
   let el;
   try {
-    const { createElement } = _self;
-    el = createElement(tagName.toLowerCase());
-    if (!isEmpty(cname)) {
-      if (typeof cname === 'string') {
-        el.className = cname;
-      } else if (isObj(cname)) {
-        formAttrs(el, cname);
-      }
-    }
-    if (!isEmpty(attrs)) {
-      if (typeof attrs === 'string') {
-        el.textContent = attrs;
-      } else if (isObj(attrs)) {
-        formAttrs(el, attrs);
-      }
-    }
+    el = _self.createElement(tagName.toLowerCase());
+    if ((typeof cname === 'string' || Array.isArray(cname)) && !isEmpty(cname))
+      dom.cl.add(el, cname);
+    if (typeof attrs === 'string' && !isEmpty(attrs)) el.textContent = attrs;
+    formAttrs(el, (isObj(cname) && cname) || (isObj(attrs) && attrs) || {});
   } catch (ex) {
     if (ex instanceof DOMException) throw new Error(`${ex.name}: ${ex.message}`, { cause: 'make' });
     ex.cause = 'make';
@@ -2322,7 +2308,6 @@ const make = (tagName, cname, attrs) => {
   }
   return el;
 };
-
 const $info = (() => {
   if (isGM) {
     if (isObj(GM.info)) {
@@ -2383,7 +2368,7 @@ const dom = {
   },
   cl: {
     add(target, token) {
-      token = normalizeTarget(token, false);
+      token = normalizeTarget((typeof token === 'string' && token.split(' ')) || token, false);
       return normalizeTarget(target)
         .filter(isHTML)
         .some((elem) => elem.classList.add(...token));
@@ -2442,6 +2427,10 @@ const iconSVG = {
     viewBox: '0 0 512 512',
     html: '<path d="M352 256c0 22.2-1.2 43.6-3.3 64l-185.3 0c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64l185.3 0c2.2 20.4 3.3 41.8 3.3 64zm28.8-64l123.1 0c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64l-123.1 0c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32l-116.7 0c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0l-176.6 0c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0L18.6 160C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192l123.1 0c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64L8.1 320C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6l176.6 0c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352l116.7 0zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6l116.7 0z"/>'
   },
+  info: {
+    viewBox: '0 0 512 512',
+    html: '<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>'
+  },
   install: {
     viewBox: '0 0 512 512',
     html: '<path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 242.7-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7 288 32zM64 352c-35.3 0-64 28.7-64 64l0 32c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-32c0-35.3-28.7-64-64-64l-101.5 0-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352 64 352zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/>'
@@ -2474,12 +2463,9 @@ const iconSVG = {
     html: '<path d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/>'
   },
   load(type, container) {
-    const { createElementNS } = _self;
-    const svgElem = createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svgElem = _self.createElementNS('http://www.w3.org/2000/svg', 'svg');
     for (const [k, v] of Object.entries(iconSVG[type])) {
-      if (k === 'html') {
-        continue;
-      }
+      if (k === 'html') continue;
       svgElem.setAttributeNS(null, k, v);
     }
     try {
@@ -2487,13 +2473,14 @@ const iconSVG = {
         svgElem.innerHTML = iconSVG[type].html;
         svgElem.setAttribute('id', `mujs_${type ?? 'Unknown'}`);
       }
-      // eslint-disable-next-line no-unused-vars
-    } catch (ex) {
+    } catch {
       /* empty */
     }
-    if (container) {
+    if (isElem(container)) {
       container.appendChild(svgElem);
       return svgElem;
+    } else if (isObj(container)) {
+      formAttrs(svgElem, container);
     }
     return svgElem.outerHTML;
   }
@@ -2677,8 +2664,7 @@ const Network = {
       }
     }
     return await new Promise((resolve, reject) => {
-      const { XMLHttpRequest } = _self;
-      const req = new XMLHttpRequest();
+      const req = new _self.XMLHttpRequest();
       let method = 'GET';
       let url = BLANK_PAGE;
       let body;
@@ -2782,14 +2768,15 @@ const Counter = {
 };
 // #region Container
 /**
- * @type { import("../typings/UserJS.d.ts").Container }
+ * @type { typeof import("../typings/UserJS.d.ts").Container }
  */
-class Container {
+const Container = class {
+  static prompts = [];
   webpage;
   host;
   injected;
   shadowRoot;
-  supported;
+  shadowSupport;
   frame;
   userjsCache;
   root;
@@ -2808,51 +2795,19 @@ class Container {
     this.host = getHostname(url?.hostname ?? BLANK_PAGE);
     this.injected = false;
     this.shadowRoot = undefined;
-    this.supported = isFN(make('main-userjs').attachShadow);
+    this.shadowSupport = isFN(make('main-userjs').attachShadow);
 
-    // /** furture update */
-    // if (!this.supported) throw new Error('Failed to initialize: "attachShadow not supported"', { cause: 'Container' });
-    // this.frame = make('main-userjs', {
-    //   style: 'visibility: visible;',
-    //   dataset: {
-    //     insertedBy: $info.script.name,
-    //     role: 'primary-container'
-    //   }
-    // });
-    // this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
+    if (!this.shadowSupport)
+      throw new Error('Failed to initialize: "attachShadow not supported"', { cause: 'Container' });
+    this.frame = make('main-userjs', {
+      style: 'visibility: visible;',
+      dataset: {
+        insertedBy: $info.script.name,
+        role: 'primary-container'
+      }
+    });
+    this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
 
-    this.ready = false;
-    this.frame = this.supported
-      ? make('main-userjs', {
-        style: 'visibility: visible;',
-          dataset: {
-            insertedBy: $info.script.name,
-            role: 'primary-container'
-          }
-        })
-      : make('iframe', 'mujs-iframe', {
-          dataset: {
-            insertedBy: $info.script.name,
-            role: 'primary-iframe'
-          },
-          loading: 'lazy',
-          src: BLANK_PAGE,
-          style:
-            'visibility: visible;position: fixed;bottom: 1rem;right: 1rem;height: 525px;width: 90%;margin: 0px 1rem;z-index: 100000000000000020 !important;',
-          onload: ({ target }) => {
-            if (target.contentDocument) {
-              this.shadowRoot = target.contentDocument.documentElement;
-              this.ready = true;
-              dom.cl.add([this.shadowRoot, target.contentDocument.body], 'mujs-iframe');
-            }
-          }
-        });
-    if (this.supported) {
-      this.shadowRoot = this.frame.attachShadow({ mode: 'closed' });
-      this.ready = true;
-    }
-
-    this.hostCache = new Map();
     this.userjsCache = new Map();
     this.root = make('mujs-root');
     this.unsaved = false;
@@ -2864,25 +2819,32 @@ class Container {
 
     const Timeout = class {
       constructor() {
+        /**
+         * @type {number[]}
+         */
         this.ids = [];
       }
-
+      /**
+       * @template R
+       * @param {number} delay
+       * @param {R} [reason]
+       */
       set(delay, reason) {
-        const { setTimeout } = _self;
         return new Promise((resolve, reject) => {
-          const id = setTimeout(() => {
+          const id = _self.setTimeout(() => {
             Object.is(reason, null) || Object.is(reason, undefined) ? resolve() : reject(reason);
             this.clear(id);
           }, delay);
           this.ids.push(id);
         });
       }
-
+      /**
+       * @param {...number} ids
+       */
       clear(...ids) {
-        const { clearTimeout } = _self;
         this.ids = this.ids.filter((id) => {
           if (ids.includes(id)) {
-            clearTimeout(id);
+            _self.clearTimeout(id);
             return false;
           }
           return true;
@@ -2898,20 +2860,13 @@ class Container {
 
     window.addEventListener('beforeunload', this.remove);
   }
-  /**
-   * @param { function(): * } callback
-   * @param { Document } doc
-   */
-  async inject(callback, doc) {
+  inject(callback, doc) {
     if (this.checkBlacklist(this.host)) {
       err(`Blacklisted "${this.host}"`);
       this.remove();
       return;
     }
-    if (!this.shadowRoot || doc === null) return;
-    while (this.ready === false) {
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-    }
+    if (!this.shadowRoot || isNull(doc)) return;
     try {
       doc.documentElement.appendChild(this.frame);
       if (this.injected) {
@@ -2937,7 +2892,7 @@ class Container {
     Counter.cnt.total.root = this.mainbtn;
     if (this.countframe)
       for (const engine of cfg.engines) this.countframe.append(Counter.set(engine));
-    const { cfgpage, table, supported, frame, refresh, hostCache, urlBar, host } = this;
+    const { refresh, urlBar, host, userjsCache, cfgpage, table } = this;
 
     class Tabs {
       /**
@@ -2978,17 +2933,11 @@ class Container {
        * @param {string} hostname
        */
       intFN(hostname) {
-        const p = this.protoReg.exec(hostname);
-        if (!p) {
-          return;
-        }
-        if (p[1] === 'settings') {
+        const [, host] = this.protoReg.exec(hostname) ?? [];
+        if (host === 'settings') {
           dom.cl.remove(cfgpage, 'hidden');
           dom.cl.add(table, 'hidden');
           urlBar.placeholder = 'Search settings';
-          if (!supported) {
-            dom.attr(frame, 'style', 'height: 100%;');
-          }
         }
       }
       /**
@@ -3020,8 +2969,15 @@ class Container {
       /** @param { HTMLElement } tab */
       close(tab) {
         if (this.pool.has(tab)) this.pool.delete(tab);
-        const host = tab.dataset.host;
-        if (cfg.clearTabCache && hostCache.has(host)) hostCache.delete(host);
+        if (cfg.clearTabCache) {
+          const { host } = tab.dataset;
+          const arr = Array.from(userjsCache.values()).filter(({ _mujs }) => {
+            return !isEmpty(_mujs) && _mujs.info.host === host;
+          });
+          for (const a of arr) {
+            arr.splice(arr.indexOf(a), 1);
+          }
+        }
         if (tab.classList.contains('active')) refresh();
         const sibling = tab.nextElementSibling ?? tab.previousElementSibling;
         if (sibling) {
@@ -3056,7 +3012,7 @@ class Container {
           textContent: 'X'
         });
         const tabHost = make('mujs-host');
-        const p = this.protoReg.exec(hostname);
+        const [, host] = this.protoReg.exec(hostname) ?? [];
         tab.append(tabHost, tabClose);
         this.el.head.append(tab);
         this.active(tab, false);
@@ -3065,9 +3021,9 @@ class Container {
           tab.dataset.host = this.blank;
           tabHost.title = i18n$('newTab');
           tabHost.textContent = i18n$('newTab');
-        } else if (p) {
+        } else if (host) {
           tab.dataset.host = hostname || host;
-          tabHost.title = p[1] || tab.dataset.host;
+          tabHost.title = host || tab.dataset.host;
           tabHost.textContent = tabHost.title;
           this.intFN(hostname);
         } else {
@@ -3128,7 +3084,12 @@ class Container {
       this.tabhead = make('thead');
       this.header = make('mujs-header');
       this.tbody = make('mujs-body');
-      this.cfgpage = make('mujs-row', 'mujs-cfg hidden');
+      this.cfgpage = make('mujs-row', 'mujs-cfg hidden', {
+        _mujs: {
+          base: [],
+          sections: new Set()
+        }
+      });
       this.main = make('mujs-main', 'hidden');
       this.urlContainer = make('mujs-url');
       this.btnframe = make('mujs-column', 'btn-frame');
@@ -3255,7 +3216,6 @@ class Container {
     return false;
   }
   remove() {
-    this.hostCache.clear();
     this.userjsCache.clear();
     dom.remove(this.frame);
   }
@@ -3271,28 +3231,25 @@ class Container {
    * @param { string } name - Name of stylesheet
    * @return { HTMLStyleElement | undefined } Style element
    */
-  loadCSS(css, name = 'CSS') {
+  loadCSS(css, name = 'CSS', useGM = true) {
     try {
+      if (this.stylesheet) return this.stylesheet;
       if (typeof name !== 'string')
         throw new Error('"name" must be a typeof "string"', { cause: 'loadCSS' });
-      if (qs(`style[data-role="${name}"]`, this.root))
-        return qs(`style[data-role="${name}"]`, this.root);
       if (typeof css !== 'string')
         throw new Error('"css" must be a typeof "string"', { cause: 'loadCSS' });
       if (isBlank(css))
         throw new Error(`"${name}" contains empty CSS string`, { cause: 'loadCSS' });
       const parent = isEmpty(this.root.shadowRoot) ? this.root : this.root.shadowRoot;
-      if (isGM) {
-        const fn = isFN(GM.addElement)
-          ? GM.addElement
-          : isFN(GM_addElement)
-            ? GM_addElement
-            : BLANK_FN;
+      if (useGM && isGM) {
+        const fn = (isFN(GM.addElement) && GM.addElement) || (isFN(GM_addElement) && GM_addElement);
+        if (!isFN(fn)) return this.loadCSS(css, name, false);
         const sty = fn(parent, 'style', { textContent: css });
         if (isElem(sty)) {
           sty.dataset.insertedBy = $info.script.name;
           sty.dataset.role = name;
-          return sty;
+          this.stylesheet = sty;
+          return this.stylesheet;
         }
       }
       const sty = make('style', {
@@ -3303,7 +3260,8 @@ class Container {
         }
       });
       parent.appendChild(sty);
-      return sty;
+      this.stylesheet = sty;
+      return this.stylesheet;
     } catch (ex) {
       err(ex);
     }
@@ -3318,7 +3276,7 @@ class Container {
     for (const b of normalizeTarget(cfg.blacklist)) {
       if (typeof b === 'string') {
         if (b.startsWith('userjs-')) {
-          const r = /userjs-(\w+)/.exec(b)[1];
+          const [, r] = /userjs-(\w+)/.exec(b) ?? [];
           const biList = builtinList[r];
           if (isRegExp(biList)) {
             if (biList.test(str)) blacklisted = true;
@@ -3348,20 +3306,18 @@ class Container {
     if (theme === DEFAULT_CONFIG.theme) {
       return;
     }
-    const sty = this.root.style;
+    const { style } = this.root;
     for (const [k, v] of Object.entries(theme)) {
       const str = `--mujs-${k}`;
-      const prop = sty.getPropertyValue(str);
+      const prop = style.getPropertyValue(str);
       if (isEmpty(v)) theme[k] = prop;
       if (prop === v) continue;
-      sty.removeProperty(str);
-      sty.setProperty(str, v);
+      style.removeProperty(str);
+      style.setProperty(str, v);
     }
   }
   makePrompt(txt, dataset = {}, usePrompt = true) {
-    for (const elem of normalizeTarget(qsA('.prompt', this.promptElem))) {
-      if (elem.dataset.prompt) elem.remove();
-    }
+    dom.remove(Container.prompts);
     const el = make('mu-js', 'prompt', {
       dataset: {
         prompt: txt
@@ -3398,6 +3354,7 @@ class Container {
       elPrompt.append(elNo);
       el.append(elPrompt);
     }
+    Container.prompts.push(el);
     this.promptElem.append(el);
     return el;
   }
@@ -3412,15 +3369,14 @@ class Container {
     for (const e of ex) {
       str += `${typeof e === 'string' ? e : `${e.cause ? `[${e.cause}] ` : ''}${e.message}${e.stack ? ` ${e.stack}` : ''}`}\n`;
     }
-    const { createTextNode } = _self;
-    error.appendChild(createTextNode(str));
+    error.appendChild(_self.createTextNode(str));
     this.footer.append(error);
   }
   refresh() {
     this.urlBar.placeholder = i18n$('newTab');
     Counter.reset();
     dom.cl.remove(this.toElem(), 'hidden');
-    dom.cl.remove(cfgSec, 'hidden');
+    dom.cl.remove(this.cfgpage._mujs.sections, 'hidden');
     dom.prop([this.tabbody, this.rateContainer, this.footer], 'innerHTML', '');
   }
   /**
@@ -3483,7 +3439,7 @@ class Container {
       yield userjs;
     }
   }
-}
+};
 const container = new Container();
 // #endregion
 // #region Primary Function
@@ -3494,49 +3450,34 @@ function primaryFN() {
   try {
     const { scheduler } = _self;
     const {
-      mainframe,
-      urlBar,
-      rateContainer,
-      footer,
-      tabbody,
-      cfgpage,
       btnfullscreen,
+      mainframe,
       main,
       Tabs,
-      showError
+      showError,
+      cfgpage: {
+        _mujs: { sections: cfgSec, base: cfgBase }
+      }
     } = container;
     const reloadCfg = () => {
       for (const base of cfgBase) {
-        const nm = /^(\w+)-(.+)/.exec(base.value);
-        const d = (() => {
-          if (base.tag === 'engine') {
-            const engine = DEFAULT_CONFIG.engines.find((engine) => engine.name === base.value);
-            if (engine) {
-              return engine;
-            }
-          }
-          if (nm) {
-            return DEFAULT_CONFIG[nm[1]][nm[2]];
-          }
-          return DEFAULT_CONFIG[base.value];
-        })();
-        const v = (() => {
-          if (base.tag === 'engine') {
-            const engine = cfg.engines.find((engine) => engine.name === base.value);
-            if (engine) {
-              return engine;
-            }
-          }
-          if (nm) {
-            return cfg[nm[1]][nm[2]];
-          }
-          return cfg[base.value];
-        })();
+        const [, CONFIG, SUB_CONFIG] = /^(\w+)-(.+)/.exec(base.value) ?? [];
+        let d = DEFAULT_CONFIG[base.value];
+        let v = cfg[base.value];
+        if (base.tag === 'engine') {
+          const dEngine = DEFAULT_CONFIG.engines.find((engine) => engine.name === base.value);
+          const vEngine = cfg.engines.find((engine) => engine.name === base.value);
+          if (dEngine) d = dEngine;
+          if (vEngine) v = vEngine;
+        } else if (CONFIG) {
+          d = DEFAULT_CONFIG[CONFIG][SUB_CONFIG];
+          v = cfg[CONFIG][SUB_CONFIG];
+        }
         base.cache = v;
         if (base.type === 'checkbox') {
-          if (nm) {
-            if (nm[1] === 'filters') {
-              base.elem.checked = cfg[nm[1]][nm[2]].enabled;
+          if (CONFIG) {
+            if (CONFIG === 'filters') {
+              base.elem.checked = cfg[CONFIG][SUB_CONFIG].enabled;
             } else {
               base.elem.checked = v;
             }
@@ -3646,11 +3587,11 @@ function primaryFN() {
     const frameTimeout = container.timeouts.frame;
     ael(main, isMobile ? 'touchend' : 'click', async (evt) => {
       try {
+        if (isNull(evt.target)) return;
         /** @type { HTMLElement } */
-        const target = evt.target.closest('[data-command]');
-        if (!target) {
-          return;
-        }
+        const t = evt.target;
+        const target = t.closest('[data-command]');
+        if (isNull(target)) return;
         let dataset = target.dataset;
         let cmd = dataset.command;
         if (/^prompt-/.test(target.dataset.command)) {
@@ -3713,7 +3654,9 @@ function primaryFN() {
             a.href = dataUserJS.code_url;
             a.click();
           }
-        } else if (cmd === 'open-tab' && dataset.webpage) {
+        } else if (/open-tab|more-info/.test(cmd) && dataset.webpage) {
+          if (cmd === 'more-info') evt.preventDefault();
+          con.log(cmd);
           if (isGM) {
             if (isFN(GM.openInTab)) {
               return GM.openInTab(dataset.webpage);
@@ -3734,7 +3677,11 @@ function primaryFN() {
         } else if (cmd === 'list-description') {
           const arr = [];
           const ignoreTags = new Set(['TD', 'MUJS-A', 'MU-JS']);
-          for (const node of Object.values(target.parentElement._mujs)) {
+          /**
+           * @type { import("../typings/UserJS.d.ts").mujsName }
+           */
+          const p = target.parentElement;
+          for (const node of Object.values(p._mujs)) {
             if (ignoreTags.has(node.tagName)) {
               continue;
             }
@@ -3770,7 +3717,7 @@ function primaryFN() {
           container.timeoutFrame();
         } else if (cmd === 'save') {
           container.rebuild = true;
-          dom.prop(rateContainer, 'innerHTML', '');
+          dom.prop(container.rateContainer, 'innerHTML', '');
           if (!dom.prop(target, 'disabled')) {
             const config = await container.save();
             if (container.rebuild) {
@@ -3783,7 +3730,7 @@ function primaryFN() {
           }
         } else if (cmd === 'reset') {
           cfg = DEFAULT_CONFIG;
-          dom.remove(qsA('.error', footer));
+          dom.remove(qsA('.error', container.footer));
           container.unsaved = true;
           container.rebuild = true;
           reloadCfg();
@@ -3867,11 +3814,13 @@ function primaryFN() {
             const engine = dataUserJS._mujs.info.engine;
             let pageURL;
             if (engine.name.includes('fork')) {
-              const { navigator } = _self;
-              const current = navigator.language.split('-')[0] ?? 'en';
+              const {
+                navigator: { language }
+              } = _self;
+              const { current } = Language;
               pageURL = dataUserJS.url.replace(
                 /\/scripts/,
-                `/${/^(zh|fr|es)/.test(current) ? navigator.language : current}/scripts`
+                `/${/^(zh|fr|es)/.test(current) ? language : current}/scripts`
               );
             } else if (engine.name.includes('github')) {
               const page_url = await Network.req(dataUserJS.page_url, 'GET', 'json', {
@@ -3887,7 +3836,7 @@ function primaryFN() {
                 return;
               }
               const page = await Network.req(page_url.download_url, 'GET', 'text');
-              if (container.supported) {
+              if (container.shadowSupport) {
                 const shadow = pageArea.attachShadow({ mode: 'closed' });
                 const div = make('div', {
                   innerHTML: page
@@ -3924,7 +3873,7 @@ function primaryFN() {
               }
               return content;
             };
-            if (container.supported) {
+            if (container.shadowSupport) {
               const shadow = pageArea.attachShadow({ mode: 'closed' });
               const div = make('div', {
                 style: 'pointer-events: none;',
@@ -4063,13 +4012,13 @@ function primaryFN() {
           dom.attr(elem, 'title', ujs.license ?? i18n$('no_license'));
           dom.text(elem, `${i18n$('license')}: ${ujs.license ?? i18n$('no_license')}`);
         } else if (name === 'code_updated_at') {
-          dom.text(elem, language.toDate(ujs.code_updated_at));
+          dom.text(elem, Language.toDate(ujs.code_updated_at));
           elem.dataset.value = new Date(ujs.code_updated_at).toISOString();
         } else if (name === 'created_date') {
-          dom.text(elem, `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`);
+          dom.text(elem, `${i18n$('created_date')}: ${Language.toDate(ujs.created_at)}`);
           elem.dataset.value = new Date(ujs.created_at).toISOString();
         } else if (name === 'total_installs') {
-          dom.text(elem, `${i18n$('total_installs')}: ${language.toNumber(ujs.total_installs)}`);
+          dom.text(elem, `${i18n$('total_installs')}: ${Language.toNumber(ujs.total_installs)}`);
         } else {
           dom.text(elem, ujs[name]);
         }
@@ -4182,11 +4131,12 @@ function primaryFN() {
         }
         const meta = {};
         const meta_block_map = new Map();
+        const reg = (this.isUserCSS && /@([a-zA-Z:-]+)\s+(.*)/) || /\/\/\s+@([a-zA-Z:-]+)\s+(.*)/;
         for (const meta_line of this.get_meta_block().split('\n').filter(Boolean)) {
-          const meta_match = /\/\/\s+@([a-zA-Z:-]+)\s+(.*)/.exec(meta_line);
-          if (!meta_match) continue;
-          const key = meta_match[1].trim();
-          const value = meta_match[2].trim();
+          let [, key, value] = reg.exec(meta_line) ?? [];
+          if (!key) continue;
+          key = key.trim();
+          value = value.trim();
           if (!meta_block_map.has(key)) meta_block_map.set(key, []);
           const meta_map = meta_block_map.get(key);
           meta_map.push(value);
@@ -4348,15 +4298,15 @@ function primaryFN() {
 
         const { data_meta } = this;
         if (translate) {
-          if (data_meta[`name:${language.current}`]) {
+          if (data_meta[`name:${Language.current}`]) {
             Object.assign(obj, {
-              name: data_meta[`name:${language.current}`]
+              name: data_meta[`name:${Language.current}`]
             });
             this.translated = true;
           }
-          if (data_meta[`description:${language.current}`]) {
+          if (data_meta[`description:${Language.current}`]) {
             Object.assign(obj, {
-              description: data_meta[`description:${language.current}`]
+              description: data_meta[`description:${Language.current}`]
             });
             this.translated = true;
           }
@@ -4367,15 +4317,15 @@ function primaryFN() {
         if (data_meta.resource) {
           const obj = {};
           if (typeof data_meta.resource === 'string') {
-            const reg = /(.+)\s+(.+)/.exec(data_meta.resource);
-            if (reg) {
-              obj[reg[1].trim()] = reg[2];
+            const [, key, value] = /(.+)\s+(.+)/.exec(data_meta.resource) ?? [];
+            if (key) {
+              obj[key.trim()] = value;
             }
           } else {
             for (const r of data_meta.resource) {
-              const reg = /(.+)\s+(http.+)/.exec(r);
-              if (reg) {
-                obj[reg[1].trim()] = reg[2];
+              const [, key, value] = /(.+)\s+(http.+)/.exec(r) ?? [];
+              if (key) {
+                obj[key.trim()] = value;
               }
             }
           }
@@ -4422,7 +4372,6 @@ function primaryFN() {
       });
       ujsURLs.append(appliesTo, applyList);
       root.append(ujsURLs);
-
       const list = obj.list ?? [];
       if (isEmpty(list)) {
         const elem = make('mujs-a', {
@@ -4484,9 +4433,7 @@ function primaryFN() {
         badUserJS.includes(ujs.id),
         badUserJS.includes(ujs.url)
       ].some((t) => t === true);
-      if (a) {
-        return;
-      }
+      if (a) return;
       if (!container.userjsCache.has(ujs.id)) container.userjsCache.set(ujs.id, ujs);
       const eframe = make('td', 'install-btn');
       const uframe = make('td', 'mujs-uframe');
@@ -4497,12 +4444,15 @@ function primaryFN() {
         }
       });
       const fupdated = make('td', 'mujs-list', {
-        textContent: language.toDate(ujs.code_updated_at),
+        textContent: Language.toDate(ujs.code_updated_at),
         dataset: {
           name: 'code_updated_at',
           value: new Date(ujs.code_updated_at).toISOString()
         }
       });
+      /**
+       * @type { import("../typings/UserJS.d.ts").mujsName }
+       */
       const fname = make('td', 'mujs-name');
       const fmore = make('mujs-column', 'mujs-list hidden', {
         dataset: {
@@ -4525,7 +4475,7 @@ function primaryFN() {
         textContent: `${i18n$('version_number')}: ${ujs.version}`
       });
       const fcreated = make('mu-js', 'mujs-list', {
-        textContent: `${i18n$('created_date')}: ${language.toDate(ujs.created_at)}`,
+        textContent: `${i18n$('created_date')}: ${Language.toDate(ujs.created_at)}`,
         dataset: {
           name: 'created_at',
           value: new Date(ujs.created_at).toISOString()
@@ -4539,7 +4489,7 @@ function primaryFN() {
         }
       });
       const ftotal = make('mu-js', 'mujs-list', {
-        textContent: `${i18n$('total_installs')}: ${language.toNumber(ujs.total_installs)}`,
+        textContent: `${i18n$('total_installs')}: ${Language.toNumber(ujs.total_installs)}`,
         dataset: {
           name: 'total_installs'
         }
@@ -4597,6 +4547,7 @@ function primaryFN() {
       });
       const tr = make('tr', 'frame', {
         dataset: {
+          engine,
           scriptId: ujs.id
         }
       });
@@ -4623,7 +4574,6 @@ function primaryFN() {
           userjs: ujs.id
         }
       });
-      tr.dataset.engine = engine;
       if (!engine.includes('fork') && cfg.recommend.others && goodUserJS.includes(ujs.url)) {
         tr.dataset.good = 'upsell';
       }
@@ -4753,22 +4703,24 @@ function primaryFN() {
       return handles.refresh();
     };
     // #region List
-    class List {
-      intEngines;
-      intHost;
+    /**
+     * @type { typeof import("../typings/UserJS.d.ts").List }
+     */
+    const List = class {
+      #intEngines;
+      #intHost;
       constructor(hostname = undefined) {
         this.build = this.build.bind(this);
         this.groupBy = this.groupBy.bind(this);
         this.dispatch = this.dispatch.bind(this);
         this.sortRecords = this.sortRecords.bind(this);
-        this.container = container;
-        this.intEngines = cfg.engines ?? [];
-        this.host = hostname;
+        this.#intEngines = cfg.engines ?? [];
+        this.setHost(hostname);
       }
 
       setEngines(engines = []) {
         const { host } = this;
-        return engines.filter((e) => {
+        const e = engines.filter((e) => {
           if (!e.enabled) {
             return false;
           }
@@ -4780,6 +4732,21 @@ function primaryFN() {
           }
           return true;
         });
+        this.#intEngines = e;
+        return e;
+      }
+
+      setHost(hostname) {
+        if (isEmpty(hostname)) hostname = container.host;
+        this.#intHost = hostname;
+        this.blacklisted = container.checkBlacklist(hostname);
+        this.#intEngines = this.setEngines(this.engines);
+        this.domain = this.getDomain(this.#intHost);
+        if (this.blacklisted) {
+          showError(`Blacklisted "${hostname}"`);
+          container.timeoutFrame();
+        }
+        return hostname;
       }
 
       dispatch(ujs) {
@@ -4788,34 +4755,14 @@ function primaryFN() {
         main.dispatchEvent(customEvent);
       }
 
-      set engines(engines) {
-        this.intEngines = this.setEngines(engines);
-      }
-
       get engines() {
-        return this.intEngines;
-      }
-
-      set host(hostname) {
-        if (isEmpty(hostname)) hostname = this.container.host;
-        this.intHost = hostname;
-        this.blacklisted = this.container.checkBlacklist(hostname);
-        this.intEngines = this.setEngines(this.engines);
-        this.domain = this.getDomain(this.intHost);
-        if (this.blacklisted) {
-          showError(`Blacklisted "${hostname}"`);
-          this.container.timeoutFrame();
-        }
+        return this.#intEngines;
       }
 
       get host() {
-        return this.intHost;
+        return this.#intHost;
       }
 
-      /**
-       * @template { string } S
-       * @param { S } str
-       */
       getDomain(str = '') {
         if (str === '*') {
           return 'all-sites';
@@ -4923,15 +4870,14 @@ function primaryFN() {
                   return;
                 }
                 const { groupBy } = _self;
-                /**
-                 * @type { {[key: string]: import("../typings/types.d.ts").GSForkQuery[]} }
-                 */
                 const g = groupBy(dataA.map(_mujs), ({ locale }) => {
-                  return locale.split('-')[0] ?? locale;
+                  const [current = locale] = locale.split('-');
+                  return current;
                 });
                 for (const [k, list] of Object.entries(g)) {
+                  if (!list) break;
                   for (const ujs of list) {
-                    if (cfg.filterlang && k !== language.current) {
+                    if (cfg.filterlang && k !== Language.current) {
                       const c = await ujs._mujs.code.request(true);
                       if (!c.translated) continue;
                     }
@@ -4968,9 +4914,9 @@ function primaryFN() {
                     showError('Invalid data received from the server, TODO fix this');
                     return;
                   }
-                  const selected = htmlDocument.documentElement;
+                  const d = htmlDocument.documentElement;
                   if (/openuserjs/gi.test(engine.name)) {
-                    const col = qsA('.col-sm-8 .tr-link', selected) ?? [];
+                    const col = qsA('.col-sm-8 .tr-link', d) ?? [];
                     for (const i of col) {
                       while (isNull(qs('.script-version', i))) {
                         await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -5135,7 +5081,7 @@ function primaryFN() {
                           const txt = make('mujs-row', 'rate-info', {
                             textContent: `${key.toUpperCase()}: ${value}`
                           });
-                          rateContainer.append(txt);
+                          container.rateContainer.append(txt);
                         }
                       })
                       .catch(respError);
@@ -5154,11 +5100,11 @@ function primaryFN() {
               }
             }
           } else {
-            for (const ujs of hostCache) tabbody.append(ujs._mujs.root);
+            for (const ujs of hostCache) container.tabbody.append(ujs._mujs.root);
           }
 
-          urlBar.placeholder = i18n$('search_placeholder');
-          urlBar.value = '';
+          container.urlBar.placeholder = i18n$('search_placeholder');
+          container.urlBar.value = '';
 
           if (isBlank(fetchRecords)) {
             this.sortRecords();
@@ -5177,29 +5123,28 @@ function primaryFN() {
           const sortType = cfg.autoSort ?? 'daily_installs';
           return b[sortType] - a[sortType];
         })) {
-          if (isElem(ujs._mujs.root)) tabbody.append(ujs._mujs.root);
+          if (isElem(ujs._mujs.root)) container.tabbody.append(ujs._mujs.root);
         }
         for (const [name, value] of Object.entries(this.groupBy(arr)))
           Counter.update(value.length, { name });
       }
 
       groupBy() {
-        const { groupBy } = _self;
-        return groupBy(Array.from(this), ({ _mujs }) => _mujs.info.engine.name);
+        return _self.groupBy(Array.from(this), ({ _mujs }) => _mujs.info.engine.name);
       }
 
       *[Symbol.iterator]() {
-        const { intHost, engines } = this;
-        const arr = Array.from(this.container).filter(
+        const { host, engines } = this;
+        const arr = Array.from(container).filter(
           ({ _mujs }) =>
-            _mujs.info.host === intHost &&
+            _mujs.info.host === host &&
             engines.find((engine) => engine.enabled && engine.name === _mujs.info.engine.name)
         );
         for (const userjs of arr) {
           yield userjs;
         }
       }
-    }
+    };
     const MUList = new List();
     // #endregion
     // #region Make Config
@@ -5234,7 +5179,7 @@ function primaryFN() {
           }
         });
         const divDesc = make('mu-js', {
-          textContent: name
+          innerHTML: name
         });
         ael(sec, 'click', (evt) => {
           /** @type { HTMLElement } */
@@ -5254,7 +5199,7 @@ function primaryFN() {
         });
         lb.append(divDesc);
         sec.append(lb);
-        cfgpage.append(sec);
+        container.cfgpage.append(sec);
         !cfgSec.has(sec) && cfgSec.add(sec);
         return sec;
       };
@@ -5262,19 +5207,26 @@ function primaryFN() {
         general: makesection('General', 'general'),
         load: makesection('Automation', 'load'),
         list: makesection('List', 'list'),
-        filters: makesection('List Filters', 'filters'),
+        filters: makesection(
+          `List Filters ${iconSVG.load('info', { dataset: { command: 'more-info', webpage: 'https://greasyfork.org/scripts/12179' } })}`,
+          'filters'
+        ),
         blacklist: makesection('Blacklist (WIP)', 'blacklist'),
         engine: makesection('Search Engines', 'engine'),
         theme: makesection('Theme Colors', 'theme'),
         exp: makesection('Import / Export', 'exp')
       };
       const makeRow = (text, value, type = 'checkbox', tag = 'general', attrs = {}) => {
+        const [name, CONFIG, SUB_CONFIG] = /^(\w+)-(.+)/.exec(value) ?? [];
         const lb = make('label', 'sub-section hidden', {
-          textContent: text,
           dataset: {
             [tag]: text
           }
         });
+        const txt = make('mu-js', {
+          innerHTML: text
+        });
+        lb.append(txt);
         const getDefault = () => {
           if (tag === 'engine') {
             const engine = DEFAULT_CONFIG.engines.find((engine) => engine.name === value);
@@ -5282,10 +5234,7 @@ function primaryFN() {
               return engine;
             }
           }
-          const nm = /^(\w+)-(.+)/.exec(value);
-          if (nm) {
-            return DEFAULT_CONFIG[nm[1]][nm[2]];
-          }
+          if (CONFIG) return DEFAULT_CONFIG[CONFIG][SUB_CONFIG];
           return DEFAULT_CONFIG[value];
         };
         const getValue = () => {
@@ -5295,10 +5244,7 @@ function primaryFN() {
               return engine;
             }
           }
-          const nm = /^(\w+)-(.+)/.exec(value);
-          if (nm) {
-            return cfg[nm[1]][nm[2]];
-          }
+          if (CONFIG) return cfg[CONFIG][SUB_CONFIG];
           return cfg[value];
         };
         const obj = {
@@ -5360,12 +5306,11 @@ function primaryFN() {
           inlab.append(inp, la);
           lb.append(inlab);
 
-          const nm = /^(\w+)-(.+)/.exec(value);
-          if (nm) {
-            if (nm[1] === 'filters') {
-              inp.checked = cfg[nm[1]][nm[2]].enabled;
+          if (CONFIG) {
+            if (CONFIG === 'filters') {
+              inp.checked = cfg[CONFIG][SUB_CONFIG].enabled;
             } else {
-              inp.checked = cfg[nm[1]][nm[2]];
+              inp.checked = cfg[CONFIG][SUB_CONFIG];
             }
           } else {
             inp.checked = cfg[value];
@@ -5375,11 +5320,11 @@ function primaryFN() {
             if (/filterlang/i.test(value)) {
               container.rebuild = true;
             }
-            if (nm) {
-              if (nm[1] === 'filters') {
-                cfg[nm[1]][nm[2]].enabled = evt.target.checked;
+            if (CONFIG) {
+              if (CONFIG === 'filters') {
+                cfg[CONFIG][SUB_CONFIG].enabled = evt.target.checked;
               } else {
-                cfg[nm[1]][nm[2]] = evt.target.checked;
+                cfg[CONFIG][SUB_CONFIG] = evt.target.checked;
               }
             } else {
               cfg[value] = evt.target.checked;
@@ -5395,7 +5340,7 @@ function primaryFN() {
                 container.unsaved = true;
                 container.rebuild = true;
                 engine.enabled = evt.target.checked;
-                MUList.engines = cfg.engines;
+                MUList.setEngines(cfg.engines);
               });
 
               if (engine.query) {
@@ -5406,7 +5351,7 @@ function primaryFN() {
                   value: decode(engine.query),
                   placeholder: decode(d.query),
                   dataset: {
-                    name: nm,
+                    name,
                     engine: engine.name
                   },
                   onchange(evt) {
@@ -5414,7 +5359,7 @@ function primaryFN() {
                     container.rebuild = true;
                     try {
                       engine.query = encodeURIComponent(new URL(evt.target.value).toString());
-                      MUList.engines = cfg.engines;
+                      MUList.setEngines(cfg.engines);
                     } catch (ex) {
                       err(ex);
                     }
@@ -5436,7 +5381,7 @@ function primaryFN() {
                     container.unsaved = true;
                     container.rebuild = true;
                     engine.token = evt.target.value;
-                    MUList.engines = cfg.engines;
+                    MUList.setEngines(cfg.engines);
                   }
                 });
                 obj.elemToken = ghToken;
@@ -5497,7 +5442,10 @@ function primaryFN() {
         makeRow(i18n$('userjs_sync'), 'cache');
         makeRow(i18n$('userjs_autoinject'), 'autoinject', 'checkbox', 'load');
       }
-      makeRow(i18n$('redirect'), 'sleazyredirect');
+      makeRow(
+        `${i18n$('redirect')} ${iconSVG.load('info', { dataset: { command: 'more-info', webpage: 'https://greasyfork.org/scripts/23840' } })}`,
+        'sleazyredirect'
+      );
       makeRow(`${i18n$('dtime')} (ms)`, 'time', 'number', 'general', {
         defaultValue: 10000,
         value: cfg.time,
@@ -5553,7 +5501,12 @@ function primaryFN() {
       makeRow('Greasy Fork', 'greasyfork', 'checkbox', 'engine');
       makeRow('Sleazy Fork', 'sleazyfork', 'checkbox', 'engine');
       makeRow('Open UserJS', 'openuserjs', 'checkbox', 'engine');
-      makeRow('GitHub API', 'github', 'checkbox', 'engine');
+      makeRow(
+        `GitHub API ${iconSVG.load('info', { dataset: { command: 'more-info', webpage: 'https://docs.github.com/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens' } })}`,
+        'github',
+        'checkbox',
+        'engine'
+      );
 
       for (const [k, v] of Object.entries(cfg.theme)) makeRow(k, v, 'text', 'theme');
 
@@ -5625,10 +5578,8 @@ function primaryFN() {
             txt = `Built-in "${s}"`;
             v = builtinList[s];
           }
-        } else {
-          if (!key.enabled) {
-            return;
-          }
+        } else if (!key.enabled) {
+          return;
         }
 
         if (isRegExp(v)) {
@@ -5741,59 +5692,64 @@ function primaryFN() {
           sections.exp.append(v);
         }
       }
-      cfgpage.append(cbtn);
+      container.cfgpage.append(cbtn);
     };
     // #endregion
     container.Tabs.custom = (host) => {
-      MUList.host = host;
+      MUList.setHost(host);
       respHandles.build();
     };
     ael(mainframe, 'mouseenter', (evt) => {
       evt.preventDefault();
       evt.stopPropagation();
+      if (isNull(evt.target)) return;
       evt.target.style.opacity = container.opacityMax;
       frameTimeout.clear(...frameTimeout.ids);
     });
     ael(mainframe, 'mouseleave', (evt) => {
       evt.preventDefault();
       evt.stopPropagation();
+      if (isNull(evt.target)) return;
       evt.target.style.opacity = container.opacityMin;
       container.timeoutFrame();
     });
+    let initClick = true;
     ael(mainframe, 'click', (evt) => {
       evt.preventDefault();
       frameTimeout.clear(...frameTimeout.ids);
+      if (initClick && !cfg.autofetch) {
+        initClick = false;
+        respHandles.build();
+      }
       dom.cl.remove(main, 'hidden');
       dom.cl.add(mainframe, 'hidden');
       if (cfg.autoexpand) {
-        dom.cl.add([btnfullscreen, main], 'expanded');
-        dom.prop(btnfullscreen, 'innerHTML', iconSVG.load('collapse'));
+        dom.cl.add([container.btnfullscreen, main], 'expanded');
+        dom.prop(container.btnfullscreen, 'innerHTML', iconSVG.load('collapse'));
       }
     });
-    ael(urlBar, 'input', (evt) => {
+    ael(container.urlBar, 'input', (evt) => {
       evt.preventDefault();
-      if (urlBar.placeholder === i18n$('newTab')) {
+      if (container.urlBar.placeholder === i18n$('newTab')) {
         return;
       }
       /**
        * @type { string }
        */
       const val = evt.target.value;
-      const section = qsA('mujs-section[data-name]', cfgpage);
       if (isEmpty(val)) {
-        dom.cl.remove(container.toElem(), 'hidden');
-        dom.cl.remove(section, 'hidden');
+        dom.cl.remove([...container.toElem(), ...cfgSec], 'hidden');
         return;
       }
       const finds = new Set();
-      if (!dom.cl.has(cfgpage, 'hidden')) {
+      if (!dom.cl.has(container.cfgpage, 'hidden')) {
         const reg = new RegExp(val, 'gi');
-        for (const elem of section) {
+        for (const elem of cfgSec) {
           if (!isElem(elem)) continue;
           if (finds.has(elem)) continue;
-          if (elem.dataset.name.match(reg)) finds.add(elem);
+          if (elem.textContent.match(reg)) finds.add(elem);
         }
-        dom.cl.add(section, 'hidden');
+        dom.cl.add(cfgSec, 'hidden');
         dom.cl.remove([...finds], 'hidden');
         return;
       }
@@ -5808,21 +5764,17 @@ function primaryFN() {
         const q_value = val.replace(regExp, '');
         const reg = new RegExp(q_value, 'gi');
         for (const v of cacheValues) {
-          let k = v[key];
           if (typeof k === 'number') {
-            k = `${v[key]}`;
-          }
-          if (k && k.match(reg)) {
-            finds.add(v._mujs.root);
+            if (`${v[key]}`.match(reg)) finds.add(v._mujs.root);
           }
         }
       };
       if (val.match(/^(code_url|url):/)) {
         ezQuery(/^(code_url|url):/, 'code_url');
       } else if (val.match(/^(author|users?):/)) {
-        const parts = /^[\w_]+:(.+)/.exec(val);
+        const [, parts] = /^[\w_]+:(.+)/.exec(val) ?? [];
         if (parts) {
-          const reg = new RegExp(parts[1], 'gi');
+          const reg = new RegExp(parts, 'gi');
           for (const v of cacheValues.filter((v) => !isEmpty(v.users))) {
             for (const user of v.users) {
               for (const value of Object.values(user)) {
@@ -5846,17 +5798,17 @@ function primaryFN() {
       } else if (val.match(/^description:/)) {
         ezQuery(/^description:/, 'description');
       } else if (val.match(/^(search_engine|engine):/)) {
-        const parts = /^[\w_]+:(\w+)/.exec(val);
+        const [, parts] = /^[\w_]+:(\w+)/.exec(val) ?? [];
         if (parts) {
-          const reg = new RegExp(parts[1], 'gi');
+          const reg = new RegExp(parts, 'gi');
           for (const { _mujs } of cacheValues)
             if (_mujs.info.engine.name.match(reg)) finds.add(_mujs.root);
         }
       } else if (val.match(/^filter:/)) {
-        const parts = /^\w+:(.+)/.exec(val);
+        const [, parts] = /^\w+:(.+)/.exec(val) ?? [];
         if (parts) {
           const bsFilter = loadFilters();
-          const filterType = bsFilter.get(parts[1].trim().toLocaleLowerCase());
+          const filterType = bsFilter.get(parts.trim().toLocaleLowerCase());
           if (filterType) {
             const { reg } = filterType;
             for (const { name, users, _mujs } of cacheValues) {
@@ -5885,31 +5837,32 @@ function primaryFN() {
               if (/name|desc/i.test(key) && key.match(reg)) finds.add(v._mujs.root);
         }
       }
-      dom.cl.add(qsA('tr[data-engine]', tabbody), 'hidden');
+      dom.cl.add(container.toElem(), 'hidden');
       dom.cl.remove([...finds], 'hidden');
     });
-    ael(urlBar, 'change', (evt) => {
+    ael(container.urlBar, 'change', (evt) => {
       evt.preventDefault();
-      const val = evt.target.value;
+      if (isNull(evt.target)) return;
+      const { target } = evt;
       const tabElem = Tabs.getActive();
-      if (urlBar.placeholder === i18n$('newTab') && tabElem) {
+      if (container.urlBar.placeholder === i18n$('newTab') && tabElem) {
         const tabHost = tabElem.firstElementChild;
-        const host = formatURL(normalizedHostname(val));
-        if (Tabs.protoReg.test(val)) {
-          const createdTab = Tabs.getTab(val);
+        const host = formatURL(normalizedHostname(target.value));
+        if (Tabs.protoReg.test(target.value)) {
+          const createdTab = Tabs.getTab(target.value);
           Tabs.close(tabElem);
           if (createdTab) {
             Tabs.active(createdTab);
           } else {
-            Tabs.create(val);
+            Tabs.create(target.value);
           }
-          evt.target.placeholder = i18n$('search_placeholder');
-          evt.target.value = '';
+          target.placeholder = i18n$('search_placeholder');
+          target.value = '';
         } else if (host === '*') {
           tabElem.dataset.host = host;
           tabHost.title = '<All Sites>';
           tabHost.textContent = '<All Sites>';
-          MUList.host = host;
+          MUList.setHost(host);
           respHandles.build();
         } else if (container.checkBlacklist(host)) {
           showError(`Blacklisted "${host}"`);
@@ -5917,7 +5870,7 @@ function primaryFN() {
           tabElem.dataset.host = host;
           tabHost.title = host;
           tabHost.textContent = host;
-          MUList.host = host;
+          MUList.setHost(host);
           respHandles.build();
         }
       }
@@ -5942,7 +5895,7 @@ function primaryFN() {
 }
 // #endregion
 /**
- * @template { Function } F
+ * @template F
  * @param { (this: F, doc: Document) => * } onDomReady
  */
 const loadDOM = (onDomReady) => {
