@@ -1,5 +1,29 @@
 # Changelog
 
+**Known Issues:**
+
+* SVG elements don't load on every webpage:
+  * _can be blocked by host, external scripts, web extensions, etc._
+
+## v7.6.6
+
+* Config changes:
+  * `autofetch` is now OFF by default
+* Internal changes:
+  * refactored some code, better readability
+  * added info icon along with help links
+* General changes:
+  * while `autofetch` is off, clicking the counter for the first time will auto fetch results
+  * minor bug fixes
+
+**TODO:**
+
+* Finish translations.
+* Finish blacklist section.
+* GitHub engine - filter out UserScript and UserStyles that don't match the host
+
+---
+
 ## v7.6.5
 
 * fixed [#67](https://github.com/magicoflolis/Userscript-Plus/issues/67)
@@ -77,7 +101,7 @@
 * Config changes, moved `codePreview` value to `preview: code`, recommended resetting your config to clear any old/unused settings.
   * If you had `Preview Code` enabled, you will need to re-enable it
 * When `Preview Metadata` and `Preview Code` are both enabled, it will display the entire userscript
-* Icon changes, svgs are now from [fontawesome.com](fontawesome.com)
+* Icon changes, svgs are now from [fontawesome.com](https://fontawesome.com)
 * Search engines have been moved to the `Search Engines` section
 * Improved mobile UI
 * Improved userscript parsing

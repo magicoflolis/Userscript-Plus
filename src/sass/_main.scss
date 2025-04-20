@@ -928,6 +928,13 @@ mujs-body {
       }
     }
 
+    svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+      background: transparent;
+    }
+
     // &[data-name='theme'],
     &[data-name='exp'],
     &[data-name='blacklist'] {

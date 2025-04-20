@@ -231,42 +231,48 @@ export type config = {
   };
 };
 
-export declare function objToStr<O>(obj: O): string;
-
+/**
+ * Object to `[object *]`
+ */
+export declare function objToStr(obj: any): string;
 /**
  * Object is typeof `RegExp`
  */
-export declare function isRegExp<O>(obj: O): boolean;
-
+export declare function isRegExp(obj: any): obj is RegExp;
+/**
+ * Object is typeof `HTMLElement`
+ */
+export declare function isHTML(obj: any): obj is HTMLElement;
 /**
  * Object is typeof `Element`
  */
-export declare function isElem<O>(obj: O): boolean;
+export declare function isElem(obj: any): obj is Element;
 
 /**
  * Object is typeof `object` / JSON Object
  */
-export declare function isObj<O>(obj: O): boolean;
+export declare function isObj(obj: any): obj is Object;
 
 /**
  * Object is typeof `Function`
  */
-export declare function isFN<O>(obj: O): boolean;
+export declare function isFN(obj: any): obj is Function;
 
 /**
  * Object is `null` or `undefined`
  */
-export declare function isNull<O>(obj: O): boolean;
+export declare function isNull(obj: any): obj is null;
+export declare function isNull(obj: any): obj is undefined;
 
 /**
- * Object is Blank
+ * Object is blank
  */
-export declare function isBlank<O extends object | string | any[]>(obj: O): boolean;
+export declare function isBlank<O extends unknown>(obj: O): boolean;
 
 /**
- * Object is Empty
+ * Object is empty
  */
-export declare function isEmpty<O extends object | string | any[]>(obj: O): boolean;
+export declare function isEmpty<O extends unknown>(obj: O): boolean;
 
 /**
  * Type is not 100% accurate
@@ -276,11 +282,6 @@ export declare function normalizeTarget<T>(
   toQuery?: boolean,
   root?: Document | Element
 ): T[];
-// export declare function normalizeTarget<T>(
-//   target: T,
-//   toQuery?: boolean,
-//   root?: Document | Element
-// ): T[];
 
 export declare function halt(evt: Event): void;
 
@@ -367,6 +368,7 @@ export declare function make<
   tagName: K,
   cname?:
     | string
+    | string[]
     | {
         [key in A]: Record<string, unknown>;
       },
@@ -400,15 +402,3 @@ export interface dom {
     has<T extends HTMLElement>(target: T, token: string | string[]): boolean;
   };
 }
-export type cfgBase = {
-  text: string;
-  tag: string;
-  value: string;
-  type: HTMLInputElement['type'];
-  attrs: object;
-  default: string | boolean | number | UserJSEngine | FilterLayout;
-  cache: string | boolean | number | UserJSEngine | FilterLayout;
-  elem: HTMLInputElement | HTMLSelectElement;
-  elemUrl?: HTMLInputElement;
-  elemToken?: HTMLInputElement;
-}[];
