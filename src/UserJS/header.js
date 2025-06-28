@@ -32,7 +32,7 @@ if (!(typeof userjs === 'object' && userjs.UserJS)) {
   return;
 }
 /** Native implementation exists */
-if (window.trustedTypes && window.trustedTypes.createPolicy) window.trustedTypes.createPolicy('default', { createHTML: (string) => string });
+if (window.trustedTypes && window.trustedTypes.createPolicy) window.trustedTypes.createPolicy('default', { createHTML: (string) => string, createScript: (string) => string, createScriptURL: (string) => string });
 /** [i18n directory](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales) */
 const translations = [[languageList]];
 /** [source code](https://github.com/magicoflolis/Userscript-Plus/blob/master/src/sass/_main.scss) */

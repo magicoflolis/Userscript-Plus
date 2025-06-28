@@ -5,6 +5,13 @@
 * SVG elements don't load on every webpage:
   * _can be blocked by host, external scripts, web extensions, etc._
 
+## v7.6.7
+
+* Bug fixes:
+  * Fixed https://github.com/magicoflolis/Userscript-Plus/issues/69
+
+---
+
 ## v7.6.6
 
 * Config changes:
@@ -75,11 +82,6 @@
 * i18n additions (still not localized):
   * new keys: `code`, `metadata`, `preview_metadata`, `recommend_author`, `recommend_other`, `default_sort`
 
-**Known Issues:**
-
-* SVG elements don't load on every webpage:
-  * _can be blocked by host, external scripts, web extensions, etc._
-
 **TODO:**
 
 * Finish translations.
@@ -116,7 +118,6 @@
 
 * Enabling a engine requires the page to be reloaded, while disabling a engine does not.
   * This is caused by the cache system.
-* SVG elements don't load on every webpage, _can be blocked by the page, external scripts, or web extensions._
 * If an item changes after the list is sorted, the sorting won't be updated
 
 **TODO:**
@@ -136,7 +137,6 @@
 * Enabling a engine requires the page to be reloaded, while disabling a engine does not.
   * This is caused by the cache system.
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
-* SVG elements don't load on every webpage, _can be blocked by the page, external script, or extensions._
 
 **TODO:**
 
@@ -164,7 +164,6 @@
 * Enabling a engine requires the page to be reloaded, while disabling a engine does not.
   * This is caused by the cache system.
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
-* SVG elements don't load on every webpage, _can be blocked by the page, external script, or extensions._
 
 **TODO:**
 
@@ -187,7 +186,6 @@
 **Known Issues:**
 
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
-* SVG elements don't load on every webpage, _can be blocked by the page, external script, or extensions._
 
 **TODO:**
 
@@ -215,7 +213,6 @@
 **Known Issues:**
 
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
-* SVG elements don't load on every webpage, _can be blocked by the page._
 
 **TODO:**
 
@@ -242,7 +239,6 @@
 **Known Issues:**
 
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
-* SVG elements don't load on every webpage, _can be blocked by the page._
 
 **TODO:**
 
@@ -274,7 +270,6 @@
 **Known Issues:**
 
 * "Filter out other languages" may not filter _every_ userscript that is not in your language.
-* SVG elements don't load on every webpage, _can be blocked by the page._
 
 **TODO:**
 

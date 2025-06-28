@@ -45,7 +45,7 @@ Finds available UserScripts and UserStyles for the current webpage, the power of
 
 Save this URL as a bookmark, clicking it will cause the **UserScript version** to inject itself into the current webpage.
 
-```JS
+```js filename="src/UserJS/main.js"
 javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/Userscript-Plus@master/userscript/dist/magic-userjs.user.js'].map(s=>document.body.appendChild(document.createElement('script')).src=s)})();
 ```
 
