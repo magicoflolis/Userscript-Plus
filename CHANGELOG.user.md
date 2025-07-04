@@ -5,10 +5,24 @@
 * SVG elements don't load on every webpage:
   * _can be blocked by host, external scripts, web extensions, etc._
 
+**TODO:**
+
+* Finish translations.
+* Finish blacklist section.
+* GitHub engine - filter out UserScript and UserStyles that don't match the host
+* Rework TrustedTypePolicy code
+
+## v7.6.8
+
+* Bug fixes:
+  * Fixed [#70](https://github.com/magicoflolis/Userscript-Plus/issues/70)
+
+---
+
 ## v7.6.7
 
 * Bug fixes:
-  * Fixed https://github.com/magicoflolis/Userscript-Plus/issues/69
+  * Fixed [#69](https://github.com/magicoflolis/Userscript-Plus/issues/69)
 
 ---
 

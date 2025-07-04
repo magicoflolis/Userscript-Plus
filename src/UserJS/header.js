@@ -5,13 +5,11 @@
 const inIframe = (() => {
   try {
     return window.self !== window.top;
-  } catch (e) {
+  } catch {
     return true;
   }
 })();
-if (inIframe) {
-  return;
-}
+if (inIframe) return;
 let userjs = self.userjs;
 /**
  * Skip text/plain documents, based on uBlock Origin `vapi.js` file
@@ -28,11 +26,15 @@ if (
 } else {
   console.error('[%cMagic Userscript+%c] %cERROR','color: rgb(29, 155, 240);','','color: rgb(249, 24, 128);', `MIME type is not a document, got "${document.contentType || ''}"`);
 }
-if (!(typeof userjs === 'object' && userjs.UserJS)) {
-  return;
+if (!(typeof userjs === 'object' && userjs.UserJS)) return;
+{
+  /** Native implementation exists */
+  const excludePolicy = [
+    'outlook.office.com'
+  ];
+  const hostname = location?.hostname || '';
+  if (window.trustedTypes && window.trustedTypes.createPolicy && !hostname.includes(excludePolicy)) window.trustedTypes.createPolicy('default', { createHTML: (string) => string, createScript: (string) => string, createScriptURL: (string) => string });
 }
-/** Native implementation exists */
-if (window.trustedTypes && window.trustedTypes.createPolicy) window.trustedTypes.createPolicy('default', { createHTML: (string) => string, createScript: (string) => string, createScriptURL: (string) => string });
 /** [i18n directory](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales) */
 const translations = [[languageList]];
 /** [source code](https://github.com/magicoflolis/Userscript-Plus/blob/master/src/sass/_main.scss) */
