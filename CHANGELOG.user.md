@@ -4,6 +4,9 @@
 
 * SVG elements don't load on every webpage:
   * _can be blocked by host, external scripts, web extensions, etc._
+* Outlook Website Loading Problem [#70](https://github.com/magicoflolis/Userscript-Plus/issues/70)
+  * Recommend excluding this userscript on `*.office.com` domains within your userscript manager or switch to the webextension version as it does not injected itself into the page.
+  * Caused by `Duplicated Default Trusted Types policy`.
 
 **TODO:**
 
@@ -15,7 +18,7 @@
 ## v7.6.8
 
 * Bug fixes:
-  * Fixed [#70](https://github.com/magicoflolis/Userscript-Plus/issues/70)
+  * ~~Fixed [#70](https://github.com/magicoflolis/Userscript-Plus/issues/70)~~
 
 ---
 
@@ -194,7 +197,7 @@
 * Added [GreasyFork Bullshit Filter](https://greasyfork.org/scripts/12179) into list.
   * You can enable it under "List Filters" in the config.
   * You can also do `filter:` in the search bar to quickly filter the list.
-    * Full list [here](https://github.com/magicoflolis/Userscript-Plus/tree/master/wiki/README.md)
+    * Full list here: [Wiki Page](https://github.com/magicoflolis/Userscript-Plus/tree/master/wiki/README.md)
     * Example: `filter:ascii` => filters out non-ASCII scripts
 
 **Known Issues:**
