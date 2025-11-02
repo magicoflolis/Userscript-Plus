@@ -298,14 +298,18 @@ const normalizedHostname = (hn) => {
  * @param {string} str
  */
 const decode = (str) => {
-  try {
-    if (decodeURI(str) !== decodeURIComponent(str)) {
-      return decode(decodeURIComponent(str));
+  let last = str;
+  while (true) {
+    try {
+      const decoded = decodeURIComponent(last);
+      if (decoded === last) {
+        return last;
+      }
+      last = decoded;
+    } catch (e) {
+      return last;
     }
-  } catch (ex) {
-    err(ex);
   }
-  return str;
 };
 // #endregion
 
