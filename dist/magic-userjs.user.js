@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.6.10
+// @version      7.6.11
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -60,7 +60,7 @@
 // @noframes
 // @run-at     document-start
 // ==/UserScript==
-(() => {
+(async () => {
 'use strict';
 /******************************************************************************/
 const inIframe = (() => {
@@ -2760,6 +2760,35 @@ const Counter = {
     }
   }
 };
+
+if (typeof window === 'undefined') {
+  return;
+}
+if (typeof window.trustedTypes !== 'undefined') {
+  /**
+   * Delay `trustedTypes.createPolicy` creation
+   */
+  const toDelay = [
+    /** Microsoft Outlook */
+    'outlook'
+  ].join('|');
+  const delayReg = new RegExp(toDelay, 'gi');
+  if (delayReg.test(url.hostname)) {
+    await new Promise((resolve) => _self.setTimeout(resolve, 1000));
+  }
+  // const toExclude = [
+  //   /** EMPTY */
+  // ].join('|');
+  // const excludeReg = new RegExp(toExclude, 'gi');
+  if (isNull(window.trustedTypes.defaultPolicy)) {
+    window.trustedTypes.createPolicy('default', {
+      createHTML: (string) => string,
+      createScript: (string) => string,
+      createScriptURL: (string) => string
+    });
+  }
+}
+
 // #region Container
 /**
  * @type { typeof import("../typings/UserJS.d.ts").Container }
@@ -5905,19 +5934,6 @@ const loadDOM = (onDomReady) => {
 };
 
 const init = async (prefix = 'Config') => {
-	if (typeof window === 'undefined') {
-    return;
-  }
-  if (typeof window.trustedTypes !== 'undefined') {
-    await new Promise((resolve) => _self.setTimeout(resolve, 1000));
-    if (isNull(window.trustedTypes.defaultPolicy)) {
-      window.trustedTypes.createPolicy('default', {
-        createHTML: (string) => string,
-        createScript: (string) => string,
-        createScriptURL: (string) => string
-      });
-    }
-  }
   const stored = await StorageSystem.getValue(prefix, DEFAULT_CONFIG);
   cfg = {
     ...DEFAULT_CONFIG,
