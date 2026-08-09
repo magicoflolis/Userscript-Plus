@@ -1,6 +1,6 @@
 <center><h1>2026-08-09: update your "Search Engines" (if already installed):</h1></center>
-<div>From <code>https://greasyfork.org/scripts/by-site/{host}.json?language=all</code> to <code>https://api.greasyfork.org/scripts/by-site/{host}.json?language=all</code></div>
-<div>From <code>https://sleazyfork.org/scripts/by-site/{host}.json?language=all</code> to <code>https://api.sleazyfork.org/scripts/by-site/{host}.json?language=all</code></div>
+<div><b>OLD: </b><code>https://greasyfork.org/scripts/by-site/{host}.json?language=all</code> <b>NEW: </b><code>https://api.greasyfork.org/scripts/by-site/{host}.json?language=all</code></div>
+<div><b>OLD: </b><code>https://sleazyfork.org/scripts/by-site/{host}.json?language=all</code> <b>NEW: </b><code>https://api.sleazyfork.org/scripts/by-site/{host}.json?language=all</code></div>
 <i>Don't forget to click "Save" after!</i>
 
 ---
