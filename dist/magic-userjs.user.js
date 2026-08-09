@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.6.8
+// @version      7.6.9
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -88,14 +88,6 @@ if (
   console.error('[%cMagic Userscript+%c] %cERROR','color: rgb(29, 155, 240);','','color: rgb(249, 24, 128);', `MIME type is not a document, got "${document.contentType || ''}"`);
 }
 if (!(typeof userjs === 'object' && userjs.UserJS)) return;
-{
-  /** Native implementation exists */
-  const excludePolicy = [
-    'outlook.office.com'
-  ];
-  const hostname = location?.hostname || '';
-  if (window.trustedTypes && window.trustedTypes.createPolicy && !hostname.includes(excludePolicy)) window.trustedTypes.createPolicy('default', { createHTML: (string) => string, createScript: (string) => string, createScriptURL: (string) => string });
-}
 /** [i18n directory](https://github.com/magicoflolis/Userscript-Plus/tree/master/src/_locales) */
 const translations = {
  'ar': {
@@ -2075,12 +2067,12 @@ const DEFAULT_CONFIG = {
     {
       enabled: true,
       name: 'greasyfork',
-      query: encodeURIComponent('https://greasyfork.org/scripts/by-site/{host}.json?language=all')
+      query: encodeURIComponent('https://api.greasyfork.org/scripts/by-site/{host}.json?language=all')
     },
     {
       enabled: false,
       name: 'sleazyfork',
-      query: encodeURIComponent('https://sleazyfork.org/scripts/by-site/{host}.json?language=all')
+      query: encodeURIComponent('https://api.sleazyfork.org/scripts/by-site/{host}.json?language=all')
     },
     {
       enabled: false,
@@ -5913,6 +5905,29 @@ const loadDOM = (onDomReady) => {
 };
 
 const init = async (prefix = 'Config') => {
+	if (typeof window === 'undefined') {
+    return;
+  }
+  if (typeof window.trustedTypes !== 'undefined') {
+    /**
+     * Delay `trustedTypes.createPolicy` creation
+     */
+    const toDelay = [
+      /** Microsoft Outlook */
+      'outlook'
+    ].join('|');
+    const delayReg = new RegExp(toDelay, 'gi');
+    if (delayReg.test(url.hostname)) {
+      await new Promise((resolve) => _self.setTimeout(resolve, 1000));
+    }
+    if (isNull(window.trustedTypes.defaultPolicy)) {
+      window.trustedTypes.createPolicy('default', {
+        createHTML: (string) => string,
+        createScript: (string) => string,
+        createScriptURL: (string) => string
+      });
+    }
+  }
   const stored = await StorageSystem.getValue(prefix, DEFAULT_CONFIG);
   cfg = {
     ...DEFAULT_CONFIG,

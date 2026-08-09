@@ -1,4 +1,4 @@
-<center><h1>2026-08-09: update your "Search Engines" (if already installed):</h1></center>
+<center><h1>2026-08-09: Manually edit "Search Engines" if updating to v7.6.9:</h1></center>
 <div><b>OLD: </b><code>https://greasyfork.org/scripts/by-site/{host}.json?language=all</code> <b>NEW: </b><code>https://api.greasyfork.org/scripts/by-site/{host}.json?language=all</code></div>
 <div><b>OLD: </b><code>https://sleazyfork.org/scripts/by-site/{host}.json?language=all</code> <b>NEW: </b><code>https://api.sleazyfork.org/scripts/by-site/{host}.json?language=all</code></div>
 <i>Don't forget to click "Save" after!</i>
