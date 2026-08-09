@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      7.6.9
+// @version      7.6.10
 // @name         Magic Userscript+ : Show Site All UserJS
 // @name:ar      Magic Userscript+: عرض جميع ملفات UserJS
 // @name:de      Magic Userscript+ : Website anzeigen Alle UserJS
@@ -5909,17 +5909,7 @@ const init = async (prefix = 'Config') => {
     return;
   }
   if (typeof window.trustedTypes !== 'undefined') {
-    /**
-     * Delay `trustedTypes.createPolicy` creation
-     */
-    const toDelay = [
-      /** Microsoft Outlook */
-      'outlook'
-    ].join('|');
-    const delayReg = new RegExp(toDelay, 'gi');
-    if (delayReg.test(url.hostname)) {
-      await new Promise((resolve) => _self.setTimeout(resolve, 1000));
-    }
+    await new Promise((resolve) => _self.setTimeout(resolve, 1000));
     if (isNull(window.trustedTypes.defaultPolicy)) {
       window.trustedTypes.createPolicy('default', {
         createHTML: (string) => string,
