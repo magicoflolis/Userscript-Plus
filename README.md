@@ -1,3 +1,10 @@
+<center><h1>2026-08-09: update your "Search Engines" (if already installed):</h1></center>
+<div>From <code>https://greasyfork.org/scripts/by-site/{host}.json?language=all</code> to <code>https://api.greasyfork.org/scripts/by-site/{host}.json?language=all</code></div>
+<div>From <code>https://sleazyfork.org/scripts/by-site/{host}.json?language=all</code> to <code>https://api.sleazyfork.org/scripts/by-site/{host}.json?language=all</code></div>
+<i>Don't forget to click "Save" after!</i>
+
+---
+
 [![Badge License](https://img.shields.io/github/license/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/blob/master/LICENSE)
 [![Badge Issues](https://img.shields.io/github/issues/magicoflolis/Userscript-Plus?style=flat-square)](https://github.com/magicoflolis/Userscript-Plus/issues)
 [![Badge Greasy Fork](https://img.shields.io/greasyfork/dt/421603?style=flat-square)](https://greasyfork.org/scripts/421603)
