@@ -1,4 +1,5 @@
-<center><h1>2026-08-09: Reset setting if updating to v7.6.9</h1></center>
+<center><h1>2026-08-09: Reset setting if updating to UserScript v7.6.9</h1></center>
+<div>If WebExtension: https://greasyfork.org/.. to https://api.greasyfork.org/.. </div>
 
 ---
 
