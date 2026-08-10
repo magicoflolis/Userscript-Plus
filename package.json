@@ -17,7 +17,12 @@
     "webpack:Cr": "webpack --progress --mode development --config=tools/webpack.config.js --env brws=chrome",
     "webpack:FF": "webpack --progress --mode development --config=tools/webpack.config.js --env brws=firefox",
     "web-ext:run": "web-ext run --config=./tools/web-ext.mjs",
-    "web-ext:android": "web-ext run --config=./tools/web-ext.mjs -t firefox-android --firefox-apk org.mozilla.firefox"
+    "web-ext:android": "web-ext run --config=./tools/web-ext.mjs -t firefox-android --firefox-apk org.mozilla.firefox",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "build:Cr": "webpack --mode production --config=tools/webpack.config.js --env brws=chrome",
+    "build:FF": "webpack --mode production --config=tools/webpack.config.js --env brws=firefox",
+    "test": "node --test"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.39.0",

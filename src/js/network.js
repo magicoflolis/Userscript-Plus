@@ -1,6 +1,16 @@
 'use strict';
 import { isEmpty, isFN } from './util.js';
 
+export class NetworkError extends Error {
+  constructor(response, url) {
+    super(`${response.status} ${response.statusText || 'Request failed'}: ${url}`);
+    this.name = 'NetworkError';
+    this.response = response;
+    this.status = response.status;
+    this.url = url;
+  }
+}
+
 /**
  * @type { import("../typings/UserJS.d.ts").Network }
  */
@@ -9,53 +19,50 @@ const Network = {
     if (isEmpty(url)) {
       throw new Error('"url" parameter is empty');
     }
-    data = Object.assign({}, data);
-    method = this.bscStr(method, false);
-    responseType = this.bscStr(responseType);
+
+    const requestUrl = String(url);
     const params = {
-      method,
-      ...data
+      method: this.bscStr(method, false),
+      ...Object.assign({}, data)
     };
-    return new Promise((resolve, reject) => {
-      fetch(url, params)
-        .then((response_1) => {
-          if (!response_1.ok) reject(response_1);
-          const check = (str_2 = 'text') => {
-            return isFN(response_1[str_2]) ? response_1[str_2]() : response_1;
-          };
-          if (responseType.match(/buffer/)) {
-            resolve(check('arrayBuffer'));
-          } else if (responseType.match(/json/)) {
-            resolve(check('json'));
-          } else if (responseType.match(/text/)) {
-            resolve(check('text'));
-          } else if (responseType.match(/blob/)) {
-            resolve(check('blob'));
-          } else if (responseType.match(/formdata/)) {
-            resolve(check('formData'));
-          } else if (responseType.match(/clone/)) {
-            resolve(check('clone'));
-          } else if (responseType.match(/document/)) {
-            const respTxt = check('text');
-            const domParser = new DOMParser();
-            if (respTxt instanceof Promise) {
-              respTxt.then((txt) => {
-                const doc = domParser.parseFromString(txt, 'text/html');
-                resolve(doc);
-              });
-            } else {
-              const doc = domParser.parseFromString(respTxt, 'text/html');
-              resolve(doc);
-            }
-          } else {
-            resolve(response_1);
-          }
-        })
-        .catch(reject);
-    });
+    const normalizedResponseType = this.bscStr(responseType);
+    const response = await fetch(requestUrl, params);
+
+    if (!response.ok) {
+      throw new NetworkError(response, requestUrl);
+    }
+
+    const read = (reader = 'text') => {
+      return isFN(response[reader]) ? response[reader]() : response;
+    };
+
+    if (normalizedResponseType.match(/buffer/)) {
+      return read('arrayBuffer');
+    }
+    if (normalizedResponseType.match(/json/)) {
+      return read('json');
+    }
+    if (normalizedResponseType.match(/text/)) {
+      return read('text');
+    }
+    if (normalizedResponseType.match(/blob/)) {
+      return read('blob');
+    }
+    if (normalizedResponseType.match(/formdata/)) {
+      return read('formData');
+    }
+    if (normalizedResponseType.match(/clone/)) {
+      return read('clone');
+    }
+    if (normalizedResponseType.match(/document/)) {
+      const domParser = new DOMParser();
+      return domParser.parseFromString(await read('text'), 'text/html');
+    }
+
+    return response;
   },
   format(bytes, decimals = 2) {
-    if (Number.isNaN(bytes)) return `0 ${this.sizes[0]}`;
+    if (!Number.isFinite(bytes) || bytes <= 0) return `0 ${this.sizes[0]}`;
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
     const i = Math.floor(Math.log(bytes) / Math.log(k));

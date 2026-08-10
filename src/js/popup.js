@@ -21,7 +21,7 @@ import {
   normalizedHostname
 } from './util.js';
 import { builtinList, template, BLANK_PAGE, badUserJS, authorID, goodUserJS } from './constants.js';
-import { DEFAULT_CONFIG } from './storage.js';
+import { DEFAULT_CONFIG, normalizeConfig } from './storage.js';
 import { BaseContainer, BaseList } from './container.js';
 
 /******************************************************************************/
@@ -1183,7 +1183,7 @@ ael(main, 'click', async (evt) => {
       }
     } else if (cmd === 'reset') {
       sendMessage({ type: 'reset' });
-      cfg = DEFAULT_CONFIG;
+      cfg = normalizeConfig();
       container.unsaved = true;
       container.rebuild = true;
       rebuildCfg();
@@ -2089,7 +2089,7 @@ async function init() {
       hostname
     });
     if (response instanceof Object) {
-      Object.assign(cfg, response.cfg ?? DEFAULT_CONFIG);
+      Object.assign(cfg, normalizeConfig(response.cfg));
       if (Array.isArray(response.data)) {
         data.push(...response.data);
       }
