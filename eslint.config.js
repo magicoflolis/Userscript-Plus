@@ -5,6 +5,9 @@ import pluginJs from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 
 export default defineConfig([
+  {
+    ignores: ['build/**', 'dist/**', 'node_modules/**', 'web-server/**', 'src/js/punycode.js']
+  },
   pluginJs.configs.recommended,
   eslintConfigPrettier,
   {

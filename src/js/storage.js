@@ -112,6 +112,59 @@ export const DEFAULT_CONFIG = {
 };
 // #endregion
 
+const clone = (value) => {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(value);
+  }
+  return JSON.parse(JSON.stringify(value));
+};
+
+const mergePlainObject = (fallback, value) => {
+  if (Array.isArray(fallback)) {
+    return Array.isArray(value) ? value : clone(fallback);
+  }
+  if (!fallback || typeof fallback !== 'object') {
+    return value ?? fallback;
+  }
+  const merged = clone(fallback);
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return merged;
+  }
+  for (const [key, val] of Object.entries(value)) {
+    if (key in fallback) {
+      merged[key] = mergePlainObject(fallback[key], val);
+    } else {
+      merged[key] = val;
+    }
+  }
+  return merged;
+};
+
+/**
+ * Returns a complete configuration object without discarding user-defined engine entries.
+ * Built-in engines are merged with their defaults, and the user's engine order is preserved
+ * so imports/exports do not unexpectedly reorder custom search providers.
+ *
+ * @param {Partial<import('../typings/types.d.ts').config>} [config]
+ * @returns {import('../typings/types.d.ts').config}
+ */
+export const normalizeConfig = (config = {}) => {
+  const normalized = mergePlainObject(DEFAULT_CONFIG, config);
+  const configuredEngines = Array.isArray(config?.engines) ? config.engines : [];
+  const defaultEngines = new Map(DEFAULT_CONFIG.engines.map((engine) => [engine.name, engine]));
+  const configuredNames = new Set(configuredEngines.map((engine) => engine?.name).filter(Boolean));
+  const mergeEngine = (engine) => {
+    const fallback = defaultEngines.get(engine.name);
+    return fallback ? { ...fallback, ...engine } : engine;
+  };
+
+  normalized.engines = [
+    ...configuredEngines.filter((engine) => engine?.name).map(mergeEngine),
+    ...DEFAULT_CONFIG.engines.filter((engine) => !configuredNames.has(engine.name))
+  ];
+  return normalized;
+};
+
 /** @type {{ [prefix: string]: StorageArea }} */
 export const storageByPrefix = {};
 

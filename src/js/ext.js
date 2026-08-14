@@ -1,29 +1,35 @@
-export const webext =
-  self.browser instanceof Object && self.browser instanceof Element === false
-    ? self.browser
-    : self.chrome;
+'use strict';
+
+const globalScope = globalThis;
+const browserApi = globalScope.browser;
+const chromeApi = globalScope.chrome;
+const hasRuntime = (api) => api && typeof api === 'object' && api.runtime;
+
+export const webext = hasRuntime(browserApi) ? browserApi : chromeApi;
+
+if (!webext?.runtime) {
+  throw new Error('WebExtension runtime API is unavailable');
+}
+
 export const runtime = webext.runtime;
 
-/******************************************************************************/
+/*******************************************************************************/
 
 // The extension's service worker can be evicted at any time, so when we
 // send a message, we try a few more times when the message fails to be sent.
 
-export function sendMessage(msg) {
+export function sendMessage(msg, { attempts = 5, delay = 200 } = {}) {
   return new Promise((resolve, reject) => {
-    let i = 5;
+    let remainingAttempts = attempts;
     const send = () => {
-      runtime
-        .sendMessage(msg)
-        .then((response) => {
-          resolve(response);
-        })
+      Promise.resolve(runtime.sendMessage(msg))
+        .then(resolve)
         .catch((reason) => {
-          i -= 1;
-          if (i <= 0) {
+          remainingAttempts -= 1;
+          if (remainingAttempts <= 0) {
             reject(reason);
           } else {
-            setTimeout(send, 200);
+            setTimeout(send, delay);
           }
         });
     };
@@ -31,4 +37,4 @@ export function sendMessage(msg) {
   });
 }
 
-/******************************************************************************/
+/*******************************************************************************/

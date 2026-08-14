@@ -3,6 +3,19 @@
 import { webext } from './ext.js';
 import { err } from './logger.js';
 
+const safeRegExp = (pattern, flags = '') => {
+  if (typeof pattern !== 'string' || pattern === '') {
+    return null;
+  }
+  try {
+    return new RegExp(pattern, flags);
+  } catch (ex) {
+    ex.cause = `Invalid regular expression: ${pattern}`;
+    err(ex);
+    return null;
+  }
+};
+
 // #region Utilities
 const userjs = {};
 const getUAData = () => {
@@ -10,7 +23,7 @@ const getUAData = () => {
     return userjs.isMobile;
   }
   try {
-    if (navigator) {
+    if (typeof navigator !== 'undefined') {
       const { userAgent, userAgentData } = navigator;
       const { platform, mobile } = userAgentData ? Object(userAgentData) : {};
       userjs.isMobile =
@@ -48,7 +61,7 @@ const strToURL = (str) => {
     err(ex);
   }
   if (url !== undefined) {
-    return url
+    return url;
   }
   return str;
 };
@@ -205,6 +218,24 @@ const union = (...arr) => [...new Set(arr.flat())];
 const loadFilters = (cfg) => {
   /** @type {Map<string, import("../typings/types.d.ts").Filters >} */
   const pool = new Map();
+  const addFilter = (key, value) => {
+    if (pool.has(key) || !value?.regExp || !value?.name) {
+      return;
+    }
+    const normalizedKey = key.trim().toLocaleLowerCase();
+    const normalizedName = value.name.trim().toLocaleLowerCase();
+    const reg = safeRegExp(value.regExp, value.flag);
+    const keyReg = safeRegExp(normalizedKey, 'gi');
+    const valueReg = safeRegExp(normalizedName, 'gi');
+    if (reg && keyReg && valueReg) {
+      pool.set(key, {
+        ...value,
+        reg,
+        keyReg,
+        valueReg
+      });
+    }
+  };
   const handles = {
     pool,
     enabled() {
@@ -212,14 +243,8 @@ const loadFilters = (cfg) => {
     },
     refresh() {
       if (!Object.is(pool.size, 0)) pool.clear();
-      for (const [key, value] of Object.entries(cfg.filters)) {
-        if (!pool.has(key))
-          pool.set(key, {
-            ...value,
-            reg: new RegExp(value.regExp, value.flag),
-            keyReg: new RegExp(key.trim().toLocaleLowerCase(), 'gi'),
-            valueReg: new RegExp(value.name.trim().toLocaleLowerCase(), 'gi')
-          });
+      for (const [key, value] of Object.entries(cfg.filters ?? {})) {
+        addFilter(key, value);
       }
       return this;
     },
@@ -233,20 +258,11 @@ const loadFilters = (cfg) => {
       const p = handles.enabled();
       if (Object.is(p.length, 0)) return true;
       for (const v of p) {
-        if ([{ name }, ...users].find((o) => o.name.match(v.reg))) return false;
+        if ([{ name }, ...(users ?? [])].find((o) => o?.name?.match(v.reg))) return false;
       }
       return true;
     }
   };
-  for (const [key, value] of Object.entries(cfg.filters)) {
-    if (!pool.has(key))
-      pool.set(key, {
-        ...value,
-        reg: new RegExp(value.regExp, value.flag),
-        keyReg: new RegExp(key.trim().toLocaleLowerCase(), 'gi'),
-        valueReg: new RegExp(value.name.trim().toLocaleLowerCase(), 'gi')
-      });
-  }
   return handles.refresh();
 };
 /**
@@ -331,5 +347,6 @@ export {
   loadFilters,
   matchesFromHostnames,
   hostnamesFromMatches,
-  normalizedHostname
+  normalizedHostname,
+  safeRegExp
 };

@@ -15,7 +15,7 @@ import {
   decode
 } from './util.js';
 import { BLANK_PAGE, template, builtinList } from './constants.js';
-import storage, { DEFAULT_CONFIG } from './storage.js';
+import storage, { DEFAULT_CONFIG, normalizeConfig } from './storage.js';
 import { BaseContainer, BaseList } from './container.js';
 import { i18n$ } from './i18n.js';
 
@@ -25,16 +25,31 @@ import { i18n$ } from './i18n.js';
 let cfg = {};
 const initCfg = async () => {
   const c = await storage.config.getMulti();
-  if (!c) {
-    await storage.config.set(DEFAULT_CONFIG);
+  cfg = normalizeConfig(c);
+  if (!c || Object.keys(c).length === 0) {
+    await storage.config.set(cfg);
   }
-  cfg = {
-    ...DEFAULT_CONFIG,
-    ...c
-  };
   return cfg;
 };
 initCfg();
+
+const persistConfig = (operation) => operation.then(initCfg).catch(err);
+const saveConfig = (nextConfig) => persistConfig(storage.config.set(normalizeConfig(nextConfig)));
+const resetConfig = () => saveConfig(DEFAULT_CONFIG);
+const saveConfigValue = (prop, value) => persistConfig(storage.config.setOne(prop, value));
+const updateEngineConfig = (engineUpdate) => {
+  if (!engineUpdate?.name) {
+    return Promise.resolve(cfg);
+  }
+  const nextConfig = normalizeConfig(cfg);
+  const engine = nextConfig.engines.find((item) => item.name === engineUpdate.name);
+  if (engine) {
+    Object.assign(engine, engineUpdate);
+  } else {
+    nextConfig.engines.push(engineUpdate);
+  }
+  return saveConfig(nextConfig);
+};
 
 class Container extends BaseContainer {
   constructor(url) {
@@ -309,25 +324,21 @@ runtime.onConnect.addListener((p) => {
   hermes.send('Config', msgCache);
   hermes.getPort().onMessage.addListener((root) => {
     log('Background Script: received message from content script', root);
-    const r = root.msg;
-    if (root.channel === 'Save') {
+    const r = root?.msg ?? {};
+    if (root?.channel === 'Save') {
       if (r.cfg) {
-        storage.config.set(r.cfg).then(initCfg);
+        saveConfig(r.cfg);
       } else {
         const v = isNull(r.value) ? cfg[r.prop] : r.value;
-        storage.config.setOne(r.prop, v).then(initCfg);
+        saveConfigValue(r.prop, v);
       }
-    } else if (root.channel === 'Reset') {
-      storage.config.set(DEFAULT_CONFIG);
-    } else if (root.channel === 'Clear') {
+    } else if (root?.channel === 'Reset') {
+      resetConfig();
+    } else if (root?.channel === 'Clear') {
       const cache = Array.from(container).filter(({ _mujs }) => _mujs.info.host === r.host);
       for (const ujs of cache) container.userjsCache.delete(ujs.id);
-    } else if (root.channel === 'Engine' && cfg.engines) {
-      const engine = cfg.engines.find((engine) => engine.name === r.engine.name);
-      for (const [k, v] of Object.entries(r.engine)) {
-        engine[k] = v;
-      }
-      storage.config.set(cfg).then(initCfg);
+    } else if (root?.channel === 'Engine' && cfg.engines) {
+      updateEngineConfig(r.engine);
     }
   });
 });
@@ -386,7 +397,7 @@ webext.webRequest.onHeadersReceived.addListener(
  * @param  {(response: any) => void} sendResponse - A function to call, at most once, to send a response to the message. The function takes a single argument, which may be any JSON-ifiable object. This argument is passed back to the message sender.
  */
 function onMessage(message, sender, sendResponse) {
-  if (sender.url.includes('popup.html')) {
+  if (sender.url?.includes('popup.html')) {
     if (message.type === 'getData') {
       if (MUList.host !== message.hostname) {
         MUList.host = message.hostname ?? BLANK_PAGE;
@@ -401,22 +412,18 @@ function onMessage(message, sender, sendResponse) {
       });
     } else if (message.type === 'save') {
       if (message.cfg) {
-        storage.config.set(message.cfg).then(initCfg);
+        saveConfig(message.cfg);
       } else {
         const v = isNull(message.value) ? cfg[message.prop] : message.value;
-        storage.config.setOne(message.prop, v).then(initCfg);
+        saveConfigValue(message.prop, v);
       }
     } else if (message.type === 'reset') {
-      storage.config.set(DEFAULT_CONFIG);
+      resetConfig();
     } else if (message.type === 'clear') {
       const cache = Array.from(container).filter(({ _mujs }) => _mujs.info.host === message.host);
       for (const ujs of cache) container.userjsCache.delete(ujs.id);
     } else if (message.type === 'engine') {
-      const engine = cfg.engines.find((engine) => engine.name === message.engine.name);
-      for (const [k, v] of Object.entries(message.engine)) {
-        engine[k] = v;
-      }
-      storage.config.set(cfg).then(initCfg);
+      updateEngineConfig(message.engine);
     } else if (message.location) {
       MUList.host = formatURL(message.location);
       MUList.build().then(sendResponse);
