@@ -5643,7 +5643,11 @@ function primaryFN() {
                           }
                         ]
                       });
-                      if (bsFilter.match(ujs)) {
+                      // match() returns true when the entry KEEPS; false means an
+                      // enabled List Filter excluded it. Skipping on true dropped every
+                      // row whenever no filters are configured, since match() returns
+                      // true in that case.
+                      if (!bsFilter.match(ujs)) {
                         continue;
                       }
                       if (
