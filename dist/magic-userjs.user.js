@@ -2392,7 +2392,7 @@ const DEFAULT_CONFIG = {
       enabled: true,
       name: 'greasyfork',
       query: encodeURIComponent(
-        'https://api.greasyfork.org/scripts.json?q={host}&sort=daily_installs'
+        'https://greasyfork.org/scripts/by-site/{host}?filter_locale=0&page=1'
       ),
       unsupported: ['pornhub.com']
     },
@@ -2400,7 +2400,7 @@ const DEFAULT_CONFIG = {
       enabled: false,
       name: 'sleazyfork',
       query: encodeURIComponent(
-        'https://api.sleazyfork.org/scripts.json?q={host}&sort=daily_installs'
+        'https://sleazyfork.org/scripts/by-site/{host}?filter_locale=0&page=1'
       ),
       unsupported: ['pornhub.com']
     },
@@ -5561,9 +5561,7 @@ function primaryFN() {
                   ? dataQ
                   : Array.isArray(dataQ.query)
                     ? dataQ.query
-                    : Array.isArray(dataQ.execute)
-                      ? dataQ.execute
-                      : [];
+                    : [];
                 const dataA = dq
                   .filter(Boolean)
                   .filter((d) => !d.deleted)
@@ -5661,6 +5659,60 @@ function primaryFN() {
                   }
                 } catch (ex) {
                   showError(ex);
+                }
+              };
+              /**
+               * Scrape a Greasy Fork / Sleazy Fork `by-site` listing page.
+               * The JSON by-site endpoint currently returns an empty array for every
+               * domain, and the JSON search endpoint matches free text, so it also
+               * returns scripts that merely mention the host. The listing page is
+               * domain-accurate, so parse it the way the openuserjs branch does.
+               * Each row carries `data-code-url`, so no slug reconstruction is needed.
+               */
+              const forkPage = async (htmlDocument) => {
+                if (!htmlDocument) {
+                  showError('Invalid data received from the server');
+                  return;
+                }
+                const origin = /sleazy/gi.test(engine.name)
+                  ? 'https://sleazyfork.org'
+                  : 'https://greasyfork.org';
+                const d = htmlDocument.documentElement;
+                for (const row of qsA('li[data-script-id]', d)) {
+                  const codeURL = dom.attr(row, 'data-code-url');
+                  const link = qs('.script-link', row);
+                  if (!codeURL || !link) continue;
+                  const pageURL = new URL(dom.prop(link, 'href') ?? '', origin).href;
+                  let users = [];
+                  const authors = dom.attr(row, 'data-script-authors');
+                  if (authors) {
+                    try {
+                      users = Object.values(JSON.parse(authors)).map((name) => ({
+                        name,
+                        url: ''
+                      }));
+                    } catch {
+                      users = [];
+                    }
+                  }
+                  const ujs = _mujs({
+                    id: Number(dom.attr(row, 'data-script-id') ?? 0),
+                    name: dom.attr(row, 'data-script-name') ?? '',
+                    description: dom.text(qs('.script-description', row)),
+                    url: pageURL,
+                    page_url: pageURL,
+                    code_url: codeURL,
+                    version: dom.attr(row, 'data-script-version'),
+                    created_at: dom.attr(row, 'data-script-created-date'),
+                    code_updated_at: dom.attr(row, 'data-script-updated-date'),
+                    daily_installs: Number(dom.attr(row, 'data-script-daily-installs') ?? 0),
+                    total_installs: Number(
+                      dom.attr(row, 'data-script-total-installs')?.replace(/,/g, '') ?? 0
+                    ),
+                    users
+                  });
+                  ujs._mujs.code.url = ujs.url;
+                  createjs(ujs, engine.name);
                 }
               };
               const gitFN = (data) => {
@@ -5783,10 +5835,10 @@ function primaryFN() {
                   });
               } else if (/openuserjs/gi.test(engine.name)) {
                 netFN = Network.req(sourceURL, 'GET', 'document').then(openuserjs);
+              } else if (/(greasy|sleazy)fork/gi.test(engine.name)) {
+                netFN = Network.req(sourceURL, 'GET', 'document').then(forkPage);
               } else {
-                netFN = Network.req(sourceURL, 'GET', 'json', {
-                  headers: { Accept: 'application/json' }
-                }).then(forkFN);
+                netFN = Network.req(sourceURL).then(forkFN);
               }
               if (netFN) {
                 fetchRecords.push(netFN.catch(respError));
