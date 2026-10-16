@@ -3910,7 +3910,12 @@ function primaryFN() {
                   const codeURL = dom.attr(row, 'data-code-url');
                   const link = qs('.script-link', row);
                   if (!codeURL || !link) continue;
-                  const pageURL = new URL(dom.prop(link, 'href') ?? '', origin).href;
+                  // dom.attr, not dom.prop: .prop resolves the href against the page being
+                  // browsed, so every result link inherited that page's host
+                  // (github.com/en/scripts/... -> GitHub 404 on click). The attribute
+                  // is always the literal relative path, so new URL() joins it with
+                  // the correct listing origin.
+                  const pageURL = new URL(dom.attr(link, 'href') ?? '', origin).href;
                   let users = [];
                   const authors = dom.attr(row, 'data-script-authors');
                   if (authors) {
