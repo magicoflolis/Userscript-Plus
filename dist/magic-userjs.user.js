@@ -2392,7 +2392,7 @@ const DEFAULT_CONFIG = {
       enabled: true,
       name: 'greasyfork',
       query: encodeURIComponent(
-        'https://greasyfork.org/scripts/by-site/{host}?filter_locale=0&page=1'
+        'https://greasyfork.org/en/scripts/by-site/{host}?page=1'
       ),
       unsupported: ['pornhub.com']
     },
@@ -2400,7 +2400,7 @@ const DEFAULT_CONFIG = {
       enabled: false,
       name: 'sleazyfork',
       query: encodeURIComponent(
-        'https://sleazyfork.org/scripts/by-site/{host}?filter_locale=0&page=1'
+        'https://sleazyfork.org/en/scripts/by-site/{host}?page=1'
       ),
       unsupported: ['pornhub.com']
     },
@@ -5678,6 +5678,7 @@ function primaryFN() {
                   ? 'https://sleazyfork.org'
                   : 'https://greasyfork.org';
                 const d = htmlDocument.documentElement;
+                const bsFilter = loadFilters();
                 for (const row of qsA('li[data-script-id]', d)) {
                   const codeURL = dom.attr(row, 'data-code-url');
                   const link = qs('.script-link', row);
@@ -5712,6 +5713,9 @@ function primaryFN() {
                     users
                   });
                   ujs._mujs.code.url = ujs.url;
+                  // Same exclusion check the openuserjs branch applies: a true
+                  // result means the user's List Filters exclude this entry.
+                  if (bsFilter.match(ujs)) continue;
                   createjs(ujs, engine.name);
                 }
               };
