@@ -619,7 +619,7 @@ const DEFAULT_CONFIG = {
       enabled: true,
       name: 'greasyfork',
       query: encodeURIComponent(
-        'https://api.greasyfork.org/scripts/by-site/{host}.json?language=all'
+        'https://greasyfork.org/en/scripts/by-site/{host}?page=1'
       ),
       unsupported: ['pornhub.com']
     },
@@ -627,7 +627,7 @@ const DEFAULT_CONFIG = {
       enabled: false,
       name: 'sleazyfork',
       query: encodeURIComponent(
-        'https://api.sleazyfork.org/scripts/by-site/{host}.json?language=all'
+        'https://sleazyfork.org/en/scripts/by-site/{host}?page=1'
       ),
       unsupported: ['pornhub.com']
     },
@@ -2845,6 +2845,27 @@ function primaryFN() {
             /** @type {Document} */
             const page = await Network.req(pageURL, 'GET', 'document');
             const getContent = () => {
+              // Sanitize remote description HTML before it is inserted via innerHTML
+              // below. A <script> tag or on* handler in the fetched page would
+              // otherwise execute in the context of whatever site you are browsing
+              // — a closed shadow root does NOT block script execution.
+              const sanitizeRemoteHTML = (html) => {
+                const t = document.createElement('template');
+                t.innerHTML = html; // inert: template content never executes
+                t.content
+                  .querySelectorAll('script, iframe, object, embed, link, meta')
+                  .forEach((e) => e.remove());
+                t.content.querySelectorAll('*').forEach((e) => {
+                  for (const a of Array.from(e.attributes)) {
+                    if (/^on/i.test(a.name)) e.removeAttribute(a.name);
+                  }
+                  for (const attr of ['href', 'src', 'action']) {
+                    const v = e.getAttribute(attr);
+                    if (v && /^\s*(javascript|data|vbscript):/i.test(v)) e.removeAttribute(attr);
+                  }
+                });
+                return t.innerHTML;
+              };
               const h = new URL(dataUserJS.url);
               const root = qs('.user-content', page.documentElement);
               for (const e of qsA('[href]', root)) {
@@ -2859,7 +2880,7 @@ function primaryFN() {
                   'max-width: 25em; max-height: 25em; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;';
               }
               if (root) {
-                return root.innerHTML;
+                return sanitizeRemoteHTML(root.innerHTML);
               }
               return 'No additional info available';
             };
@@ -3867,6 +3888,73 @@ function primaryFN() {
                   showError(ex);
                 }
               };
+              /**
+               * Scrape a Greasy Fork / Sleazy Fork `by-site` listing page.
+               * The JSON by-site endpoint currently returns an empty array for every
+               * domain, and the JSON search endpoint matches free text, so it also
+               * returns scripts that merely mention the host. The listing page is
+               * domain-accurate, so parse it the way the openuserjs branch does.
+               * Each row carries `data-code-url`, so no slug reconstruction is needed.
+               */
+              const forkPage = async (htmlDocument) => {
+                if (!htmlDocument) {
+                  showError('Invalid data received from the server');
+                  return;
+                }
+                const origin = /sleazy/gi.test(engine.name)
+                  ? 'https://sleazyfork.org'
+                  : 'https://greasyfork.org';
+                const d = htmlDocument.documentElement;
+                const bsFilter = loadFilters();
+                for (const row of qsA('li[data-script-id]', d)) {
+                  const codeURL = dom.attr(row, 'data-code-url');
+                  const link = qs('.script-link', row);
+                  if (!codeURL || !link) continue;
+                  // dom.attr, not dom.prop: .prop resolves the href against the page being
+                  // browsed, so every result link inherited that page's host
+                  // (github.com/en/scripts/... -> GitHub 404 on click). The attribute
+                  // is always the literal relative path, so new URL() joins it with
+                  // the correct listing origin.
+                  const pageURL = new URL(dom.attr(link, 'href') ?? '', origin).href;
+                  let users = [];
+                  const authors = dom.attr(row, 'data-script-authors');
+                  if (authors) {
+                    try {
+                      users = Object.values(JSON.parse(authors)).map((name) => ({
+                        name,
+                        url: ''
+                      }));
+                    } catch {
+                      users = [];
+                    }
+                  }
+                  const ujs = _mujs({
+                    id: Number(dom.attr(row, 'data-script-id') ?? 0),
+                    name: dom.attr(row, 'data-script-name') ?? '',
+                    description: dom.text(qs('.script-description', row)),
+                    url: pageURL,
+                    page_url: pageURL,
+                    code_url: codeURL,
+                    version: dom.attr(row, 'data-script-version'),
+                    created_at: dom.attr(row, 'data-script-created-date'),
+                    code_updated_at: dom.attr(row, 'data-script-updated-date'),
+                    daily_installs: Number(dom.attr(row, 'data-script-daily-installs') ?? 0),
+                    total_installs: Number(
+                      dom.attr(row, 'data-script-total-installs')?.replace(/,/g, '') ?? 0
+                    ),
+                    users
+                  });
+                  ujs._mujs.code.url = ujs.url;
+                  // bsFilter.match() returns true when the entry KEEPS (false
+                  // means an enabled List Filter excluded it), which is why
+                  // forkFN uses it as `.filter(bsFilter.match)`. The negation
+                  // here matters: skipping on a true result would drop every
+                  // entry whenever no filters are configured, since match()
+                  // returns true in that case.
+                  if (!bsFilter.match(ujs)) continue;
+                  createjs(ujs, engine.name);
+                }
+              };
               const gitFN = (data) => {
                 try {
                   if (isBlank(data.items)) {
@@ -3987,6 +4075,8 @@ function primaryFN() {
                   });
               } else if (/openuserjs/gi.test(engine.name)) {
                 netFN = Network.req(sourceURL, 'GET', 'document').then(openuserjs);
+              } else if (/(greasy|sleazy)fork/gi.test(engine.name)) {
+                netFN = Network.req(sourceURL, 'GET', 'document').then(forkPage);
               } else {
                 netFN = Network.req(sourceURL).then(forkFN);
               }
