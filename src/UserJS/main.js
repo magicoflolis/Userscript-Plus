@@ -619,7 +619,7 @@ const DEFAULT_CONFIG = {
       enabled: true,
       name: 'greasyfork',
       query: encodeURIComponent(
-        'https://api.greasyfork.org/scripts/by-site/{host}.json?language=all'
+        'https://api.greasyfork.org/scripts.json?q={host}&sort=daily_installs'
       ),
       unsupported: ['pornhub.com']
     },
@@ -627,7 +627,7 @@ const DEFAULT_CONFIG = {
       enabled: false,
       name: 'sleazyfork',
       query: encodeURIComponent(
-        'https://api.sleazyfork.org/scripts/by-site/{host}.json?language=all'
+        'https://api.sleazyfork.org/scripts.json?q={host}&sort=daily_installs'
       ),
       unsupported: ['pornhub.com']
     },
@@ -2845,6 +2845,27 @@ function primaryFN() {
             /** @type {Document} */
             const page = await Network.req(pageURL, 'GET', 'document');
             const getContent = () => {
+              // Sanitize remote description HTML before it is inserted via innerHTML
+              // below. A <script> tag or on* handler in the fetched page would
+              // otherwise execute in the context of whatever site you are browsing
+              // — a closed shadow root does NOT block script execution.
+              const sanitizeRemoteHTML = (html) => {
+                const t = document.createElement('template');
+                t.innerHTML = html; // inert: template content never executes
+                t.content
+                  .querySelectorAll('script, iframe, object, embed, link, meta')
+                  .forEach((e) => e.remove());
+                t.content.querySelectorAll('*').forEach((e) => {
+                  for (const a of Array.from(e.attributes)) {
+                    if (/^on/i.test(a.name)) e.removeAttribute(a.name);
+                  }
+                  for (const attr of ['href', 'src', 'action']) {
+                    const v = e.getAttribute(attr);
+                    if (v && /^\s*(javascript|data|vbscript):/i.test(v)) e.removeAttribute(attr);
+                  }
+                });
+                return t.innerHTML;
+              };
               const h = new URL(dataUserJS.url);
               const root = qs('.user-content', page.documentElement);
               for (const e of qsA('[href]', root)) {
@@ -2859,7 +2880,7 @@ function primaryFN() {
                   'max-width: 25em; max-height: 25em; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;';
               }
               if (root) {
-                return root.innerHTML;
+                return sanitizeRemoteHTML(root.innerHTML);
               }
               return 'No additional info available';
             };
@@ -3767,7 +3788,9 @@ function primaryFN() {
                   ? dataQ
                   : Array.isArray(dataQ.query)
                     ? dataQ.query
-                    : [];
+                    : Array.isArray(dataQ.execute)
+                      ? dataQ.execute
+                      : [];
                 const dataA = dq
                   .filter(Boolean)
                   .filter((d) => !d.deleted)
@@ -3988,7 +4011,9 @@ function primaryFN() {
               } else if (/openuserjs/gi.test(engine.name)) {
                 netFN = Network.req(sourceURL, 'GET', 'document').then(openuserjs);
               } else {
-                netFN = Network.req(sourceURL).then(forkFN);
+                netFN = Network.req(sourceURL, 'GET', 'json', {
+                  headers: { Accept: 'application/json' }
+                }).then(forkFN);
               }
               if (netFN) {
                 fetchRecords.push(netFN.catch(respError));
