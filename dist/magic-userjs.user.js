@@ -5713,9 +5713,13 @@ function primaryFN() {
                     users
                   });
                   ujs._mujs.code.url = ujs.url;
-                  // Same exclusion check the openuserjs branch applies: a true
-                  // result means the user's List Filters exclude this entry.
-                  if (bsFilter.match(ujs)) continue;
+                  // bsFilter.match() returns true when the entry KEEPS (false
+                  // means an enabled List Filter excluded it), which is why
+                  // forkFN uses it as `.filter(bsFilter.match)`. The negation
+                  // here matters: skipping on a true result would drop every
+                  // entry whenever no filters are configured, since match()
+                  // returns true in that case.
+                  if (!bsFilter.match(ujs)) continue;
                   createjs(ujs, engine.name);
                 }
               };
